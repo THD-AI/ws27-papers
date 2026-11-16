@@ -1,0 +1,19 @@
+{
+  "name": "ws27-papers",
+  "private": true,
+  "type": "module",
+  "description": "Two long-form articles: scroll-driven on screen, two-column papers in print.",
+  "scripts": {
+    "sources": "node tools/sources.mjs renovate",
+    "build": "node lib/build.mjs",
+    "serve": "node tools/serve.mjs",
+    "shots": "node tools/shots.mjs renovate"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.0"
+  },
+  "devDependencies": {
+    "pdfjs-dist": "^4.10.38",
+    "puppeteer-core": "^24.0.0"
+  }
+}

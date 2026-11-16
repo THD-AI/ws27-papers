@@ -1,0 +1,118 @@
+{
+  "id": "path",
+  "headline": "One decision at T-Mobile US and at Telekom in Germany",
+  "reading": "In the US the decision goes straight to launch and the checks come after; in Germany it passes several gates first, and the way out by dismissal is shut until the end of 2028.",
+  "axis": {
+    "wide": "left to right: order of steps, not time",
+    "tall": "top to bottom: order of steps, not time"
+  },
+  "tracks": {
+    "us": "United States",
+    "de": "Germany"
+  },
+  "decision": {
+    "note": "the decision: let a software agent act on accounts"
+  },
+  "launch": "launch",
+  "saving": "taking the saving",
+  "us": {
+    "run": {
+      "note": "announced September 2024 → a third of contract customers' calls by mid-2026, about [[21]] months",
+      "source": [
+        "R6-08",
+        "R6-06"
+      ]
+    },
+    "slot": {
+      "note": "no works council",
+      "source": "R11-36"
+    },
+    "after": {
+      "bracket": "checks after launch",
+      "marks": [
+        {
+          "label": "caller authentication (every call)",
+          "source": "R11-40"
+        },
+        {
+          "label": "state rules from 2027",
+          "source": "R11-41"
+        },
+        {
+          "label": "lawsuits",
+          "source": "R11-43"
+        }
+      ]
+    },
+    "exit": {
+      "note": "dismissal: management decides, [[60]] days' notice for a mass layoff",
+      "source": [
+        "R11-34",
+        "R11-35"
+      ]
+    }
+  },
+  "de": {
+    "gates": [
+      {
+        "step": 3,
+        "holder": "Works council is told at the planning stage",
+        "basis": "§ 90 BetrVG",
+        "source": "R11-05"
+      },
+      {
+        "step": 4,
+        "holder": "Works council agrees, or a conciliation committee decides",
+        "basis": "§ 87(1) no. 6, § 76 BetrVG",
+        "note": "applies to systems suited to monitoring staff",
+        "source": [
+          "R11-07",
+          "R11-08"
+        ]
+      },
+      {
+        "step": 5,
+        "holder": "Privacy and security approval",
+        "basis": "company procedure",
+        "source": "R11-21"
+      },
+      {
+        "step": 5,
+        "holder": "Impact assessment · AI Act duties",
+        "basis": "GDPR Art. 35 · AI Act Art. 50",
+        "source": [
+          "R11-22",
+          "R9-04"
+        ]
+      }
+    ],
+    "more": {
+      "count": 7,
+      "note": "[[7]] more in the research",
+      "source": "R11-05",
+      "sourceNote": "FIGURES.md names no source for the seven; text.md cites R11-05 for the count of eleven gates."
+    },
+    "shut": {
+      "note": "no dismissals for business reasons until",
+      "date": "31 Dec 2028",
+      "source": "R11-14"
+    },
+    "side": {
+      "note": "about [[4,000]] a year leave by agreed routes",
+      "source": "R12-01"
+    },
+    "queue": {
+      "note": "until 2021: six weeks per system, sometimes over a hundred in one meeting",
+      "source": "R11-12"
+    },
+    "sieve": {
+      "note": "since 2021: a profile checked against agreed rules",
+      "source": "R11-12"
+    },
+    "box": {
+      "note": "a screen that listens to calls: own agreement, not public",
+      "source": "R11-12"
+    },
+    "before": "checks before launch"
+  }
+}

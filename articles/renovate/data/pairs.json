@@ -1,0 +1,312 @@
+{
+  "id": "pairs",
+  "headline": "Ten pairs of figures, and why none compares fully",
+  "reading": "Each row sets an American figure against a German one, and in every row they count different things.",
+  "note": "None compares fully; row 6 does in part.",
+  "tag": "company-reported",
+  "columns": [
+    "What is counted",
+    "T-Mobile US",
+    "Telekom, Germany",
+    "Why they do not compare"
+  ],
+  "short": {
+    "us": "US",
+    "de": "DE"
+  },
+  "key": {
+    "reported": "reported",
+    "open": "target, or a figure for a later year"
+  },
+  "sources": [
+    "R6-06",
+    "R6-02",
+    "R6-03",
+    "R6-04",
+    "R6-16",
+    "R6-12",
+    "R6-14",
+    "R6-09",
+    "R6-11",
+    "R6-01",
+    "R10-50"
+  ],
+  "sourceNote": "FIGURES.md gives one list of sources for all ten rows. A row names its own ids only where text.md ties the figure to them; otherwise it carries the whole list.",
+  "rows": [
+    {
+      "n": 1,
+      "what": "Fewer contacts",
+      "us": {
+        "value": 55,
+        "bound": "more",
+        "show": "> 55%",
+        "status": "reported",
+        "text": "fewer contacts per account, Q4 2021 to Q2 2026 (achieved)"
+      },
+      "de": {
+        "range": [
+          50,
+          55
+        ],
+        "show": "50–55%",
+        "status": "target",
+        "text": "fewer calls and chats by 2030 against 2023 (target)"
+      },
+      "why": "achieved against target; per account against absolute",
+      "source": [
+        "R6-06",
+        "R6-12",
+        "R6-03",
+        "R6-04"
+      ]
+    },
+    {
+      "n": 2,
+      "what": "Share handled by AI",
+      "us": {
+        "value": 32,
+        "bound": "about",
+        "show": "≈ 32%",
+        "status": "reported",
+        "text": "of contract customers' contacts start with an AI agent, Q2 2026"
+      },
+      "de": {
+        "value": null,
+        "absent": "no number",
+        "note": "The German side is a sentence, not a figure.",
+        "text": "“every customer interaction … handled by AI or even assisted”"
+      },
+      "why": "started by AI against touched by AI",
+      "source": [
+        "R6-06",
+        "R6-02",
+        "R6-03",
+        "R6-04"
+      ]
+    },
+    {
+      "n": 3,
+      "what": "Chatbot success",
+      "us": {
+        "value": 78,
+        "show": "78%",
+        "status": "reported",
+        "text": "of chats never reach a person, Q2 2026 ([[25%]] in Q2 2024)"
+      },
+      "de": {
+        "value": 0.3333,
+        "bound": "more",
+        "show": "> 1/3",
+        "status": "reported",
+        "text": "of requests resolved immediately, 2024"
+      },
+      "why": "not reaching a person is not the same as resolved",
+      "source": [
+        "R6-06",
+        "R6-02",
+        "R6-03",
+        "R6-04",
+        "R6-16",
+        "R6-12",
+        "R6-14",
+        "R6-09",
+        "R6-11",
+        "R6-01",
+        "R10-50"
+      ]
+    },
+    {
+      "n": 4,
+      "what": "Volume",
+      "us": {
+        "value": null,
+        "absent": "not published",
+        "note": "No absolute number is published for the United States.",
+        "text": "no absolute number published"
+      },
+      "de": {
+        "value": 2.6,
+        "show": "2.6 million",
+        "status": "reported",
+        "text": "calls deflected by bots, first half of 2026 (Europe column of the slide; another slide gives [[2.1 million]] for Germany)"
+      },
+      "why": "no American number, no German total",
+      "source": [
+        "R6-01",
+        "R6-03",
+        "R10-50"
+      ]
+    },
+    {
+      "n": 5,
+      "what": "Voice bot",
+      "us": {
+        "value": 21,
+        "show": "+21%",
+        "status": "reported",
+        "text": "more handled automatically than by the old phone menu"
+      },
+      "de": {
+        "value": null,
+        "absent": "none for Germany",
+        "note": "No German figure; the only figure is for Greece and one product.",
+        "text": "[[49%]] in Greece for one product"
+      },
+      "why": "other country, other measure",
+      "source": [
+        "R6-06",
+        "R6-02",
+        "R6-03",
+        "R6-04",
+        "R6-16",
+        "R6-12",
+        "R6-14",
+        "R6-09",
+        "R6-11",
+        "R6-01",
+        "R10-50"
+      ]
+    },
+    {
+      "n": 6,
+      "what": "Help for staff",
+      "partly": "partly comparable",
+      "us": {
+        "value": 74,
+        "show": "74%",
+        "status": "reported",
+        "text": "of interactions use the assistant; satisfaction up [[12%]] where used"
+      },
+      "de": {
+        "value": 12000,
+        "bound": "more",
+        "show": "> 12,000",
+        "status": "reported",
+        "text": "staff on one desktop; calls [[7%]] shorter"
+      },
+      "why": "both assist people; different measures",
+      "source": [
+        "R6-06",
+        "R6-02",
+        "R6-03",
+        "R6-04",
+        "R6-16",
+        "R6-12",
+        "R6-14",
+        "R6-09",
+        "R6-11",
+        "R6-01",
+        "R10-50"
+      ]
+    },
+    {
+      "n": 7,
+      "what": "Done digitally",
+      "us": {
+        "value": 80,
+        "bound": "more",
+        "show": "> 80%",
+        "status": "reported",
+        "text": "of upgrades, Q3 2026"
+      },
+      "de": {
+        "value": 70,
+        "bound": "upto",
+        "show": "up to 70%",
+        "status": "target",
+        "text": "of tariff changes by 2030 (target)"
+      },
+      "why": "different transactions; achieved against target",
+      "source": [
+        "R6-14",
+        "R6-12",
+        "R6-03",
+        "R6-04"
+      ]
+    },
+    {
+      "n": 8,
+      "what": "Satisfaction",
+      "us": {
+        "value": 46,
+        "show": "46",
+        "status": "reported",
+        "text": "score (one survey)"
+      },
+      "de": {
+        "value": 67,
+        "bound": "more",
+        "show": "> 67",
+        "status": "reported",
+        "text": "score (another kind of score)"
+      },
+      "why": "two different scores",
+      "source": [
+        "R6-06",
+        "R6-02",
+        "R6-03",
+        "R6-04",
+        "R6-16",
+        "R6-12",
+        "R6-14",
+        "R6-09",
+        "R6-11",
+        "R6-01",
+        "R10-50"
+      ]
+    },
+    {
+      "n": 9,
+      "what": "Savings",
+      "us": {
+        "value": 3,
+        "bound": "about",
+        "show": "≈ $3 bn",
+        "status": "ahead",
+        "text": "of profit contribution by 2027 against 2025"
+      },
+      "de": {
+        "value": 2.5,
+        "bound": "about",
+        "show": "≈ €2.5 bn",
+        "status": "ahead",
+        "text": "gross by 2030 against 2023, whole group outside the US"
+      },
+      "why": "scope, measure and base year differ",
+      "source": [
+        "R6-06",
+        "R6-02",
+        "R6-03",
+        "R6-04",
+        "R6-16",
+        "R6-12",
+        "R6-14",
+        "R6-09",
+        "R6-11",
+        "R6-01",
+        "R10-50"
+      ]
+    },
+    {
+      "n": 10,
+      "what": "Cost of staff change",
+      "us": {
+        "value": 531,
+        "show": "$531 m",
+        "status": "reported",
+        "text": "of severance to September 2026"
+      },
+      "de": {
+        "value": null,
+        "absent": "not published",
+        "note": "No German figure is published.",
+        "text": ""
+      },
+      "why": "only one side is filed",
+      "source": [
+        "R6-09",
+        "R6-11"
+      ]
+    }
+  ]
+}
