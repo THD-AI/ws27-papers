@@ -2,11 +2,15 @@
 //
 //   node tools/read.mjs <slug>
 //
-// At 1440×900, 390×844 and 844×390 it scrolls through every scene in small
+// At 1440×900, 390×844 and 768×1024 it scrolls through every scene in small
 // steps and checks that
 //   - the figure is on screen whenever a passage of the scene is,
-//   - the active passage is on screen, and not the only one there,
+//   - two or three passages are in view while the figure is pinned,
+//   - the active passage is the one at the reading line, and on screen,
 //   - every passage becomes the active one, in order,
+//   - the figure's state moves forward with the scroll, without jumps, and a
+//     step is complete before the next one begins,
+//   - the figure rests about a third of a window after the last passage,
 //   - the place label does not stand twice (at the figure and in the text).
 // At 1440×900 and 390×844 it also scans the whole page for emptiness:
 //   - any gap of more than 6rem between consecutive blocks of the text,
@@ -33,56 +37,105 @@ const { server, port } = await startServer(join(ROOT, 'dist'));
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: true });
 const problems = [];
 
-// Runs in the page: walks through one scene and reports what a reader sees.
+// Runs in the page: walks through one scene in steps of 16 px and reports
+// what a reader sees. The rule (lib/article.js, updateScene): the figure is
+// pinned, the passages scroll past it about 45% of a window apart; the one
+// whose top has last passed the reading line is active; t runs with the
+// scroll from 0 to 1 over 65% of the way to the next passage, then rests.
 async function walkScene(index) {
   const frame = () => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
   const scene = document.querySelectorAll('.scene')[index];
   const passages = [...scene.querySelectorAll('.passage')];
-  const svgBox = () => scene.querySelector('.scene-stage svg')?.getBoundingClientRect();
+  const figure = scene.querySelector('.scene-stage [data-fig]');
+  const stageEl = scene.querySelector('.scene-stage');
+  const side = getComputedStyle(scene).display === 'grid';
   const vh = innerHeight;
+  // the words of a passage, not its box (the box includes the room after it)
+  const words = (p) => {
+    const first = p.firstElementChild.getBoundingClientRect();
+    const lastR = p.lastElementChild.getBoundingClientRect();
+    return { top: first.top, bottom: lastR.bottom, height: lastR.bottom - first.top };
+  };
   const start = scene.getBoundingClientRect().top + scrollY - vh;
   const end = scene.getBoundingClientRect().bottom + scrollY;
   const found = [];
   const order = [];
   const shots = {};
-  for (let y = Math.max(0, start); y <= end; y += 24) {
+  const counts = [];
+  let prev = null;                 // the figure state at the last position
+  let restFrom = null;             // where the last passage became active
+  let pinnedUntil = null;          // the last position at which the figure was pinned
+  const stickyTop = parseFloat(getComputedStyle(stageEl).top) || 0;
+
+  for (let y = Math.max(0, start); y <= end; y += 16) {
     scrollTo(0, y);
     await frame();
-    const stage = scene.querySelector('.scene-stage').getBoundingClientRect();
-    const onScreen = (r, from = 0) => r.bottom > from + 8 && r.top < vh - 8;
-    const floor = getComputedStyle(scene).display === 'grid' ? 0 : Math.max(0, stage.bottom);   // text under a figure pinned on top is not seen
-    const seen = passages.filter((p) => onScreen(p.getBoundingClientRect(), floor));
+    const stage = stageEl.getBoundingClientRect();
+    const floor = side ? 0 : Math.max(0, stage.bottom);          // text under a figure pinned on top is not seen
+    const line = side ? vh * 0.4 : floor + (vh - floor) * 0.4;
+    const seen = passages.filter((p) => { const w = words(p); return w.bottom > floor + 6 && w.top < vh - 6; });
     if (!seen.length) continue;
-    // while the scene leaves, the text after it is on screen and the figure goes with the scene
+    const box = scene.getBoundingClientRect();
+    const pinned = Math.abs(stage.top - stickyTop) < 2 && box.top <= stickyTop + 1;
+    if (pinned) pinnedUntil = y;
     const leaving = scene.querySelector('.scene-text').getBoundingClientRect().bottom < vh;
-    const fig = svgBox();
-    // as much of the drawing in the window as of the text (up to 120 px);
-    // 70 px are allowed for the label and the drawing's own heading
-    const textSeen = Math.min(vh, Math.max(...seen.map((p) => p.getBoundingClientRect().bottom))) - Math.max(floor, Math.min(...seen.map((p) => p.getBoundingClientRect().top)));
-    if (!leaving && (!fig || Math.min(fig.bottom, vh) - Math.max(fig.top, 0) < Math.min(120, textSeen - 70))) found.push(`y ${y}: a passage is on screen without the figure`);
+
+    const svg = figure.querySelector('svg')?.getBoundingClientRect();
+    const textSeen = Math.min(vh, Math.max(...seen.map((p) => words(p).bottom))) - Math.max(floor, Math.min(...seen.map((p) => words(p).top)));
+    if (!leaving && (!svg || Math.min(svg.bottom, vh) - Math.max(svg.top, 0) < Math.min(120, textSeen - 70))) found.push(`y ${y}: a passage is on screen without the figure`);
+
     const k = passages.findIndex((p) => p.classList.contains('is-active'));
     if (order[order.length - 1] !== k) { order.push(k); shots[k] = y; }
-    const fullySeen = seen.length === passages.length;
-    if (k >= 0 && !onScreen(passages[k].getBoundingClientRect(), floor)) found.push(`y ${y}: the active passage ${k} is not on screen`);
-    // while the scene comes in or leaves, the text around it is on screen too
-    const entering = scene.getBoundingClientRect().top > 0 || leaving;
-    if (seen.length < 2 && passages.length > 1 && !fullySeen && !entering) {
-      const r = seen[0].getBoundingClientRect();
-      // one long passage may fill the band of text; it must not be a short one alone
-      if (r.height < (vh - floor) * 0.5) found.push(`y ${y}: passage alone on the screen`);
+    if (k === passages.length - 1 && restFrom === null) restFrom = y;
+
+    // the active passage is the one at the reading line
+    let want = 0;
+    passages.forEach((p, i) => { if (p.getBoundingClientRect().top <= line + 0.5) want = i; });
+    // a passage whose words have left the window hands over to the next one
+    while (want < passages.length - 1 && words(passages[want]).bottom < floor + 12) want++;
+    if (k !== want) found.push(`y ${y}: passage ${k} is active, passage ${want} is at the reading line`);
+    const wk = words(passages[k]);
+    if (pinned && !(wk.bottom > floor + 6 && wk.top < vh - 6)) found.push(`y ${y}: the active passage ${k} is not on screen`);
+
+    // two or three passages in view while the figure is pinned (a long one may stand with one neighbour less)
+    if (pinned && !leaving) {
+      counts.push(seen.length);
+      const longOne = seen.some((p) => words(p).height > (vh - floor) * 0.45);
+      // the last passage rests alone at the line before the figure is let go
+      if (seen.length < 2 && passages.length > 1 && !longOne && k !== passages.length - 1) found.push(`y ${y}: only ${seen.length} passage in view`);
+      if (seen.length > 4) found.push(`y ${y}: ${seen.length} passages in view`);
     }
+
+    // the figure moves forward with the scroll, and a step is complete before the next begins
+    const [step, t] = (figure.dataset.shown || '0:0').split(':').map(Number);
+    if (prev) {
+      if (step < prev.step || (step === prev.step && t < prev.t - 0.001)) found.push(`y ${y}: the figure went back from ${prev.step}:${prev.t} to ${step}:${t}`);
+      if (step > prev.step && prev.t < 0.999) found.push(`y ${y}: step ${prev.step} ended at t ${prev.t}`);
+      if (step === prev.step && t - prev.t > 0.25) found.push(`y ${y}: t jumped from ${prev.t} to ${t} in 16 px`);
+    }
+    prev = { step, t };
+
     const label = scene.querySelector('.fig-where');
     if (label && label.textContent && getComputedStyle(label).visibility !== 'hidden') {
-      const twice = [...scene.querySelectorAll('.passage .where')].some((el) => el.textContent.trim() === label.textContent && onScreen(el.getBoundingClientRect(), floor));
+      const twice = [...scene.querySelectorAll('.passage .where')].some((el) => { const q = el.getBoundingClientRect(); return el.textContent.trim() === label.textContent && q.bottom > floor + 6 && q.top < vh - 6; });
       if (twice) found.push(`y ${y}: the place "${label.textContent}" stands twice`);
     }
   }
   const expected = passages.map((_, i) => i).join(',');
   if (order.join(',') !== expected) found.push(`passages became active in the order ${order.join(',')}, expected ${expected}`);
+  // the figure stays for about a third of a window after the last passage has reached the line
+  const rest = restFrom !== null && pinnedUntil !== null ? pinnedUntil - restFrom : 0;
+  if (side && rest < vh * 0.28) found.push(`the figure rests only ${Math.round(rest)} px after the last passage reached the line`);
   // keep the first report of each kind
   const kinds = new Map();
-  for (const f of found) { const kind = f.replace(/^y \d+: /, '').replace(/\d+/g, 'n'); if (!kinds.has(kind)) kinds.set(kind, f); }
-  return { id: scene.dataset.scene, problems: [...kinds.values()], shots };
+  for (const f of found) { const kind = f.replace(/^y [\d.]+: /, '').replace(/[\d.]+/g, 'n'); if (!kinds.has(kind)) kinds.set(kind, f); }
+  const sorted = [...counts].sort((x, z) => x - z);
+  return {
+    id: scene.dataset.scene, problems: [...kinds.values()], shots,
+    inView: sorted.length ? `${sorted[0]} to ${sorted[sorted.length - 1]}, mostly ${sorted[Math.floor(sorted.length / 2)]}` : '–',
+    rest: Math.round(rest),
+    length: Math.round(scene.getBoundingClientRect().height / vh * 10) / 10,
+  };
 }
 
 // Runs in the page: gaps of more than 6rem between consecutive blocks.
@@ -161,7 +214,7 @@ async function emptyScreens(page, helper, w, h) {
 const helper = await browser.newPage();
 await helper.setContent('<!doctype html><body></body>');
 
-for (const [w, h] of [[1440, 900], [390, 844], [844, 390]]) {
+for (const [w, h] of [[1440, 900], [390, 844], [768, 1024], [844, 390]]) {
   const page = await browser.newPage();
   await page.setViewport({ width: w, height: h, isMobile: w < 1000, hasTouch: w < 1000 });
   page.on('pageerror', (e) => problems.push(`${w}x${h}: ${e.message}`));
@@ -177,13 +230,15 @@ for (const [w, h] of [[1440, 900], [390, 844], [844, 390]]) {
   for (let i = 0; i < count && !seq; i++) {
     const res = await page.evaluate(walkScene, i);
     for (const p of res.problems) problems.push(`${tag} scene ${res.id}: ${p}`);
-    console.log(`${tag} scene ${res.id}: ${res.problems.length ? res.problems.length + ' problems' : 'reads in order, figure and passages together'}`);
+    console.log(`${tag} scene ${res.id}: ${res.length} windows long, ${res.inView} passages in view, figure rests ${res.rest} px at the end – ${res.problems.length ? res.problems.length + ' problems' : 'ok'}`);
     // three consecutive passages, each a little after it became the active one
-    for (const k of [0, 1, 2, 3]) {
+    for (const k of [1, 2]) {
       if (res.shots[k] === undefined) continue;
-      await page.evaluate((y) => scrollTo(0, y + 60), res.shots[k]);
-      await wait();
-      await page.screenshot({ path: join(out, `${tag}-${res.id}-passage${k}.png`) });
+      for (const [name, add] of [['early', 50], ['late', 260]]) {
+        await page.evaluate((y) => scrollTo(0, y), res.shots[k] + add);
+        await wait();
+        await page.screenshot({ path: join(out, `${tag}-${res.id}-passage${k}-${name}.png`) });
+      }
     }
   }
   if (seq) {

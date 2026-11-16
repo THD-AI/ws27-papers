@@ -388,6 +388,8 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
    the text runs down its left side. */
 @media screen and (min-width: 700px) {
   .margin-still { float: right; width: 11rem; margin: 0.3rem 0 0.8rem 1.4rem; }
+  /* set by article.js where the text beside the still would be too short */
+  .margin-still.as-block { float: none; width: 12rem; margin: 0.2rem 0 1.2rem; }
 }
 
 @media screen and (min-width: 1180px) {
@@ -458,11 +460,14 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 /* 2d. Screen: scenes                                                       */
 /* ------------------------------------------------------------------------ */
 
-/* The passages of a scene are one run of text: normal paragraph spacing and
-   a little more between passages. The one at the reading line is in full
-   ink, the others step back but stay readable. */
+/* A scene is told by scrolling: the figure is pinned and the passages scroll
+   past it. From the top of one passage to the top of the next is about 45%
+   of the window (--pitch; a long passage takes its own height), so two or
+   three passages are on screen together. The one at the reading line is in
+   full ink, its neighbours step back but stay readable. */
 @media screen and (min-height: 560px) {
-  .passage { margin-bottom: 1.5rem; }
+  .scene { --pitch: clamp(15rem, 45vh, 26rem); }
+  .passage { min-height: var(--pitch); padding-bottom: 1.5rem; }
   .passage > :last-child { margin-bottom: 0; }
   .scene.is-live .passage { opacity: 0.55; transition: opacity 0.25s ease; }
   .scene.is-live .passage.is-active { opacity: 1; }
@@ -488,17 +493,16 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
     display: flex; justify-content: center;
   }
   .scene-stage .fig { max-width: 100%; }
-  .scene-text { grid-column: 1; grid-row: 1; }
-  .scene-text { position: sticky; top: var(--text-top, 1rem); }
-  /* the label's line is kept above the drawing, so the text starts level with it */
-  .scene-text { padding-top: 0; }
+  /* in the normal flow: the passages scroll past the pinned figure; the room
+     after the last one is set by article.js (sizeScenes) */
+  .scene-text { grid-column: 1; grid-row: 1; padding-top: 0; }
   .scene-caption { display: none; }
 }
 
 /* Pinned on top: the figure across the page, the passages close together
    under it. article.js keeps the figure short enough for four lines of text. */
 @media screen and (max-width: 999.98px) and (min-height: 560px) {
-  .scene { max-width: none !important; margin: 0 calc(-1 * var(--gutter)) 0 calc(-1 * var(--left)); }
+  .scene { --pitch: clamp(13rem, 35svh, 22rem); max-width: none !important; margin: 0 calc(-1 * var(--gutter)) 0 calc(-1 * var(--left)); }
   .scene-stage {
     position: sticky; top: 0; z-index: 3;
     padding: 0.45rem 0 0.45rem;
