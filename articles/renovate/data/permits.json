@@ -1,0 +1,50 @@
+{
+  "id": "permits",
+  "headline": "Checks before the work, or after it",
+  "reading": "Two construction schedules on one time axis. United States: build, move in, inspections afterwards. Germany: a permit first, then build, then move in. A pre-approved standard design keeps the German permit short; a building beyond the standard still needs a full permit.",
+  "axis": { "time": "time", "start": "start" },
+  "words": {
+    "permit": "permit",
+    "build": "build",
+    "move": "move in",
+    "inspections": "inspections afterwards",
+    "stamp": ["STANDARD", "DESIGN"],
+    "beyond": "outside the standard design: the full permit, as before"
+  },
+  "schedule": {
+    "note": "Schematic lengths in arbitrary units on one shared axis: the order and the relative length matter, no duration is measured. The building work has the same length on both sides. The long permit stands for the period before 2021 (about six weeks per system, R11-12) and for a system beyond the standing agreement (R11-12).",
+    "span": 14,
+    "us": { "build": [0, 4], "move": [4, 14], "inspections": [7.5, 11] },
+    "de": {
+      "permit": [0, 6],
+      "build": [6, 10],
+      "move": [10, 14],
+      "checks": [1.2, 3, 4.8],
+      "standard": { "permit": [0, 3.5], "build": [3.5, 7.5], "move": [7.5, 14] }
+    }
+  },
+  "rows": {
+    "us": { "label": "United States", "source": ["R6-08", "R6-06"] },
+    "de": { "label": "Germany", "source": "R11-05" }
+  },
+  "notes": [
+    {
+      "step": 0,
+      "lead": "United States, T-Mobile (Telekom's US subsidiary).",
+      "text": "No works council; for this kind of decision the checks come afterwards, as court cases and state rules.",
+      "source": ["R6-01", "R11-36", "R11-37", "R11-41", "R11-43"]
+    },
+    {
+      "step": 1,
+      "lead": "Germany, Telekom.",
+      "text": "The permit: the works council is told while planning, has to agree if the system can monitor staff, and a privacy review approves it. Until 2021 about six weeks per system.",
+      "source": ["R11-05", "R11-07", "R11-08", "R11-21", "R11-12"]
+    },
+    {
+      "step": 2,
+      "lead": "Standard design.",
+      "text": "Since 2021 a standing agreement approves IT systems inside fixed rules. A system beyond them needs its own agreement.",
+      "source": "R11-12"
+    }
+  ]
+}

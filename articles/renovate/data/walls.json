@@ -1,0 +1,39 @@
+{
+  "id": "walls",
+  "reading": "Three walls, and the same new cable put into each. Timber frame, as in most new US homes: pulled through holes drilled in the studs, behind the board; quick. Plastered brick, as in most German homes, repainted: a duct screwed onto the surface and painted over; quick, but it stays on show. Plastered brick, renovated: a channel cut, the cable laid and plastered over; slow, and the channel stays as a scar.",
+  "sourceNote": "No numbers are drawn; no hours or days are given. 'Most new US homes': 94% of new single-family homes completed in 2025 had wood frames (NAHB-2026, from the Census Survey of Construction). 'Most German homes': about two in three new homes approved in 2020 were of masonry (DESTATIS-2021); hidden cables in masonry run in fixed installation zones, in channels cut and plastered (BAUNETZ-DIN18015). The rest describes general building practice; the analogy is the owner's (transcript 2026-11-16-020).",
+  "cable": {
+    "label": "the same new cable",
+    "again": "the same cable",
+    "source": "analogy"
+  },
+  "panels": [
+    {
+      "kind": "timber",
+      "heading": "Timber frame",
+      "where": "most new US homes",
+      "sub": "board on studs, hollow",
+      "note": "pulled through",
+      "effort": "quick",
+      "source": "NAHB-2026"
+    },
+    {
+      "kind": "surface",
+      "heading": "Brick, repainted",
+      "where": "most German homes",
+      "sub": "on plastered brick: a duct, painted over",
+      "note": "on the surface",
+      "effort": "quick, but stays on show",
+      "source": "DESTATIS-2021 BAUNETZ-DIN18015"
+    },
+    {
+      "kind": "chase",
+      "heading": "Brick, renovated",
+      "where": "most German homes",
+      "sub": "in plastered brick: a channel, plastered",
+      "note": "cut, laid, plastered",
+      "effort": "slow: cut, dust, plaster",
+      "source": "DESTATIS-2021 BAUNETZ-DIN18015"
+    }
+  ]
+}

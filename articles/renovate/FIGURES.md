@@ -4,6 +4,19 @@ Read `SPEC.md` first (figure contract, design system). Each figure below says wh
 
 Honesty rules that override looks: where a value is not published, draw the absence (an empty slot with an italic note "not published"), never an estimate. Never connect two measured points with a line that suggests the path between them. Company-reported figures carry a small mono tag `company-reported`.
 
+## Draft 5 (16 November 2026, evening): the building analogy
+
+Alexander's rule for this article (dotUni transcripts `2026-11-16-019`, `-020`): every hard idea is explained with an everyday analogy, and the main one is his father's, a civil engineer: American houses are timber frames, so new wiring is pulled through hollow walls; German houses are mostly masonry, so a new cable means a channel cut and plastered. **The analogy is drawn in its own world. No AI agents, robots, screens or office workers inside it.** The plan with the analogy dictionary and the storyboard is in arudaev/dotUni `docs/papers/innovation/plan-restart.md`.
+
+Retired in draft 5: `path` (its point did not come across; replaced by `permits`) and the margin scene `house` (distracting). Their files stay for reference; the text no longer uses them. The five house directions of the same day (`house-a` to `house-e`, branch `feat/renovate-house-directions`) were all rejected.
+
+New in draft 5:
+
+- **`walls`** (figure, column, 3 steps, the hero): the same new cable added to a timber stud wall and to a brick wall. Five-second reading: "the same job is quick in one wall and building work in the other". Sources: NAHB-2026, DESTATIS-2021, BAUNETZ-DIN18015.
+- **`terms`** (figure, column, 2 steps): four everyday pictures for the parts of an AI system: apprentice (language model), plans archive (retrieval), keys (an agent's permissions), wiring (connections). Five-second reading: "what people picture as AI is only the apprentice".
+- **`permits`** (figure, column, 3 steps): one decision as two construction schedules on one time axis: Germany checks before the work, the US after; a pre-approved standard design (Telekom's 2021 framework agreement) keeps the German permit short. Facts and ids from `data/path.json`.
+- **`roadmap`** (figure, wide, 5 steps): the renovation of an occupied building in order: survey, foundations, wiring with keys in steps, fit-out with the residents, inspection while building; "the residents stay" (no dismissals for business reasons until the end of 2028) under all phases.
+
 ## `numbers` (scene, 5 steps): what the 40% and the 55% are
 
 Five-second reading, steps 0 to 2: "the announcement said 40 of 100 contacts; the company's own slide says 32, and those are contacts that start with the software, not ones it finished". Steps 3 and 4: "a customer account contacted care 7 times a year in 2021 and about 3 times in 2026; the software agents arrived late in that fall".

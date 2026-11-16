@@ -1,225 +1,168 @@
 ---
 title: Renovate, don't repaint
-deck: Deutsche Telekom points to its American subsidiary as proof that software agents can run customer service. I checked what that proof is made of, and which part of it a German company can have.
+deck: An AI agent is not Jarvis. It is software that needs cables into a company's systems, and cables only go where the building lets them. T-Mobile rebuilt its walls before its agents went in. Deutsche Telekom in Europe has to do the same, with the people still inside.
 author: Alexander Rudaev
 context: Innovation Management for AI · TH Deggendorf · winter semester 2026/27
 status: Draft for review, 16 November 2026
 accent: renovate
 ---
 
-:::margin house 0
+## The short version
 
-## What I wanted to know
+On 5 October 2026 Deutsche Telekom told investors that software agents now do a large part of customer service at T-Mobile, its American subsidiary, and that it wants the same in Europe by 2030. {{R6-01 R6-03}}
 
-On 5 October 2026 Deutsche Telekom told investors that software agents now do a large part of its customer service in the United States, and that it wants the same in Europe by 2030. A software agent here means a program that does not only answer a customer but carries out a step in the customer's account, such as changing a tariff. When I write "service staff" I mean the people. {{R6-01 R6-03}}
+My argument is that this result cannot be bought and screwed onto a company. It depends on the building underneath. In America 94% of new family homes have timber frames: a new cable is pulled through the hollow wall behind the board. In Germany about two in three new homes are of brick or other masonry: a new cable runs in a channel cut into the wall and plastered over. A brick house is solid and built to stand. But once it cracks, or needs new pipes, cables or a network, the work is heavy and slow. A timber house goes up fast, and its walls open easily. {{NAHB-2026 DESTATIS-2021 BAUNETZ-DIN18015}}
 
-I started with an assumption: a European company cannot take over such a result by buying the same software, because the result rests on work underneath it. I compared it to a house. You renew the foundations and the wiring before you paint. This text reports what I found when I checked that assumption against Telekom's own documents, and where the assumption was wrong.
+:::figure walls wide
+The same new cable in three walls. In a timber frame it is pulled through behind the board. In brick it can be screwed onto the surface in a duct and painted over, which works but stays exposed. Or a channel is cut, the cable laid and plastered: the renovation. In this article the cable stands for a connection between software systems.
+:::
 
-## 1. The announcement
+T-Mobile was not born timber. It opened its walls and rebuilt its systems before its agents went in. Telekom's systems in Europe are brick, and Telekom says so itself. In Germany three things make the renovation harder than in America: education, the law, and dependence on American technology. And Telekom cannot take the people out of the building while it works, so the agents have to help the staff who stay. The last section gives the order in which I would renovate.
 
-@where Deutsche Telekom's release · about the United States
-T-Mobile US is a subsidiary of Deutsche Telekom. Deutsche Telekom's release of 5 October says that at T-Mobile, AI agents "handle 40 percent of customer contacts" and that service calls fell by 55%. The same release reports 2.6 million calls in the first half of 2026 that Frag Magenta, Telekom's chatbot and phone bot, took off the hotline. That is about 14,000 a day. The release gives no total to set it against, and another Telekom slide gives 2.1 million for Germany alone; how the two counts relate is not explained. {{R6-01 R6-03 R10-50}}
+## 1. An AI system, in building terms
 
-The release does not say why the two markets differ. It presents the American result as the model.
+When people hear "AI agent" they picture Jarvis from Iron Man: one mind that understands everything and does what it is told. What a company actually builds looks more like the equipment of a building site.
 
-## 2. What the American numbers measure
+:::figure terms column
+Four everyday objects for four parts of an AI system. The first is what most people picture as AI. A working system needs the other three.
+:::
+
+The language model is the handbook: it answers fluently from what it once read, and sometimes wrongly. Retrieval is the plans archive: the system looks up the company's own documents first, so the answer is only as good as the archive. An AI agent is software that has been given keys: it may act, not only answer, but only where its keys fit. And the cables connect it to the billing system, the customer record and the network. The handbook can be bought. The archive, the keys and the cables are the building.
+
+## 2. The American result
 
 @where United States · T-Mobile US
-I compared the release with the slides T-Mobile US showed at Deutsche Telekom's investor day on the same date, and with what T-Mobile filed with the American securities regulator. All of these are the company's own figures. None of the service figures is audited. {{R6-02 R6-06 R6-09}}
+T-Mobile's figures, shown at Deutsche Telekom's investor day and in its filings with the American securities regulator, are the company's own and are not audited. They are still the best public evidence of what agents do in a large customer service. {{R6-02 R6-06 R6-09}}
 
 :::scene numbers
 
 @caption What the two headline figures count. Left: of 100 contacts, the release speaks of 40 without saying whose, and T-Mobile's own slide counts 32 that start with the software. Right: contacts per customer account in a year, at the two dates that are public.
 
 @step 0
-**The 40%.** I could not find it anywhere in T-Mobile's material. {{R6-01 R6-06}}
+**The 40%.** Deutsche Telekom's release says AI agents at T-Mobile "handle 40 percent of customer contacts". I could not find that figure in T-Mobile's own material. It matters because the American result is the model Telekom sets for Europe, so it should be the figure T-Mobile actually measures. {{R6-01 R6-06}}
 
 @step 1
 T-Mobile's slide gives 32%, and says what it counts: contacts from contract customers that were "served by an AI agent" in the second quarter of 2026. {{R6-06}}
 
 @step 2
-T-Mobile's head of IT described these as calls where the customer gets the software "from the beginning". The figure counts calls that start with the software. How many of them the software finished is not published. {{R6-02}}
+These are calls where the customer meets the software "from the beginning", in the words of T-Mobile's head of IT. How many of them the software finished is not published. {{R6-02}}
 
 @step 3
-**The 55%.** It comes from a series T-Mobile has reported since 2021: how often an average customer account contacts customer care in a year. At the end of 2021 that was 7.0 times, about once every seven weeks. In mid-2026 it was 3.1 times, about once every four months. Only these two points are public. {{R6-06 R6-12}}
+**The 55%.** It comes from a series T-Mobile has reported since 2021: how often an average customer account contacts customer care in a year. At the end of 2021 that was 7.0 times, about once every seven weeks. In mid-2026 it was 3.1 times, about once every four months. {{R6-06 R6-12}}
 
 @step 4
-The agent platform was announced in September 2024, almost three years after the series begins. T-Mobile itself names other causes: problems removed before customers call, and customers doing things in the app. I cannot say how much of the fall belongs to the agents, and T-Mobile does not say either. {{R6-08 R6-14}}
+The agent platform was announced in September 2024, almost three years into that series. T-Mobile names other causes too: problems fixed before customers call, and customers doing things in the app. The fall belongs to the whole rebuilt house, not to the agents alone. {{R6-08 R6-14}}
 
 :::
 
 @where United States and Germany · side by side
-**The comparison.** I put every figure for the US next to the nearest figure for Germany and got ten pairs. In none of them do the two sides fully count the same thing over the same period. {{R6-06 R6-16 R6-03}}
+**The comparison.** Telekom's German figures and T-Mobile's American ones measure different things, so nobody outside the company can say how far Germany is behind. I put every American figure next to the nearest German one and got ten pairs; in none of them do the two sides fully count the same thing over the same period. What the figures do show is how differently the two businesses are built. {{R6-06 R6-16 R6-03}}
 
 :::figure pairs wide
 Ten pairs of figures, the United States on the left and Germany on the right. A pair could be compared if both sides counted the same thing, in the same period, in the same way. None does fully; one does in part.
 :::
 
-So from public figures I cannot tell by how much Germany is behind, or whether it is.
-
-:::margin house 1
-
-## 3. What T-Mobile says it did before the agents
+## 3. Timber and brick
 
 @where United States · T-Mobile US
-T-Mobile's managers describe what they changed. This is their account, given to investors. {{R6-02}}
+**T-Mobile opened its walls.** Its head of IT told investors that the company had relied on "a largely outsourced, third-party workforce" working on systems owned by suppliers, and replaced it with its own engineers on its own systems. It built one system that holds what the company knows about each customer, and the agents read from it. A customer calling from a T-Mobile phone is recognised automatically, so the agent knows whose contract it may touch. The work cost money: 278 million dollars were written off on a billing system being replaced. Only then were the agents connected, and the share of chat conversations that never reached a person rose from about a quarter in mid-2024 to 78% in mid-2026. {{R6-02 R6-06 R6-09}}
 
-- **Software.** Its head of IT said the company had "a largely outsourced, third-party workforce" working on systems owned by suppliers, and replaced it with its own engineers on its own systems. {{R6-02}}
-- **Customer data.** It built one system that holds what the company knows about each customer. The agents read from it. {{R6-06 R6-02}}
-- **Who is calling.** A customer who calls from a T-Mobile phone is recognised automatically. An agent that may change a contract has to know whose contract it is. {{R6-02}}
-- **One app.** About 32 million people use it every month, and more than 80% of phone upgrades are done digitally. {{R6-14 R6-12}}
-- **Cost.** Its filings show 278 million dollars written off on a billing system that was being replaced, which means money already spent on it was booked as lost, and 531 million dollars of severance in a programme it calls workforce transformation. {{R6-09 R6-11}}
+@where Germany and Europe · Deutsche Telekom
+**Telekom's house is brick, and there are many of them.** In Germany Telekom already runs Frag Magenta, a chat and phone assistant, for more than 380 kinds of request. After login it can do a few things itself, such as show a bill or change bank details; otherwise it hands the customer to a member of staff with a summary. {{R6-16 R6-02}}
 
-All of these steps concern the systems around the model. In the picture of the house they are the foundations and the wiring. On the order of the work I have one statement and two dates: T-Mobile's head of IT says the company first had to replace its outsourced IT, and the costs in its filings fall in 2025 and 2026.
+Across its European countries, Telekom's own slides say, customers prove who they are in 14 different ways, to be cut to three, and customer data sits in separate systems that still have to be made usable for agents. It is a row of brick houses, each wired differently. Above that list the slide states a principle: "Simplify before automating". {{R6-05}}
 
-:::margin house 2
+German firms in general say the same about their walls. Of those that considered AI and decided against it, 45% named systems that do not fit together and 44% problems with their data. {{R7-06}}
 
-## 4. Telekom is renovating too
+## 4. Paint: replacing the people
 
-@where Germany · Deutsche Telekom
-Telekom in Germany already runs Frag Magenta for more than 380 kinds of request. After login it can do a few things itself, such as show a bill or change bank details. Otherwise it hands the chat to a member of the service staff with a summary. The staff have their own program on screen during a call. It listens to the call and writes the record, 50,000 times a day. {{R6-16 R6-02}}
+Painting is cheaper and faster than renovating, and from the street it looks the same for a while. The painted version of the American result is to keep the old walls, put an agent in front of the customers and take the people out.
 
-Telekom's slides for Europe also list what is unfinished. Customers prove who they are in 14 different ways across its countries, to be cut to 3. Customer data sits in separate systems that still have to be made usable for agents. The slide states the principle "Simplify before automating". {{R6-05}}
+Klarna, a Swedish payment company, tried it. In February 2024 it said its assistant did work that, by its own estimate, equalled 700 service agents. In May 2025 its chief executive said: "Really, investing in the quality of human support is the way of the future for us", and the company began hiring service staff again. {{R12-14 R12-15}}
 
-This is where my assumption needed its first correction. I had expected to find a company painting over old walls. Telekom's own slides describe part of the same renovation, as planned work: the ways customers prove who they are, and the data. They do not mention bringing software back in-house or replacing billing, as T-Mobile did. The difference I found is in timing. T-Mobile reports its work as done and its result as measured. Telekom sets its result targets for 2030, half as many calls and chats as in 2023 and every call answered first by software, and gives no date for finishing the work underneath. {{R6-03 R6-04}}
+There is an older test of this. After the war, Italian firms whose managers were trained inside American companies did better for at least fifteen years. Firms that only received American machines gained for a while, and then the gain levelled off. {{R12-34}}
 
-:::margin house 3
+## 5. Renovating an occupied house: helping the people
 
-## 5. Less deep, and dependent
-
-The rest of my assumption was that European companies adjust more slowly and end up relying on American technology. For that I looked beyond Telekom.
-
-@where European Union and Germany
-**Less deep.** The European Commission's own report for 2026 says 20% of firms in the Union with ten or more staff used AI in 2025, and that AI uptake is "far from being on track" for the 2030 target of 75% of firms using AI, cloud or data analytics. A survey by the European Investment Bank asks firms in the EU and the US the same questions and counts differently: it weights firms by their size in the economy, so its shares are higher. In it, about as many European firms as American ones use AI somewhere, 68% against 72%. Fewer use it in two or more parts of the business, 44% against 58%, and fewer in customer service, 22% against 29%. In 2025 private investment in AI was 286 billion dollars in the United States and 21 billion in Europe, about 14 times as much in the United States. None of these figures measures speed. They show how widely AI is used and how much is spent on it. {{R7-14 R10-01 R1-03}}
-
-**Dependent.** In a Bitkom survey of 605 German firms with 20 or more staff, published in November 2025, 51% called themselves strongly dependent on the United States for the digital technology they import, up from 41% in January of that year. European providers hold about 15% of Europe's own cloud market; in 2017 it was 29%. The same holds for Telekom's own tools. Its internal assistant runs partly on OpenAI models, it is rolling out 120,000 OpenAI licences, and the reference data platform on its slide uses Google's BigQuery, in public and sovereign cloud. In 2024 Telekom named GPT-4 for one Frag Magenta example; which model runs it today is not disclosed. Telekom describes its European platform as able to use different models. {{B-2025 SRG-2025 R6-17 R6-02 R6-05 R6-04 R10-52}}
-
-**The law.** German firms that considered AI but do not use it were asked why. Unclear legal consequences (62%) and data protection (60%) come second and third, behind missing knowledge (72%). {{R7-06}}
-
-:::figure obstacles column
-Reasons German firms gave in 2025 for not using AI after considering it. Several answers were possible; the six most named are shown. Source: Federal Statistical Office.
-:::
-
-So firms do name the law as an obstacle, and two rules of the EU AI Act apply to Telekom directly. Since 2 August 2026 people must be told that they are dealing with an AI system, unless that is obvious. From 2 December 2027 a tool used to monitor or evaluate employees can count as high risk; systems placed on the market before then are covered only if their design changes significantly. What I could not find is a case where a rule stopped or delayed Telekom's service systems. The next section says why that is hard to know from outside. {{R9-04 R9-05 R4-01}}
-
-:::margin house 4
-
-## 6. The path of one decision
-
-I followed one decision on both sides: to let a software agent act on customer accounts and work next to service staff. I call each point where someone other than management has to be informed, has to agree, or has to approve a gate.
-
-:::scene path
-
-@caption One decision on both sides. In the United States it reaches launch without a gate, and the checks follow. In Germany it passes gates before launch, and dismissal as a way to collect the saving is shut until the end of 2028.
-
-@step 0
-@where Both companies
-The same decision starts on both sides.
-
-@step 1
-@where United States · T-Mobile US
-**United States.** I found no gate before launch. T-Mobile announced its agent platform in September 2024, and about 21 months later a third of contract customers' calls started with it. A works council in the German sense does not exist there. T-Mobile had set up a staff body of its own; the American labour board found that the company dominated it and ordered it dissolved, and a federal appeals court upheld that in January 2024. {{R6-08 R6-06 R11-36 R11-37}}
-
-@step 2
-One telecoms rule applies before any call is answered: a caller must be authenticated before call details are disclosed, and T-Mobile meets it by recognising its own phones. Other checks come after launch, as lawsuits and state rules. {{R11-40 R11-41 R11-43}}
-
-@step 3
-@where Germany · Deutsche Telekom
-**Germany.** The research lists eleven gates in Germany; the last, on jobs, applies after launch. The works council, elected by the staff, has to be told while the system is still being planned; since 2021 the law names AI expressly. {{R11-05}}
-
-@step 4
-If a system is suited to monitoring staff, the works council has to agree to it. If the two sides do not agree, a conciliation committee with a neutral chair takes a binding decision. The law says "intended to monitor"; the Federal Labour Court holds that being suited to it is enough, where no law or collective agreement already settles the matter. A screen that listens to calls would very likely be covered. {{R11-07 R11-08}}
-
-@step 5
-Telekom's own privacy and security experts have to approve a system before it runs. Separately, the data protection regulation requires an impact assessment before risky processing and limits decisions made by software alone. The AI Act adds the duties from section 5. {{R11-21 R11-22 R9-04}}
-
-@step 6
-The last gate is about jobs. On 28 May 2026 Telekom and the union ver.di agreed that there will be no dismissals for business reasons until 31 December 2028, for about 60,000 employees. It was subject to the union's approval, whose outcome I did not find. It is a collective agreement and covers only dismissals for business reasons. {{R11-14}}
-
-@step 7
-**Did the gates cost time?** Before 2021 they did. Telekom's works council approved IT systems one by one, with six weeks for each and sometimes more than a hundred on the table in one meeting. At another German company approvals took at least twelve months for complex systems before the procedure was changed, six to eight afterwards, and three for simple ones. {{R11-12 R11-30}}
-
-@step 8
-**What Telekom changed.** Since a trial that began in November 2018 and became permanent in March 2021, a standing agreement sets rules once for IT systems in general: no control of individual performance, evaluations only for groups, logs only for security. A department fills in a profile of its system, the works council checks it, and if both sides see nothing to object to, the system needs no separate resolution. My source for this is a foundation close to the unions. {{R11-12}}
-
-:::
-
-A system that goes beyond those rules still needs its own agreement, and a screen that listens to calls plausibly goes beyond them. Whether the service systems went through this procedure, and how long it took, is not public. I can say that the gates exist and that they used to cost weeks per system. I cannot say what they cost Telekom's service systems today, because the agreements that would show it are not published. Telekom's chief executive told investors: "I do not have a single situation, even the works council, where I was, always, provoking, saying you stop, you make me slow." That is management's account, the same kind of source as the slides I questioned in section 2, and I found no statement from the works council. {{R11-45}}
-
-Two studies test whether works councils block new technology in German firms. One finds that they do not hinder the adoption of robots. The other, for one federal state, finds no difference in the use of AI once the size and kind of firm are taken into account. An older study finds less digital equipment where there is a works council and makes no claim about cause. None of them measures how long a launch takes. {{R11-25 R11-27 R11-24}}
-
-:::margin house 5
-
-## 7. The part that cannot be copied
+T-Mobile did both: software took over many contacts, and the company paid 531 million dollars of severance. But it also gave the staff who stayed an assistant of their own, used in 74% of their conversations with customers, and where they use it the net promoter score is 12% higher. A study of 5,172 support agents found that AI help raised the cases solved per hour by 15%, and by about 30% for the least experienced. Where the effect on service staff has been measured, helping them pays. {{R6-06 R6-09 R4-29}}
 
 @where Germany · Deutsche Telekom
-I checked whether promises to the workforce stop change at Telekom. In the numbers I found, staff numbers still fell, through the routes the agreements allow.
-
-Telekom's report on its staff lists those routes for Germany: partial retirement, early retirement, severance, and civil servants retiring or moving to public authorities. From 2021 to 2025, 20,223 full-time equivalents went this way across everything Telekom employs in Germany, about 4,000 a year. Exits by severance nearly doubled, from 526 to 1,016 a year. {{R12-01}}
+Telekom could not empty the building anyway. On 28 May 2026 it agreed with the union ver.di that there will be no dismissals for business reasons until 31 December 2028, for about 60,000 employees. People still leave by agreed routes: partial retirement, early retirement, severance, and civil servants retiring. From 2021 to 2025, 20,223 full-time positions went that way across Telekom in Germany, about 4,000 a year. {{R11-14 R12-01}}
 
 :::figure exits wide
 Every full-time position that left Telekom in Germany by an agreed route, 2021 to 2025. One mark is 25 positions. Source: Deutsche Telekom, HR Factbook 2025.
 :::
 
-@where United States · T-Mobile US
-In the US, management decides on dismissals itself. Washington State, where T-Mobile is based, allows an employer to dismiss at any time and for any lawful reason; under federal law a mass layoff needs 60 days' written notice and nobody's consent. In August 2023 T-Mobile announced a cut of just under 7% of its staff in one statement, with a charge of 450 million dollars. That cut was mostly in office roles and came a year before the agents, so it shows how an American employer can cut staff; it says nothing about savings from the agents. I could not compare how fast the two companies shrink: the public counts cover different groups, and T-Mobile's rose and fell with company purchases. {{R11-34 R11-35 R11-38 R12-11}}
-
-@where Germany · Deutsche Telekom
-This changes the calculation behind an agent in Germany. For the employees under the agreement, a saving cannot be collected by dismissal before 2029. It comes when people leave by one of the paid routes, or when the same people do other work. Telekom's targets run to 2030 and the agreement to the end of 2028; what applies in between is not public.
-
-:::margin house end
-
-I also checked whether Germans are more wary of AI than Americans. In two surveys that asked both countries the same questions, they were not. {{R12-25 R12-28}}
+So the residents stay while the walls are opened, and that is also the route with the best evidence behind it. The residents are not against the work. In two surveys that asked both countries the same questions, Germans were no more wary of AI than Americans. One German result stands out: 79% saw digital monitoring of workers negatively, the second-highest share in the European Union. {{R12-25 R12-28}}
 
 :::figure attitudes column
 Three questions, each asked the same way in both countries or across the EU. Sources: Ipsos for Google 2025; Ipsos AI Monitor 2025; Eurobarometer 2024 (EU only).
 :::
 
-One German result stands out inside Europe: 79% of Germans saw digital monitoring of workers negatively, the second-highest share in the Union. The works council rule in section 6 covers this kind of monitoring.
+## 6. The trades: know-how
 
-## 8. When only the result is copied
+The first of the three German difficulties is education: the trades who know how to do the work. German firms that had considered AI and decided against it were asked why. The first answer was not the law. It was missing knowledge. {{R7-06}}
 
-In 2026 Vodafone in Germany announced that about 2,300 jobs would go or move, and O2 a programme for about 1,100 voluntary exits. Vodafone names AI as one way to save; O2 mentions it as background. {{R12-20 R12-21}}
+:::figure obstacles column
+Reasons German firms gave in 2025 for not using AI after considering it. Several answers were possible; the six most named are shown. Source: Federal Statistical Office.
+:::
 
-Klarna, a Swedish payment company, cut further and later reversed part of it. In February 2024 it said its assistant did work that, by its own estimate, equalled 700 service agents. In May 2025 its chief executive said: "Really, investing in the quality of human support is the way of the future for us", and the company began hiring service staff again. {{R12-14 R12-15}}
+@where Europe and the United States
+Germany trains AI researchers at scale, but that knowledge does not reach the firms that would have to rebuild. A survey by the European Investment Bank asked firms on both sides the same questions: about as many European as American firms use AI somewhere, 68% against 72%, but fewer use it in two or more parts of the business, 44% against 58%, and fewer in customer service, 22% against 29%. {{R10-01}}
 
-Two studies looked at when a result did carry over to a new place. After the war, Italian firms whose managers were trained inside American companies did better for at least fifteen years; for firms that only received American machines the gain levelled off. Japanese car plants in North America reached productivity and quality similar to Japan's, and how much of the Japanese way of working they took over varied from practice to practice. {{R12-34 R12-37}}
+## 7. The building codes: law
 
-## 9. What follows for Telekom
+In Germany you need a permit before you build. In America, for this kind of decision, the checks mostly come afterwards. I followed one decision on both sides: to let a software agent act on customer accounts and work next to service staff.
+
+:::figure permits column
+One decision, two schedules. In the United States it goes live without a check by staff representatives, and the checks follow in court and in state rules. In Germany the works council and the privacy review come first. Since 2021 a standing agreement pre-approves IT systems that stay inside fixed rules.
+:::
+
+@where United States · T-Mobile US
+At T-Mobile I found no check by staff before launch. T-Mobile announced its agent platform in September 2024, and about 21 months later a third of contract customers' calls started with it. A works council in the German sense does not exist there; a staff body that T-Mobile had set up itself was ordered dissolved, and a federal appeals court upheld that in January 2024. Other checks come later, as lawsuits and state rules. {{R6-08 R6-06 R11-36 R11-37 R11-41 R11-43}}
 
 @where Germany · Deutsche Telekom
-From what I found, the American result has three parts: a model that can be bought, systems around it that Telekom's own slides show as unfinished in Europe, and a quick route to fewer staff that Telekom has agreed not to use until 2029.
+At Telekom the works council, elected by the staff, has to be told while the system is still being planned; since 2021 the law names AI expressly. If a system is suited to monitoring staff, the works council has to agree, and a screen that listens to service calls very likely is. Telekom's own privacy and security experts approve a system before it runs, and the data protection regulation requires an impact assessment before risky processing. {{R11-05 R11-07 R11-08 R11-21 R11-22}}
 
-Telekom has already planned the second part, so I do not propose it. These are four points I did not find in its public plan:
+Telekom has already renovated part of this process. Before 2021 its works council approved IT systems one by one, six weeks each. Since then a standing agreement sets the rules once: no control of individual performance, evaluations only for groups, logs only for security. A department fills in a profile of its system, the works council checks it, and if nothing goes beyond the rules no separate decision is needed: a standard design with a quick check. A screen that listens to calls probably goes beyond it and needs its own permit, and the agreements that would show how long that takes are not published. {{R11-12}}
 
-1. **One measure for both countries, with its cost.** For example: requests finished without a person that did not come back within a week, set against what the agent costs to build and run. Today no pair of figures compares fully (section 2), so nobody outside the company can check the 2030 target.
-2. **The agreement for the screen that listens.** It is the system most likely to need the works council's own agreement (section 6), and it could count as high risk under the AI Act if it is used to monitor or evaluate staff. I would expect that settling both while the system is built costs less time than settling them afterwards.
-3. **A calculation without dismissals.** Until the end of 2028 the return has to come from fewer repeat contacts, from service staff moving to work software cannot do, and from the share of customer service among the roughly 4,000 who leave each year by the agreed routes (section 7). That share is not public.
-4. **Permissions in steps.** First let the agent read: show a bill, check an order. Then actions that can be undone, such as restarting a line. Changes that fraud could use come last, with a confirmation from the customer and a named person who answers for that kind of action. Frag Magenta can already change bank details after login (section 4); that is the case I would review first. A layer that lets the agent change its model supplier is already on Telekom's slide (section 5), so I do not list it.
+The rules that apply are precise. Under § 87(1) no. 6 of the Works Constitution Act the works council must agree to technical systems suited to monitoring staff. Under the AI Act, customers must be told since 2 August 2026 when they deal with an AI system, and from 2 December 2027 a tool used to monitor or evaluate employees can count as high risk. Firms feel the weight: among those that considered AI and decided against it, 62% named unclear legal consequences and 60% data protection, second and third after missing knowledge. And the jobs agreement moves any saving from dismissals to paid exits until 2029. In a brick house the inspection comes before the wall is opened, and the work has to be planned for that. {{R11-07 R9-04 R9-05 R7-06 R11-14}}
 
-## 10. What would show that I am wrong
+## 8. The materials: dependence
 
-My assumption held in two parts, held in part in one and was wrong in one; one part I could not test.
+@where Germany and Europe
+A building is only as independent as what it is made of. In a Bitkom survey of 605 German firms with 20 or more staff, published in November 2025, 51% called themselves strongly dependent on the United States for the digital technology they import. European providers hold about 15% of Europe's own cloud market; in 2017 it was 29%. {{B-2025 SRG-2025}}
 
-| I assumed | What I found |
-| --- | --- |
-| The American result rests on work under the model | Supported by T-Mobile's own account (section 3) |
-| European companies are slower with AI | Partly supported: less depth of use and less investment; speed itself is not measured (section 5) |
-| They depend on American technology | Supported, for German firms in general and for Telekom (section 5) |
-| Telekom is painting over old walls | Wrong. Its slides describe a similar renovation as planned work (section 4) |
-| Rules and gates are what holds it back | Not shown. The gates exist; what they cost today is not public (section 6) |
+@where Germany · Deutsche Telekom
+Telekom is better placed than almost any German firm. Since February 2026 it runs an AI factory in Munich with nearly 10,000 graphics processors, which it sells to industrial customers. For its own staff it still uses OpenAI models in its internal assistant and is rolling out 120,000 OpenAI licences, and which model runs Frag Magenta is not disclosed. If even Telekom reaches for American materials for its own house, firms without a factory of their own will do so all the more. {{R6-24 R6-17 R6-02 R6-05}}
 
-Three things would show that the rest is wrong too. If Telekom reports a German figure built like T-Mobile's 32% before its authentication and data work is finished, the foundations mattered less than I claim. If its staff numbers in customer service fall faster than the agreed routes allow, the jobs gate is softer than it reads. And if a works agreement for the service systems is published with its dates, it would show what the gates cost.
+That dependence is a problem. A house built from one foreign supplier's parts is at that supplier's mercy: it sets the price, the delivery dates and the rules for what may be stored where. Telekom describes its European platform as able to switch between models. That switch matters more than any single model. {{R6-04}}
 
-## What I could not show
+## 9. The renovation, in order
 
-- That Germany is behind the US by any measured amount.
-- That the agents caused the fall in American service contacts.
-- That any gate delayed a Telekom service system, or that none did.
-- How many of the positions that went, on either side, were in customer service or had to do with AI.
-- Which model runs Frag Magenta and where.
-- What the staff screen that listens to calls does with what it hears, and under which agreement it runs.
+@where Germany · Deutsche Telekom
+Telekom has planned part of the renovation already. What I did not find in its public plan is the order, and a date for the work in the walls. This is the order I would follow; each step names what it is measured by.
+
+:::figure roadmap wide
+The renovation as a construction schedule. Each phase is finished before the next depends on it, and the residents stay throughout.
+:::
+
+1. **Survey.** One measure for both countries, with its cost: requests finished without a person that did not come back within a week, set against what the agent costs to build and run. Today no pair of figures compares fully (section 2), so the 2030 target cannot be checked from outside.
+2. **Foundations.** Cut the 14 ways of proving who is calling to three and make the customer data usable before agents act on accounts: Telekom's own "simplify before automating", with a date. Measured by the share of calls in which the caller is recognised without questions. {{R6-05}}
+3. **Materials.** Keep the switch between model suppliers, and keep sensitive customer data on hosting Telekom controls in Germany. Measured by how many systems could change their model supplier within a month. {{R6-04}}
+4. **Wiring, with keys in steps.** First let the agent read: show a bill, check an order. Then actions that can be undone, such as restarting a line. Changes that fraud could use come last, with a confirmation from the customer and a named person who answers for that kind of action. Frag Magenta can already change bank details after login; that is the key I would review first. {{R6-16}}
+5. **Train the trades.** The service staff who stay learn to work with the new tools, starting with the least experienced, for whom the measured gain is largest. Measured by cases solved per hour and by repeat contacts. {{R4-29}}
+6. **Fit-out with the residents.** A calculation without dismissals: until the end of 2028 the return has to come from fewer repeat contacts, from staff moving to work software cannot do, and from the share of customer service among the roughly 4,000 who leave each year by the agreed routes. {{R11-14 R12-01}}
+7. **Inspection while building.** Settle the works agreement for the screen that listens to calls, and its status under the AI Act, while the system is built, not afterwards. Since 2 August 2026 customers must be told when they deal with an AI system, and from December 2027 a tool used to monitor or evaluate employees can count as high risk. {{R9-04 R9-05}}
+
+## Where this could be wrong
+
+The analogy simplifies. A quarter of new German homes are now timber, many German firms run modern systems, and no source shows that either kind of house lasts longer. Unlike brick, software walls can be rebuilt completely. I use the analogy for one property only: how hard it is to add a new connection to what already stands.
+
+Three findings would show that my argument is wrong. If Telekom reports a German figure built like T-Mobile's 32% before its work on authentication and customer data is finished, the foundations mattered less than I claim. If staff numbers in customer service fall faster than the agreed routes allow, the residents are leaving after all. And if a works agreement for the service systems is published with its dates and shows months of delay, the building codes are a bigger weight than I give them here.
+
+What I could not show from public sources: that the agents alone caused the fall in American service contacts; that any permit delayed a Telekom service system, or that none did; which model runs Frag Magenta and where; and how many of the positions that left, on either side, were in customer service.
 
 ## How this was made
 
-The research, the drafts and the fact reviews were done with AI assistants that I directed. They opened the sources: company reports and slides, filings, legal texts, official statistics and published studies. I chose which ones count, and separate AI review passes checked the claims against them. One result of those reviews: I removed a comparison of staff cuts that did not hold. Every figure carries its source; select the mark at the end of a passage to open it. The question, the choice of sources and every claim are my responsibility.
+The research, the drafts and the fact reviews were done with AI assistants that I directed. They opened the sources: company reports and slides, filings, legal texts, official statistics and published studies. I chose which ones count, and separate review passes checked the claims against them. The analogy of timber and brick houses comes from my father, a civil engineer. Every figure carries its source; select the mark at the end of a passage to open it. The question, the choice of sources and every claim are my responsibility.

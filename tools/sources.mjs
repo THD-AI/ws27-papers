@@ -46,6 +46,29 @@ const OVERRIDES = {
     type: 'survey',
   },
 
+  // The building analogy (draft 5): opened on 16 November 2026, not in the dossiers.
+  'NAHB-2026': {
+    title: 'Wood framing continues to dominate single-family construction (Census Survey of Construction, 2025 completions)',
+    publisher: 'NAHB, Eye on Housing',
+    date: '2026-09',
+    url: 'https://eyeonhousing.org/2026/09/wood-framing-continues-to-dominate-single-family-construction/',
+    type: 'statistics',
+  },
+  'DESTATIS-2021': {
+    title: 'Baugenehmigungen 2020 nach überwiegend verwendetem Baustoff (Destatis, reported by Baulinks)',
+    publisher: 'Federal Statistical Office (Destatis)',
+    date: '2021-10',
+    url: 'https://www.baulinks.de/webplugin/2021/1028.php4',
+    type: 'statistics',
+  },
+  'BAUNETZ-DIN18015': {
+    title: 'Leitungsverlegung und Installationszonen (DIN 18015-3)',
+    publisher: 'Baunetz Wissen',
+    date: '2016',
+    url: 'https://www.baunetzwissen.de/elektro/fachwissen/leitungen-verteiler/leitungsverlegung-und-installationszonen-153012',
+    type: 'standard',
+  },
+
   // The dossier row reads "Regulation (EU) 2026/1744 ..., recitals 38, 40";
   // the automatic cut kept only the tail.
   'R9-05': {
