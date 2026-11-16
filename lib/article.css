@@ -243,6 +243,30 @@ figcaption, .scene-caption {
 }
 .fig-placeholder b { font-weight: 500; color: var(--ink); }
 
+/* The place the text is about (@where): a small mono kicker in the accent
+   with a short hairline, above the block it applies to. */
+.where {
+  display: flex; align-items: center; gap: 0.7rem;
+  margin: 1.7rem 0 0.45rem;
+  font: 500 0.68rem/1.4 var(--mono);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--accent-line);
+  break-after: avoid;
+}
+.where::after { content: ''; flex: none; width: 2.2rem; height: 1px; background: currentColor; opacity: 0.55; }
+h2.sec + .where, h2.sec + .margin-still + .where, .passage > .where:first-child { margin-top: 0; }
+/* The same place, kept at the top-left of a pinned figure. */
+.fig-where {
+  margin: 0 auto 0.4rem; max-width: 100%; min-height: 1.4em;
+  font: 500 0.68rem/1.4 var(--mono);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent-line);
+}
+.fig-where.is-hidden { visibility: hidden; }
+
 /* Shown only where the layout calls for them (2b, 2d, print). */
 .margin-still, .seq-still { display: none; }
 .margin-mark { display: block; height: 0; }
@@ -351,23 +375,39 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 /* 2b. Screen: the margin column, where it really fits                      */
 /* ------------------------------------------------------------------------ */
 
-@media screen and (min-width: 1180px) and (min-height: 560px) {
+/* The states of the margin scene are small stills at their markers, on
+   every screen as on paper. */
+@media screen {
+  .margin-still { display: block; width: min(12rem, 100%); margin: 0.2rem 0 1.4rem; }
+  .margin-still.is-empty { display: none; }
+  /* nothing that spans the column stands beside a floated still */
+  main.body > h2, main.body > .scene, main.body > .fig, main.body > .table-frame, main.body > .sources, main.body > .margin-mark { clear: both; }
+}
+
+/* From tablets up, a still in the text column floats at its right edge and
+   the text runs down its left side. */
+@media screen and (min-width: 700px) {
+  .margin-still { float: right; width: 11rem; margin: 0.3rem 0 0.8rem 1.4rem; }
+}
+
+@media screen and (min-width: 1180px) {
   :root { --left: max(var(--gutter), calc((var(--pw) - var(--measure) - var(--gap) - var(--margin-col)) / 2)); }
 
-  .rail { position: absolute; top: 0; bottom: 0; left: calc(var(--left) + var(--measure) + var(--gap)); width: var(--margin-col); max-width: none; pointer-events: none; }
-  .rail-pin { position: sticky; top: 17vh; transition: opacity 0.3s ease; }
-  .rail-pin.is-away { opacity: 0; }
+  /* In the margin column, top-aligned with the block that follows, and
+     scrolling with the text. No "top": the still keeps the place it has in
+     the flow and takes no room there. article.js adds .in-flow where a scene
+     or wide figure needs the margin at that height. */
+  main.body > .margin-still:not(.in-flow) {
+    position: absolute;
+    left: calc(var(--left) + var(--measure) + var(--gap));
+    float: none;
+    width: var(--margin-col);
+    margin: 0.3rem 0 0;
+  }
 
   /* With a margin column, wide figures start at the text's left edge and
      run across the margin column. */
   main.body > .fig-wide, main.body > .table-frame.table-wide { width: min(100%, 58rem); margin-left: 0; }
-}
-
-/* No margin column: its states are small stills at their sections. */
-@media screen and (max-width: 1179.98px), screen and (max-height: 559.98px) {
-  .rail { display: none; }
-  .margin-still { display: block; width: 11.5rem; margin: 0.2rem 0 1.4rem; }
-  .margin-still.is-empty { display: none; }
 }
 
 /* ------------------------------------------------------------------------ */
@@ -418,52 +458,58 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 /* 2d. Screen: scenes                                                       */
 /* ------------------------------------------------------------------------ */
 
-/* Side by side: the passages in a column on the left, the figure pinned on
-   the right with the rest of the page width. */
+/* The passages of a scene are one run of text: normal paragraph spacing and
+   a little more between passages. The one at the reading line is in full
+   ink, the others step back but stay readable. */
+@media screen and (min-height: 560px) {
+  .passage { margin-bottom: 1.5rem; }
+  .passage > :last-child { margin-bottom: 0; }
+  .scene.is-live .passage { opacity: 0.55; transition: opacity 0.25s ease; }
+  .scene.is-live .passage.is-active { opacity: 1; }
+}
+
+/* Side by side: the passages in a column on the left, the figure on the
+   right with the rest of the page width. Both start at the top of the scene,
+   directly after the paragraph before it; the figure is then pinned in the
+   middle of the window (--stage-top, set by article.js) until the scene ends. */
 @media screen and (min-width: 1000px) and (min-height: 560px) {
   .scene {
     --pad: clamp(1.5rem, calc((var(--pw) - 62rem) * 0.2), 4rem);
     display: grid;
     grid-template-columns: clamp(17.5rem, 26%, 22rem) minmax(0, 1fr);
     column-gap: var(--gap);
+    align-items: start;
     max-width: none !important;
-    margin: 0 calc(var(--pad) - var(--gutter)) 0 calc(var(--pad) - var(--left));
+    margin: 2rem calc(var(--pad) - var(--gutter)) 2.4rem calc(var(--pad) - var(--left));
   }
   .scene-stage {
     grid-column: 2; grid-row: 1;
-    position: sticky; top: 0;
-    height: 100vh;
-    align-self: start;
-    display: flex; align-items: center; justify-content: center;
+    position: sticky; top: var(--stage-top, 1rem);
+    display: flex; justify-content: center;
   }
   .scene-stage .fig { max-width: 100%; }
-  .scene-text { grid-column: 1; grid-row: 1; padding: 44vh 0 30vh; }
-  .passage { min-height: 72vh; }
+  .scene-text { grid-column: 1; grid-row: 1; }
+  .scene-text { position: sticky; top: var(--text-top, 1rem); }
+  /* the label's line is kept above the drawing, so the text starts level with it */
+  .scene-text { padding-top: 0; }
   .scene-caption { display: none; }
 }
 
-/* Pinned on top: the figure across the page, the passages scrolling under
-   it. article.js keeps the figure short enough for four lines of text. */
+/* Pinned on top: the figure across the page, the passages close together
+   under it. article.js keeps the figure short enough for four lines of text. */
 @media screen and (max-width: 999.98px) and (min-height: 560px) {
   .scene { max-width: none !important; margin: 0 calc(-1 * var(--gutter)) 0 calc(-1 * var(--left)); }
   .scene-stage {
     position: sticky; top: 0; z-index: 3;
-    padding: 0.5rem 0 0.45rem;
+    padding: 0.45rem 0 0.45rem;
     background: var(--paper);
     border-bottom: 1px solid var(--hairline);
   }
   .scene-stage figcaption { display: none; }
+  .scene-stage .fig-where { margin-bottom: 0.2rem; padding: 0 var(--gutter); }
   .scene-text, .scene-caption { max-width: var(--measure); margin-left: var(--left); margin-right: var(--gutter); }
-  .scene-text { padding: 2.5rem 0 0; }
-  .passage { min-height: 46svh; padding-bottom: 2rem; }
+  .scene-text { padding: 1.4rem 0 0.4rem; }
   .scene-caption { margin-bottom: 2rem; padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
-}
-
-/* Passages that are not at the reading line step back. Only while a figure
-   is pinned and the scroll engine runs (it sets .is-live). */
-@media screen and (min-height: 560px) {
-  .scene.is-live .passage { opacity: 0.4; transition: opacity 0.3s ease; }
-  .scene.is-live .passage.is-active { opacity: 1; }
 }
 
 /* A sequence: windows too short to pin anything (phones held sideways).
@@ -471,14 +517,14 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 @media screen and (max-height: 559.98px) {
   .scene-stage { display: none; }
   .seq-still { display: block; margin: 1.6rem 0 1rem calc(var(--gutter) - var(--left)); }
-  .passage { margin-bottom: 2.4rem; }
+  .passage { margin-bottom: 1.4rem; }
   .scene-caption { margin: 0 0 2rem; padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
   main.body > .scene { max-width: none; }
   .scene-text > .passage, .scene-caption { max-width: var(--measure); }
 }
 
 @media screen and (prefers-reduced-motion: reduce) {
-  .scene.is-live .passage, .rail-pin { transition: none; }
+  .scene.is-live .passage { transition: none; }
   html { scroll-behavior: auto; }
 }
 
@@ -586,6 +632,11 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   main li { margin-bottom: 0.3em; }
   main ul > li::before, main ol:not(.src-list):not(.index-list) > li::before { left: -4mm; }
   main ol:not(.src-list):not(.index-list) > li::before { font-size: 6.6pt; top: 0.55em; }
+
+  /* The place (@where) at each change, small. */
+  .where { margin: 2.2mm 0 0.8mm; font-size: 5.8pt; line-height: 1.3; }
+  .where::after { width: 5mm; }
+  .fig-where { display: none; }
 
   /* Source marks become bracketed numbers that match the list at the end. */
   .src-print { display: inline; margin-left: 0.2em; font: 400 0.78em/1 var(--mono); font-variant-numeric: tabular-nums lining-nums; color: var(--muted); white-space: nowrap; }

@@ -15,21 +15,26 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 9;
-const SIZE = { wide: [800, 600], tall: [360, 478] };
+const SIZE = { wide: [800, 600], tall: [360, 500] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 function build(el, ctx) {
   const C = colors(ctx), d = ctx.data, tall = ctx.layout === 'tall';
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
-  const top = tall ? 52 : 24;
+  const top = tall ? 74 : 24;
   const outer = svgRoot(el, W, H, d.reading);
   outer.style.color = C.ink;
   const st = stage();
   const hl = g(outer);
   const hlt = text(hl, tall ? 14 : 16, tall ? 14 : 17, d.headline, { family: 'sans', size: tall ? 12.5 : 13.5, weight: 600, width: W - 28, lh: 15 });
-  if (tall) text(hl, 14, Math.min(hlt.bottom + 13, 46), d.axis.tall, { family: 'mono', size: 11.5, fill: C.muted });
+  // how to read it, from the first step on
+  text(hl, tall ? 14 : 16, hlt.bottom + (tall ? 14 : 17), tall ? d.follow.tall : d.follow.wide, { italic: true, size: tall ? 12.5 : 14, fill: C.muted, width: W - 28, lh: 15.5 });
   st.fade(hl, 0, 0.1);
-  const svg = g(outer, { transform: `translate(0 ${top})` });
+  // three layers: Germany, the United States, and what belongs to both.
+  // `svg` is the layer the following lines draw into.
+  const base = g(outer, { transform: `translate(0 ${top})` });
+  const deL = g(base), usL = g(base);
+  let svg = base;
 
   // a: position along a track, c: the track's place across the drawing
   const P = tall ? (a, c) => [c, a] : (a, c) => [a, c];
@@ -39,8 +44,8 @@ function build(el, ctx) {
   const data = { stroke: C.ink, 'stroke-width': 2.25, 'stroke-linecap': 'round' };
 
   const G = tall
-    ? { us: 34, de: 190, a0: 46, gates: [76, 110, 144, 174], ticks: [188, 4], flag: 224, marks: [250, 268, 286], open: 304, usEnd: 314, branch: 242, shut: 288, slot: 110, hb: 13, gap: 4.5, r: 2.3, note: 12.5, holder: 12, basis: 11, name: 12.5 }
-    : { us: 132, de: 372, a0: 64, gates: [160, 272, 384, 462], ticks: [492, 8], flag: 572, marks: [656, 690, 724], open: 768, usEnd: 782, branch: 650, shut: 722, slot: 272, hb: 20, gap: 5.5, r: 2.7, note: 14, holder: 13, basis: 12, name: 13.5 };
+    ? { us: 34, de: 190, a0: 46, gates: [76, 110, 144, 174], ticks: [188, 4], flag: 224, marks: [250, 268, 286], open: 304, usEnd: 314, branch: 242, shut: 288, slot: 110, hb: 13, gap: 4.5, r: 2.3, note: 12.5, holder: 12, basis: 11, name: 13.5 }
+    : { us: 132, de: 372, a0: 64, gates: [160, 272, 384, 462], ticks: [492, 8], flag: 572, marks: [656, 690, 724], open: 768, usEnd: 782, branch: 650, shut: 722, slot: 272, hb: 20, gap: 5.5, r: 2.7, note: 14, holder: 13, basis: 12, name: 15 };
   const N = { italic: true, size: G.note };
   const gone = (s) => (tall ? [s + 1.0, s + 1.12] : undefined);     // tall: a step's notes leave with the step
   const fadeT = (elm, a, b, s) => st.fade(elm, a, b, gone(s));
@@ -48,7 +53,7 @@ function build(el, ctx) {
   // width, so that they wrap freely on the narrowest phone
   const ZY = 330, zones = {};
   const zput = (s, str, o = {}) => {
-    const z = zones[s] || (zones[s] = { g: g(svg), y: ZY });
+    const z = zones[s] || (zones[s] = { g: g(s === 1 || s === 2 ? usL : s === 6 ? base : deL), y: ZY });
     const t = text(z.g, 14, z.y + 11, str, { italic: true, size: G.note, width: W - 28, ...o });
     z.y = t.bottom + 6;
     return t;
@@ -61,6 +66,7 @@ function build(el, ctx) {
   };
 
   // --- the one field: the gated stretch of the German track ---------------
+  svg = deL;
   const f0 = G.gates[0] - 9, fEnd = G.flag - 7;
   const fld = tall
     ? rect(svg, G.de - G.hb, f0, G.hb * 2, 1, { fill: C.field, 'data-audit': 'skip' })
@@ -74,15 +80,16 @@ function build(el, ctx) {
   });
 
   // --- step 0: both tracks, empty ----------------------------------------
-  const guides = g(svg);
-  seg(guides, G.a0, G.usEnd, G.us, { stroke: C.hairline, 'stroke-width': 1.25 });
-  seg(guides, G.a0, G.shut, G.de, { stroke: C.hairline, 'stroke-width': 1.25 });
-  st.fade(guides, 0.04, 0.3);
-  const starts = g(svg);
-  [G.us, G.de].forEach((c) => { const p = P(G.a0, c); circle(starts, p[0], p[1], tall ? 4.2 : 5, { fill: C.ink }); });
-  st.fade(starts, 0.1, 0.3);
-  const flags = g(svg);
+  const gu = g(usL), gd = g(deL);
+  seg(gu, G.a0, G.usEnd, G.us, { stroke: C.hairline, 'stroke-width': 1.25 });
+  seg(gd, G.a0, G.shut, G.de, { stroke: C.hairline, 'stroke-width': 1.25 });
+  st.fade(gu, 0.04, 0.3).fade(gd, 0.04, 0.3);
+  const su = g(usL), sd = g(deL);
+  [G.us, G.de].forEach((c) => { const p = P(G.a0, c); circle(c === G.us ? su : sd, p[0], p[1], tall ? 4.2 : 5, { fill: C.ink }); });
+  st.fade(su, 0.1, 0.3).fade(sd, 0.1, 0.3);
+  const fu = g(usL), fd = g(deL);
   [G.us, G.de].forEach((c) => {
+    const flags = c === G.us ? fu : fd;
     const [x, y] = P(G.flag, c);
     if (tall) {
       path(flags, `M${x} ${y}L${x + 15} ${y}`, ink);
@@ -95,16 +102,17 @@ function build(el, ctx) {
       text(flags, x + 18, y - 26, d.launch, { family: 'sans', size: G.holder, weight: 500 });
     }
   });
-  st.fade(flags, 0.5, 0.7);
-  const names = g(svg);
+  st.fade(fu, 0.5, 0.7).fade(fd, 0.5, 0.7);
+  const nmu = g(usL), nmd = g(deL);
   if (tall) {
-    text(names, 14, 22, d.tracks.us, { family: 'sans', size: G.name, weight: 600 });
-    text(names, G.de - 26, 22, d.tracks.de, { family: 'sans', size: G.name, weight: 600 });
+    text(nmu, 14, 22, d.tracks.us, { family: 'sans', size: G.name, weight: 600 });
+    text(nmd, G.de - 26, 22, d.tracks.de, { family: 'sans', size: G.name, weight: 600 });
   } else {
-    text(names, 74, G.us - 13, d.tracks.us, { family: 'sans', size: G.name, weight: 600 });
-    text(names, 74, G.de - 13, d.tracks.de, { family: 'sans', size: G.name, weight: 600 });
+    text(nmu, 74, G.us - 13, d.tracks.us, { family: 'sans', size: G.name, weight: 600 });
+    text(nmd, 74, G.de - 13, d.tracks.de, { family: 'sans', size: G.name, weight: 600 });
   }
-  st.fade(names, 0.2, 0.4);
+  st.fade(nmu, 0.2, 0.4).fade(nmd, 0.2, 0.4);
+  svg = base;
   // the decision: one note, joined to both start dots by a bracket
   const dec = g(svg);
   if (tall) {
@@ -115,18 +123,18 @@ function build(el, ctx) {
     text(dec, 46, 196, d.decision.note, { ...N, width: 104 });
   }
   fadeT(dec, 0.66, 0.86, 0);
-  const axn = g(svg);
-  if (!tall) text(axn, W - 10, 568, d.axis.wide, { family: 'mono', size: 12, fill: C.muted, anchor: 'end' });
-  st.fade(axn, 0.7, 0.9);
 
   // --- inked tracks: they draw from the decision outward -----------------
+  svg = usL;
   const usTrack = [seg(svg, G.a0, G.flag, G.us, data), seg(svg, G.flag, G.marks[2] + (tall ? 8 : 14), G.us, data), seg(svg, G.marks[2] + (tall ? 8 : 14), G.usEnd, G.us, data)];
   st.draw(usTrack[0], 1.05, 1.5).draw(usTrack[1], 2.04, 2.28).draw(usTrack[2], 6.05, 6.25);
+  svg = deL;
   const deStops = [G.a0, G.gates[0], G.gates[1], G.flag, G.shut];
   const deTrack = deStops.slice(1).map((b, i) => seg(svg, deStops[i], b, G.de, data));
   st.draw(deTrack[0], 3.05, 3.3).draw(deTrack[1], 4.05, 4.28).draw(deTrack[2], 5.05, 5.45).draw(deTrack[3], 6.3, 6.5);
 
   // --- step 1: the US run -------------------------------------------------
+  svg = usL;
   const run = g(svg);
   if (tall) {
     bracket(run, 18, G.flag, 18, G.a0, -4, { stroke: C.ink, 'stroke-width': 1 });
@@ -171,6 +179,7 @@ function build(el, ctx) {
   st.fade(aft, 2.62, 2.8).fade(aftL, 2.74, 2.9);
 
   // --- steps 3 to 5: the German checks before launch ----------------------
+  svg = deL;
   const gateT = [3.3, 4.26, 5.18, 5.34];
   const ticksEnd = G.ticks[0] + (d.de.more.count - 1) * G.ticks[1];
   d.de.gates.forEach((gt, i) => {
@@ -223,6 +232,7 @@ function build(el, ctx) {
   st.fade(bef, 5.6, 5.8).fade(befL, 5.74, 5.9);
 
   // --- step 6: taking the saving ------------------------------------------
+  svg = base;
   const sav = g(svg);
   if (tall) {
     bracket(sav, 354, G.usEnd, 354, G.flag + 8, 4, { stroke: C.muted, 'stroke-width': 1 });
@@ -233,6 +243,7 @@ function build(el, ctx) {
     text(sav, (x0 + x1) / 2, y + 19, d.saving, { family: 'sans', size: G.holder, weight: 600, fill: C.muted, anchor: 'middle' });
   }
   st.fade(sav, 6.04, 6.2);
+  svg = usL;
   const og = g(svg);
   cross(og, G.open, G.us - G.hb, G.us - G.gap - (tall ? 3.5 : 6), { stroke: C.ink, 'stroke-width': 2.6 });
   cross(og, G.open, G.us + G.gap + (tall ? 3.5 : 6), G.us + G.hb, { stroke: C.ink, 'stroke-width': 2.6 });
@@ -246,6 +257,7 @@ function build(el, ctx) {
     leader(ex, G.open, t.bottom + 3, G.open, G.us - G.hb - 3, { stroke: C.muted, dot: false });
   }
   fadeT(ex, 6.36, 6.56, 6);
+  svg = deL;
   const sg = g(svg);
   cross(sg, G.shut, G.de - G.hb, G.de + G.hb, { stroke: C.accent, 'stroke-width': 3.4, 'stroke-linecap': 'butt' });
   cross(sg, G.shut + (tall ? 4.5 : 5.5), G.de - G.hb, G.de + G.hb, { stroke: C.accent, 'stroke-width': 1.25 });
@@ -335,7 +347,20 @@ function build(el, ctx) {
     odd.style.opacity = o >= 0.999 ? '' : o.toFixed(3);
   });
 
+  // --- who the step is about: the other track steps back -----------------
+  // steps 1 and 2 are the United States, 3 to 5 Germany, from 6 on both.
+  // Nothing is dimmed on paper.
+  if (!ctx.print) {
+    st.on((gg) => {
+      const dimDe = ease(span(gg, 1.0, 1.2)) * (1 - ease(span(gg, 3.0, 3.2)));
+      const dimUs = ease(span(gg, 3.0, 3.2)) * (1 - ease(span(gg, 6.0, 6.2)));
+      deL.style.opacity = dimDe > 0.001 ? (1 - 0.65 * dimDe).toFixed(3) : '';
+      usL.style.opacity = dimUs > 0.001 ? (1 - 0.65 * dimUs).toFixed(3) : '';
+    });
+  }
+
   // --- travelling dots: idle motion on screen only ------------------------
+  svg = base;
   let breathe = { stop() {} };
   if (!ctx.reduced && !ctx.print && !tall) {
     const flow = (c, n, seed, gatesAt) => {

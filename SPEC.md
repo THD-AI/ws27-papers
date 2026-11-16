@@ -28,6 +28,7 @@ Front matter: `title`, `deck`, `author`, `context`, `status`, `accent`. Then Mar
 - `:::scene <id>` … `:::` wraps passages that scroll beside one pinned figure. Inside, a line `@step n` sets the step shown while the following passages are in view. A line `@caption …` gives the caption used in print and on phones.
 - `:::figure <id> <wide|column>` … `:::` a figure in the text flow; the block's text is its caption.
 - `:::margin <id> <state>` sets the state of the small margin scene from this point on.
+- `@where <label>` on a line of its own sets the place the text is about (for example `United States · T-Mobile US`) from that point until the next `@where` or the next `##` heading. Rendered as a small mono kicker in the accent colour above the next block; inside a scene, above the first passage and wherever the place changes, and as a label at the top-left of the pinned figure that follows the active passage. Figures receive it as `ctx.where`.
 - Tables are Markdown tables.
 
 ## Figure contract

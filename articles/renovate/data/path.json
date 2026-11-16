@@ -1,11 +1,7 @@
 {
   "id": "path",
-  "headline": "One decision at T-Mobile US and at Telekom in Germany",
+  "headline": "United States and Germany · one decision at both companies",
   "reading": "In the US the decision goes straight to launch and the checks come after; in Germany it passes several gates first, and the way out by dismissal is shut until the end of 2028.",
-  "axis": {
-    "wide": "left to right: order of steps, not time",
-    "tall": "top to bottom: order of steps, not time"
-  },
   "tracks": {
     "us": "United States",
     "de": "Germany"
@@ -114,5 +110,9 @@
       "source": "R11-12"
     },
     "before": "checks before launch"
+  },
+  "follow": {
+    "wide": "follow the decision from left to right: the order of steps, not time",
+    "tall": "follow the decision from top to bottom: the order of steps, not time"
   }
 }

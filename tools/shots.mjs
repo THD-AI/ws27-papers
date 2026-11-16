@@ -41,11 +41,12 @@ if (!existsSync(join(ROOT, 'dist', slug, 'index.html'))) {
 }
 
 const out = join(ROOT, '.shots', slug);
-// A matrix run keeps the other shots, and the other way round.
+// A matrix run keeps the other shots, and the other way round. The reading
+// shots (tools/read.mjs) and the filmstrips (tools/filmstrip.mjs) are kept too.
 if (matrix) {
   rmSync(join(out, 'matrix'), { recursive: true, force: true });
 } else if (existsSync(out)) {
-  for (const f of readdirSync(out)) if (f !== 'matrix' && f !== 'matrix.md') rmSync(join(out, f), { recursive: true, force: true });
+  for (const f of readdirSync(out)) if (f !== 'matrix' && f !== 'matrix.md' && f !== 'read' && !f.startsWith('strip-')) rmSync(join(out, f), { recursive: true, force: true });
 }
 mkdirSync(join(out, 'matrix'), { recursive: true });
 

@@ -7,7 +7,7 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 1;
-const SIZE = { wide: [580, 342], tall: [360, 376] };
+const SIZE = { wide: [580, 360], tall: [360, 396] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 function build(el, ctx) {
@@ -34,9 +34,9 @@ function build(el, ctx) {
   const valX = S.sx + slot.width + (tall ? 8 : 10);
 
   const hd = g(svg);
-  text(hd, S.x0, tall ? 14 : 18, d.headline, { family: 'sans', size: tall ? 12.5 : 14, weight: 600 });
-  if (tall) text(hd, S.x0, 32, d.unit.note, { italic: true, size: S.note });
-  else text(hd, W - S.x0, 18, d.unit.note, { italic: true, size: S.note, anchor: 'end' });
+  const hl = text(hd, S.x0, tall ? 14 : 18, d.headline, { family: 'sans', size: tall ? 12.5 : 14, weight: 600, width: W - 2 * S.x0, lh: 15.5 });
+  const un = text(hd, S.x0, hl.bottom + S.note + 2, d.unit.note, { italic: true, size: S.note });
+  S.top = un.bottom + (tall ? 22 : 24);
   st.fade(hd, 0, 0.08);
 
   let y = S.top, ring = null;
