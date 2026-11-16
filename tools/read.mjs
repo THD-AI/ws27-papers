@@ -214,7 +214,7 @@ async function emptyScreens(page, helper, w, h) {
 const helper = await browser.newPage();
 await helper.setContent('<!doctype html><body></body>');
 
-for (const [w, h] of [[1440, 900], [390, 844], [768, 1024], [844, 390]]) {
+for (const [w, h] of (process.env.SIZES ? JSON.parse(process.env.SIZES) : [[1440, 900], [390, 844], [768, 1024], [844, 390], [793, 496], [1366, 500]])) {
   const page = await browser.newPage();
   await page.setViewport({ width: w, height: h, isMobile: w < 1000, hasTouch: w < 1000 });
   page.on('pageerror', (e) => problems.push(`${w}x${h}: ${e.message}`));

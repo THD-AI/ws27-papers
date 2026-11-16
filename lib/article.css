@@ -418,7 +418,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
    anything that runs through the margin column: a scene, a wide figure, a
    table. The stills are then not needed on screen. */
 .rail { display: none; }
-@media screen and (min-width: 1180px) and (min-height: 560px) {
+@media screen and (min-width: 1180px) and (min-height: 420px) {
   .rail {
     display: block;
     position: absolute; top: 0; bottom: 0;
@@ -484,7 +484,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
    of the window (--pitch; a long passage takes its own height), so two or
    three passages are on screen together. The one at the reading line is in
    full ink, its neighbours step back but stay readable. */
-@media screen and (min-height: 560px) {
+@media screen and (min-height: 560px), screen and (min-width: 640px) {
   .scene { --pitch: clamp(15rem, 45vh, 26rem); }
   .passage { min-height: var(--pitch); padding-bottom: 1.5rem; }
   .passage > :last-child { margin-bottom: 0; }
@@ -496,7 +496,9 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
    right with the rest of the page width. Both start at the top of the scene,
    directly after the paragraph before it; the figure is then pinned in the
    middle of the window (--stage-top, set by article.js) until the scene ends. */
-@media screen and (min-width: 1000px) and (min-height: 560px) {
+/* Also in short windows from 640 px wide (a laptop window made low, a phone
+   held sideways): the figure fills the height beside the passages. */
+@media screen and (min-width: 1000px) and (min-height: 560px), screen and (min-width: 640px) and (max-height: 559.98px) {
   .scene {
     --pad: clamp(1.5rem, calc((var(--pw) - 62rem) * 0.2), 4rem);
     display: grid;
@@ -518,6 +520,13 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .scene-caption { display: none; }
 }
 
+/* Short windows side by side: the caption would hang below the window, so it
+   follows the scene, as on phones, and the figure takes the full height. */
+@media screen and (min-width: 640px) and (max-height: 559.98px) {
+  .scene-stage figcaption { display: none; }
+  .scene-caption { display: block; grid-column: 1 / -1; grid-row: 2; max-width: var(--measure); margin: 0.6rem 0 0 calc(var(--left) - var(--pad)); padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
+}
+
 /* Pinned on top: the figure across the page, the passages close together
    under it. article.js keeps the figure short enough for four lines of text. */
 @media screen and (max-width: 999.98px) and (min-height: 560px) {
@@ -535,9 +544,9 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .scene-caption { margin-bottom: 2rem; padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
 }
 
-/* A sequence: windows too short to pin anything (phones held sideways).
+/* A sequence: windows both narrow and short, where nothing can be pinned.
    Every passage is preceded by a still of its step. */
-@media screen and (max-height: 559.98px) {
+@media screen and (max-width: 639.98px) and (max-height: 559.98px) {
   .scene-stage { display: none; }
   .seq-still { display: block; margin: 1.6rem 0 1rem calc(var(--gutter) - var(--left)); }
   .passage { margin-bottom: 1.4rem; }
@@ -545,6 +554,18 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   main.body > .scene { max-width: none; }
   .scene-text > .passage, .scene-caption { max-width: var(--measure); }
 }
+
+/* The opening drawing drifts a little with the scroll. Where the browser
+   can tie an animation to the scroll, it runs here in step with it; else
+   article.js moves it (updateHero). */
+@supports (animation-timeline: scroll()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .hero .hero-field { animation: hero-drift-field linear both; animation-timeline: scroll(root); animation-range: 0px 150vh; }
+    .hero .hero-line { animation: hero-drift-line linear both; animation-timeline: scroll(root); animation-range: 0px 150vh; }
+  }
+}
+@keyframes hero-drift-field { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, 13.5vh, 0); } }
+@keyframes hero-drift-line { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, 5.25vh, 0); } }
 
 @media screen and (prefers-reduced-motion: reduce) {
   .scene.is-live .passage { transition: none; }
