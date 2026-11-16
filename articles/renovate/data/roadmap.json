@@ -1,57 +1,73 @@
 {
   "id": "roadmap",
-  "reading": "Six everyday actions in order: measure first, fix the foundations, choose parts you can swap, hand over keys one at a time, train the crew, finish the rooms with people at home; a line under steps 2 to 6 marks the inspection at every step.",
+  "reading": "A renovation schedule for an occupied house, seven rows on one time axis: survey; plan and choose materials; approval, alongside the planning; the trades trained first; the main supply; the rooms one after the other (read only, then actions that can be undone, then changes fraud could use); running it, from the first room on. A band along the bottom: the people stay at home throughout. An open diamond after each piece of work: inspected at every step.",
   "headline": "Renovate in this order, with the people at home, and inspect as you go.",
-  "drawn": "Only the everyday actions are drawn; the company meaning of each step is in the article text under the figure.",
-  "actions": [
+  "note": "Schematic lengths in arbitrary units on one shared axis: the order and the overlaps matter, no duration or date is measured. The everyday words are the analogy; the second line of each row is what the step means for Telekom.",
+  "span": 20,
+  "axis": { "start": "start", "time": "time · schematic, no dates" },
+  "rows": [
     {
-      "label": "Measure first",
-      "icon": "tape",
+      "label": "Survey",
       "company": "one measure for both countries, with its cost",
-      "source": "R6-04",
+      "bars": [[0, 2]],
+      "source": "proposal",
       "note": "Telekom's 2030 targets have no measure that compares with T-Mobile's; the measure is the article's proposal (section 9, point 1)"
     },
     {
-      "label": "Fix the foundations",
-      "icon": "footing",
-      "company": "ways to prove who is calling, 14 to 3; customer data made usable",
+      "label": "Plan and choose materials",
+      "company": "keep the switch between model suppliers; data hosted in Germany",
+      "bars": [[1.5, 5]],
+      "source": "R6-04 R6-24"
+    },
+    {
+      "label": "Approval",
+      "company": "works agreement and AI Act status settled while planning",
+      "bars": [[2, 5.5]],
+      "source": "R11-07 R9-04 R9-05",
+      "note": "runs alongside the planning, not after the building"
+    },
+    {
+      "label": "Trades first",
+      "company": "staff trained before the tools arrive, least experienced first",
+      "bars": [[4.5, 9.5]],
+      "source": "R4-29",
+      "note": "the least experienced gain most from the new tools (R4-29)"
+    },
+    {
+      "label": "The main supply",
+      "company": "14 ways of proving who calls cut to 3; one usable customer record",
+      "bars": [[5.5, 9.5]],
       "source": "R6-05"
     },
     {
-      "label": "Choose parts you can swap",
-      "icon": "plugs",
-      "company": "one switch between models; sensitive data hosted in Germany",
-      "source": "R6-05 R6-24",
-      "wide": "Choose parts\nyou can swap"
-    },
-    {
-      "label": "Hand over keys one at a time",
-      "icon": "keys",
-      "company": "read first, then actions that can be undone, risky changes last",
+      "label": "Room by room",
+      "company": "the keys given in steps",
+      "segments": [
+        { "label": "read only", "span": [9.5, 12.5], "source": "proposal" },
+        { "label": "actions that can be undone", "span": [12.5, 15.5], "source": "proposal" },
+        { "label": "changes fraud could use", "span": [15.5, 18.5], "source": "R6-16", "note": "changing bank details after login already exists (R6-16)" }
+      ],
       "source": "proposal",
-      "note": "the article's own proposal (section 9, point 4); changing bank details after login already exists (R6-16)",
-      "wide": "Hand over keys\none at a time"
+      "note": "the article's own proposal (section 9, point 4)"
     },
     {
-      "label": "Train the crew",
-      "icon": "toolbox",
-      "company": "the staff who stay learn the new tools",
-      "source": "R7-06"
-    },
-    {
-      "label": "Finish the rooms with people at home",
-      "icon": "window",
-      "company": "a calculation without dismissals, ruled out until the end of 2028",
-      "source": "R11-14",
-      "wide": "Finish the rooms\nwith people at home",
-      "tall": "Finish the rooms\nwith people at home"
+      "label": "Running it",
+      "company": "a named team answers for it, nights included; cost per request watched",
+      "bars": [[12.5, 20]],
+      "open": true,
+      "checks": [15.5, 18.5],
+      "source": "proposal",
+      "note": "starts after the first room and does not end"
     }
   ],
+  "home": {
+    "label": "People at home throughout",
+    "company": "no dismissals for business reasons until the end of 2028",
+    "source": "R11-14"
+  },
   "inspection": {
     "label": "inspected at every step",
-    "from": 1,
-    "company": "works agreement and AI Act settled while building",
     "source": "R11-07 R9-04 R9-05",
-    "note": "the line runs under steps 2 to 6: the inspection goes along with the work, not after it"
+    "note": "an open diamond after each work bar, and along the running: the inspection goes with the work, not after it"
   }
 }

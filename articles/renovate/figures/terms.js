@@ -10,7 +10,7 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 2;
-const SIZE = { wide: [580, 316], tall: [360, 528] };
+const SIZE = { wide: [580, 332], tall: [360, 540] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 // Every drawing lives in a box of 124 x 104; the ground is at y = 104.
@@ -109,15 +109,33 @@ function keys(P, C) {
 }
 
 function cable(P, C) {
-  // two wall sockets, a plugged cable between them
-  [6, 90].forEach((x) => {
-    P.shape(box(x, 30, 28, 28), C.paper);
-    P.thin(arc(x + 14, 44, 8.5, 0, 360, 20));
-    circle(P.root, x + 10.5, 44, 1.4, { fill: C.ink });
-    circle(P.root, x + 17.5, 44, 1.4, { fill: C.ink });
-    P.shape(box(x + 10, 58, 8, 8), C.paper);
+  // two surface junction boxes on the wall, one cable run between them:
+  // the cable leaves each box through a gland and is clipped along the wall
+  const top = 30, side = 32, cy = 90;
+  [4, 88].forEach((x) => {
+    P.shape(box(x, top, side, side), C.paper);              // the box
+    P.thin(box(x + 3.5, top + 3.5, side - 7, side - 7));     // its lid
+    [[x + 7, top + 7], [x + side - 7, top + 7], [x + 7, top + side - 7], [x + side - 7, top + side - 7]]
+      .forEach(([sx, sy], i) => {                            // four lid screws
+        P.thin(arc(sx, sy, 1.9, 0, 360, 10));
+        P.hair([[sx - 1.3, sy + (i % 2 ? 0.6 : -0.6)], [sx + 1.3, sy + (i % 2 ? -0.6 : 0.6)]]);
+      });
+    // the cable gland under the box: a nut, then the tapered cap
+    const gx = x + side / 2;
+    P.shape([[gx - 5, top + side], [gx - 5, top + side + 4], [gx + 5, top + side + 4], [gx + 5, top + side]], C.paper, 1.1);
+    P.shape([[gx - 3.6, top + side + 4], [gx - 2.8, top + side + 8.5], [gx + 2.8, top + side + 8.5], [gx + 3.6, top + side + 4]], C.paper, 1.1);
   });
-  P.line(curve([20, 66], [20, 98], [50, 98], [62, 98]).concat(curve([62, 98], [74, 98], [104, 98], [104, 66]).slice(1)), 2);
+  // the cable: down out of one gland, along the wall, up into the other
+  const a = 4 + side / 2, b = 88 + side / 2, gy = top + side + 8.5;
+  P.line(curve([a, gy], [a, cy - 4], [a + 4, cy], [a + 10, cy], 8)
+    .concat([[b - 10, cy]])
+    .concat(curve([b - 10, cy], [b - 4, cy], [b, cy - 4], [b, gy], 8)), 2);
+  // clips across it, each nailed to the wall above and below the cable
+  [a + 24, 62, b - 24].forEach((x) => {
+    P.shape(box(x - 2.2, cy - 5.5, 4.4, 11), C.paper, 1);
+    circle(P.root, x, cy - 3.5, 0.75, { fill: C.ink });
+    circle(P.root, x, cy + 3.5, 0.75, { fill: C.ink });
+  });
 }
 
 const DRAW = { handbook, archive, keys, cable };
@@ -146,8 +164,8 @@ function build(el, ctx) {
   };
 
   const S = tall
-    ? { x0: 12, cols: 2, gap: 16, head: 13, name: 12.5, term: 12, note: 13, rowGap: 14 }
-    : { x0: 10, cols: 4, gap: 10, head: 14, name: 12.5, term: 12, note: 13, rowGap: 0 };
+    ? { x0: 12, cols: 2, gap: 16, head: 13.5, name: 13, term: 12.5, note: 13.5, rowGap: 14 }
+    : { x0: 10, cols: 4, gap: 12, head: 15.5, name: 14, term: 13.5, note: 14.5, rowGap: 0 };
   const cellW = (W - 2 * S.x0 - (S.cols - 1) * S.gap) / S.cols;
   const sc = Math.min(cellW / BOX, 1.18);
 
@@ -175,8 +193,8 @@ function build(el, ctx) {
       DRAW[part.key](at(pic), C);
       st.fade(pic, a, a + 0.18);
       const lab = g(svg);
-      const nm = text(lab, x, ground + 20, part.name, { family: 'sans', size: S.name, weight: 500, width: cellW, lh: 15 });
-      const tm = text(lab, x, nm.bottom + S.term + 3, part.term, { family: 'sans', size: S.term, fill: ctx.print ? C.ink : C.muted, width: cellW, lh: 14.5 });
+      const nm = text(lab, x, ground + 20, part.name, { family: 'sans', size: S.name, weight: 500, width: cellW, lh: S.name * 1.18 });
+      const tm = text(lab, x, nm.bottom + S.term + 3, part.term, { family: 'sans', size: S.term, fill: ctx.print ? C.ink : C.muted, width: cellW, lh: S.term * 1.2 });
       st.fade(lab, a + 0.04, a + 0.2);
       rowBottom = Math.max(rowBottom, tm.bottom);
       if (k === 0) {

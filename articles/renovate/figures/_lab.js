@@ -22,7 +22,7 @@ const FIGS = {
   house:     { role: 'margin', steps: 6 },
   'walls': { role: 'wide', steps: 3 },
   'permits': { role: 'column', steps: 3 },
-  'roadmap': { role: 'wide', steps: 6 },
+  'roadmap': { role: 'wide', steps: 3 },
   'terms': { role: 'column', steps: 2 },
 };
 const MM = 96 / 25.4;

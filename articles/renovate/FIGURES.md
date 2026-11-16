@@ -4,6 +4,18 @@ Read `SPEC.md` first (figure contract, design system). Each figure below says wh
 
 Honesty rules that override looks: where a value is not published, draw the absence (an empty slot with an italic note "not published"), never an estimate. Never connect two measured points with a line that suggests the path between them. Company-reported figures carry a small mono tag `company-reported`.
 
+## Draft 6 (17 November 2026): the readers' fixes
+
+Six independent readers read draft 5 (dotUni `docs/papers/innovation/readers-draft-5.md`); the requirements and the loop are in `docs/papers/innovation/loop-draft-6.md`. Analogies need not all be construction (transcript `2026-11-17-003`): use the real-world picture that is true and explains best.
+
+- **`walls`**: the cable follows the DIN 18015-3 installation zones (along the upper zone, down beside a corner, to a socket near the floor) in all three walls; the brick walls read as plastered, with the brick visible only in the cut and in a broken-away patch.
+- **`terms`**: the cable joins two junction boxes (a lead between two wall sockets is a lethal double plug); the agent "acts in a loop".
+- **`permits`**: now cars, because buildings are inspected before occupancy in both countries. United States: the maker certifies itself, tests and recalls come afterwards (FR-2020-28107). Germany and the EU: type approval before any car is sold (EU-2018-858). The 2021 standing agreement is the type approval; a system outside it needs its own approval, the long way.
+- **`roadmap`**: a renovation schedule of an occupied house in a true order: survey, plan and materials, approval, trades first, the main supply, room by room with the keys in steps, running it; people at home throughout; inspected at every step.
+- **`obstacles`**: the accent is on missing knowledge, which the section is about; the law rows are marked quietly.
+- **`exits`**, **`attitudes`**: labels enlarged for laptop screens.
+- **`pairs`**: moved to an appendix; the text keeps a two-sentence summary.
+
 ## Draft 5 (16 November 2026, evening): the building analogy
 
 Alexander's rule for this article (dotUni transcripts `2026-11-16-019`, `-020`): every hard idea is explained with an everyday analogy, and the main one is his father's, a civil engineer: American houses are timber frames, so new wiring is pulled through hollow walls; German houses are mostly masonry, so a new cable means a channel cut and plastered. **The analogy is drawn in its own world. No AI agents, robots, screens or office workers inside it.** The plan with the analogy dictionary and the storyboard is in arudaev/dotUni `docs/papers/innovation/plan-restart.md`.
@@ -55,7 +67,7 @@ Sources for all rows: R6-06, R6-02, R6-03, R6-04, R6-16, R6-12, R6-14, R6-09, R6
 
 Five-second reading: "missing knowledge comes first; the law comes second and third".
 
-Six rows of unit dots, one dot is 2 percentage points, 50 dots to a full row, counted from zero at the left. Order as given. The two legal rows in the accent, the others in ink. The value in mono at the end of each row. Note at the top row: "one dot is 2% of firms". Source R7-06 (Federal Statistical Office, 2025; firms that considered AI and do not use it; several answers possible; the six most named of the listed reasons are shown, and the figure's note says so).
+Six rows of unit dots, one dot is 2 percentage points, 50 dots to a full row, counted from zero at the left. Order as given. Missing knowledge in the accent; the two legal rows marked quietly, the others in ink. The value in mono at the end of each row. Note at the top row: "one dot is 2% of firms". Source R7-06 (Federal Statistical Office, 2025; firms that considered AI and do not use it; several answers possible; the six most named of the listed reasons are shown, and the figure's note says so).
 
 | Reason | % |
 | --- | --- |

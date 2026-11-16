@@ -4,7 +4,7 @@
 // the years. Severance is the one field.
 import {
   mountFigure, svgRoot, colors, g, rect, line, text, textSize, cells, units, dots,
-  leader, bracket, penRing, stage, fmt,
+  leader, bracket, penRing, stage, fmt, measure, h, FONTS,
 } from '../../../lib/fig.js';
 
 export const steps = 1;
@@ -106,9 +106,22 @@ function build(el, ctx) {
   // severance: the note in the free rows of its band, and the pen ring
   const sev = ringBand.r.values, last = sev.length - 1;
   const ng = g(svg);
-  const noteStr = `[[${fmt(sev[0])}]] in ${d.years[0]} → [[${fmt(sev[last])}]] in ${d.years[last]}`;
+  // Upright sans with tabular lining figures: the mono zero, small and
+  // beside italics, was read as an 8 ("1,816").
   const rx = ringBox.w * (tall ? 0.6 : 0.66), ry = ringBox.h * (tall ? 0.72 : 0.74);
-  const nt = text(ng, tall ? S.x0 : colX(3) + colW - 4, ringBand.top + S.note * 0.72 - 1, noteStr, { italic: true, size: S.note, anchor: tall ? 'start' : 'end' });
+  const nSize = tall ? 14.5 : 16.5;
+  const pieces = [
+    { s: fmt(sev[0]), weight: 600 }, { s: ` in ${d.years[0]}  →  `, weight: 400 },
+    { s: fmt(sev[last]), weight: 600 }, { s: ` in ${d.years[last]}`, weight: 400 },
+  ].map((p) => ({ ...p, w: measure(p.s, { family: 'sans', size: nSize, weight: p.weight }) }));
+  const total = pieces.reduce((s, p) => s + p.w, 0);
+  const nBase = ringBand.top + nSize * 0.78 + (tall ? 1 : 0);
+  const nx0 = tall ? S.x0 : colX(3) + colW - 4 - total;
+  const te = h('text', { x: nx0.toFixed(1), y: nBase.toFixed(1), fill: C.ink, 'font-family': FONTS.sans, 'font-size': nSize }, ng);
+  te.style.whiteSpace = 'pre';
+  te.style.fontVariantNumeric = 'tabular-nums lining-nums';
+  pieces.forEach((p) => { h('tspan', { 'font-weight': p.weight }, te).textContent = p.s; });
+  const nt = { right: nx0 + total, cy: nBase - nSize * 0.36 };
   { // the leader ends on the ring itself
     const dy = (nt.cy - ringBox.cy) / ry, ex = ringBox.cx - rx * Math.sqrt(Math.max(0, 1 - dy * dy));
     leader(ng, nt.right + 5, nt.cy, ex - 2, nt.cy, { stroke: C.muted, dot: false });

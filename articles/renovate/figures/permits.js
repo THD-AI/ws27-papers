@@ -1,20 +1,21 @@
-// permits: two construction schedules on one time axis, like a site plan.
-//   step 0: United States. build → move in → inspections afterwards
-//           (the checks, open diamonds, stand inside the occupied period).
-//   step 1: Germany. A permit first (the field, with the same diamonds:
-//           the checks), then build, then move in.
-//   step 2: a "standard design" stamp lands on the German permit; the
-//           permit shrinks to its short form and the building work moves
-//           forward. A dimension line keeps the long permit's length:
-//           a building beyond the standard still needs a full permit.
-// Words in the drawing are building words; the company terms are in the
-// notes under the axis. Lengths are schematic (data/permits.json).
+// permits: two schedules for a new car on one time axis.
+//   step 0: United States. design and build → on the road, with the
+//           authority's tests and recalls afterwards (open diamonds inside
+//           the road period): the maker certifies its own cars.
+//   step 1: Germany / EU. Type approval first (the field, with the same
+//           diamonds: the checks), then build, then on the road.
+//   step 2: a "type approved" stamp lands on the German approval; it
+//           shrinks to its short form and building moves forward. A dashed
+//           ghost keeps the long approval's length: a car outside the
+//           approved type needs its own approval.
+// Words in the drawing are car words; the company terms are in the notes
+// under the axis. Lengths are schematic (data/permits.json).
 import {
-  mountFigure, svgRoot, colors, g, path, rect, line, text, stage, span, ease, rng, spline, lerp, clamp,
+  mountFigure, svgRoot, colors, g, path, rect, line, text, textSize, stage, span, ease, rng, spline, lerp, clamp,
 } from '../../../lib/fig.js';
 
 export const steps = 3;
-const SIZE = { wide: [552, 434], tall: [360, 486] };
+const SIZE = { wide: [552, 434], tall: [360, 506] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 // a pen line: thin, a little uneven, seeded
@@ -63,6 +64,16 @@ function build(el, ctx) {
   const diamond = (parent, x, y, r = 5.5) => path(parent, `M${x} ${y - r}L${x + r} ${y}L${x} ${y + r}L${x - r} ${y}Z`, {
     stroke: C.accent, 'stroke-width': 1.6, 'stroke-linejoin': 'round', fill: C.paper,
   });
+  // a small car, side view, in pen lines; (x, y) is the left end of its wheel line
+  const car = (parent, x, y) => {
+    const c = g(parent);
+    const body = ink(c, [[x + 3, y], [x, y], [x, y - 5.5], [x + 5, y - 6.5], [x + 8, y - 11.5], [x + 17, y - 11.5], [x + 21, y - 6.5], [x + 26, y - 5.5], [x + 26, y], [x + 23, y]], 1.2);
+    const mid = ink(c, [[x + 10, y], [x + 16, y]], 1.2);
+    const r = 2.8;
+    for (const wx of [x + 6.5, x + 19.5]) path(c, `M${wx - r} ${y}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0`, { stroke: C.ink, 'stroke-width': 1.2, fill: 'none' });
+    void body; void mid;
+    return c;
+  };
 
   // --- headline
   const head = text(svg, X0, 20, d.headline, { family: 'sans', size: 13.5, weight: 600, width: X1 - X0 });
@@ -75,7 +86,8 @@ function build(el, ctx) {
   st.fade(usK.el, 0.04, 0.14);
   const lab1 = usY + 22, bar1 = lab1 + 7;
   const us = S.us;
-  const lb = mono(svg, X(us.build[0]) + 1, lab1, wd.build); st.fade(lb.el, 0.2, 0.3);
+  const buildFits = X(us.build[0]) + 1 + textSize(wd.build, { family: 'mono', size: 11.5 }).w < X(us.move[0]) - 4;
+  const lb = mono(svg, X(us.build[0]) + 1, lab1, buildFits ? wd.build : wd.buildShort); st.fade(lb.el, 0.2, 0.3);
   twice(svg, [[X(us.build[0]), bar1], [X(us.build[1]), bar1], [X(us.build[1]), bar1 + BH], [X(us.build[0]), bar1 + BH], [X(us.build[0]), bar1]], 0.16, 0.38);
   const lm = mono(svg, X(us.move[0]) + 7, lab1, wd.move); st.fade(lm.el, 0.38, 0.48);
   twice(svg, [[X(us.move[0]) + 6, bar1], [X1, bar1]], 0.36, 0.56);
@@ -84,9 +96,16 @@ function build(el, ctx) {
   const insp = g(svg);
   us.inspections.forEach((u) => diamond(insp, X(u), bar1 + BH / 2));
   st.fade(insp, 0.58, 0.72);
-  const li = mono(svg, X(us.inspections[0]) - 5, lab1, wd.inspections, { fill: C.accent });
+  const usCar = car(svg, X(us.move[0]) + 13, bar1 + BH - 9);
+  st.fade(usCar, 0.44, 0.54);
+  // the tests label above the bar if it fits beside "on the road", else under it
+  const liW = textSize(wd.inspections, { family: 'mono', size: 11.5 }).w;
+  let liX = X(us.inspections[0]) - 5, liAnchor = 'start', liY = lab1, below = false;
+  if (liX + liW > X1) { liX = X1; liAnchor = 'end'; }
+  if ((liAnchor === 'end' ? X1 - liW : liX) < lm.right + 12) { liX = X(us.inspections[0]) - 5; liAnchor = 'start'; below = true; liY = bar1 + BH + 17; if (liX + liW > X1) { liX = X1; liAnchor = 'end'; } }
+  const li = mono(svg, liX, liY, wd.inspections, { fill: C.accent, anchor: liAnchor });
   st.fade(li.el, 0.62, 0.74);
-  y = bar1 + BH + 30;
+  y = bar1 + BH + (below ? 44 : 30);
 
   // --- Germany
   const deY = y;
@@ -120,7 +139,7 @@ function build(el, ctx) {
   const shift = X(sd.build[0]) - X(de.build[0]);
   const bld = g(svg);
   twice(bld, [[X(de.build[0]), bar2], [X(de.build[1]), bar2], [X(de.build[1]), bar2 + BH], [X(de.build[0]), bar2 + BH], [X(de.build[0]), bar2]], 1.36, 1.58);
-  const lb2 = mono(bld, X(de.build[0]) + 1, lab2, wd.build); st.fade(lb2.el, 1.42, 1.52);
+  const lb2 = mono(bld, X(de.build[0]) + 1, lab2, wd.buildDe); st.fade(lb2.el, 1.42, 1.52);
   // move in: its left edge travels with the building, its long lines are
   // drawn at the final length and clipped from the left
   const cid = `permits-clip-${Math.random().toString(36).slice(2, 8)}`;
@@ -134,6 +153,8 @@ function build(el, ctx) {
   const mvEdge = g(svg);
   twice(mvEdge, [[X(de.move[0]) + 6, bar2], [X(de.move[0]) + 6, bar2 + BH]], 1.54, 1.62);
   const lm2 = mono(mvEdge, X(de.move[0]) + 7, lab2, wd.move); st.fade(lm2.el, 1.58, 1.68);
+  const deCar = car(mvEdge, X(de.move[0]) + 13, bar2 + BH - 9);
+  st.fade(deCar, 1.64, 1.74);
   let lastS = '';
   st.on((gg) => {
     const dx = shift * shrink(gg);
@@ -165,7 +186,10 @@ function build(el, ctx) {
     fill: 'none', stroke: C.muted, 'stroke-width': 1, 'stroke-dasharray': '4 3', opacity: 0.8, 'data-audit': 'skip',
   });
   st.fade(ghost, 2.58, 2.72);
-  const dimL = text(svg, X(de.permit[0]), bar2 + BH + 21, wd.beyond, { italic: true, size: 13, fill: C.ink, width: X1 - X0 });
+  // one line if it fits, else two lines of about equal length
+  const bOpt = { italic: true, size: 13, fill: C.ink };
+  const bW = textSize(wd.beyond, bOpt).w;
+  const dimL = text(svg, X(de.permit[0]), bar2 + BH + 21, wd.beyond, { ...bOpt, width: bW <= X1 - X0 ? X1 - X0 : Math.ceil(bW / 2) + 24 });
   st.fade(dimL.el, 2.66, 2.8);
   y = dimL.bottom + 22;
 

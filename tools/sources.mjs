@@ -69,6 +69,36 @@ const OVERRIDES = {
     type: 'standard',
   },
 
+  // Draft 6 (17 November 2026): the approval analogy and two peer-reviewed frames, opened that day.
+  'FR-2020-28107': {
+    title: 'Notice regarding the applicability of NHTSA FMVSS test procedures to certifying manufacturers (85 FR 83143)',
+    publisher: 'National Highway Traffic Safety Administration, Federal Register',
+    date: '2020-12-21',
+    url: 'https://www.govinfo.gov/content/pkg/FR-2020-12-21/html/2020-28107.htm',
+    type: 'legal text',
+  },
+  'EU-2018-858': {
+    title: 'Regulation (EU) 2018/858 on the approval and market surveillance of motor vehicles and their trailers (Art. 6(4), recital 40)',
+    publisher: 'European Parliament and Council',
+    date: '2018-05-30',
+    url: 'https://eur-lex.europa.eu/eli/reg/2018/858/oj',
+    type: 'legal text',
+  },
+  'BRS-2021': {
+    title: 'The Productivity J-Curve: How Intangibles Complement General Purpose Technologies. American Economic Journal: Macroeconomics 13(1), 333–372',
+    publisher: 'Erik Brynjolfsson, Daniel Rock, Chad Syverson',
+    date: '2021-01',
+    url: 'https://doi.org/10.1257/mac.20180386',
+    type: 'peer-reviewed',
+  },
+  'CL-1990': {
+    title: 'Absorptive Capacity: A New Perspective on Learning and Innovation. Administrative Science Quarterly 35(1), 128–152',
+    publisher: 'Wesley M. Cohen, Daniel A. Levinthal',
+    date: '1990-03',
+    url: 'https://doi.org/10.2307/2393553',
+    type: 'peer-reviewed',
+  },
+
   // The dossier row reads "Regulation (EU) 2026/1744 ..., recitals 38, 40";
   // the automatic cut kept only the tail.
   'R9-05': {

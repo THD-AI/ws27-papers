@@ -19,12 +19,12 @@
     {
       "key": "keys",
       "name": "a ring of keys",
-      "term": "AI agent: allowed to act, only where its keys fit",
+      "term": "AI agent: acts in a loop, only where its keys fit",
       "source": null
     },
     {
       "key": "cable",
-      "name": "a cable between two sockets",
+      "name": "a cable between two junction boxes",
       "term": "connections: cables to other systems",
       "source": null
     }

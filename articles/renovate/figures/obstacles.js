@@ -2,7 +2,7 @@
 // one dot is 2 percentage points, counted from zero at the left.
 import {
   mountFigure, svgRoot, colors, g, rect, line, text, cells, units, dots, plate,
-  leader, edge, penRing, stage, fmt,
+  leader, edge, penRing, stage, fmt, bracket,
 } from '../../../lib/fig.js';
 
 export const steps = 1;
@@ -27,14 +27,28 @@ function build(el, ctx) {
   const rowY = (i) => S.top + i * S.rowH;            // baseline of the row's label
   const dotY = (i) => rowY(i) + S.dotDy;
 
-  // the one field: the two rows that are about the law
-  const legal = d.rows.map((r, i) => (r.legal ? i : -1)).filter((i) => i >= 0);
-  if (legal.length) {
-    const y0 = rowY(legal[0]) - S.label - 5, y1 = dotY(legal[legal.length - 1]) + S.pitch + 5;
+  // the one field: the reason named most, missing knowledge
+  const first = d.rows.findIndex((r) => r.first);
+  if (first >= 0) {
+    const y0 = rowY(first) - S.label - 5, y1 = dotY(first) + S.pitch + 5;
     const f = rect(svg, 0, y0, W, y1 - y0, { fill: C.field, 'data-audit': 'skip' });
     st.fade(f, 0.22, 0.42);
-    const fl = text(svg, W - (tall ? 12 : 16), (y0 + y1) / 2 + 2, d.fieldLabel, { italic: true, size: S.note + 1, fill: C.accent, weight: 600, anchor: 'end' });
+    // at the right end of the band, on the line of the row's label; on the
+    // narrow layout a little higher, clear of the ring on the value
+    const fl = text(svg, W - (tall ? 12 : 16), rowY(first) - (tall ? 6 : 0), d.fieldLabel, { italic: true, size: S.note + 1, fill: C.accent, weight: 600, anchor: 'end' });
     st.fade(fl.el, 0.4, 0.52);
+  }
+  // the two rows about the law: marked quietly, a muted bracket at the right
+  const legal = d.rows.map((r, i) => (r.legal ? i : -1)).filter((i) => i >= 0);
+  if (legal.length) {
+    const la = legal[0], lb = legal[legal.length - 1];
+    const bx = W - (tall ? 10 : 14), y0 = rowY(la) - S.label + 2, y1 = dotY(lb) + S.pitch;
+    const lg = g(svg);
+    bracket(lg, bx, y0, bx, y1, tall ? 5 : 6, { stroke: C.muted, 'stroke-width': 1 });
+    // in the free band between the two rows, right-aligned against the bracket
+    const ly = tall ? rowY(la) + 39 : (y0 + y1) / 2 + 5;
+    text(lg, bx - (tall ? 9 : 12), ly, d.lawLabel, { italic: true, size: S.note, fill: C.muted, anchor: 'end' });
+    st.fade(lg, 0.5, 0.62);
   }
 
   // plate: the 50 places of every row, and the scale under the last one
@@ -43,7 +57,7 @@ function build(el, ctx) {
     // the places behind the row's number stay empty, so that nothing sits under lettering
     const from = whole(r.value).cells, skip = Math.ceil(((tall ? 7 : 9) + S.num * 0.62 * (String(r.value).length + 1) + 5) / S.pitch);
     const free = slot.filter((c) => c.i < from || c.i >= from + skip);
-    plate(pl, free, tall ? 0.75 : 0.95, r.legal ? C.muted : C.hairline, S.x0, dotY(i)).setAttribute('opacity', r.legal ? 0.45 : 1);
+    plate(pl, free, tall ? 0.75 : 0.95, r.first ? C.muted : C.hairline, S.x0, dotY(i)).setAttribute('opacity', r.first ? 0.45 : 1);
   });
   const axY = dotY(d.rows.length - 1) + S.pitch + (tall ? 13 : 14);
   const ax = g(svg);
@@ -62,7 +76,7 @@ function build(el, ctx) {
     const lab = text(svg, S.x0, rowY(i), r.label, { family: 'sans', size: S.label, weight: 500 });
     st.fade(lab.el, a - 0.04, a + 0.06);
     const u = whole(r.value);
-    const ds = dots(g(svg), slot, u, S.r, { fill: r.legal ? C.accent : C.ink }, S.x0, dotY(i));
+    const ds = dots(g(svg), slot, u, S.r, { fill: r.first ? C.accent : C.ink }, S.x0, dotY(i));
     st.fill(ds, a, b);
     const last = slot[u.cells - 1];
     const vx = S.x0 + last.x + S.pitch / 2 + (tall ? 7 : 9);

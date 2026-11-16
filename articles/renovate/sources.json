@@ -97,6 +97,13 @@
     "type": "official statistics",
     "date": "2025-11-24"
   },
+  "BRS-2021": {
+    "title": "The Productivity J-Curve: How Intangibles Complement General Purpose Technologies. American Economic Journal: Macroeconomics 13(1), 333–372",
+    "publisher": "Erik Brynjolfsson, Daniel Rock, Chad Syverson",
+    "date": "2021-01",
+    "url": "https://doi.org/10.1257/mac.20180386",
+    "type": "peer-reviewed"
+  },
   "R12-14": {
     "title": "press release on the AI assistant's first month, 27 February 2024",
     "publisher": "Klarna",
@@ -108,12 +115,6 @@
     "publisher": "Entrepreneur",
     "url": "https://www.entrepreneur.com/business-news/klarna-ceo-reverses-course-by-hiring-more-humans-not-ai/491396",
     "type": "press"
-  },
-  "R12-34": {
-    "title": "What makes transplants thrive",
-    "publisher": "Pil and MacDuffie, Journal of World Business 34(4), 1999, 372–391",
-    "url": "https://ideas.repec.org/a/eee/worbus/v34y1999i4p372-391.html",
-    "type": "peer-reviewed (abstract)"
   },
   "R4-29": {
     "title": "Generative AI at Work",
@@ -153,6 +154,27 @@
     "url": "https://www.eib.org/files/publications/20260192-091126-eib-group-investment-survey-2026-eu-overview-en.pdf",
     "type": "institutional survey",
     "date": "2026-11-09"
+  },
+  "CL-1990": {
+    "title": "Absorptive Capacity: A New Perspective on Learning and Innovation. Administrative Science Quarterly 35(1), 128–152",
+    "publisher": "Wesley M. Cohen, Daniel A. Levinthal",
+    "date": "1990-03",
+    "url": "https://doi.org/10.2307/2393553",
+    "type": "peer-reviewed"
+  },
+  "FR-2020-28107": {
+    "title": "Notice regarding the applicability of NHTSA FMVSS test procedures to certifying manufacturers (85 FR 83143)",
+    "publisher": "National Highway Traffic Safety Administration, Federal Register",
+    "date": "2020-12-21",
+    "url": "https://www.govinfo.gov/content/pkg/FR-2020-12-21/html/2020-28107.htm",
+    "type": "legal text"
+  },
+  "EU-2018-858": {
+    "title": "Regulation (EU) 2018/858 on the approval and market surveillance of motor vehicles and their trailers (Art. 6(4), recital 40)",
+    "publisher": "European Parliament and Council",
+    "date": "2018-05-30",
+    "url": "https://eur-lex.europa.eu/eli/reg/2018/858/oj",
+    "type": "legal text"
   },
   "R11-36": {
     "title": "29 U.S.C. § 158 (NLRA section 8)",
@@ -238,13 +260,6 @@
     "publisher": "Bitkom",
     "date": "2025-11-13",
     "url": "https://www.bitkom.org/Presse/Presseinformation/Europas-Weg-digitale-Souveraenitaet",
-    "type": "survey"
-  },
-  "SRG-2025": {
-    "title": "European Cloud Providers' Local Market Share Now Holds Steady at 15%",
-    "publisher": "Synergy Research Group",
-    "date": "2025-07-24",
-    "url": "https://srgresearch.com/articles/european-cloud-providers-local-market-share-now-holds-steady-at-15",
     "type": "survey"
   },
   "R6-24": {

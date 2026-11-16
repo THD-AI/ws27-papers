@@ -1,6 +1,6 @@
 {
   "id": "obstacles",
-  "reading": "Missing knowledge comes first; the law comes second and third.",
+  "reading": "Missing knowledge comes first; the two legal reasons, unclear legal consequences and data protection, come second and third.",
   "source": "R7-06",
   "base": "Federal Statistical Office, 2025; firms that considered AI and do not use it; several answers possible",
   "unit": {
@@ -17,40 +17,47 @@
     {
       "label": "Missing knowledge",
       "value": 72,
+      "first": true,
       "legal": false,
       "source": "R7-06"
     },
     {
       "label": "Unclear legal consequences",
       "value": 62,
+      "first": false,
       "legal": true,
       "source": "R7-06"
     },
     {
       "label": "Data protection",
       "value": 60,
+      "first": false,
       "legal": true,
       "source": "R7-06"
     },
     {
       "label": "Systems that do not fit",
       "value": 45,
+      "first": false,
       "legal": false,
       "source": "R7-06"
     },
     {
       "label": "Data not available or not good enough",
       "value": 44,
+      "first": false,
       "legal": false,
       "source": "R7-06"
     },
     {
       "label": "Cost",
       "value": 32,
+      "first": false,
       "legal": false,
       "source": "R7-06"
     }
   ],
   "headline": "Germany, 2025 · why firms that considered AI do not use it",
-  "fieldLabel": "the law"
+  "fieldLabel": "first: know-how",
+  "lawLabel": "the law: second and third"
 }

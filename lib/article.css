@@ -542,6 +542,9 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .scene-text, .scene-caption { max-width: var(--measure); margin-left: var(--left); margin-right: var(--gutter); }
   .scene-text { padding: 1.4rem 0 0.4rem; }
   .scene-caption { margin-bottom: 2rem; padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
+  /* a passage already read nearly vanishes as it slides under the pinned
+     figure, so no half-cut grey paragraph shows at the figure's edge */
+  .scene.is-live .passage:has(~ .passage.is-active) { opacity: 0.2; }
 }
 
 /* A sequence: windows both narrow and short, where nothing can be pinned.

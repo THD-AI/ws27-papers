@@ -2,9 +2,14 @@
 // little uneven, drawn on with the scroll. Side by side on wide frames,
 // stacked on phones.
 //   step 0: the three walls. Timber frame: a board, the studs behind it as
-//           hidden (dashed) lines. Brick, twice: courses in running bond.
+//           hidden (dashed) lines. Brick, twice: a plain plastered face,
+//           the brick showing only where the plaster has broken away at a
+//           lower corner.
 //   step 1: the same new cable arrives above each wall.
-//   step 2: the three jobs. Timber: holes drilled in the studs, the cable
+//   step 2: the three jobs, all on one route in the installation zones of
+//           DIN 18015-3: in at the top right, across in the upper zone,
+//           down in the corner zone at the left, to a socket near the floor.
+//           Timber: holes bored in the studs, the cable
 //           pulled through behind the board to a socket; quick, nothing
 //           shows. Brick, repainted: a plastic duct screwed onto the
 //           surface and painted over; it works, but it sits on the wall.
@@ -75,15 +80,23 @@ function build(el, ctx) {
     st.fade(G, 0.02 + k * 0.06, 0.16 + k * 0.06);
     return t;
   });
-  // the stud bays of the timber frame; the cable enters every wall in the
-  // middle of the last bay and ends in the first, so it never runs on a stud
+  // the route, the same in every wall, in the installation zones of DIN
+  // 18015-3: in at the top near the right side, across in the upper zone just
+  // under the top of the wall, down in the corner zone near the left side,
+  // into a socket near the floor. In the timber frame both vertical legs lie
+  // inside the end stud bays, and the run crosses the studs through holes.
   boxes.forEach((b) => {
-    const w = b.x1 - b.x0;
+    const w = b.x1 - b.x0, hh = b.floor - b.top;
     b.n = Math.round(w / 58);
     b.bay = (w - 10) / b.n;
-    b.entry = Math.round(b.x0 + 5 + (b.n - 0.5) * b.bay);
-    b.sock = Math.round(b.x0 + 5 + 0.5 * b.bay + 8);
-    b.run = b.top + Math.round((b.floor - b.top) * 0.56);
+    const side = tall ? 18 : 20;
+    b.entry = b.x1 - side;
+    b.drop = b.x0 + side;
+    b.run = b.top + Math.max(13, Math.round(hh * 0.12));
+    b.sz = tall ? 12 : 13;
+    b.sockY = b.floor - Math.max(14, Math.round(hh * 0.12));
+    b.sockTop = b.sockY - b.sz / 2;
+    b.mid = Math.round(lerp(b.run, b.sockTop, 0.55));
   });
 
   let seed = 5;
@@ -99,15 +112,21 @@ function build(el, ctx) {
 
   const socket = (parent, b) => {
     const s = g(parent);
-    const sz = tall ? 12 : 13, cx = b.sock - sz / 2 - 1;
-    rect(s, cx - sz / 2, b.run - sz / 2, sz, sz, { fill: C.paper, stroke: C.ink, 'stroke-width': 1.25, rx: 1.5 });
-    circle(s, cx - 2.4, b.run, 1.1, { fill: C.ink });
-    circle(s, cx + 2.4, b.run, 1.1, { fill: C.ink });
+    const sz = b.sz, cx = b.drop, cy = b.sockY;
+    rect(s, cx - sz / 2, cy - sz / 2, sz, sz, { fill: C.paper, stroke: C.ink, 'stroke-width': 1.25, rx: 1.5 });
+    circle(s, cx - 2.4, cy, 1.1, { fill: C.ink });
+    circle(s, cx + 2.4, cy, 1.1, { fill: C.ink });
     return s;
   };
-  // the brick bond, faint: the wall is plastered, the bond seen through it
+  // an offset band of half width e around the route (down, across, down)
+  const band = (b, e, y0 = b.top, y1 = b.sockTop) => [
+    [b.entry - e, y0], [b.entry + e, y0], [b.entry + e, b.run + e], [b.drop + e, b.run + e],
+    [b.drop + e, y1], [b.drop - e, y1], [b.drop - e, b.run - e], [b.entry - e, b.run - e],
+  ];
+  // brick courses in running bond over the whole wall; the wall is
+  // plastered, so they are only ever shown through an opening (a clip)
   const bricks = (parent, b, attrs) => {
-    const grp = g(parent, { stroke: C.muted, 'stroke-width': 0.6, opacity: 0.32, fill: 'none', ...attrs });
+    const grp = g(parent, { stroke: C.ink, 'stroke-width': 0.75, opacity: 0.6, fill: 'none', ...attrs });
     const courses = Math.round((b.floor - b.top) / 10.6);
     const ch = (b.floor - b.top) / courses, bl = ch * 3;
     let dd = '';
@@ -119,6 +138,23 @@ function build(el, ctx) {
     path(grp, dd);
     return grp;
   };
+  // plaster broken away at the lower right corner: a ragged edge, brick behind
+  const patch = (parent, b, i) => {
+    const r = rng(70 + i), rx = tall ? 66 : 84, ry = tall ? 40 : 56, n = 9;
+    const edge = [];
+    for (let k = 0; k <= n; k++) {
+      const a = (k / n) * Math.PI / 2;
+      const j = k === 0 || k === n ? 1 : 0.84 + 0.2 * r();
+      edge.push([b.x1 - rx * Math.sin(a) * j, b.floor - ry * Math.cos(a) * j]);
+    }
+    const id = `${clipId}-patch-${i}`;
+    const clip = h('clipPath', { id }, svg);
+    path(clip, poly([...edge, [b.x1, b.floor]], true), { fill: '#000' });
+    const grp = g(parent, { 'data-audit': 'skip' });
+    bricks(grp, b, { 'clip-path': `url(#${id})` });
+    pline(grp, edge, 1, C.ink, 0.45);
+    return grp;
+  };
 
   const marks = [];      // where each note's leader points
   d.panels.forEach((p, i) => {
@@ -128,7 +164,8 @@ function build(el, ctx) {
     st.fade(hd.el, 0.02 + i * 0.04, 0.16 + i * 0.04).fade(sb.el, 0.12 + i * 0.04, 0.26 + i * 0.04);
     twice(P, [[b.x0 - 8, b.floor], [b.x1 + 8, b.floor]], 0.02 + i * 0.03, 0.14 + i * 0.03);
 
-    const runPts = [[b.entry, b.top], [b.entry, b.run], [b.sock, b.run]];
+    const runPts = [[b.entry, b.top], [b.entry, b.run], [b.drop, b.run], [b.drop, b.sockTop]];
+    const lx = b.x0 + (tall ? 36 : 42);           // where each leader leaves its note
 
     if (p.kind === 'timber') {
       const hidden = g(P, { stroke: C.ink, 'stroke-width': 0.9, 'stroke-dasharray': '5 3', opacity: 0.7, fill: 'none' });
@@ -139,8 +176,8 @@ function build(el, ctx) {
       studs.forEach((x) => [x - sw / 2, x + sw / 2].forEach((xx) => path(hidden, poly([[xx, b.top + plate], [xx, b.floor - plate]]))));
       st.fade(hidden, 0.3, 0.6);
       twice(P, [[b.x0, b.floor], [b.x0, b.top], [b.x1, b.top], [b.x1, b.floor]], 0.1, 0.42);
-      // the job: drill, pull through, close nothing
-      const crossed = studs.filter((x) => x < b.entry - 4 && x > b.sock + 4);
+      // the job: bore the studs in the upper zone, pull through, close nothing
+      const crossed = studs.filter((x) => x < b.entry - 4 && x > b.drop + 4);
       const holes = g(P, { stroke: C.ink, 'stroke-width': 1, fill: C.paper });
       crossed.forEach((x) => circle(holes, x, b.run, 3.2));
       st.fade(holes, 2.02, 2.1);
@@ -148,58 +185,52 @@ function build(el, ctx) {
       st.draw(solid, 2.08, 2.3, [2.32, 2.42]);
       st.fade(path(P, poly(runPts), hiddenCab), 2.32, 2.42);
       st.fade(socket(P, b), 2.3, 2.38);
-      const hx = crossed[Math.floor((crossed.length - 1) / 2)];
-      // the leader rises in the bay beside the stud, not along it
-      marks.push({ x: hx - 3, y: b.run + 3.5, lx: hx - b.bay / 2, at: [2.36, 2.46] });
+      // the leader rises in the first bay to the drop, not along a stud
+      marks.push({ x: b.drop + 3, y: b.mid, lx, at: [2.36, 2.46] });
     } else {
-      st.fade(bricks(P, b), 0.3, 0.62);
+      st.fade(patch(P, b, i), 0.3, 0.62);
       twice(P, [[b.x0, b.floor], [b.x0, b.top], [b.x1, b.top], [b.x1, b.floor]], 0.14, 0.46);
     }
 
     if (p.kind === 'surface') {
       // a plastic duct screwed onto the face of the wall, painted over
       const dw = tall ? 5 : 5.5;
-      const duct = [
-        [b.entry - dw, b.top], [b.entry + dw, b.top], [b.entry + dw, b.run + dw], [b.sock, b.run + dw],
-        [b.sock, b.run - dw], [b.entry - dw, b.run - dw],
-      ];
+      const duct = band(b, dw);
       // the cable laid on the face, then the duct's cover closes over it
       st.draw(path(P, poly(runPts), cab), 2.2, 2.34);
       const body = path(P, poly(duct, true), { fill: C.paper, stroke: 'none', 'data-audit': 'skip' });
       const edge = pline(P, [...duct, duct[0]], 1.25, C.ink, 0.25);
       const screws = g(P, { stroke: C.ink, 'stroke-width': 0.9, fill: C.paper, 'data-audit': 'skip' });
-      const vy = [lerp(b.top, b.run, 0.35), lerp(b.top, b.run, 0.78)];
-      vy.forEach((y) => { circle(screws, b.entry, y, 1.9); path(screws, poly([[b.entry - 1.3, y], [b.entry + 1.3, y]])); });
-      for (let k = 1; k <= 3; k++) {
-        const x = lerp(b.entry, b.sock, k / 4);
+      const across = tall ? 5 : 4;
+      for (let k = 1; k < across; k++) {
+        const x = lerp(b.entry - dw, b.drop + dw, k / across);
         circle(screws, x, b.run, 1.9); path(screws, poly([[x, b.run - 1.3], [x, b.run + 1.3]]));
       }
+      [0.3, 0.75].forEach((f) => {
+        const y = lerp(b.run + dw, b.sockTop, f);
+        circle(screws, b.drop, y, 1.9); path(screws, poly([[b.drop - 1.3, y], [b.drop + 1.3, y]]));
+      });
       st.fade(body, 2.34, 2.42).draw(edge, 2.32, 2.44).fade(screws, 2.4, 2.46);
       st.fade(socket(P, b), 2.3, 2.36);
       // painted over: the duct takes the wall's colour, a muted second edge
       const paint = pline(P, [...duct, duct[0]], 0.6, C.muted, 0.8);
       st.draw(paint, 2.44, 2.54);
-      const mx = lerp(b.entry, b.sock, 0.5);
-      marks.push({ x: mx, y: b.run + dw + 3, at: [2.5, 2.6] });
+      marks.push({ x: b.drop + dw + 2.5, y: b.mid, lx, at: [2.5, 2.6] });
     }
 
     if (p.kind === 'chase') {
       const cw = 4.5, pw = cw + 3.5;
-      const chan = [
-        [b.entry - cw, b.top], [b.entry + cw, b.top], [b.entry + cw, b.run + cw], [b.sock, b.run + cw],
-        [b.sock, b.run - cw], [b.entry - cw, b.run - cw],
-      ];
-      const scarPts = [
-        [b.entry - pw, b.top + 0.6], [b.entry + pw, b.top + 0.6], [b.entry + pw, b.run + pw], [b.sock - 8, b.run + pw],
-        [b.sock - 8, b.run - pw], [b.entry - pw, b.run - pw], [b.entry - pw, b.top + 0.6],
-      ];
+      const chan = band(b, cw);
+      // the scar runs on past the socket: its box is chased in too
+      const scarPts = band(b, pw, b.top + 0.6, b.sockY + b.sz / 2 + 2.5);
+      scarPts.push(scarPts[0]);
       const plaster = path(P, pen(scarPts, 41 + i, 0.9) + 'Z', { fill: C.field, stroke: 'none', 'data-audit': 'skip' });
       // the cut: the plaster is opened and the brick itself shows
       const cut = g(P, { 'data-audit': 'skip' });
       const clip = h('clipPath', { id: clipId }, svg);
       path(clip, poly(chan, true), { fill: '#000' });
       path(cut, poly(chan, true), { fill: C.paper, stroke: 'none' });
-      bricks(cut, b, { stroke: C.ink, 'stroke-width': 0.75, opacity: 0.6, 'clip-path': `url(#${clipId})` });
+      bricks(cut, b, { 'clip-path': `url(#${clipId})` });
       const cutEdge = pline(P, [...chan, chan[0]], 1, C.ink, 0.35);
       st.fade(cut, 2.06, 2.24, [2.62, 2.76]);
       st.draw(cutEdge, 2.06, 2.32, [2.62, 2.76]);
@@ -210,7 +241,7 @@ function build(el, ctx) {
       st.draw(solid, 2.4, 2.6, [2.66, 2.78]);
       st.fade(path(P, poly(runPts), hiddenCab), 2.7, 2.8);
       st.fade(socket(P, b), 2.8, 2.88);
-      marks.push({ x: lerp(b.entry, b.sock, 0.5), y: b.run + pw + 1.5, at: [2.86, 2.96] });
+      marks.push({ x: b.drop + pw + 1.5, y: b.mid, lx, at: [2.86, 2.96] });
     }
 
     // the cable arrives (step 1) and goes in (step 2)

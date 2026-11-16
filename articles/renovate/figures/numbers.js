@@ -19,8 +19,8 @@ const fill = (tpl, v, dec = 0) => tpl.replace('{v}', fmt(v, dec));
 function plateA(svg, C, d, tall, st, keep, big) {
   const A = d.plateA;
   const L = tall
-    ? { p: 20.5, gx: 14, gy: 152, rBase: 2, rUnit: 6.7, note: 12.5, top: [141, 130, 112, 88, 77], bottomY: 378, relX: 229, relNoteX: 241, relW: 108, restX: 256, restY: 116, restW: 96, tagX: 346, tagY: 44 }
-    : { p: 32, gx: 150, gy: 162, rBase: 2.8, rUnit: 10.2, note: 14, top: [148, 136, 114, 88, 76], bottomY: 495, relX: 484, relNoteX: 500, relW: 230, restX: 492, restY: 110, restW: 240, tagX: 786, tagY: 17 };
+    ? { p: 20.5, gx: 14, gy: 152, rBase: 2, rUnit: 6.7, note: 12.5, top: [141, 130, 112, 83, 72], bottomY: 378, relX: 229, relNoteX: 241, relW: 108, restX: 256, restY: 116, restW: 96, tagX: 346, tagY: 44 }
+    : { p: 32, gx: 150, gy: 162, rBase: 2.8, rUnit: 10.2, note: 14, top: [148, 136, 113, 83, 71], bottomY: 495, relX: 484, relNoteX: 500, relW: 230, restX: 492, restY: 110, restW: 240, tagX: 786, tagY: 17 };
   if (big) L.note = 13.5;
   if (tall) { L.restX = 244; L.restY = 270; L.restW = 108; }
   const root = g(svg), body = g(root, tall ? { transform: 'translate(0 40)' } : null), grid = g(body), notes = g(body);
@@ -93,10 +93,12 @@ function plateA(svg, C, d, tall, st, keep, big) {
   // the note, then the number on its own with clear space, ringed
   const [pre, post] = A.slide.note.split('[[{v}]]');
   const t1 = text(gSn, bx0, L.top[2], pre.trim(), o);
-  const num = text(gSn, t1.right + (tall ? 11 : 13), L.top[2], fmt(A.slide.value), { family: 'mono', size: L.note, weight: 500 });
-  text(gSn, num.right + (tall ? 11 : 13), L.top[2], post.trim(), o);
+  // the number that matters, larger than the notes so it is found first
+  const numSize = tall ? 16.5 : 18;
+  const num = text(gSn, t1.right + (tall ? 12 : 14), L.top[2], fmt(A.slide.value), { family: 'mono', size: numSize, weight: 600 });
+  text(gSn, num.right + (tall ? 12 : 14), L.top[2], post.trim(), o);
   {
-    const pr = penRing(gSn, num.cx, num.cy - 0.5, num.w / 2 + (tall ? 5.5 : 6.5), L.note * 0.5 + (tall ? 3.4 : 4), { seed: 31, stroke: C.accent, width: tall ? 1.3 : 1.5 });
+    const pr = penRing(gSn, num.cx, num.cy - 0.5, num.w / 2 + (tall ? 6 : 7), numSize * 0.5 + (tall ? 3.6 : 4), { seed: 31, stroke: C.accent, width: tall ? 1.7 : 1.8 });
     pr.paths.forEach((p, k) => st.draw(p, 1.74 + k * 0.03, 1.92 + k * 0.03));
   }
   nt(gSn, 1.6, 1.74);
@@ -111,8 +113,11 @@ function plateA(svg, C, d, tall, st, keep, big) {
     const [qx, qy] = at(order[A.release.value - 1]);
     leader(gN, rest.x + 6, rest.y - 3, qx + 3, qy + L.rUnit + 3.5, { stroke: C.muted });
   } else {
-    const [rx, ry] = at(order[A.slide.value + (tall ? 0 : rowsTop)]);
-    leader(gN, rest.x + (tall ? 6 : 10), rest.bottom + 3, rx + (tall ? 3 : 2), ry - L.rUnit - 3.5, { stroke: C.muted });
+    // a short bracket over the two columns of the eight, beside the one
+    // over the 32, so that the top edge reads as 32 | the rest
+    const ex0 = L.gx + (A.slide.value / rowsTop) * L.p + 3, ex1 = L.gx + cols * L.p - 3;
+    bracket(gN, ex1, L.top[0], ex0, L.top[0], 6, { stroke: C.muted, 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+    leader(gN, rest.x + 10, rest.bottom + 3, (ex0 + ex1) / 2, L.top[0] - 2.5, { stroke: C.muted });
   }
   nt(gN, 1.8, 1.94);
 
@@ -121,9 +126,9 @@ function plateA(svg, C, d, tall, st, keep, big) {
   text(gA, bx0, L.top[1], A.start.note, o);
   nt(gA, 2.24, 2.42);
   const gF = g(notes);
-  bracket(gF, bx1, L.top[3], bx0, L.top[3], tall ? 4.5 : 6, { stroke: C.ink, 'stroke-width': 1, 'stroke-dasharray': '3 3.5' });
+  bracket(gF, bx1, L.top[3], bx0, L.top[3], tall ? 4.5 : 6, { stroke: C.muted, 'stroke-width': 1, 'stroke-dasharray': '3 3.5' });
   {
-    const fo = { ...o, width: tall ? 250 : 330 }, ftxt = fill(A.finished.note, A.slide.value);
+    const fo = { ...o, width: tall ? 250 : 330, fill: C.muted }, ftxt = fill(A.finished.note, A.slide.value);
     const fs = textSize(ftxt, fo);
     text(gF, bx0, L.top[4] - (fs.lines - 1) * fs.lh, ftxt, fo);
   }
@@ -232,10 +237,13 @@ function plateB(svg, C, d, tall, st, bare, big) {
 
   if (!bare) {
     // plate A is gone; one line keeps what it showed
+    // at step 3 it stands where the time line will be, and gives way to it
     const rm = g(root);
-    text(rm, S.x0, tall ? H - 22 : H - 12, B.reminder.replace('{a}', fmt(d.plateA.slide.value)).replace('{b}', fmt(d.plateA.total.value)), { family: 'mono', size: S.small, fill: C.muted });
-    text(rm, W - S.x0, tall ? H - 7 : 17, d.tag, { family: 'mono', size: S.small, fill: C.muted, anchor: 'end' });
-    st.fade(rm, 3.4, 3.56);
+    text(rm, tall ? S.x0 : rx0, ay + 4, B.reminder.replace('{a}', fmt(d.plateA.slide.value)).replace('{b}', fmt(d.plateA.total.value)), { family: 'mono', size: S.small, fill: C.muted });
+    st.fade(rm, 3.4, 3.56, [4.0, 4.1]);
+    const tg = g(root);
+    text(tg, W - S.x0, tall ? H - 7 : 17, d.tag, { family: 'mono', size: S.small, fill: C.muted, anchor: 'end' });
+    st.fade(tg, 3.4, 3.56);
   }
   return { root };
 }
