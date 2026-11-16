@@ -16,7 +16,7 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 3;
-export const aspect = { wide: 928 / 386, tall: 360 / 736 };
+export const aspect = { wide: 928 / 392, tall: 360 / 734 };
 let mounts = 0;
 
 function pen(points, seed, amp) {
@@ -42,7 +42,7 @@ const poly = (pts, close) => pts.map((q, i) => `${i ? 'L' : 'M'}${q[0].toFixed(1
 
 function build(el, ctx) {
   const C = colors(ctx), d = ctx.data, tall = ctx.layout === 'tall';
-  const W = tall ? 360 : 928, H = tall ? 736 : 386;
+  const W = tall ? 360 : 928, H = tall ? 734 : 392;
   const svg = svgRoot(el, W, H, d.reading);
   svg.style.color = C.ink;
   const st = stage();
@@ -56,11 +56,24 @@ function build(el, ctx) {
   // baseline (the effort line follows it)
   const boxes = d.panels.map((p, i) => {
     if (tall) {
-      const by = 4 + i * 244;
-      return { x0: 16, x1: 344, hy: by + 18, wy: by + 35, sy: by + 51, cy: by + 66, top: by + 90, floor: by + 186, ny: by + 208 };
+      const by = 4 + i * 252 - (i === 2 ? 26 : 0);   // the last panel shares the header above it
+      return { x0: 16, x1: 344, gy: by + 14, hy: by + 40, sy: by + 57, cy: by + 72, top: by + 96, floor: by + 192, ny: by + 214 };
     }
     const w = 270, gap = (W - 40 - 3 * w) / 2, x0 = 20 + i * (w + gap);
-    return { x0, x1: x0 + w, hy: 24, wy: 43, sy: 61, cy: 98, top: 126, floor: 314, ny: 350 };
+    return { x0, x1: x0 + w, gy: 18, hy: 50, sy: 68, cy: 102, top: 130, floor: 318, ny: 354 };
+  });
+
+  // where each wall is common: one header over the timber frame, one shared
+  // by the two brick walls (one wall, two ways), with a hairline under it
+  // (beside it, running down, when the panels are stacked)
+  d.groups.forEach((gr, k) => {
+    const first = boxes[gr.panels[0]], last = boxes[gr.panels[gr.panels.length - 1]];
+    const G = g(svg);
+    const t = text(G, first.x0, first.gy, gr.label, { family: 'mono', size: S.where, fill: C.muted, caps: true, spacing: 0.3, width: tall ? first.x1 - first.x0 : last.x1 - first.x0 });
+    if (tall) path(G, poly([[first.x0 - 9, first.gy - 9], [first.x0 - 9, last.floor]]), { stroke: C.hairline, 'stroke-width': 1, 'data-audit': 'skip' });
+    else path(G, poly([[first.x0, first.gy + 9], [last.x1, first.gy + 9]]), { stroke: C.hairline, 'stroke-width': 1, 'data-audit': 'skip' });
+    st.fade(G, 0.02 + k * 0.06, 0.16 + k * 0.06);
+    return t;
   });
   // the stud bays of the timber frame; the cable enters every wall in the
   // middle of the last bay and ends in the first, so it never runs on a stud
@@ -111,9 +124,8 @@ function build(el, ctx) {
   d.panels.forEach((p, i) => {
     const b = boxes[i], P = g(svg);
     const hd = text(P, b.x0, b.hy, p.heading, { family: 'sans', size: S.head, weight: 600 });
-    const wh = text(P, b.x0, b.wy, p.where, { family: 'mono', size: S.where, fill: C.muted, caps: true, spacing: 0.4 });
     const sb = text(P, b.x0, b.sy, p.sub, { family: 'sans', size: S.sub, fill: C.muted });
-    st.fade(hd.el, 0.02 + i * 0.04, 0.16 + i * 0.04).fade(wh.el, 0.08 + i * 0.04, 0.22 + i * 0.04).fade(sb.el, 0.12 + i * 0.04, 0.26 + i * 0.04);
+    st.fade(hd.el, 0.02 + i * 0.04, 0.16 + i * 0.04).fade(sb.el, 0.12 + i * 0.04, 0.26 + i * 0.04);
     twice(P, [[b.x0 - 8, b.floor], [b.x1 + 8, b.floor]], 0.02 + i * 0.03, 0.14 + i * 0.03);
 
     const runPts = [[b.entry, b.top], [b.entry, b.run], [b.sock, b.run]];
@@ -225,11 +237,11 @@ function build(el, ctx) {
   if (tall) {
     // stacked: each wall has its own tag
     boxes.forEach((b, i) => {
-      const cn = text(cg, b.entry - 40, b.cy + 6, i ? d.cable.again : d.cable.label, { italic: true, size: S.note, anchor: 'end' });
+      const cn = text(cg, b.entry - 40, b.cy + 6, d.cable.label, { italic: true, size: S.note, anchor: 'end' });
       leader(lead, cn.right + 4, cn.y + cn.h / 2, b.entry - 31, b.cy + 0.5, { stroke: C.muted });
     });
   } else {
-    const cn = text(cg, W / 2, 84, d.cable.label, { italic: true, size: S.note, anchor: 'middle' });
+    const cn = text(cg, W / 2, 90, d.cable.label, { italic: true, size: S.note, anchor: 'middle' });
     boxes.forEach((b) => {
       const sx = Math.max(cn.x + 6, Math.min(cn.right - 6, b.entry - 30));
       leader(lead, sx, cn.bottom + 3, b.entry - 31, b.cy - 1, { stroke: C.muted });

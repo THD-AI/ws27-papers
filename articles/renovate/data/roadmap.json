@@ -1,117 +1,57 @@
 {
   "id": "roadmap",
-  "reading": "A renovation in seven phases, one after another, with the residents at home throughout and the inspection running alongside the work, not after it.",
-  "axis": "order of work, not time",
-  "columns": 6,
-  "phases": [
+  "reading": "Six everyday actions in order: measure first, fix the foundations, choose parts you can swap, hand over keys one at a time, train the crew, finish the rooms with people at home; a line under steps 2 to 6 marks the inspection at every step.",
+  "headline": "Renovate in this order, with the people at home, and inspect as you go.",
+  "drawn": "Only the everyday actions are drawn; the company meaning of each step is in the article text under the figure.",
+  "actions": [
     {
-      "building": "Survey",
+      "label": "Measure first",
+      "icon": "tape",
       "company": "one measure for both countries, with its cost",
-      "span": [
-        0,
-        1
-      ],
-      "detail": "tape",
       "source": "R6-04",
-      "note": "Telekom's 2030 targets have no measure that compares with T-Mobile's; the measure is the article's proposal (section 9, point 1)",
-      "phrase": "measure first"
+      "note": "Telekom's 2030 targets have no measure that compares with T-Mobile's; the measure is the article's proposal (section 9, point 1)"
     },
     {
-      "building": "Foundations",
-      "company": "ways to prove who is calling, [[14]] → [[3]]; customer data made usable",
-      "span": [
-        1,
-        2
-      ],
-      "detail": "piles",
-      "piles": {
-        "from": 14,
-        "to": 3,
-        "source": "R6-05"
-      },
-      "source": "R6-05",
-      "phrase": "fewer, firmer footings"
+      "label": "Fix the foundations",
+      "icon": "footing",
+      "company": "ways to prove who is calling, 14 to 3; customer data made usable",
+      "source": "R6-05"
     },
     {
-      "building": "Materials",
+      "label": "Choose parts you can swap",
+      "icon": "plugs",
       "company": "one switch between models; sensitive data hosted in Germany",
-      "span": [
-        2,
-        3
-      ],
-      "detail": "swap",
       "source": "R6-05 R6-24",
-      "note": "the model-switch layer and sovereign hosting are on Telekom's slide (R6-05); its AI factory in Munich (R6-24)",
-      "phrase": "parts you can swap"
+      "wide": "Choose parts\nyou can swap"
     },
     {
-      "building": "Wiring",
-      "company": "[[1]] read, [[2]] actions that can be undone, [[3]] risky changes last",
-      "span": [
-        3,
-        4
-      ],
-      "detail": "keys",
-      "keys": [
-        3.2,
-        3.5,
-        3.8
-      ],
+      "label": "Hand over keys one at a time",
+      "icon": "keys",
+      "company": "read first, then actions that can be undone, risky changes last",
       "source": "proposal",
       "note": "the article's own proposal (section 9, point 4); changing bank details after login already exists (R6-16)",
-      "phrase": "keys handed out one by one"
+      "wide": "Hand over keys\none at a time"
     },
     {
-      "building": "Training",
+      "label": "Train the crew",
+      "icon": "toolbox",
       "company": "the staff who stay learn the new tools",
-      "span": [
-        4,
-        5
-      ],
-      "detail": "none",
-      "source": "R7-06",
-      "note": "missing knowledge is the reason German firms name most often for not using AI (R7-06)",
-      "phrase": "train the trades who stay"
+      "source": "R7-06"
     },
     {
-      "building": "Fit-out",
-      "company": "a calculation without dismissals",
-      "span": [
-        5,
-        6
-      ],
-      "detail": "none",
+      "label": "Finish the rooms with people at home",
+      "icon": "window",
+      "company": "a calculation without dismissals, ruled out until the end of 2028",
       "source": "R11-14",
-      "note": "the return has to come from fewer repeat contacts, other work, and the agreed exit routes (R12-01); the article's proposal (section 9, point 3)",
-      "phrase": "with the residents at home"
-    },
-    {
-      "building": "Inspection",
-      "company": "works agreement and AI Act settled while building",
-      "span": [
-        1,
-        6
-      ],
-      "detail": "stamps",
-      "stamps": [
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "ghost": "not after",
-      "source": "R11-07 R9-04 R9-05",
-      "note": "the article's proposal (section 9, point 2)",
-      "phrase": "while building, not after"
+      "wide": "Finish the rooms\nwith people at home",
+      "tall": "Finish the rooms\nwith people at home"
     }
   ],
-  "residents": {
-    "building": "The residents stay",
-    "company": "staff: no dismissals for business reasons until end of 2028",
-    "source": "R11-14",
-    "phrase": "at home through every phase"
-  },
-  "headline": "Renovate in this order, with the residents at home, and inspect while you build.",
-  "drawn": "Only building words are drawn; company meanings stay here for the article text under the figure."
+  "inspection": {
+    "label": "inspected at every step",
+    "from": 1,
+    "company": "works agreement and AI Act settled while building",
+    "source": "R11-07 R9-04 R9-05",
+    "note": "the line runs under steps 2 to 6: the inspection goes along with the work, not after it"
+  }
 }

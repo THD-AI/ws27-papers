@@ -5,6 +5,7 @@ author: Alexander Rudaev
 context: Innovation Management for AI · TH Deggendorf · winter semester 2026/27
 status: Draft for review, 16 November 2026
 accent: renovate
+hero: none
 ---
 
 ## The short version
@@ -14,7 +15,7 @@ On 5 October 2026 Deutsche Telekom told investors that software agents now do a 
 My argument is that this result cannot be bought and screwed onto a company. It depends on the building underneath. In America 94% of new family homes have timber frames: a new cable is pulled through the hollow wall behind the board. In Germany about two in three new homes are of brick or other masonry: a new cable runs in a channel cut into the wall and plastered over. A brick house is solid and built to stand. But once it cracks, or needs new pipes, cables or a network, the work is heavy and slow. A timber house goes up fast, and its walls open easily. {{NAHB-2026 DESTATIS-2021 BAUNETZ-DIN18015}}
 
 :::figure walls wide
-The same new cable in three walls. In a timber frame it is pulled through behind the board. In brick it can be screwed onto the surface in a duct and painted over, which works but stays exposed. Or a channel is cut, the cable laid and plastered: the renovation. In this article the cable stands for a connection between software systems.
+The same new cable in three walls. In a timber frame it is pulled through behind the board. In brick it can be bolted onto the surface in a duct and painted over: quick, and the old wall stays as it was. Or a channel is cut, the cable laid and plastered: the renovation. In this article the cable stands for a connection between software systems, and the paint for an agent put on top of systems that were not changed.
 :::
 
 T-Mobile was not born timber. It opened its walls and rebuilt its systems before its agents went in. Telekom's systems in Europe are brick, and Telekom says so itself. In Germany three things make the renovation harder than in America: education, the law, and dependence on American technology. And Telekom cannot take the people out of the building while it works, so the agents have to help the staff who stay. The last section gives the order in which I would renovate.
@@ -115,7 +116,7 @@ Germany trains AI researchers at scale, but that knowledge does not reach the fi
 In Germany you need a permit before you build. In America, for this kind of decision, the checks mostly come afterwards. I followed one decision on both sides: to let a software agent act on customer accounts and work next to service staff.
 
 :::figure permits column
-One decision, two schedules. In the United States it goes live without a check by staff representatives, and the checks follow in court and in state rules. In Germany the works council and the privacy review come first. Since 2021 a standing agreement pre-approves IT systems that stay inside fixed rules.
+One decision, two schedules: checks after the work in the United States, before it in Germany, and a standard design that shortens the German permit since 2021.
 :::
 
 @where United States · T-Mobile US
@@ -126,7 +127,7 @@ At Telekom the works council, elected by the staff, has to be told while the sys
 
 Telekom has already renovated part of this process. Before 2021 its works council approved IT systems one by one, six weeks each. Since then a standing agreement sets the rules once: no control of individual performance, evaluations only for groups, logs only for security. A department fills in a profile of its system, the works council checks it, and if nothing goes beyond the rules no separate decision is needed: a standard design with a quick check. A screen that listens to calls probably goes beyond it and needs its own permit, and the agreements that would show how long that takes are not published. {{R11-12}}
 
-The rules that apply are precise. Under § 87(1) no. 6 of the Works Constitution Act the works council must agree to technical systems suited to monitoring staff. Under the AI Act, customers must be told since 2 August 2026 when they deal with an AI system, and from 2 December 2027 a tool used to monitor or evaluate employees can count as high risk. Firms feel the weight: among those that considered AI and decided against it, 62% named unclear legal consequences and 60% data protection, second and third after missing knowledge. And the jobs agreement moves any saving from dismissals to paid exits until 2029. In a brick house the inspection comes before the wall is opened, and the work has to be planned for that. {{R11-07 R9-04 R9-05 R7-06 R11-14}}
+The rules that apply are precise. Under § 87(1) no. 6 of the Works Constitution Act the works council must agree to technical systems suited to monitoring staff. Under the AI Act, customers must be told since 2 August 2026 when they deal with an AI system, and from 2 December 2027 a tool used to monitor or evaluate employees can count as high risk. Firms feel the weight: among those that considered AI and decided against it, 62% named unclear legal consequences and 60% data protection, second and third after missing knowledge. And the jobs agreement moves any saving from dismissals to paid exits until 2029. In Germany the inspection comes before the wall is opened, and the work has to be planned for that. {{R11-07 R9-04 R9-05 R7-06 R11-14}}
 
 ## 8. The materials: dependence
 
@@ -144,7 +145,7 @@ That dependence is a problem. A house built from one foreign supplier's parts is
 Telekom has planned part of the renovation already. What I did not find in its public plan is the order, and a date for the work in the walls. This is the order I would follow; each step names what it is measured by.
 
 :::figure roadmap wide
-The renovation as a construction schedule. Each phase is finished before the next depends on it, and the residents stay throughout.
+The renovation in order, in everyday terms. The list under it says what each step means for Telekom.
 :::
 
 1. **Survey.** One measure for both countries, with its cost: requests finished without a person that did not come back within a week, set against what the agent costs to build and run. Today no pair of figures compares fully (section 2), so the 2030 target cannot be checked from outside.
