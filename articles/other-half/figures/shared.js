@@ -1,9 +1,24 @@
 // Helpers shared by the figures of "The other half of a quantum computer":
 // the article's colours, the layout of the surface code, the drawing of a
 // grid with its checks, the marks for errors, the dot-grid plate.
-import { colors, g, circle, path, text } from '../../../lib/fig.js';
+import { colors, g, circle, path, text as figText } from '../../../lib/fig.js';
 
-const OWN = { '--accent': '#5D6FC4', '--field': '#A9B7EC' };
+const OWN = {
+  '--ink': '#15171C', '--paper': '#FBFBFC', '--muted': '#5C6370',
+  '--hairline': '#DADDE3', '--accent': '#4254C5', '--field': '#C9D3F7',
+};
+
+// Lettering never goes under a floor: a figure sets it for its layout so
+// that the smallest text is still 11 px at the narrowest frame the layout
+// is used for (tall: 288 px, wide: 640 px).
+let FLOOR = 0;
+export function floor(v) { FLOOR = v || 0; }
+export function text(parent, x, y, str, opts = {}) {
+  const asked = opts.size || 14, size = Math.max(asked, FLOOR);
+  const o = { ...opts, size };
+  if (opts.lh && size > asked) o.lh = Math.round(opts.lh * (size / asked) * 10) / 10;
+  return figText(parent, x, y, str, o);
+}
 
 export function pal(ctx) {
   return colors({
@@ -112,7 +127,7 @@ export function errMark(parent, x, y, r, letter, C, kind = 'real') {
   const real = kind === 'real';
   circle(grp, x, y, r, real ? { fill: C.ink, stroke: C.ink, 'stroke-width': 1.25 } : { fill: C.paper, stroke: C.accent, 'stroke-width': 1.6 });
   const size = r * 1.42;
-  text(grp, x, y + size * 0.355, letter, { family: 'sans', size, weight: 600, anchor: 'middle', fill: real ? C.paper : C.accent });
+  figText(grp, x, y + size * 0.355, letter, { family: 'sans', size, weight: 600, anchor: 'middle', fill: real ? C.paper : C.accent });
   return grp;
 }
 

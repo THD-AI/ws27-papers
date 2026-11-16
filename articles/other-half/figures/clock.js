@@ -8,15 +8,16 @@
 // different kinds of number and are never drawn as two lengths of one kind.
 // Every value is from data/clock.json.
 import {
-  mountFigure, svgRoot, g, line, rect, circle, path, text, bracket, leader, penRing, stage, fmt,
+  mountFigure, svgRoot, g, line, rect, circle, path, bracket, leader, penRing, stage, fmt,
 } from '../../../lib/fig.js';
-import { pal, dotPlate } from './shared.js';
+import { pal, dotPlate, text, floor } from './shared.js';
 
 export const steps = 5;
-const SIZE = { wide: [720, 472], tall: [360, 520] };
+const SIZE = { wide: [720, 472], tall: [360, 440] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 function build(el, ctx) {
+  floor(ctx.layout === 'tall' ? 13.8 : 12.45);
   const C = pal(ctx), d = ctx.data, tall = ctx.layout === 'tall', print = !!ctx.print;
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
   const T = d.round.value;
@@ -54,7 +55,7 @@ function build(el, ctx) {
     const n1 = narrow
       ? text(n1g, B.x, 39, `one round of checks every [[${us(T)}]], ${perSecond} a second`, { ...noteO, width: B.w, lh: 16 })
       : text(n1g, B.x + B.w, 20, `one round of checks every [[${us(T)}]], ${perSecond} a second`, { ...noteO, anchor: 'end' });
-    const L1 = (narrow ? n1.bottom : t1.bottom) + (narrow ? 58 : 84);
+    const L1 = (narrow ? n1.bottom : t1.bottom) + (narrow ? 50 : 84);
     const base = g(root);
     line(base, B.x, L1, B.x + B.w, L1, { stroke: C.ink, 'stroke-width': 1 });
     const ticks = [];
@@ -73,7 +74,7 @@ function build(el, ctx) {
     st.fade(gp, 0.78, 0.96, [1, 1.14]);
 
     // lane 2: the network of 2024
-    const by = L1 + (narrow ? 66 : 96), bh = 26;
+    const by = L1 + (narrow ? 50 : 96), bh = narrow ? 24 : 26;
     const y2 = by + bh + 19;
     const h2 = g(root);
     const t2 = text(h2, B.x, y2, net.label, sans);
@@ -142,13 +143,13 @@ function build(el, ctx) {
       pr.paths.forEach((pp, k) => st.draw(pp, 2.86 + k * 0.03, 2.97 + k * 0.02));
     }
     // the axis
-    const ay = pileBottom + (narrow ? 26 : 34), ax = g(root);
+    const ay = pileBottom + (narrow ? 18 : 34), ax = g(root);
     line(ax, B.x, ay, right, ay, { stroke: C.ink, 'stroke-width': 1.25 });
     for (let t = 0; t <= o.maxT; t += 10) {
       line(ax, x(t), ay, x(t), ay + 5, { stroke: C.ink, 'stroke-width': 1 });
       text(ax, x(t), ay + 19, t === 0 ? '0' : String(t), { ...mono, anchor: t === 0 ? 'start' : 'middle' });
     }
-    text(ax, B.x, ay + 38, 'the start of a run · time in millionths of a second (µs)', { ...mono, width: B.w, lh: 15 });
+    text(ax, B.x, ay + (narrow ? 36 : 38), narrow ? 'the start of a run · millionths of a second (µs)' : 'the start of a run · time in millionths of a second (µs)', { ...mono, width: B.w, lh: 15 });
     st.fade(ax, 0, 0.15);
     return root;
   }
@@ -168,9 +169,9 @@ function build(el, ctx) {
       `network: [[${acc.network_afterwards.per_100000_rounds}]] errors per [[100,000]] rounds, answers late · live matching: [[${acc.live_matching.per_100000_rounds}]], answers in time`,
       { size: narrow ? 13 : 14, width: B.w, lh: 17 });
     // lane 1: the chip
-    const y1 = trade.bottom + 22;
-    text(base, B.x, y1, 'the chip: the end of a run', small);
-    const L1 = y1 + 30;
+    const y1 = trade.bottom + (narrow ? 20 : 22);
+    text(base, B.x, y1, narrow ? 'the chip' : 'the chip: the end of a run', small);
+    const L1 = y1 + (narrow ? 24 : 30);
     line(base, B.x, L1, right, L1, { stroke: C.ink, 'stroke-width': 1 });
     const nBack = Math.floor((xLast - B.x) / (T * s));
     for (let k = 0; k <= nBack; k++) {
@@ -178,9 +179,9 @@ function build(el, ctx) {
       line(base, xx, L1 - 8, xx, L1, { stroke: C.ink, 'stroke-width': k === 0 ? 1.6 : 1 });
       if (T * s > 5) circle(base, xx, L1 - 13, Math.min(2.1, T * s * 0.3), { fill: C.ink });
     }
-    text(base, xLast + 8, L1 - 9, 'last round', { ...noteO, size: narrow ? 13 : 14.5 });
+    text(base, xLast + 8, L1 - (narrow ? 11 : 9), narrow ? 'last round of a run' : 'last round', { ...noteO, size: narrow ? 13 : 14.5 });
     // lane 2: still busy
-    let y = L1 + 30;
+    let y = L1 + (narrow ? 24 : 30);
     text(base, B.x, y, net.label, small);
     const bandY = y + 9, bh = 20;
     rect(base, B.x, bandY, B.w, bh, { fill: C.field, 'data-audit': 'skip' });
@@ -189,12 +190,12 @@ function build(el, ctx) {
     text(base, B.x + 8, bandY + 14.5, 'still answering much earlier rounds', { family: 'sans', size: 12 });
     const nA = text(base, B.x, bandY + bh + 19, `after a run of a million rounds ([[${d.derived[1].value} seconds]]) the network would need [[${d.derived[2].value} seconds]]`, { ...noteO, width: B.w, lh: 16 });
     // lane 3: matching, live
-    y = nA.bottom + 22;
+    y = nA.bottom + (narrow ? 19 : 22);
     const t3 = text(l3, B.x, y, 'matching, live, 2024', small);
     const keeps = narrow
       ? text(n3, B.x, y + 17, 'runs beside the chip all along: it keeps pace', noteO)
       : text(n3, t3.right + 14, y, 'runs beside the chip all along: it keeps pace', noteO);
-    const y3 = (narrow ? keeps.bottom : t3.bottom) + 24;
+    const y3 = (narrow ? keeps.bottom + 22 : t3.bottom + 24);
     const run = line(l3, B.x, y3, xLast, y3, { stroke: C.ink, 'stroke-width': 1.6, 'stroke-linecap': 'round' });
     line(l3, xLast, y3 - 6, xLast, y3 + 6, { stroke: C.ink, 'stroke-width': 1.6 });
     const after = g(l3);
@@ -214,7 +215,7 @@ function build(el, ctx) {
     const same = text(n3, narrow ? big.right + 22 : xLast, narrow ? big.y + big.h - 4 : big.bottom + 17, narrow ? 'for runs of up to\na million rounds' : 'the same for runs of up to a million rounds', { ...noteO, lh: 15, fill: C.muted });
     const pr = penRing(root, big.cx, big.cy, big.w / 2 + 8, 12, { seed: 8, stroke: C.accent, width: 1.5 });
     // lane 4: the claim
-    y = Math.max(big.bottom, same.bottom) + 28;
+    y = Math.max(big.bottom, same.bottom) + (narrow ? 20 : 28);
     text(l4, B.x, y, claim.label, small);
     const y4 = y + 9, w4 = Math.max(2.5, claim.below * s * 0.8);
     for (let k = 0; k <= nBack; k++) {
@@ -223,9 +224,9 @@ function build(el, ctx) {
     }
     const on = text(l4, xLast + 10, y4 + 9, 'claimed, 2025 preprint, not yet reviewed', { ...noteO, size: narrow ? 12.5 : 13.5 });
     if (on.right + 8 < right) line(l4, on.right + 8, y4 + 4.5, right, y4 + 4.5, { stroke: C.ink, 'stroke-width': 0.9, 'stroke-dasharray': '2 5' });
-    const tg = text(l4, B.x, y4 + 28, claim.tag_on_page, { ...mono, width: B.w, lh: 15 });
+    const tg = text(l4, B.x, y4 + 28, narrow ? claim.tag_on_page.split(' · ').slice(1, 3).join(' · ') : claim.tag_on_page, { ...mono, width: B.w, lh: 15 });
     // the axis: time after the last round
-    const ay = tg.bottom + 14;
+    const ay = tg.bottom + (narrow ? 10 : 14);
     line(base, xLast, ay, right, ay, { stroke: C.ink, 'stroke-width': 1.25 });
     for (let t = 0; t <= live.value + live.plus_minus; t += 20) {
       line(base, x(t), ay, x(t), ay + 5, { stroke: C.ink, 'stroke-width': 1 });

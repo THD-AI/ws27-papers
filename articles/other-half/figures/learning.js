@@ -6,12 +6,12 @@
 // million examples. Step 2: distance 5 on the longer schedule. All values
 // are from data/learning.json.
 import {
-  mountFigure, svgRoot, g, h, line, rect, circle, path, text, bracket, leader, penRing, stage, lerp, ease, span,
+  mountFigure, svgRoot, g, h, line, rect, circle, path, bracket, leader, penRing, stage, lerp, ease, span,
 } from '../../../lib/fig.js';
-import { pal, pct, dotPlate, show } from './shared.js';
+import { pal, pct, dotPlate, show, text, floor } from './shared.js';
 
 export const steps = 3;
-const SIZE = { wide: [720, 474], tall: [360, 500] };
+const SIZE = { wide: [720, 474], tall: [360, 530] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 const X0 = 1e6, X1 = 3e8, YTOP = 0.025;          // the plate's scales
@@ -20,6 +20,7 @@ const M = (v, dgt = 1) => (v / 1e6).toFixed(dgt);
 let uid = 0;
 
 function build(el, ctx) {
+  floor(ctx.layout === 'tall' ? 13.8 : 12.45);
   const C = pal(ctx), d = ctx.data, tall = ctx.layout === 'tall', print = !!ctx.print;
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
   const P = Object.fromEntries(d.panels.map((p) => [p.id, p]));
@@ -193,7 +194,7 @@ function build(el, ctx) {
   const fr = frame(svg, R), fr5 = frame(svg, R, X5, XT5);
   const tg = g(svg);
   text(tg, tall ? R.x : 16, 16, tall ? 'how often the decoder was wrong' : HEAD, { family: 'sans', size: 13, weight: 600 });
-  if (tall) text(tg, R.x, 33, tagStr, mono); else text(tg, W - 8, 16, tagStr, { ...mono, anchor: 'end' });
+  if (tall) text(tg, 14, 33, tagStr, mono); else text(tg, W - 8, 16, tagStr, { ...mono, anchor: 'end' });
   if (!tall) {
     const rot = g(tg, { transform: `translate(15 ${R.y + R.h}) rotate(-90)`, 'data-audit': 'skip' });
     text(rot, 0, 0, 'share of runs in which the decoder was wrong', { family: 'sans', size: 12, fill: C.muted });
@@ -204,9 +205,9 @@ function build(el, ctx) {
   const l3 = labels(svg, p3), la = labels(svg, pa, { fifth: false }), lb = labels(svg, pb, { fifth: true });
   const dip = dipNote(svg, p3);
   const t3 = g(svg), ta = g(svg), tb = g(svg);
-  title(t3, R, d3, tall ? `${d3.seeds} seeds · ${rounds(d3)}` : `${d3.seeds} seeds, one line each · ${rounds(d3)}`);
-  title(ta, R, a5, tall ? `${a5.seeds} seeds · ${rounds(a5)}` : `${a5.seeds} seeds · ${rounds(a5)}, not comparable with distance ${d3.distance}`);
-  title(tb, R, b5, tall ? `${a5.seeds} + ${b5.seeds} seeds · ${rounds(b5)}` : `${a5.seeds} + ${b5.seeds} seeds · ${rounds(b5)}, not comparable with distance ${d3.distance}`);
+  title(t3, R, d3, tall ? `${d3.seeds} seeds` : `${d3.seeds} seeds, one line each · ${rounds(d3)}`);
+  title(ta, R, a5, tall ? `${a5.seeds} seeds` : `${a5.seeds} seeds · ${rounds(a5)}, not comparable with distance ${d3.distance}`);
+  title(tb, R, b5, tall ? `${a5.seeds} + ${b5.seeds} seeds` : `${a5.seeds} + ${b5.seeds} seeds · ${rounds(b5)}, not comparable with distance ${d3.distance}`);
 
   const drawPanel = (pl, a, b) => {
     st.fade(pl.levels, a, a + 0.15);
@@ -222,7 +223,7 @@ function build(el, ctx) {
   const I = tall ? { x: R.x + 12, y: R.y + R.h - 84, w: 104, h: 50 } : { x: R.x + 22, y: R.y + R.h - 98, w: 150, h: 62 };
   const ig = g(svg);
   rect(ig, I.x, I.y, I.w, I.h, { fill: 'none', stroke: C.hairline, 'stroke-width': 1 });
-  text(ig, I.x, I.y - 6, `distance ${d3.distance}: the network ends below both`, mono);
+  text(ig, I.x, I.y - 6, tall ? `distance ${d3.distance}: ends below both` : `distance ${d3.distance}: the network ends below both`, mono);
   st.fade(ig, 1.3, 1.45);
   st.on((gg) => {
     const m = ease(span(gg, 1.02, 1.4));
@@ -264,11 +265,11 @@ function build(el, ctx) {
   const by = R.y + R.h + (tall ? 58 : 62);
   const lw = W - R.x - 8;
   const r3 = g(svg), ra = g(svg), rb = g(svg), foot = g(svg);
-  const o = { ...mono, fill: C.ink, width: lw, lh: 15 };
-  text(r3, R.x, by, res.d3, o);
-  const t1 = text(ra, R.x, by, res.a5, o);
-  text(rb, R.x, by, res.b5, o);
-  text(foot, tall ? R.x : 16, t1.bottom + 20, tall ? `${FOOT}\n${notCmp}` : FOOT, { ...mono, width: tall ? lw : W - 20, lh: 15 });
+  const o = { ...mono, fill: C.ink, width: tall ? W - 28 : lw, lh: 15 };
+  text(r3, tall ? 14 : R.x, by, res.d3, o);
+  const t1 = text(ra, tall ? 14 : R.x, by, res.a5, o);
+  text(rb, tall ? 14 : R.x, by, res.b5, o);
+  text(foot, tall ? 14 : 16, t1.bottom + 20, tall ? `${FOOT}\n${notCmp}` : FOOT, { ...mono, width: tall ? W - 28 : W - 20, lh: 15 });
   st.fade(r3, 0.86, 0.98, [1, 1.12]).fade(ra, 1.84, 1.98, [2, 2.12]).fade(rb, 2.84, 2.98).fade(foot, 0.1, 0.25);
 
   return { set: (s, t) => st.set(s, t) };

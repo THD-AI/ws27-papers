@@ -46,6 +46,16 @@ const OVERRIDES = {
     type: 'survey',
   },
 
+  // The dossier row reads "Regulation (EU) 2026/1744 ..., recitals 38, 40";
+  // the automatic cut kept only the tail.
+  'R9-05': {
+    title: 'Regulation (EU) 2026/1744 (Digital Omnibus on AI), amending the AI Act',
+    publisher: 'European Union',
+    date: '2026-07-24',
+    url: 'https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202601744',
+    type: 'legal text',
+  },
+
   // The register gives this one as a bare link; "EIB" is in its title.
   'R10-01': { publisher: 'European Investment Bank' },
 

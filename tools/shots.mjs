@@ -15,18 +15,25 @@
 //   console.txt     console errors and warnings, page errors, failed requests
 //
 // --quick skips the freeze shots and the phone run.
+//
+//   node tools/shots.mjs <slug> --matrix
+//
+// runs the any-device matrix instead (tools/matrix.mjs): shots in
+// .shots/<slug>/matrix/ and a summary table in .shots/<slug>/matrix.md.
 
-import { mkdirSync, rmSync, writeFileSync, existsSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import puppeteer from 'puppeteer-core';
 import { startServer } from './serve.mjs';
+import { runMatrix } from './matrix.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const CHROME = process.env.CHROME || 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 
 const slug = process.argv[2];
 const quick = process.argv.includes('--quick');
+const matrix = process.argv.includes('--matrix');
 if (!slug) { console.error('usage: node tools/shots.mjs <slug> [--quick]'); process.exit(1); }
 if (!existsSync(join(ROOT, 'dist', slug, 'index.html'))) {
   console.error(`dist/${slug}/index.html does not exist; run "node lib/build.mjs ${slug}" first`);
@@ -34,8 +41,14 @@ if (!existsSync(join(ROOT, 'dist', slug, 'index.html'))) {
 }
 
 const out = join(ROOT, '.shots', slug);
-rmSync(out, { recursive: true, force: true });
-mkdirSync(out, { recursive: true });
+// A matrix run keeps the other shots, and the other way round. The reading
+// shots (tools/read.mjs) and the filmstrips (tools/filmstrip.mjs) are kept too.
+if (matrix) {
+  rmSync(join(out, 'matrix'), { recursive: true, force: true });
+} else if (existsSync(out)) {
+  for (const f of readdirSync(out)) if (f !== 'matrix' && f !== 'matrix.md' && f !== 'read' && !f.startsWith('strip-')) rmSync(join(out, f), { recursive: true, force: true });
+}
+mkdirSync(join(out, 'matrix'), { recursive: true });
 
 const { server, port } = await startServer(join(ROOT, 'dist'), 0, {
   '/__pdfjs/': join(ROOT, 'node_modules', 'pdfjs-dist', 'build'),
@@ -170,6 +183,13 @@ async function run(prefix, viewport, { everySection }) {
 
   await page.close();
   return a;
+}
+
+if (matrix) {
+  await runMatrix({ slug, out, open, settle, scrollTo, log });
+  await browser.close();
+  server.close();
+  process.exit(0);
 }
 
 // --- the index page ---------------------------------------------------------

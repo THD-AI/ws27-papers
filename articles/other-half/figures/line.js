@@ -2,14 +2,17 @@
 // for flips only, three times: what happened (three flips), what the chip
 // reports (one fired check), what the decoder adds (two more flips, and the
 // line now crosses the grid). All of it from data/line.json.
-import { mountFigure, svgRoot, g, line, text, stage } from '../../../lib/fig.js';
-import { pal, grid, errMark } from './shared.js';
+import {
+  mountFigure, svgRoot, g, line, stage,
+} from '../../../lib/fig.js';
+import { pal, grid, errMark, text, floor } from './shared.js';
 
 export const steps = 1;
 const SIZE = { wide: [560, 400], tall: [360, 610] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 function build(el, ctx) {
+  floor(ctx.layout === 'tall' ? 13.8 : 0);
   const C = pal(ctx), d = ctx.data, tall = ctx.layout === 'tall';
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
   const nReal = d.real_errors.length, nAdd = d.decoder_correction.length;
@@ -17,13 +20,13 @@ function build(el, ctx) {
     `${nReal} real flips in one column of a grid of distance ${d.distance} fire ${d.fired_by_real_errors.length} check. `
     + `The decoder's shortest explanation adds ${nAdd} more flips below it. Errors and correction together cross the grid from the ${d.crosses_from} to the ${d.crosses_to}: the stored value has changed and no check fires.`);
   svg0.style.color = C.ink;
-  text(svg0, tall ? 16 : 20, 18, `the one mistake that matters, on a grid of distance ${d.distance}`, { family: 'sans', size: 13, weight: 600 });
+  text(svg0, tall ? 16 : 20, 18, tall ? 'the one mistake that matters' : `the one mistake that matters, on a grid of distance ${d.distance}`, { family: 'sans', size: 13, weight: 600 });
   text(svg0, tall ? 16 : 20, H - 14, 'a full line of flips fires no check: an error nobody sees', { size: tall ? 13.5 : 14.5 });
   const svg = g(svg0, { transform: 'translate(0 26)' });
   const st = stage();
-  const pitch = tall ? 29 : 30, er = 8.3;
+  const pitch = tall ? 27 : 30, er = tall ? 9.8 : 8.3;
   const P = tall
-    ? [0, 1, 2].map((i) => ({ cx: 96, cy: 100 + i * 180, tx: 196, ty: 46 + i * 180, tw: 152 }))
+    ? [0, 1, 2].map((i) => ({ cx: 84, cy: 100 + i * 180, tx: 172, ty: 46 + i * 180, tw: 178 }))
     : [0, 1, 2].map((i) => ({ cx: 95 + i * 185, cy: 132, tx: 95 + i * 185 - 75, ty: 30, tw: 170 }));
   const titles = ['what happened', 'what the chip reports', 'what the decoder adds'];
   const noteO = { italic: true, size: 13.5 };

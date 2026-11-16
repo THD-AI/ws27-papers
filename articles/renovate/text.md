@@ -17,12 +17,14 @@ I started with an assumption: a European company cannot take over such a result 
 
 ## 1. The announcement
 
+@where Deutsche Telekom's release · about the United States
 T-Mobile US is a subsidiary of Deutsche Telekom. Deutsche Telekom's release of 5 October says that at T-Mobile, AI agents "handle 40 percent of customer contacts" and that service calls fell by 55%. The same release reports 2.6 million calls in the first half of 2026 that Frag Magenta, Telekom's chatbot and phone bot, took off the hotline. That is about 14,000 a day. The release gives no total to set it against, and another Telekom slide gives 2.1 million for Germany alone; how the two counts relate is not explained. {{R6-01 R6-03 R10-50}}
 
 The release does not say why the two markets differ. It presents the American result as the model.
 
-## 2. What the numbers measure
+## 2. What the American numbers measure
 
+@where United States · T-Mobile US
 I compared the release with the slides T-Mobile US showed at Deutsche Telekom's investor day on the same date, and with what T-Mobile filed with the American securities regulator. All of these are the company's own figures. None of the service figures is audited. {{R6-02 R6-06 R6-09}}
 
 :::scene numbers
@@ -46,6 +48,7 @@ The agent platform was announced in September 2024, almost three years after the
 
 :::
 
+@where United States and Germany · side by side
 **The comparison.** I put every figure for the US next to the nearest figure for Germany and got ten pairs. In none of them do the two sides fully count the same thing over the same period. {{R6-06 R6-16 R6-03}}
 
 :::figure pairs wide
@@ -58,6 +61,7 @@ So from public figures I cannot tell by how much Germany is behind, or whether i
 
 ## 3. What T-Mobile says it did before the agents
 
+@where United States · T-Mobile US
 T-Mobile's managers describe what they changed. This is their account, given to investors. {{R6-02}}
 
 - **Software.** Its head of IT said the company had "a largely outsourced, third-party workforce" working on systems owned by suppliers, and replaced it with its own engineers on its own systems. {{R6-02}}
@@ -72,6 +76,7 @@ All of these steps concern the systems around the model. In the picture of the h
 
 ## 4. Telekom is renovating too
 
+@where Germany · Deutsche Telekom
 Telekom in Germany already runs Frag Magenta for more than 380 kinds of request. After login it can do a few things itself, such as show a bill or change bank details. Otherwise it hands the chat to a member of the service staff with a summary. The staff have their own program on screen during a call. It listens to the call and writes the record, 50,000 times a day. {{R6-16 R6-02}}
 
 Telekom's slides for Europe also list what is unfinished. Customers prove who they are in 14 different ways across its countries, to be cut to 3. Customer data sits in separate systems that still have to be made usable for agents. The slide states the principle "Simplify before automating". {{R6-05}}
@@ -84,6 +89,7 @@ This is where my assumption needed its first correction. I had expected to find 
 
 The rest of my assumption was that European companies adjust more slowly and end up relying on American technology. For that I looked beyond Telekom.
 
+@where European Union and Germany
 **Less deep.** The European Commission's own report for 2026 says 20% of firms in the Union with ten or more staff used AI in 2025, and that AI uptake is "far from being on track" for the 2030 target of 75% of firms using AI, cloud or data analytics. A survey by the European Investment Bank asks firms in the EU and the US the same questions and counts differently: it weights firms by their size in the economy, so its shares are higher. In it, about as many European firms as American ones use AI somewhere, 68% against 72%. Fewer use it in two or more parts of the business, 44% against 58%, and fewer in customer service, 22% against 29%. In 2025 private investment in AI was 286 billion dollars in the United States and 21 billion in Europe, about 14 times as much in the United States. None of these figures measures speed. They show how widely AI is used and how much is spent on it. {{R7-14 R10-01 R1-03}}
 
 **Dependent.** In a Bitkom survey of 605 German firms with 20 or more staff, published in November 2025, 51% called themselves strongly dependent on the United States for the digital technology they import, up from 41% in January of that year. European providers hold about 15% of Europe's own cloud market; in 2017 it was 29%. The same holds for Telekom's own tools. Its internal assistant runs partly on OpenAI models, it is rolling out 120,000 OpenAI licences, and the reference data platform on its slide uses Google's BigQuery, in public and sovereign cloud. In 2024 Telekom named GPT-4 for one Frag Magenta example; which model runs it today is not disclosed. Telekom describes its European platform as able to use different models. {{B-2025 SRG-2025 R6-17 R6-02 R6-05 R6-04 R10-52}}
@@ -107,15 +113,18 @@ I followed one decision on both sides: to let a software agent act on customer a
 @caption One decision on both sides. In the United States it reaches launch without a gate, and the checks follow. In Germany it passes gates before launch, and dismissal as a way to collect the saving is shut until the end of 2028.
 
 @step 0
+@where Both companies
 The same decision starts on both sides.
 
 @step 1
+@where United States · T-Mobile US
 **United States.** I found no gate before launch. T-Mobile announced its agent platform in September 2024, and about 21 months later a third of contract customers' calls started with it. A works council in the German sense does not exist there. T-Mobile had set up a staff body of its own; the American labour board found that the company dominated it and ordered it dissolved, and a federal appeals court upheld that in January 2024. {{R6-08 R6-06 R11-36 R11-37}}
 
 @step 2
 One telecoms rule applies before any call is answered: a caller must be authenticated before call details are disclosed, and T-Mobile meets it by recognising its own phones. Other checks come after launch, as lawsuits and state rules. {{R11-40 R11-41 R11-43}}
 
 @step 3
+@where Germany · Deutsche Telekom
 **Germany.** The research lists eleven gates in Germany; the last, on jobs, applies after launch. The works council, elected by the staff, has to be told while the system is still being planned; since 2021 the law names AI expressly. {{R11-05}}
 
 @step 4
@@ -143,6 +152,7 @@ Two studies test whether works councils block new technology in German firms. On
 
 ## 7. The part that cannot be copied
 
+@where Germany · Deutsche Telekom
 I checked whether promises to the workforce stop change at Telekom. In the numbers I found, staff numbers still fell, through the routes the agreements allow.
 
 Telekom's report on its staff lists those routes for Germany: partial retirement, early retirement, severance, and civil servants retiring or moving to public authorities. From 2021 to 2025, 20,223 full-time equivalents went this way across everything Telekom employs in Germany, about 4,000 a year. Exits by severance nearly doubled, from 526 to 1,016 a year. {{R12-01}}
@@ -151,8 +161,10 @@ Telekom's report on its staff lists those routes for Germany: partial retirement
 Every full-time position that left Telekom in Germany by an agreed route, 2021 to 2025. One mark is 25 positions. Source: Deutsche Telekom, HR Factbook 2025.
 :::
 
+@where United States · T-Mobile US
 In the US, management decides on dismissals itself. Washington State, where T-Mobile is based, allows an employer to dismiss at any time and for any lawful reason; under federal law a mass layoff needs 60 days' written notice and nobody's consent. In August 2023 T-Mobile announced a cut of just under 7% of its staff in one statement, with a charge of 450 million dollars. That cut was mostly in office roles and came a year before the agents, so it shows how an American employer can cut staff; it says nothing about savings from the agents. I could not compare how fast the two companies shrink: the public counts cover different groups, and T-Mobile's rose and fell with company purchases. {{R11-34 R11-35 R11-38 R12-11}}
 
+@where Germany · Deutsche Telekom
 This changes the calculation behind an agent in Germany. For the employees under the agreement, a saving cannot be collected by dismissal before 2029. It comes when people leave by one of the paid routes, or when the same people do other work. Telekom's targets run to 2030 and the agreement to the end of 2028; what applies in between is not public.
 
 I also checked whether Germans are more wary of AI than Americans. In two surveys that asked both countries the same questions, they were not. {{R12-25 R12-28}}
@@ -173,6 +185,7 @@ Two studies looked at when a result did carry over to a new place. After the war
 
 ## 9. What follows for Telekom
 
+@where Germany · Deutsche Telekom
 From what I found, the American result has three parts: a model that can be bought, systems around it that Telekom's own slides show as unfinished in Europe, and a quick route to fewer staff that Telekom has agreed not to use until 2029.
 
 Telekom has already planned the second part, so I do not propose it. These are four points I did not find in its public plan:

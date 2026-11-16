@@ -214,7 +214,7 @@ function index() {
 async function main() {
   const id = q.get('fig');
   if (!id || !FIGS[id]) { index(); window.__lab = { ready: true, audits: [] }; return; }
-  try { await Promise.all(['italic 14px "STIX Two Text"', '14px "STIX Two Text"', '14px "Libre Franklin"', '500 14px "Libre Franklin"', '600 14px "Libre Franklin"', '14px "JetBrains Mono"', '500 14px "JetBrains Mono"'].map((f) => document.fonts.load(f))); } catch { /* fallbacks */ }
+  try { await Promise.all(['italic 14px "Newsreader"', 'italic 600 14px "Newsreader"', '14px "Libre Franklin"', '500 14px "Libre Franklin"', '600 14px "Libre Franklin"', '14px "JetBrains Mono"', '500 14px "JetBrains Mono"'].map((f) => document.fonts.load(f))); } catch { /* fallbacks */ }
   const layout = q.get('layout') === 'tall' ? 'tall' : 'wide';
   const print = q.get('print') === '1';
   const mounts = [];

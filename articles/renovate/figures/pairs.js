@@ -7,7 +7,7 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 1;
-const SIZE = { wide: [880, 794], tall: [360, 1738] };
+const SIZE = { wide: [880, 832], tall: [360, 1792] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 function build(el, ctx) {

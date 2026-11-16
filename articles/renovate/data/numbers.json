@@ -32,7 +32,7 @@
     },
     "finished": {
       "value": null,
-      "note": "finished by the software: not published",
+      "note": "how many of these [[{v}]] the software finished: T-Mobile does not say",
       "source": "R6-02"
     }
   },
@@ -50,25 +50,28 @@
     },
     "strip": {
       "months": 12,
-      "note": "A strip is one year for one account; one tick is one contact."
+      "letters": "JFMAMJJASOND",
+      "note": "A ruler is one year for one customer account; one dot is one contact. Positions are even spacing derived from the yearly value, not dates of real contacts."
     },
     "points": [
       {
-        "label": "Q4 2021",
+        "label": "2021",
         "year": 2021,
         "quarter": 4,
         "value": 7.0,
         "decimals": 1,
-        "note": "[[{v}]] contacts a year, about one every seven weeks",
+        "count": "[[{v}]] contacts a year",
+        "note": "about one every seven weeks",
         "source": "R6-06"
       },
       {
-        "label": "Q2 2026",
+        "label": "2026",
         "year": 2026,
         "quarter": 2,
         "value": 3.1,
         "decimals": 1,
-        "note": "[[{v}]] a year, about one every four months",
+        "count": "[[{v}]] contacts a year",
+        "note": "about one every four months; [[{v}]] is an average",
         "source": "R6-06"
       }
     ],
@@ -80,14 +83,14 @@
         2025
       ],
       "value": null,
-      "note": "not published",
+      "note": "{a} to {b}: no figures published",
       "source": "R6-06"
     },
     "event": {
       "year": 2024,
       "month": 9,
-      "label": "Sep 2024",
-      "note": "agent platform announced",
+      "note": "agents announced, September 2024",
+      "before": "almost three years before the agents",
       "source": "R6-08"
     },
     "causes": {
@@ -97,7 +100,7 @@
     "reminder": "{a} of {b} start with the software"
   },
   "headline": {
-    "a": "Of 100 contacts at T-Mobile US: how many did the software handle?",
-    "b": "How often one customer account contacts care in a year (T-Mobile US)"
+    "a": "United States · of 100 contacts at T-Mobile US: how many did the software handle?",
+    "b": "United States · how often one customer account contacts care in a year"
   }
 }

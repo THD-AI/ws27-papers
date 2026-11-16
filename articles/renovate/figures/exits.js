@@ -8,11 +8,11 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 1;
-export const aspect = { wide: 880 / 448, tall: 360 / 470 };
+export const aspect = { wide: 880 / 448, tall: 360 / 492 };
 
 function build(el, ctx) {
   const C = colors(ctx), d = ctx.data, tall = ctx.layout === 'tall';
-  const W = tall ? 360 : 880, H = tall ? 470 : 448;
+  const W = tall ? 360 : 880, H = tall ? 492 : 448;
   const per = d.unit.positionsPerMark;
   const svg = svgRoot(el, W, H, `${d.reading} Totals by year: `
     + d.years.map((y, i) => `${y} ${fmt(d.totals.values[i])}`).join(', ')
@@ -23,7 +23,7 @@ function build(el, ctx) {
   st.fade(hdl.el, 0, 0.08);
 
   const S = tall
-    ? { cols: 8, p: 7.1, r: 2.7, x0: 19, colGap: 9, bandGap: 24, label: 12, num: 11.5, note: 12.5, year: 11.5, bottom: 58 }
+    ? { cols: 8, p: 7.1, r: 2.7, x0: 19, colGap: 9, bandGap: 24, label: 12, num: 11.5, note: 12.5, year: 11.5, bottom: 80 }
     : { cols: 10, p: 11, r: 4.1, x0: 26, colGap: 26, bandGap: 15, label: 13.5, num: 13, note: 14, year: 13, bottom: 62 };
   const colW = S.cols * S.p;
   const colX = (i) => S.x0 + i * (colW + S.colGap);
@@ -95,7 +95,7 @@ function build(el, ctx) {
   // unit note under the first column, joined to its last bottom-row mark
   const ug = g(svg);
   const ux = tall ? S.x0 + colW + 14 : colX(0) + colW + 24;
-  const un = text(ug, ux, H - (tall ? 26 : 16), d.unit.note, { italic: true, size: S.note, width: tall ? 200 : 520 });
+  const un = text(ug, ux, H - (tall ? 44 : 16), d.unit.note, { italic: true, size: S.note, width: tall ? 200 : 520 });
   leader(ug, un.x - 5, un.y + 7, colX(0) + colW - S.p / 2 + 2.5, bands[0].base - S.p / 2 + 3, { stroke: C.muted });
   const tagG = g(svg);
   if (tall) text(tagG, S.x0, ty - 17, d.tag, { family: 'mono', size: 11.5, fill: C.muted });
@@ -107,7 +107,7 @@ function build(el, ctx) {
   const sev = ringBand.r.values, last = sev.length - 1;
   const ng = g(svg);
   const noteStr = `[[${fmt(sev[0])}]] in ${d.years[0]} → [[${fmt(sev[last])}]] in ${d.years[last]}`;
-  const rx = ringBox.w * (tall ? 0.6 : 0.7), ry = ringBox.h * (tall ? 0.72 : 0.74);
+  const rx = ringBox.w * (tall ? 0.6 : 0.66), ry = ringBox.h * (tall ? 0.72 : 0.74);
   const nt = text(ng, tall ? S.x0 : colX(3) + colW - 4, ringBand.top + S.note * 0.72 - 1, noteStr, { italic: true, size: S.note, anchor: tall ? 'start' : 'end' });
   { // the leader ends on the ring itself
     const dy = (nt.cy - ringBox.cy) / ry, ex = ringBox.cx - rx * Math.sqrt(Math.max(0, 1 - dy * dy));

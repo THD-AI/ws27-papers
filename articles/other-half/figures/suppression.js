@@ -3,18 +3,19 @@
 // is ten errors), the exact value in mono, and between rungs the factor
 // Lambda. Everything is from data/suppression.json; nothing here is ours.
 import {
-  mountFigure, svgRoot, g, text, cells, dots, bracket, leader, penRing, stage, fmt,
+  mountFigure, svgRoot, g, cells, dots, bracket, leader, penRing, stage, fmt,
 } from '../../../lib/fig.js';
-import { pal } from './shared.js';
+import { pal, text, floor } from './shared.js';
 
 export const steps = 1;
-const SIZE = { wide: [560, 536], tall: [360, 560] };
+const SIZE = { wide: [560, 536], tall: [360, 660] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 const PER = 10, COLS = 10, ROUNDS = 100000;      // one dot: ten errors; rows of ten
 const WORDS = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 
 function build(el, ctx) {
+  floor(ctx.layout === 'tall' ? 13.8 : 0);
   const C = pal(ctx), d = ctx.data, tall = ctx.layout === 'tall';
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
   const [m, nn] = d.decoders;
@@ -46,7 +47,8 @@ function build(el, ctx) {
     let y = top + (tall ? 38 : 30);
     dc.points.forEach((pt, i) => {
       const a = 0.1 + i * 0.24 + k * 0.05, rg = g(svg);
-      text(rg, x, y, `distance ${pt.distance} · ${pt.qubits} qubits`, { ...mono, fill: C.muted });
+      text(rg, x, y, tall ? `distance ${pt.distance}\n${pt.qubits} qubits` : `distance ${pt.distance} · ${pt.qubits} qubits`, { ...mono, fill: C.muted, lh: 14 });
+      if (tall) y += 17;
       const n = Math.round(pt.per_100000_rounds / PER);
       const list = cells(n, COLS, { gx: p, gy: p });
       const accent = k === 1 && i === dc.points.length - 1;
