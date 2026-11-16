@@ -27,7 +27,7 @@ I compared the release with the slides T-Mobile US showed at Deutsche Telekom's 
 
 :::scene numbers
 
-@caption What the two headline figures count. Left: of 100 contacts from contract customers, the release speaks of 40, and T-Mobile's own slide counts 32 that start with the software. Right: contacts per customer account in a year, at the two dates that are public.
+@caption What the two headline figures count. Left: of 100 contacts, the release speaks of 40 without saying whose, and T-Mobile's own slide counts 32 that start with the software. Right: contacts per customer account in a year, at the two dates that are public.
 
 @step 0
 **The 40%.** I could not find it anywhere in T-Mobile's material. {{R6-01 R6-06}}
@@ -94,7 +94,7 @@ The rest of my assumption was that European companies adjust more slowly and end
 Reasons German firms gave in 2025 for not using AI after considering it. Several answers were possible; the six most named are shown. Source: Federal Statistical Office.
 :::
 
-So firms do name the law as an obstacle, and two rules of the EU AI Act apply to Telekom directly. Since 2 August 2026 people must be told that they are dealing with an AI system, unless that is obvious. From 2 December 2027 a tool used to monitor or evaluate employees can count as high risk; systems already in use by then are covered only if they are changed significantly. What I could not find is a case where a rule stopped or delayed Telekom's service systems. The next section says why that is hard to know from outside. {{R9-04 R4-01}}
+So firms do name the law as an obstacle, and two rules of the EU AI Act apply to Telekom directly. Since 2 August 2026 people must be told that they are dealing with an AI system, unless that is obvious. From 2 December 2027 a tool used to monitor or evaluate employees can count as high risk; systems placed on the market before then are covered only if their design changes significantly. What I could not find is a case where a rule stopped or delayed Telekom's service systems. The next section says why that is hard to know from outside. {{R9-04 R9-05 R4-01}}
 
 :::margin house 4
 
@@ -116,7 +116,7 @@ The same decision starts on both sides.
 One telecoms rule applies before any call is answered: a caller must be authenticated before call details are disclosed, and T-Mobile meets it by recognising its own phones. Other checks come after launch, as lawsuits and state rules. {{R11-40 R11-41 R11-43}}
 
 @step 3
-**Germany.** The research lists eleven gates before launch. The works council, elected by the staff, has to be told while the system is still being planned; since 2021 the law names AI expressly. {{R11-05}}
+**Germany.** The research lists eleven gates in Germany; the last, on jobs, applies after launch. The works council, elected by the staff, has to be told while the system is still being planned; since 2021 the law names AI expressly. {{R11-05}}
 
 @step 4
 If a system is suited to monitoring staff, the works council has to agree to it. If the two sides do not agree, a conciliation committee with a neutral chair takes a binding decision. The law says "intended to monitor"; the Federal Labour Court holds that being suited to it is enough, where no law or collective agreement already settles the matter. A screen that listens to calls would very likely be covered. {{R11-07 R11-08}}
@@ -177,19 +177,19 @@ From what I found, the American result has three parts: a model that can be boug
 
 Telekom has already planned the second part, so I do not propose it. These are four points I did not find in its public plan:
 
-1. **One measure for both countries, with its cost.** For example: requests finished without a person that did not come back within a week, set against what the agent costs to build and run. Today no pair of figures can be compared (section 2), so nobody outside the company can check the 2030 target.
+1. **One measure for both countries, with its cost.** For example: requests finished without a person that did not come back within a week, set against what the agent costs to build and run. Today no pair of figures compares fully (section 2), so nobody outside the company can check the 2030 target.
 2. **The agreement for the screen that listens.** It is the system most likely to need the works council's own agreement (section 6), and it could count as high risk under the AI Act if it is used to monitor or evaluate staff. I would expect that settling both while the system is built costs less time than settling them afterwards.
 3. **A calculation without dismissals.** Until the end of 2028 the return has to come from fewer repeat contacts, from service staff moving to work software cannot do, and from the share of customer service among the roughly 4,000 who leave each year by the agreed routes (section 7). That share is not public.
 4. **Permissions in steps.** First let the agent read: show a bill, check an order. Then actions that can be undone, such as restarting a line. Changes that fraud could use come last, with a confirmation from the customer and a named person who answers for that kind of action. Frag Magenta can already change bank details after login (section 4); that is the case I would review first. A layer that lets the agent change its model supplier is already on Telekom's slide (section 5), so I do not list it.
 
 ## 10. What would show that I am wrong
 
-My assumption held in three parts and was wrong in one; one part I could not test.
+My assumption held in two parts, held in part in one and was wrong in one; one part I could not test.
 
 | I assumed | What I found |
 | --- | --- |
 | The American result rests on work under the model | Supported by T-Mobile's own account (section 3) |
-| European companies are slower with AI | Supported for depth of use and for investment; speed itself is not measured (section 5) |
+| European companies are slower with AI | Partly supported: less depth of use and less investment; speed itself is not measured (section 5) |
 | They depend on American technology | Supported, for German firms in general and for Telekom (section 5) |
 | Telekom is painting over old walls | Wrong. Its slides describe a similar renovation as planned work (section 4) |
 | Rules and gates are what holds it back | Not shown. The gates exist; what they cost today is not public (section 6) |

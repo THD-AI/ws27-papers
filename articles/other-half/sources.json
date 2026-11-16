@@ -165,7 +165,7 @@
     "url": "",
     "type": "own measurement",
     "date": "15 November 2026",
-    "note": "training.seconds in the result files; results/timing-2026-11-15.json (untrained network, average over a batch, x64 Python emulated on an ARM laptop). The range of 19 to 232 ms per training step on the laptop is from FINDINGS-2026-11-15.md, not from a result file."
+    "note": "training.seconds in the result files; results/timing-2026-11-15.json (untrained network, average over a batch, x64 Python emulated on an ARM laptop). The range of 19 to 232 ms per training step on the laptop is from FINDINGS-2026-11-15.md, not from a result file. Training step times in the text are from timing-2026-11-15.json (91 to 132 ms per step)."
   },
   "OWN-ARITH": {
     "title": "Counting and arithmetic on published values (qubits per grid, rounds per second, ratios)",
@@ -180,6 +180,7 @@
     "publisher": "This work",
     "url": "",
     "type": "own measurement",
-    "date": "2026-11-16"
+    "date": "16 November 2026",
+    "note": "replication/REPORT.md; replication/results/d3/results_d3.json and d5/results_d5.json"
   }
 }
