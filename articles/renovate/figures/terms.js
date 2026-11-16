@@ -6,7 +6,7 @@
 // frames, two rows of two on a phone and in a print column. Drawn in the
 // same slightly uneven pen line as walls and permits (seeded, so stable).
 import {
-  mountFigure, svgRoot, colors, g, circle, path, text, bracket, stage, rng, spline, lerp,
+  mountFigure, svgRoot, colors, g, circle, path, text, bracket, stage, lerp, pen,
 } from '../../../lib/fig.js';
 
 export const steps = 2;
@@ -16,27 +16,6 @@ export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / 
 // Every drawing lives in a box of 124 x 104; the ground is at y = 104.
 const BOX = 124, GROUND = 104;
 
-// The pen line of walls.js: points resampled every 5 units, nudged by two
-// slow seeded waves, joined by a spline.
-function pen(points, seed, amp) {
-  const r = rng(seed);
-  const ph = [r(), r(), r(), r()].map((v) => v * Math.PI * 2);
-  const out = [];
-  let s = 0;
-  for (let i = 0; i < points.length; i++) {
-    const [ax, ay] = points[i];
-    if (i === 0) { out.push({ x: ax, y: ay, s: 0 }); continue; }
-    const [px, py] = points[i - 1];
-    const len = Math.hypot(ax - px, ay - py);
-    const n = Math.max(1, Math.round(len / 5));
-    for (let k = 1; k <= n; k++) out.push({ x: lerp(px, ax, k / n), y: lerp(py, ay, k / n), s: s + len * (k / n) });
-    s += len;
-  }
-  return spline(out.map((p) => [
-    p.x + amp * (0.65 * Math.sin(p.s * 0.031 + ph[0]) + 0.35 * Math.sin(p.s * 0.083 + ph[1])),
-    p.y + amp * (0.65 * Math.sin(p.s * 0.027 + ph[2]) + 0.35 * Math.sin(p.s * 0.071 + ph[3])),
-  ]));
-}
 const arc = (cx, cy, r, a0, a1, n = 14) => Array.from({ length: n + 1 }, (_, i) => {
   const a = lerp(a0, a1, i / n) * Math.PI / 180;
   return [cx + r * Math.cos(a), cy + r * Math.sin(a)];

@@ -17,32 +17,13 @@
 //           over; the plaster stays as a scar (the one field).
 // The final state reads alone: three walls with the cable in, done three ways.
 import {
-  mountFigure, svgRoot, colors, h, g, path, rect, circle, text, leader, stage, rng, spline, lerp,
+  mountFigure, svgRoot, colors, h, g, path, rect, circle, text, leader, stage, rng, spline, lerp, pen,
 } from '../../../lib/fig.js';
 
 export const steps = 3;
 export const aspect = { wide: 928 / 392, tall: 360 / 734 };
 let mounts = 0;
 
-function pen(points, seed, amp) {
-  const r = rng(seed);
-  const ph = [r(), r(), r(), r()].map((v) => v * Math.PI * 2);
-  const out = [];
-  let s = 0;
-  for (let i = 0; i < points.length; i++) {
-    const [ax, ay] = points[i];
-    if (i === 0) { out.push({ x: ax, y: ay, s: 0 }); continue; }
-    const [px, py] = points[i - 1];
-    const len = Math.hypot(ax - px, ay - py);
-    const n = Math.max(1, Math.round(len / 5));
-    for (let k = 1; k <= n; k++) out.push({ x: lerp(px, ax, k / n), y: lerp(py, ay, k / n), s: s + len * (k / n) });
-    s += len;
-  }
-  return spline(out.map((p) => [
-    p.x + amp * (0.65 * Math.sin(p.s * 0.031 + ph[0]) + 0.35 * Math.sin(p.s * 0.083 + ph[1])),
-    p.y + amp * (0.65 * Math.sin(p.s * 0.027 + ph[2]) + 0.35 * Math.sin(p.s * 0.071 + ph[3])),
-  ]));
-}
 const poly = (pts, close) => pts.map((q, i) => `${i ? 'L' : 'M'}${q[0].toFixed(1)} ${q[1].toFixed(1)}`).join('') + (close ? 'Z' : '');
 
 function build(el, ctx) {
