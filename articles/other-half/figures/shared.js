@@ -141,8 +141,10 @@ export function dotPlate(parent, x, y, w, hgt, pitch, C, r = 0.85) {
 
 // Shows or hides an element with an opacity in [0, 1].
 export function show(el, p) {
-  if (p <= 0.001) { el.style.display = 'none'; return false; }
-  el.style.display = '';
-  el.style.opacity = p >= 0.999 ? '' : p.toFixed(3);
+  // only what changed is written: an unchanged write still costs a style pass
+  if (p <= 0.001) { if (el.style.display !== 'none') el.style.display = 'none'; return false; }
+  if (el.style.display) el.style.display = '';
+  const o = p >= 0.999 ? '' : p.toFixed(3);
+  if (el.style.opacity !== o) el.style.opacity = o;
   return true;
 }
