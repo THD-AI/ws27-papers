@@ -392,7 +392,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .margin-still.as-block { float: none; width: 12rem; margin: 0.2rem 0 1.2rem; }
 }
 
-@media screen and (min-width: 1180px) {
+@media screen and (min-width: 900px) {
   :root { --left: max(var(--gutter), calc((var(--pw) - var(--measure) - var(--gap) - var(--margin-col)) / 2)); }
 
   /* In the margin column, top-aligned with the block that follows, and
@@ -418,7 +418,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
    anything that runs through the margin column: a scene, a wide figure, a
    table. The stills are then not needed on screen. */
 .rail { display: none; }
-@media screen and (min-width: 1180px) and (min-height: 420px) {
+@media screen and (min-width: 900px) and (min-height: 420px) {
   .rail {
     display: block;
     position: absolute; top: 0; bottom: 0;
