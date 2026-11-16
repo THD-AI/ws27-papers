@@ -412,6 +412,25 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   main.body > .fig-wide, main.body > .table-frame.table-wide { width: min(100%, 58rem); margin-left: 0; }
 }
 
+/* Where the margin column fits and the window is tall enough, the margin
+   scene is one figure pinned in that column, which changes with the scroll
+   as the reader passes each marker (article.js). It steps out of the way of
+   anything that runs through the margin column: a scene, a wide figure, a
+   table. The stills are then not needed on screen. */
+.rail { display: none; }
+@media screen and (min-width: 1180px) and (min-height: 560px) {
+  .rail {
+    display: block;
+    position: absolute; top: 0; bottom: 0;
+    left: calc(var(--left) + var(--measure) + var(--gap));
+    width: var(--margin-col); max-width: none;
+    pointer-events: none;
+  }
+  /* its opacity is set by article.js from the distance to what comes next */
+  .rail-pin { position: sticky; top: max(4.5rem, calc(50vh - 12rem)); }
+  main.body > .margin-still { display: none; }
+}
+
 /* ------------------------------------------------------------------------ */
 /* 2c. Screen: the hero, beside the title or above it                       */
 /* ------------------------------------------------------------------------ */
