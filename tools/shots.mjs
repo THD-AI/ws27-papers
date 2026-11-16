@@ -108,7 +108,7 @@ async function anchors(page) {
     figures: [...document.querySelectorAll('[data-role="figure"]')].map((f) => f.dataset.fig),
     tables: document.querySelectorAll('.table-frame').length,
     margin: (() => {
-      const marks = [...document.querySelectorAll('.margin-mark')];
+      const marks = [...document.querySelectorAll('.margin-mark:not(.margin-end)')];
       return marks.length ? { id: marks[0].dataset.margin, states: marks.map((m) => Number(m.dataset.state)) } : null;
     })(),
     manifest: JSON.parse(document.getElementById('article-data').textContent),
