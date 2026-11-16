@@ -281,7 +281,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
      anchored right and running a little past the edge, centred against the
      title and deck. The title keeps its place on the left and breaks before
      it would run far into the drawing. */
-  .title-block { --hero-w: 48vw; --title-w: calc(100vw - var(--left) - var(--hero-w) + 5rem); }
+  .title-block { --hero-w: 48vw; --title-w: calc(100vw - var(--left) - var(--hero-w) - 0.5rem); }
   /* --bw, --pr, --sy and the like are the bounds of the drawing inside its
      image file, measured by article.js; without them the file counts whole. */
   .hero {
@@ -328,7 +328,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .src-pop h2 { margin: 0 0 0.6rem; font: 500 0.66rem/1.2 var(--mono); letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
   .src-pop ol { margin: 0; padding: 0; list-style: none; }
   .src-pop li { display: grid; grid-template-columns: 1.7rem 1fr; margin: 0 0 0.65rem; }
-  .src-pop .src-title::after { content: ' a0↗'; font-family: var(--mono); font-size: 0.85em; color: var(--muted); }
+  .src-pop .src-title::after { content: '\00a0↗'; font-family: var(--mono); font-size: 0.85em; color: var(--muted); }
 }
 
 /* Desktop: text column, margin column, scenes with a pinned figure. */

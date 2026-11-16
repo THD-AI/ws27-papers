@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Figure lab – other-half</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Libre+Franklin:ital,wght@0,400;0,500;0,600;1,400&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap">
+<style>
+  :root {
+    --paper: #F7F5F0; --ink: #26241F; --muted: #6B665F; --hairline: #D6D1C9;
+    --accent: #5D6FC4; --field: #A9B7EC;
+  }
+  html, body { margin: 0; background: var(--paper); color: var(--ink); }
+  body { font: 400 13px/1.4 'Libre Franklin', Arial, sans-serif; }
+  #lab { padding: 16px; display: inline-block; }
+  .cell { margin: 0 0 22px; }
+  .cell h2 { margin: 0 0 6px; font: 500 11px/1.2 'JetBrains Mono', Consolas, monospace; letter-spacing: 0.06em; color: var(--muted); text-transform: uppercase; }
+  .frame { position: relative; outline: 1px dotted var(--hairline); }
+  .frame > svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .sheet { display: grid; gap: 22px 22px; align-items: start; }
+  #audit { margin: 0; padding: 0 16px 16px; font: 400 11px/1.5 'JetBrains Mono', Consolas, monospace; white-space: pre-wrap; color: var(--muted); }
+  #audit b { color: var(--accent); font-weight: 500; }
+  nav { padding: 16px; font: 400 12px/1.9 'JetBrains Mono', Consolas, monospace; }
+  nav a { color: var(--ink); margin-right: 0.9em; }
+  nav h2 { font: 600 13px/1.4 'Libre Franklin', Arial, sans-serif; margin: 1.2em 0 0.2em; }
+</style>
+</head>
+<body>
+<div id="lab"></div>
+<pre id="audit"></pre>
+<script type="module" src="./_lab.js"></script>
+</body>
+</html>
