@@ -381,7 +381,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .margin-still { display: block; width: min(12rem, 100%); margin: 0.2rem 0 1.4rem; }
   .margin-still.is-empty { display: none; }
   /* nothing that spans the column stands beside a floated still */
-  main.body > h2, main.body > .scene, main.body > .fig, main.body > .table-frame, main.body > .sources, main.body > .margin-mark { clear: both; }
+  main.body > h2, main.body > .scene, main.body > .fig, main.body > .table-frame, main.body > .sources, main.body > .margin-mark:not(.margin-end) { clear: both; }
 }
 
 /* From tablets up, a still in the text column floats at its right edge and

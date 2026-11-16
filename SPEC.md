@@ -27,7 +27,7 @@ Front matter: `title`, `deck`, `author`, `context`, `status`, `accent`. Then Mar
 - `{{ID ID}}` at the end of a paragraph or list item: the ids of its sources in `sources.json`. Rendered as one small mark at the end of the passage. Selecting it opens the sources of that passage (title, publisher, link). In print the mark becomes bracketed numbers and a numbered list of sources is set at the end. Unknown ids fail the build.
 - `:::scene <id>` … `:::` wraps passages that scroll beside one pinned figure. Inside, a line `@step n` sets the step shown while the following passages are in view. A line `@caption …` gives the caption used in print and on phones.
 - `:::figure <id> <wide|column>` … `:::` a figure in the text flow; the block's text is its caption.
-- `:::margin <id> <state>` sets the state of the small margin scene from this point on.
+- `:::margin <id> <state>` sets the state of the small margin scene from this point on. `:::margin <id> end` is where its story ends: on screen the pinned figure fades out as this point reaches it and does not come back; nothing is drawn there, on screen or on paper.
 - `@where <label>` on a line of its own sets the place the text is about (for example `United States · T-Mobile US`) from that point until the next `@where` or the next `##` heading. Rendered as a small mono kicker in the accent colour above the next block; inside a scene, above the first passage and wherever the place changes, and as a label at the top-left of the pinned figure that follows the active passage. Figures receive it as `ctx.where`.
 - Tables are Markdown tables.
 

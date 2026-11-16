@@ -138,6 +138,8 @@ Logical errors in 100,000 rounds on Google's 2024 chip at distances 3, 5 and 7, 
 
 Google isn't alone, and the others don't all go the same way. A group at Harvard, MIT and QuEra got below the threshold with a different kind of qubit, single atoms held in place by light, and it too used a decoder that learns. IBM is betting on a different code that needs fewer qubits, with a decoder that doesn't learn at all and is built to run on fast special-purpose hardware. In October 2026 Quantinuum, whose qubits are charged atoms, reported errors falling far more steeply per step than Google's, by a factor of about 12, with a different code, the colour code, and tried neural decoders on its data; that paper hasn't been reviewed yet. A group at USTC reported a distance-7 surface code below the threshold, with Λ = 1.4. Learned decoders are one of several routes, and nobody knows yet which one wins. {{NA-2025 IBM-RELAY-2025 IBM-FPGA-2025 QTN-2026 QTN-PR-2026 USTC-2025}}
 
+:::margin qubits end
+
 ## 8. Accurate, or in time
 
 Nobody writes a neural decoder's rules; it learns them. First it's trained on a simulator, where the true errors are known. Then it's trained further on data from the chip itself, where nobody knows which errors happened and the only thing known is whether the stored value came out as it went in. From this it picks up whatever regularities are there, including the ones matching leaves out. {{AQ-2024 GQA-2024}}

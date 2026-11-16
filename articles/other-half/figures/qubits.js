@@ -55,12 +55,19 @@ function build(el, ctx) {
       if (!seen.has(key)) { seen.set(key, d); items.push({ i, j, store: false, d0: d }); }
     }
   }
+  // A dot that is not there yet is transparent, not removed, so that its
+  // arrival does not rebuild the layout; and every attribute is written only
+  // when its value changes (put), since set() runs on every scroll frame.
   const gDots = g(svg);
   for (const it of items) {
     it.k0 = firstState(it.d0);
     it.rad = Math.hypot(it.i, it.j);
     it.el = circle(gDots, 0, 0, 1, it.store ? { fill: C.paper, stroke: C.ink, 'stroke-width': 1.25 } : { fill: C.ink });
+    it.el.setAttribute('opacity', '0');
+    it.last = { o: '0' };
   }
+  // writes an attribute only when its value has changed
+  const put = (it, key, name, v) => { if (it.last[key] !== v) { it.last[key] = v; it.el.setAttribute(name, v); } };
   // the new dots of a state arrive from the centre outwards, storing first
   const order = new Map();
   K.forEach((k, s) => {
@@ -92,20 +99,21 @@ function build(el, ctx) {
     const m = ease(clamp(u / 0.55));
     const pitch = lerp(a.pitch, b.pitch, m), cx = lerp(a.cx, b.cx, m), cy = lerp(a.cy, b.cy, m), mode = lerp(a.mode, b.mode, m);
     const arrive = G <= 0 ? clamp(G + 1) : clamp((u - 0.38) / 0.62);
+    const sw = lerp(1.25, 1, mode).toFixed(2);
+    const rStore = lerp(pitch * 0.19, 2.9, mode), rHelp = lerp(pitch * 0.085, 1.5, mode);
     for (const it of items) {
       let p = it.k0 < k1 || (it.k0 === 0 && G > 0) ? 1 : 0;
       if (it.k0 === k1) {
         const n = order.get(k1), spread = Math.max(1, n * 0.3);
         p = easeOut(clamp((arrive * (n + spread) - it.rank) / spread));
       }
-      if (!show(it.el, p)) continue;
-      const r = it.store ? lerp(pitch * 0.19, 2.9, mode) : lerp(pitch * 0.085, 1.5, mode);
-      it.el.setAttribute('cx', (cx + it.j * pitch).toFixed(2));
-      it.el.setAttribute('cy', (cy + it.i * pitch).toFixed(2));
-      it.el.setAttribute('r', (r * (0.4 + 0.6 * p)).toFixed(2));
-      if (it.store) {
-        it.el.setAttribute('stroke-width', lerp(1.25, 1, mode).toFixed(2));
-      }
+      const o = p <= 0.001 ? '0' : p >= 0.999 ? '1' : p.toFixed(2);
+      put(it, 'o', 'opacity', o);
+      if (o === '0') continue;
+      put(it, 'cx', 'cx', (cx + it.j * pitch).toFixed(2));
+      put(it, 'cy', 'cy', (cy + it.i * pitch).toFixed(2));
+      put(it, 'r', 'r', ((it.store ? rStore : rHelp) * (0.4 + 0.6 * p)).toFixed(2));
+      if (it.store) put(it, 'sw', 'stroke-width', sw);
     }
     // box and its line
     const boxP = a.box && b.box ? 1 : b.box ? ease(clamp((u - 0.5) / 0.4)) : 0;

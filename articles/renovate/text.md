@@ -167,6 +167,8 @@ In the US, management decides on dismissals itself. Washington State, where T-Mo
 @where Germany · Deutsche Telekom
 This changes the calculation behind an agent in Germany. For the employees under the agreement, a saving cannot be collected by dismissal before 2029. It comes when people leave by one of the paid routes, or when the same people do other work. Telekom's targets run to 2030 and the agreement to the end of 2028; what applies in between is not public.
 
+:::margin house end
+
 I also checked whether Germans are more wary of AI than Americans. In two surveys that asked both countries the same questions, they were not. {{R12-25 R12-28}}
 
 :::figure attitudes column
