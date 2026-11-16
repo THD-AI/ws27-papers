@@ -1,0 +1,16 @@
+{
+  "id": "house-b",
+  "reading": "One pen line draws the same house twice. On the left a crack runs up from the foundations and a paint roller covers it on the wall; on the right the line draws the foundations first, renewed, and the house stands on them.",
+  "source": "Topic proposal, Figure 1 (2 November 2026): Repaint, an AI agent added to the old structure; Renovate, every layer inspected, renewed and documented",
+  "sourceNote": "No numbers are drawn. The two labels and notes restate the proposal's Figure 1 in fewer words.",
+  "repaint": {
+    "label": "repaint",
+    "note": "an AI agent painted over the cracks",
+    "source": "proposal Figure 1"
+  },
+  "renovate": {
+    "label": "renovate",
+    "note": "the foundations renewed",
+    "source": "proposal Figure 1"
+  }
+}

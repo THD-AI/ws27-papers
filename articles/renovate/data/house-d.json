@@ -1,0 +1,16 @@
+{
+  "id": "house-d",
+  "reading": "The same AI agent stands in two identical houses. On the left the footing is old and shallow; a crack runs from it up through the wall, the agent tilts, and the person at work is cut off from it. On the right the foundations are renewed, with own data and own models, the agent stands straight and the person works with it.",
+  "source": "Topic proposal (2 November 2026): thesis \"The difference is not the model\"; Figure 1, Foundations (owned documents, versioned knowledge) and Utilities (EU-hosted cloud models, self-hosted open-weight models); Service rooms (the specialist is retrained, not replaced)",
+  "sourceNote": "No numbers are drawn. Every word restates the proposal in fewer words.",
+  "agent": "AI agent",
+  "old": {
+    "label": "old foundations",
+    "source": "proposal Figure 1, Repaint"
+  },
+  "renewed": {
+    "label": "renewed foundations",
+    "slab": ["own data", "own models"],
+    "source": "proposal Figure 1, Renovate: layers 1 and 2"
+  }
+}

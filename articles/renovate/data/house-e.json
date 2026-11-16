@@ -1,0 +1,14 @@
+{
+  "id": "house-e",
+  "reading": "One house is renovated while the reader scrolls. A person works at a desk on an old, shallow footing. An AI agent is set into the house as it is; a crack runs up from the footing under it and the agent tilts. The footing is replaced underneath the same house with renewed foundations, own data and own models, and the crack closes. The same agent, now standing straight, hands the person a finished ticket.",
+  "source": "Topic proposal (2 November 2026): thesis \"The difference is not the model\"; Figure 1, Repaint (an AI agent added to the old structure) and Renovate (Foundations: owned documents; Utilities: EU-hosted and self-hosted models; Service rooms: the agent hands work to a specialist, who is retrained, not replaced)",
+  "sourceNote": "No numbers are drawn. Every word restates the proposal in fewer words.",
+  "agent": "AI agent",
+  "slab": ["own data", "own models"],
+  "notes": [
+    "the service as it is",
+    "an AI agent on the old foundations",
+    "the foundations renewed; the crack closed",
+    "the same agent: the person works with it"
+  ]
+}

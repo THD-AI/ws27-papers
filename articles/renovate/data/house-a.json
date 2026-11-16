@@ -1,0 +1,23 @@
+{
+  "id": "house-a",
+  "reading": "The same house twice. Left, repaint: an AI agent painted on a cracked facade, documents lying loose in the ground. Right, renovate: the house renewed from the foundations up – documents filed with an owner, one model gateway, scoped tools, an AI agent that hands exceptions to a person who stays and is retrained, secured walls, an inspection under the roof.",
+  "sourceNote": "Every label is a shortened wording of Figure 1, section 3 and section 5 of the approved topic proposal (Rudaev, PLV1, 2 November 2026). The figure draws no numbers.",
+  "kickers": {
+    "repaint": "Repaint",
+    "renovate": "Renovate"
+  },
+  "repaint": {
+    "paint": "AI agent",
+    "note": "painted on; the cracks stay",
+    "papers": "documents nobody owns",
+    "source": "proposal, Figure 1 (left: scattered, unowned documents; an agent added to the old structure)"
+  },
+  "layers": [
+    { "n": 1, "key": "foundations", "label": "every document has an owner", "source": "proposal, Figure 1, layer 1; section 5 'give every document an owner'" },
+    { "n": 2, "key": "utilities", "label": "one gateway: EU-hosted and own models", "source": "proposal, Figure 1, layer 2; section 5 'Keep models swappable'" },
+    { "n": 3, "key": "wiring", "label": "scoped tools, logged runs", "source": "proposal, Figure 1, layer 3" },
+    { "n": 4, "key": "rooms", "label": "AI agent", "note": "the person stays, retrained", "source": "proposal, Figure 1, layer 4; section 3 (staff reassigned and retrained, not replaced)" },
+    { "n": 5, "key": "walls", "label": "secured walls", "source": "proposal, Figure 1, layer 5 (identity, patching, monitoring)" },
+    { "n": 6, "key": "inspection", "label": "inspection", "lines": ["AI Act · GDPR", "NIS2 · works council"], "source": "proposal, Figure 1, layer 6" }
+  ]
+}

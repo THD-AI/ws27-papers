@@ -1,0 +1,16 @@
+{
+  "id": "house-c",
+  "reading": "Two pen drawings of the same house with a person at work at a desk. Left, repaint: a crack runs from the old footing up the wall, and a paint roller covers the wall and the person's middle with an AI agent; the crack below stays. Right, renovate: the same house and the same person, on a new foundation.",
+  "sourceNote": "No numbers. The labels follow the topic proposal of 2 November 2026 (Figure 1: 'Repaint: an agent added to the old structure'; 'every layer inspected, renewed and documented'; the specialist is 'reassigned, retrained') and the thesis of 16 November 2026 (workers enabled, not replaced).",
+  "repaint": {
+    "head": "Repaint",
+    "paint": "AI agent",
+    "note": "an AI agent painted over the old structure",
+    "source": "proposal-2026-11-02, Figure 1"
+  },
+  "renovate": {
+    "head": "Renovate",
+    "note": "renewed from the foundation up; the person at work stays",
+    "source": "proposal-2026-11-02, Figure 1; thesis 2026-11-16"
+  }
+}

@@ -20,6 +20,12 @@ const FIGS = {
   exits:     { role: 'wide',   steps: 1 },
   attitudes: { role: 'column', steps: 1 },
   house:     { role: 'margin', steps: 6 },
+  // three directions for the house, 16 November (concepts, not in the article)
+  'house-a': { role: 'column', steps: 8 },
+  'house-b': { role: 'column', steps: 2 },
+  'house-c': { role: 'column', steps: 3 },
+  'house-d': { role: 'column', steps: 3 },
+  'house-e': { role: 'column', steps: 4 },
 };
 const MM = 96 / 25.4;
 
