@@ -5,12 +5,12 @@
 // and counts are from data/syndromes.json; nothing is sized or shaded by
 // probability.
 import {
-  mountFigure, svgRoot, g, rect, path, circle, text, bracket, penRing, stage,
+  mountFigure, svgRoot, g, rect, path, circle, bracket, penRing, stage,
 } from '../../../lib/fig.js';
-import { pal, grid } from './shared.js';
+import { pal, grid, text, floor } from './shared.js';
 
 export const steps = 1;
-const SIZE = { wide: [880, 548], tall: [360, 736] };
+const SIZE = { wide: [720, 504], tall: [360, 760] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 // Where the eight checks sit, in the layout of data/lattice.json (the
@@ -27,6 +27,7 @@ const CHECKS = [
 ];
 
 function build(el, ctx) {
+  floor(ctx.layout === 'tall' ? 13.8 : 12.45);
   const C = pal(ctx), d = ctx.data, tall = ctx.layout === 'tall';
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
   const n = d.grid.order.length, cnt = d.counts;
@@ -46,8 +47,8 @@ function build(el, ctx) {
   text(hd, tall ? 14 : 20, 18, `every pattern in which the ${CHECKS.length} checks of the smallest grid can fire`, { family: 'sans', size: 13, weight: 600, width: W - 30, lh: 16 });
   st.fade(hd, 0, 0.1);
 
-  const c = tall ? 19 : 24, sq = c - (tall ? 6 : 8);
-  const fx = tall ? 44 : 150, fy = tall ? 112 : 98, fw = n * c;
+  const c = tall ? 19 : 22, sq = c - (tall ? 6 : 8);
+  const fx = tall ? 44 : 92, fy = tall ? 112 : 98, fw = n * c;
   const rowsG = Array.from({ length: n }, () => g(svg));
   let ex = null;
   for (const cell of d.cells) {
@@ -89,8 +90,8 @@ function build(el, ctx) {
 
   // one pattern, enlarged, joined to its square
   const eg = g(svg);
-  const pitch = tall ? 30 : 34;
-  const ecx = tall ? 66 : fx + fw + 96, ecy = tall ? fy + fw + 76 : fy + (ex.row + 1) * c;
+  const pitch = 30;
+  const ecx = tall ? 66 : fx + fw + 80, ecy = tall ? fy + fw + 76 : fy + (ex.row + 1) * c;
   const G = grid(eg, { checks: CHECKS, d: 3, cx: ecx, cy: ecy, pitch, C });
   CHECKS.forEach((ch, i) => { const on = (i < 4 ? ex.flip_checks[i] : ex.phase_checks[i - 4]) === '1'; if (on) G.tiles[ch.id].setFired(1); });
   const cx0 = fx + (ex.col + 1) * c, cy0 = fy + (ex.row + 1) * c;
@@ -101,23 +102,23 @@ function build(el, ctx) {
   path(eg, lead, { stroke: C.ink, 'stroke-width': 0.8, 'stroke-linejoin': 'round', 'data-audit': 'skip' });
   circle(eg, cx0, cy0, 1.6, { fill: C.ink });
   const nFired = [...ex.flip_checks, ...ex.phase_checks].filter((ch) => ch === '1').length;
-  const et = text(eg, ecx + pitch * 1.5 + 16, ecy - (tall ? 20 : 12), `one pattern: which of the ${CHECKS.length} checks fired`, { ...noteO, width: tall ? 190 : 150 });
-  text(eg, et.x, et.bottom + 15, `here ${nFired}; the example that follows`, { ...noteO, fill: C.muted, width: tall ? 190 : 150 });
+  const et = text(eg, ecx + pitch * 1.5 + 16, ecy - (tall ? 20 : 12), `one pattern: which of the ${CHECKS.length} checks fired`, { ...noteO, width: tall ? 190 : 132 });
+  text(eg, et.x, et.bottom + 15, `here ${nFired}; the example that follows`, { ...noteO, fill: C.muted, width: tall ? 190 : 132 });
   st.fade(eg, 0.6, 0.78);
 
   // the count, with the one pen ring around the number only
   const rg = g(svg);
-  const rx0 = tall ? 26 : fx + fw + 44, ry0 = tall ? ecy + pitch * 1.5 + 62 : fy + fw - 132;
+  const rx0 = tall ? 26 : fx + fw + 38, ry0 = tall ? ecy + pitch * 1.5 + 62 : fy + fw - 140;
   const ct = text(rg, rx0 + 8, ry0, `${cnt.differs} of ${cnt.patterns}`, { family: 'mono', size: tall ? 20 : 23, weight: 500 });
-  const w1 = text(rg, rx0, ct.bottom + 30, 'patterns: plain matching’s answer is not the most likely one', { size: tall ? 14 : 15.5, width: tall ? W - 40 : 280, lh: tall ? 18 : 20 });
-  const w2 = text(rg, rx0, w1.bottom + 18, `they occur in about [[${share}]] of cases; in [[${none}]] of cases no check fires`, { size: tall ? 14 : 15.5, width: tall ? W - 40 : 280, lh: tall ? 18 : 20 });
+  const w1 = text(rg, rx0, ct.bottom + 30, 'patterns: plain matching’s answer is not the most likely one', { size: tall ? 14 : 15, width: tall ? W - 40 : 226, lh: tall ? 18 : 20 });
+  const w2 = text(rg, rx0, w1.bottom + 18, `they occur in about [[${share}]] of cases; in [[${none}]] of cases no check fires`, { size: tall ? 14 : 15, width: tall ? W - 40 : 226, lh: tall ? 18 : 20 });
   circle(rg, rx0 + 6, ct.bottom + 24.5 - 12, 0, { fill: C.accent });
   st.fade(rg, 0.74, 0.88);
   const pr = penRing(svg, ct.cx, ct.cy, ct.w / 2 + 15, tall ? 19 : 22, { seed: 3, stroke: C.accent, width: 1.6 });
   pr.paths.forEach((pp, k) => st.draw(pp, 0.86 + k * 0.03, 0.97 + k * 0.02));
 
   const foot = g(svg);
-  text(foot, tall ? 26 : fx, tall ? w2.bottom + 22 : fy + fw + 30, tall
+  text(foot, tall ? 14 : fx, tall ? w2.bottom + 22 : fy + fw + 30, tall
     ? `distance ${dist} · ${err} error per storing qubit ·\nchecks never wrong · our own count`
     : `distance ${dist} · ${err} error per storing qubit · checks never wrong · our own count`, { ...mono, lh: 15 });
   st.fade(foot, 0.8, 0.94);

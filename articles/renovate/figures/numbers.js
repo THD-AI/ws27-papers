@@ -21,7 +21,8 @@ function plateA(svg, C, d, tall, st, keep, big) {
   const L = tall
     ? { p: 20.5, gx: 14, gy: 152, rBase: 2, rUnit: 6.7, note: 12.5, top: [141, 130, 112, 88, 77], bottomY: 378, relX: 229, relNoteX: 241, relW: 108, restX: 256, restY: 116, restW: 96, tagX: 346, tagY: 44 }
     : { p: 32, gx: 150, gy: 162, rBase: 2.8, rUnit: 10.2, note: 14, top: [148, 136, 114, 88, 76], bottomY: 495, relX: 484, relNoteX: 500, relW: 230, restX: 492, restY: 110, restW: 240, tagX: 786, tagY: 17 };
-  if (big) { L.note = 13.5; L.restX = 244; L.restY = 266; L.restW = 108; }
+  if (big) L.note = 13.5;
+  if (tall) { L.restX = 244; L.restY = 270; L.restW = 108; }
   const root = g(svg), grid = g(root), notes = g(root);
   const n = A.total.value, cols = 10;
   const at = (i) => { const c = i % cols, r = Math.floor(i / cols); return [L.gx + L.p / 2 + c * L.p, L.gy + L.p / 2 + r * L.p]; };
@@ -106,7 +107,7 @@ function plateA(svg, C, d, tall, st, keep, big) {
   // the eight that are only in the release
   const gN = g(notes);
   const rest = text(gN, L.restX, L.restY, A.rest.note, { ...o, width: L.restW });
-  if (big) {
+  if (tall) {
     const [qx, qy] = at(order[A.release.value - 1]);
     leader(gN, rest.x + 6, rest.y - 3, qx + 3, qy + L.rUnit + 3.5, { stroke: C.muted });
   } else {

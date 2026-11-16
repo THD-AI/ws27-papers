@@ -3,11 +3,11 @@
 // on a phone), Germany above the United States, on the same left edge. The
 // third question was asked in the EU only and stands alone.
 import {
-  mountFigure, svgRoot, colors, g, rect, line, text, cells, dots, plate, penRing, stage, fmt,
+  mountFigure, svgRoot, colors, g, rect, line, text, textSize, cells, dots, plate, penRing, stage, fmt,
 } from '../../../lib/fig.js';
 
 export const steps = 1;
-const SIZE = { wide: [580, 342], tall: [360, 350] };
+const SIZE = { wide: [580, 342], tall: [360, 376] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 function build(el, ctx) {
@@ -22,13 +22,21 @@ function build(el, ctx) {
     ? { q: 12.5, tag: 11.5, label: 12, num: 12.5, note: 12.5, pitch: 4.0, gap: 1.6, r: 1.6, rows: 2, cols: 50, x0: 14, sx: 100, rowH: 21, panelGap: 22, top: 48 }
     : { q: 13.5, tag: 12, label: 13, num: 13.5, note: 14, pitch: 4.0, gap: 1.8, r: 1.65, rows: 1, cols: 100, x0: 16, sx: 112, rowH: 19, panelGap: 28, top: 50 };
   const n = d.unit.dotsPerStrip;
+  // the strip takes what the country names and the numbers leave
+  const names = [...new Set(d.panels.flatMap((p) => p.rows.map((r) => r.country)))];
+  S.sx = S.x0 + Math.max(...names.map((c) => textSize(c, { family: 'sans', size: S.label }).w)) + 9;
+  const numW = textSize('100%', { family: 'mono', size: S.num, weight: 500 }).w + (tall ? 14 : 18);
+  S.pitch = Math.min(4.2, (W - S.sx - S.x0 - numW - 9 * S.gap * (S.cols / 100)) / S.cols);
+  S.r = S.pitch * 0.41;
+  if (tall) S.top = 64;
   const slot = cells(n, S.cols, { gx: S.pitch, gy: S.pitch + 0.6, group: 10, groupGap: S.gap });
   const stripH = S.rows * (S.pitch + 0.6);
   const valX = S.sx + slot.width + (tall ? 8 : 10);
 
   const hd = g(svg);
   text(hd, S.x0, tall ? 14 : 18, d.headline, { family: 'sans', size: tall ? 12.5 : 14, weight: 600 });
-  text(hd, W - S.x0, tall ? 14 : 18, d.unit.note, { italic: true, size: S.note, anchor: 'end' });
+  if (tall) text(hd, S.x0, 32, d.unit.note, { italic: true, size: S.note });
+  else text(hd, W - S.x0, 18, d.unit.note, { italic: true, size: S.note, anchor: 'end' });
   st.fade(hd, 0, 0.08);
 
   let y = S.top, ring = null;

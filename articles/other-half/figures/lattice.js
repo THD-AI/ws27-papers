@@ -3,9 +3,9 @@
 // with its two explanations. Geometry, fired checks and chances are all
 // from data/lattice.json; the strips count the chances in units of 1/30.
 import {
-  mountFigure, svgRoot, g, circle, line, path, text, leader, penRing, stage, lerp, ease, span,
+  mountFigure, svgRoot, g, circle, line, path, leader, penRing, stage, lerp, ease, span,
 } from '../../../lib/fig.js';
-import { pal, grid, errMark, show } from './shared.js';
+import { pal, grid, errMark, show, text, floor } from './shared.js';
 
 export const steps = 6;
 const SIZE = { wide: [720, 450], tall: [360, 544] };
@@ -15,6 +15,7 @@ const STRIP = 30;
 const KEY = '[[X]]  a flip\n[[Z]]  a phase error\n[[Y]]  both at once';
 
 function build(el, ctx) {
+  floor(ctx.layout === 'tall' ? 13.8 : 12.45);
   const C = pal(ctx), d = ctx.data, tall = ctx.layout === 'tall', print = !!ctx.print;
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
   const ex = d.example, pm = ex.plain_matching, rt = ex.read_together;

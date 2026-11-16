@@ -51,9 +51,10 @@ export default function mount(el, ctx) {      // el: empty container; build one 
 
 ## Design system
 
-- Page: paper `#F7F5F0`, ink `#26241F`, muted `#6B665F`, hairline `#D6D1C9`. A 3% noise grain on screen only.
-- One accent per article, used for the one field and for emphasis only. `renovate`: line `#B0675D`, field `#E3C9B8`. `other-half`: line `#5D6FC4`, field `#A9B7EC`.
-- Typefaces, each with a job: STIX Two Text for body, title and figure notes (notes in italic); Libre Franklin for headings, captions and table text; JetBrains Mono for kickers, section numbers, axis numbers and units (tabular figures). Load from Google Fonts with `display=swap`.
+- Page (changed 16 November: the first version, warm cream paper with a clay accent and a serif text face, was too close to Claude's own look, and the owner asked for it to go): paper `#FBFBFC`, ink `#15171C`, muted `#5C6370`, hairline `#DADDE3`. No grain, no cream, no clay, no terracotta, no orange anywhere.
+- One accent per article, used for the one field and for emphasis only. `renovate`: line `#1F7A54`, field `#CDE9D9` (green). `other-half`: line `#4254C5`, field `#C9D3F7` (blue). Both lines pass 4.5:1 on the paper.
+- Typefaces, the three of the owner's own CV, each with a job: Libre Franklin for body text, headings, captions and table text; Newsreader for the title, the deck and figure notes (notes in italic); JetBrains Mono for kickers, section numbers, axis numbers and units (tabular figures). No other family. Load from Google Fonts with `display=swap`.
+- Any device, any orientation: the page must fit and read well from 320 px to 2560 px wide, in portrait and landscape, including phones held sideways (about 844 by 390) and tablets both ways. No sideways scrolling, no text under 11 px on screen inside figures, no pinned figure that leaves fewer than four lines of text visible.
 - Kicker: small mono caps with `·` separators and a hairline that runs to the right edge, for example `INNOVATION MANAGEMENT FOR AI · WS 2026/27`. Section numbers in the accent colour.
 - Screen: one text column of 62 to 68 characters, a right margin column of about 14rem for the margin scene and notes, wide figures and scenes break out. In a scene the figure is pinned (`position: sticky`) and the passages scroll past it; on phones the figure pins at the top third of the screen and passages scroll under it.
 - Print: A4, two columns, 15mm margins, 7mm gutter, body about 9.8pt, figures one column or full width, scenes as stills with their captions, margin scene states as small figures at their sections, running footer with title and page number. No grain, no sticky, no hidden text. Ctrl+P must give a paper.
