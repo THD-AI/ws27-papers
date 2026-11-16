@@ -1,0 +1,517 @@
+/* Page, type, tables, print. The design system is SPEC.md; this file sets it.
+ *
+ * How the file is organised
+ *   1. Tokens and base type            – no media condition, shared by screen and print
+ *   2. Screen layout                   – every rule inside "@media screen …"
+ *   3. Print                           – "@media print" and "@page"
+ *
+ * article.js switches the page into print mode (for ?print=1 and just before
+ * the browser prints) by turning every "print" media rule on and every
+ * "screen" media rule off. That only works if layout that must not reach the
+ * paper is written inside a screen block, so keep it that way.
+ */
+
+/* ------------------------------------------------------------------------ */
+/* 1. Tokens and base type                                                  */
+/* ------------------------------------------------------------------------ */
+
+:root {
+  --paper: #F7F5F0;
+  --ink: #26241F;
+  --muted: #6B665F;
+  --hairline: #D6D1C9;
+
+  /* One accent per article: the line colour and the field colour. */
+  --accent-line: #B0675D;
+  --accent-field: #E3C9B8;
+
+  --serif: 'STIX Two Text', 'STIX Two', Georgia, 'Times New Roman', serif;
+  --sans: 'Libre Franklin', 'Franklin Gothic Medium', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+
+  /* The same values under the other names a figure might ask for. */
+  --accent: var(--accent-line);
+  --line: var(--accent-line);
+  --field: var(--accent-field);
+  --font-serif: var(--serif);
+  --font-body: var(--serif);
+  --font-sans: var(--sans);
+  --font-head: var(--sans);
+  --font-mono: var(--mono);
+
+  /* Screen measures. 34.5rem of STIX Two Text at 19px holds 62 to 68 characters. */
+  --measure: 34.5rem;
+  --gap: 3rem;
+  --margin-col: 14rem;
+  --gutter: 1.5rem;
+  --left: max(var(--gutter), calc((100vw - var(--measure) - var(--gap) - var(--margin-col)) / 2));
+}
+
+[data-accent='renovate'] { --accent-line: #B0675D; --accent-field: #E3C9B8; }
+[data-accent='other-half'] { --accent-line: #5D6FC4; --accent-field: #A9B7EC; }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 1.5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.1875rem;
+  line-height: 1.58;
+  font-kerning: normal;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  hanging-punctuation: first;
+  text-rendering: optimizeLegibility;
+}
+
+p { margin: 0 0 1.05em; }
+p, li { hyphens: manual; overflow-wrap: break-word; }
+
+a { color: inherit; text-decoration-line: underline; text-decoration-color: var(--muted); text-decoration-thickness: 0.06em; text-underline-offset: 0.18em; }
+a:hover { text-decoration-color: var(--accent-line); }
+
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 1px; }
+
+/* Run-in heads ("The 40%.") are set in the heading face, a little smaller. */
+strong { font-family: var(--sans); font-weight: 600; font-size: 0.875em; letter-spacing: 0.005em; }
+em { font-style: italic; }
+
+.skip { position: absolute; left: -999rem; top: 0.5rem; font: 500 0.85rem var(--sans); background: var(--paper); padding: 0.4rem 0.7rem; }
+.skip:focus { left: 0.5rem; z-index: 50; }
+
+/* Kicker: small mono caps and a hairline that runs out to the right. */
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  font: 500 0.72rem/1.4 var(--mono);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--ink);
+}
+.kicker::after { content: ''; flex: 1; height: 1px; background: var(--hairline); }
+
+/* Title block */
+.title-block h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(2.7rem, 7.4vw, 5.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.018em;
+  font-variant-numeric: lining-nums;
+  text-wrap: balance;
+}
+.deck { margin: 1.6rem 0 0; max-width: 35rem; font-size: 1.42rem; line-height: 1.38; text-wrap: pretty; }
+.byline { margin: 2rem 0 0; font-family: var(--sans); font-size: 0.92rem; line-height: 1.5; }
+.byline .author { display: block; font-weight: 600; }
+.byline .context { display: block; color: var(--muted); }
+.status {
+  margin: 0.9rem 0 0;
+  font: 400 0.72rem/1.5 var(--mono);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--accent-line);
+}
+/* A small open circle marks the status line as a note, not as a label. */
+.status::before { content: ''; display: inline-block; width: 0.5em; height: 0.5em; margin-right: 0.6em; border: 1px solid currentColor; border-radius: 50%; vertical-align: 0.05em; }
+
+.hero img { display: block; width: 100%; height: auto; mix-blend-mode: multiply; }
+.hero .hero-line { position: absolute; inset: 0; }
+
+/* Table of sections */
+.toc ol { list-style: none; margin: 0; padding: 0; }
+.toc a { display: grid; grid-template-columns: 1.9rem 1fr; padding: 0.22rem 0; text-decoration: none; font: 400 0.9rem/1.35 var(--sans); }
+.toc a:hover .toc-title { text-decoration: underline; text-decoration-color: var(--accent-line); text-underline-offset: 0.2em; }
+.toc-num { font: 400 0.72rem/1.7 var(--mono); color: var(--accent-line); font-variant-numeric: tabular-nums lining-nums; }
+
+/* Section headings: the number in the accent on a hairline, the title under it. */
+h2.sec { margin: 3.4rem 0 1rem; font-family: var(--sans); font-weight: 600; font-size: 1.45rem; line-height: 1.22; letter-spacing: -0.005em; text-wrap: balance; break-after: avoid; }
+.sec-num {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.7rem;
+  font: 500 0.78rem/1 var(--mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--accent-line);
+  min-height: 0.78rem;
+}
+.sec-num::after { content: ''; flex: 1; height: 1px; background: var(--hairline); }
+.sec-title { display: block; }
+h3 { margin: 2rem 0 0.6rem; font: 600 1.05rem/1.3 var(--sans); break-after: avoid; }
+
+/* Lists: a dash or a mono number, hung in the indent. */
+main ul, main ol { margin: 0 0 1.05em; padding: 0 0 0 1.5rem; list-style: none; }
+main li { position: relative; margin: 0 0 0.55em; }
+main ul > li::before { content: '–'; position: absolute; left: -1.5rem; color: var(--muted); }
+main ol:not(.src-list):not(.index-list) { counter-reset: item; }
+main ol:not(.src-list):not(.index-list) > li { counter-increment: item; }
+main ol:not(.src-list):not(.index-list) > li::before {
+  content: counter(item);
+  position: absolute; left: -1.5rem; top: 0.42em;
+  font: 400 0.72rem/1 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Source marks: a small open ring and the number of sources behind it. */
+.src { white-space: nowrap; }
+.src-mark {
+  all: unset;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.14em;
+  margin-left: 0.28em;
+  vertical-align: 0.34em;
+  font: 400 0.6em/1 var(--mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--muted);
+  cursor: pointer;
+}
+/* The mark is small; this invisible pad makes it easy to hit. */
+.src-mark::after { content: ''; position: absolute; inset: -0.75em -0.6em; }
+.src-ring { width: 0.62em; height: 0.62em; border: 1px solid currentColor; border-radius: 50%; }
+.src-mark:hover, .src-mark[aria-expanded='true'] { color: var(--accent-line); }
+.src-mark[aria-expanded='true'] .src-ring { background: var(--accent-line); border-color: var(--accent-line); }
+.src-mark:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.src-print { display: none; }
+
+/* Figures */
+.fig, .margin-still { margin: 0; }
+.fig-frame { position: relative; width: 100%; aspect-ratio: var(--aspect, 1.6); }
+.fig-frame > svg { display: block; width: 100%; height: auto; overflow: visible; }
+figcaption, .scene-caption {
+  margin: 0.75rem 0 0;
+  max-width: 34rem;
+  font: 400 0.84rem/1.45 var(--sans);
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.fig-label {
+  margin-right: 0.5em;
+  font: 500 0.7rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--muted);
+}
+.fig-column, .fig-wide { margin: 2.2rem 0 2.4rem; break-inside: avoid; }
+
+/* A figure whose module is not there yet: a quiet frame with its id. */
+.fig-placeholder {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;
+  border: 1px dashed var(--hairline);
+  font: 400 0.72rem/1.3 var(--mono);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--muted);
+  text-align: center;
+}
+.fig-placeholder b { font-weight: 500; color: var(--ink); }
+
+.margin-still { display: none; }
+.margin-mark { display: block; height: 0; }
+
+/* Tables: a 1pt ink rule above the header, a hairline under it, a 0.5pt rule
+   at the end. No fills, no zebra. */
+.table-frame { margin: 1.8rem 0 2rem; overflow-x: auto; -webkit-overflow-scrolling: touch; break-inside: avoid; }
+table { width: 100%; border-collapse: collapse; border-top: 1pt solid var(--ink); border-bottom: 0.5pt solid var(--ink); font: 400 0.86rem/1.4 var(--sans); font-variant-numeric: lining-nums; }
+th { padding: 0.55rem 0.9rem 0.5rem 0; border-bottom: 1px solid var(--hairline); font-weight: 600; text-align: left; vertical-align: bottom; }
+td { padding: 0.5rem 0.9rem 0.5rem 0; vertical-align: top; }
+th:last-child, td:last-child { padding-right: 0; }
+td.num { font-family: var(--mono); font-size: 0.92em; font-variant-numeric: tabular-nums lining-nums; text-align: right; white-space: nowrap; }
+td.empty { color: var(--muted); }
+/* Two columns: a statement and what came of it. The first stays narrower. */
+table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
+
+/* Sources at the end */
+.sources { margin-top: 4rem; }
+.src-list { margin: 0; padding: 0; list-style: none; font: 400 0.82rem/1.42 var(--sans); }
+.src-list li { display: grid; grid-template-columns: 2rem 1fr; margin: 0 0 0.7rem; break-inside: avoid; }
+.src-n { font: 400 0.72rem/1.75 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums lining-nums; }
+.src-title { font-weight: 500; }
+.src-meta { display: block; color: var(--muted); font-size: 0.94em; }
+.src-host { display: block; font-family: var(--mono); font-size: 0.9em; }
+
+.colophon { font: 400 0.72rem/1.5 var(--mono); color: var(--muted); letter-spacing: 0.03em; }
+
+/* Index page */
+.index-list { list-style: none; margin: 0; padding: 0; }
+.index-list > li { margin: 0 0 3.2rem; }
+.index-list a { text-decoration: none; }
+.index-title { font: 500 clamp(2rem, 5vw, 3rem)/1.06 var(--serif); letter-spacing: -0.012em; }
+.index-list a:hover .index-title { text-decoration: underline; text-decoration-color: var(--accent-line); text-decoration-thickness: 1px; text-underline-offset: 0.14em; }
+.index-deck { margin: 0.8rem 0 0; font-size: 1.15rem; line-height: 1.45; }
+.index-meta { margin: 0.9rem 0 0; font: 400 0.86rem/1.5 var(--sans); color: var(--muted); }
+.index-meta span { display: block; }
+.index-meta .status { margin-top: 0.3rem; }
+
+/* ------------------------------------------------------------------------ */
+/* 2. Screen layout                                                         */
+/* ------------------------------------------------------------------------ */
+
+@media screen {
+  /* 3% grain over the whole page. Generated noise, no image file. */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 100;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.6 0 0 0 -0.3'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 220px 220px;
+  }
+
+  .title-block { position: relative; padding: 1.6rem 0 0 var(--left); overflow-x: clip; }
+  .title-text { padding: clamp(3rem, 11vh, 7rem) var(--gutter) 0 0; max-width: calc(var(--measure) + var(--gap) + var(--margin-col)); }
+
+  /* Hero art: two layers behind the right half of the title block. The title
+     keeps its place whether the art is there or not. */
+  /* The drawing is the signature of the page: almost half the window wide,
+     anchored right and running a little past the edge, centred against the
+     title and deck. The title keeps its place on the left and breaks before
+     it would run far into the drawing. */
+  .title-block { --hero-w: 48vw; --title-w: calc(100vw - var(--left) - var(--hero-w) - 0.5rem); }
+  /* --bw, --pr, --sy and the like are the bounds of the drawing inside its
+     image file, measured by article.js; without them the file counts whole. */
+  .hero {
+    --w: calc(var(--hero-w) / var(--bw, 1));
+    position: absolute; z-index: -1; pointer-events: none;
+    width: var(--w);
+    right: calc(-1.5vw - var(--pr, 0) * var(--w));
+    top: calc(50% + 1rem);
+    translate: 0 calc(-50% + var(--sy, 0%));
+  }
+  .title-block.has-hero { min-height: calc(var(--hero-w) * 0.62); }
+  .has-hero h1 { max-width: var(--title-w); font-size: clamp(2.7rem, 5.6vw, 5rem); }
+  .has-hero .deck, .has-hero .byline { max-width: min(35rem, var(--title-w)); }
+  .hero img { will-change: transform; }
+
+  .toc { margin: 3.2rem var(--gutter) 0 var(--left); max-width: var(--measure); padding-top: 0.9rem; border-top: 1px solid var(--hairline); }
+  .toc ol { columns: 2; column-gap: 2rem; }
+  .toc li { break-inside: avoid; }
+
+  main.body { position: relative; padding: 2.2rem var(--gutter) 0 var(--left); }
+  main.body > * { max-width: var(--measure); }
+  main.body > h2.sec:first-of-type { margin-top: 2rem; }
+
+  main.body > .fig-wide { max-width: min(58rem, 100%); }
+  main.body > .table-frame.table-wide { max-width: min(58rem, 100%); }
+
+  .colophon { margin: 5rem var(--gutter) 3rem var(--left); max-width: var(--measure); padding-top: 0.9rem; border-top: 1px solid var(--hairline); }
+
+  body.index .title-block { padding-bottom: 3rem; }
+
+  /* Source popover: paper, an ink rule on top like a table, no shadow. */
+  .src-pop {
+    position: absolute; z-index: 40;
+    width: min(23rem, calc(100vw - 1.5rem));
+    max-height: min(70vh, 26rem);
+    overflow-y: auto;
+    padding: 0.75rem 0.9rem 0.3rem;
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-top: 1pt solid var(--ink);
+    font: 400 0.8rem/1.4 var(--sans);
+  }
+  .src-pop:focus { outline: none; }
+  .src-pop h2 { margin: 0 0 0.6rem; font: 500 0.66rem/1.2 var(--mono); letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+  .src-pop ol { margin: 0; padding: 0; list-style: none; }
+  .src-pop li { display: grid; grid-template-columns: 1.7rem 1fr; margin: 0 0 0.65rem; }
+  .src-pop .src-title::after { content: '\00a0↗'; font-family: var(--mono); font-size: 0.85em; color: var(--muted); }
+}
+
+/* Desktop: text column, margin column, scenes with a pinned figure. */
+@media screen and (min-width: 900px) {
+  .rail { position: absolute; top: 0; bottom: 0; left: calc(var(--left) + var(--measure) + var(--gap)); width: var(--margin-col); max-width: none; pointer-events: none; }
+  .rail-pin { position: sticky; top: 17vh; transition: opacity 0.3s ease; }
+  .rail-pin.is-away { opacity: 0; }
+
+  /* A scene leaves the text column to the left, so that the pinned figure
+     gets at least 58% of the window; its passages keep a column of 22rem. */
+  .scene {
+    --scene-left: max(var(--gutter), min(var(--left), calc(42vw - 22rem - var(--gap) - 2 * var(--gutter))));
+    display: grid;
+    grid-template-columns: 22rem minmax(0, 1fr);
+    column-gap: var(--gap);
+    max-width: none !important;
+    margin: 0 0 0 calc(var(--scene-left) - var(--left));
+  }
+  .scene-stage {
+    grid-column: 2; grid-row: 1;
+    position: sticky; top: 0;
+    height: 100vh;
+    align-self: start;
+    display: flex; align-items: center;
+  }
+  /* As wide as the column allows, but never taller than the window. */
+  .scene-stage .fig { width: min(100%, calc(min(78vh, 100vh - 8rem) * var(--aspect, 1.6))); margin: 0 auto; }
+  .scene-text { grid-column: 1; grid-row: 1; padding: 44vh 0 30vh; }
+  .passage { min-height: 72vh; }
+  .scene-caption { display: none; }
+}
+
+/* Phones and narrow windows: one column; a scene pins its figure in the
+   upper part of the screen and the passages scroll under it. */
+@media screen and (max-width: 899.98px) {
+  :root { --gutter: 1.1rem; --left: var(--gutter); }
+  body { font-size: 1.09rem; line-height: 1.55; }
+  .title-block { padding-top: 1.1rem; }
+  .title-text { padding-top: 2.6rem; }
+  .deck { font-size: 1.2rem; }
+  /* The drawing sits above the title, as wide as the screen. */
+  .hero {
+    --w: calc(100vw / var(--bw, 1));
+    position: relative; right: auto; top: 0; translate: none;
+    width: var(--w);
+    margin: calc(1.4rem - var(--pt, 0) * var(--w) * var(--ar, 0)) 0 calc(-1 * var(--pb, 0) * var(--w) * var(--ar, 0)) calc(-1 * var(--gutter) - var(--pl, 0) * var(--w));
+  }
+  .title-block.has-hero { min-height: 0; }
+  .has-hero h1 { max-width: none; font-size: clamp(2.7rem, 7.4vw, 5.5rem); }
+  .has-hero .deck, .has-hero .byline { max-width: 35rem; }
+  .toc { margin-top: 2.4rem; }
+  h2.sec { margin-top: 2.8rem; font-size: 1.28rem; }
+
+  .rail { display: none; }
+  .margin-still { display: block; width: 11.5rem; margin: 0.2rem 0 1.4rem; }
+  .margin-still.is-empty { display: none; }
+
+  .scene-stage {
+    position: sticky; top: 0; z-index: 3;
+    margin: 0 calc(-1 * var(--gutter));
+    padding: 0.7rem var(--gutter) 0.6rem;
+    background: var(--paper);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .scene-stage .fig { width: min(100%, calc(46svh * var(--aspect, 1.6))); margin: 0 auto; }
+  .scene-stage figcaption { display: none; }
+  .scene-text { padding: 2.5rem 0 0; }
+  .passage { min-height: 46svh; padding-bottom: 2rem; }
+  .scene-caption { margin: 0 0 2rem; padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
+
+  /* Tables wider than the screen scroll inside their own frame. */
+  .table-frame.table-wide table { min-width: 36rem; }
+  table.cols-2 th:first-child, table.cols-2 td:first-child { width: 42%; }
+  th, td { padding-right: 0.7rem; }
+}
+
+@media screen and (max-width: 480px) {
+  .toc ol { columns: 1; }
+}
+
+/* Passages that are not at the reading line step back. Only when the scroll
+   engine runs (it sets .is-live), so the text is never dim without it. */
+@media screen {
+  .scene.is-live .passage { opacity: 0.4; transition: opacity 0.3s ease; }
+  .scene.is-live .passage.is-active { opacity: 1; }
+}
+@media screen and (prefers-reduced-motion: reduce) {
+  .scene.is-live .passage, .rail-pin { transition: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* ------------------------------------------------------------------------ */
+/* 3. Print: A4, two columns, 15mm margins, 7mm gutter                      */
+/* ------------------------------------------------------------------------ */
+
+@page {
+  size: A4;
+  margin: 15mm 15mm 16mm;
+  @bottom-left { font: 400 6.6pt 'JetBrains Mono', monospace; color: #6B665F; letter-spacing: 0.04em; vertical-align: middle; }
+  @bottom-right { content: counter(page); font: 400 6.6pt 'JetBrains Mono', monospace; color: #6B665F; vertical-align: middle; }
+}
+
+@media print {
+  html { font-size: 10pt; }
+  body { background: none; font-size: 9.8pt; line-height: 1.36; font-variant-numeric: lining-nums proportional-nums; }
+
+  .skip, .toc, .rail, .colophon, .src-mark, .scene-caption, .src-pop { display: none !important; }
+
+  a { text-decoration: none; }
+  p { margin-bottom: 0.62em; orphans: 2; widows: 2; hyphens: auto; }
+  li { hyphens: auto; }
+
+  /* Title block across both columns */
+  .title-block { position: relative; margin: 0 0 6mm; padding: 0; }
+  .title-text { padding: 9mm 0 0; }
+  .title-block h1 { font-size: 30pt; line-height: 1.04; }
+  .deck { margin-top: 4mm; max-width: 125mm; font-size: 12pt; line-height: 1.34; }
+  .byline { margin-top: 5mm; font-size: 8pt; }
+  .byline .author, .byline .context { display: inline; }
+  .byline .author::after { content: ' · '; font-weight: 400; color: var(--muted); }
+  .status { margin-top: 1.5mm; font-size: 6.6pt; }
+  .kicker { font-size: 6.6pt; }
+  .title-block.has-hero .title-text { padding-right: 75mm; }
+  /* 70mm of drawing, top right; the empty paper of the file hangs outside. */
+  .hero { --w: calc(70mm / var(--bw, 1)); position: absolute; width: var(--w); right: calc(-1 * var(--pr, 0) * var(--w)); top: calc(7mm - var(--pt, 0) * var(--w) * var(--ar, 0)); }
+  .title-block.has-hero { min-height: calc(9mm + 70mm / var(--bw, 1) * var(--ar, 0.7) * var(--bh, 1)); }
+
+  /* Body in two columns. The scene parts become plain blocks of the column
+     flow, so that the stage can span both columns. */
+  main.body { column-count: 2; column-gap: 7mm; column-fill: balance; padding: 0; }
+  .scene { display: contents; }
+  .scene-stage { column-span: all; margin: 4mm 0 5mm; break-inside: avoid; }
+  .scene-stage .fig { width: 100%; }
+  .scene-text, .passage { display: contents; }
+  /* Figures are drawn for the full width: scenes and wide figures take all
+     180mm, column figures one whole column, and each takes the height its
+     aspect needs. Width wins over any height cap, so lettering keeps its size. */
+  .scene-stage .fig-frame, .fig-wide .fig-frame, .fig-column .fig-frame { width: 100%; }
+  /* The page as article.js measures it before it places the spanning figures. */
+  body { max-width: 180mm; margin: 0 auto; }
+  html.is-measure-col main.body { column-count: 1; width: 86.5mm; }
+  html.is-measure-col .scene-stage, html.is-measure-col .fig-wide, html.is-measure-col .table-frame.table-wide { display: none; }
+  .fig-wide { column-span: all; margin: 4mm 0 5mm; }
+  .fig-column { margin: 3mm 0 4mm; }
+  .fig, .fig-frame, .margin-still, figure { break-inside: avoid; }
+  figcaption { margin-top: 2mm; max-width: 120mm; font-size: 7.4pt; line-height: 1.36; }
+  .fig-column figcaption { max-width: none; }
+  .fig-label { font-size: 6.2pt; }
+  .fig-placeholder { font-size: 6.6pt; }
+
+  /* Margin scene states: small stills at the start of their sections. */
+  .margin-still { display: block; width: 44mm; margin: 0.5mm 0 3mm; }
+  .margin-still.is-empty { display: none; }
+
+  h2.sec { margin: 6.5mm 0 2.2mm; font-size: 11pt; line-height: 1.2; break-after: avoid; break-inside: avoid; }
+  main.body > h2.sec:first-of-type, main.body > .margin-mark:first-child + h2.sec { margin-top: 0; }
+  .sec-num { margin-bottom: 1.6mm; font-size: 6.8pt; min-height: 6.8pt; }
+  /* A heading takes its first lines with it to the next column or page. */
+  h2.sec + p, h2.sec + .margin-still + p { break-before: avoid; }
+  h3 { margin: 4mm 0 1.5mm; font-size: 9.4pt; }
+
+  main ul, main ol { padding-left: 4mm; margin-bottom: 0.62em; }
+  main li { margin-bottom: 0.3em; }
+  main ul > li::before, main ol:not(.src-list):not(.index-list) > li::before { left: -4mm; }
+  main ol:not(.src-list):not(.index-list) > li::before { font-size: 6.6pt; top: 0.5em; }
+
+  /* Source marks become bracketed numbers that match the list at the end. */
+  .src-print { display: inline; margin-left: 0.2em; font: 400 0.76em/1 var(--mono); font-variant-numeric: tabular-nums lining-nums; color: var(--muted); white-space: nowrap; }
+  .src { white-space: normal; }
+
+  .table-frame { margin: 3mm 0 4mm; overflow: visible; }
+  .table-frame.table-wide { column-span: all; }
+  table { font-size: 7.6pt; line-height: 1.32; }
+  th { padding: 1.4mm 2.5mm 1.2mm 0; }
+  td { padding: 1.2mm 2.5mm 1.2mm 0; }
+
+  .sources { margin-top: 6mm; }
+  .src-list { font-size: 6.9pt; line-height: 1.34; }
+  .src-list li { grid-template-columns: 5.5mm 1fr; margin-bottom: 1.3mm; }
+  .src-n { font-size: 6.4pt; line-height: 1.5; }
+  .src-host { display: inline; white-space: nowrap; }
+  .src-host::before { content: '· '; font-family: var(--sans); }
+
+  /* Index page, if someone prints it */
+  body.index main.body { column-count: 1; }
+}

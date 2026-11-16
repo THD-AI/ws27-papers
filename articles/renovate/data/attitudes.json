@@ -1,0 +1,61 @@
+{
+  "id": "attitudes",
+  "reading": "Germans are not more wary of AI than Americans; what stands out is that Germans reject monitoring of workers.",
+  "unit": {
+    "percentPerDot": 1,
+    "dotsPerStrip": 100,
+    "note": "one dot is [[1%]]"
+  },
+  "panels": [
+    {
+      "question": "AI will eliminate jobs rather than create them",
+      "survey": "Ipsos for Google, 2025 · 21 countries",
+      "source": "R12-25",
+      "rows": [
+        {
+          "country": "Germany",
+          "value": 61,
+          "source": "R12-25"
+        },
+        {
+          "country": "United States",
+          "value": 67,
+          "source": "R12-25"
+        }
+      ]
+    },
+    {
+      "question": "I trust my government to regulate AI responsibly",
+      "survey": "Ipsos AI Monitor, 2025 · 30 countries",
+      "source": "R12-25",
+      "rows": [
+        {
+          "country": "Germany",
+          "value": 49,
+          "source": "R12-25"
+        },
+        {
+          "country": "United States",
+          "value": 31,
+          "source": "R12-25"
+        }
+      ]
+    },
+    {
+      "question": "Digital monitoring of workers: negative",
+      "survey": "Eurobarometer, 2024 · EU only",
+      "source": "R12-28",
+      "standsOut": true,
+      "rows": [
+        {
+          "country": "Germany",
+          "value": 79,
+          "source": "R12-28"
+        }
+      ],
+      "note": "second-highest in the EU, after Sweden's [[80%]]; asked in the EU only",
+      "surveyNote": "The survey line is taken from the caption in text.md (Eurobarometer 2024, EU only)."
+    }
+  ],
+  "headline": "The same question, asked in both countries"
+}

@@ -1,0 +1,103 @@
+{
+  "id": "numbers",
+  "reading": {
+    "a": "The announcement said 40 of 100 contacts; the company's own slide says 32, and those are contacts that start with the software, not ones it finished.",
+    "b": "A customer account contacted care 7 times a year in 2021 and about 3 times in 2026; the software agents arrived late in that fall."
+  },
+  "tag": "company-reported",
+  "plateA": {
+    "total": {
+      "value": 100,
+      "note": "[[{v}]] contacts from contract customers, Q2 2026",
+      "source": "R6-06"
+    },
+    "release": {
+      "value": 40,
+      "note": "release: [[{v}]] handled by AI agents",
+      "source": "R6-01"
+    },
+    "slide": {
+      "value": 32,
+      "note": "T-Mobile's slide: [[{v}]] served by an AI agent",
+      "source": "R6-06"
+    },
+    "rest": {
+      "note": "not in T-Mobile's material",
+      "source": "R6-06",
+      "derivation": "release value minus slide value; drawn, not printed as a number"
+    },
+    "start": {
+      "note": "start with the software",
+      "source": "R6-02"
+    },
+    "finished": {
+      "value": null,
+      "note": "finished by the software: not published",
+      "source": "R6-02"
+    }
+  },
+  "plateB": {
+    "axis": {
+      "from": {
+        "year": 2021,
+        "quarter": 4
+      },
+      "to": {
+        "year": 2026,
+        "quarter": 2
+      },
+      "source": "R6-06"
+    },
+    "strip": {
+      "months": 12,
+      "note": "A strip is one year for one account; one tick is one contact."
+    },
+    "points": [
+      {
+        "label": "Q4 2021",
+        "year": 2021,
+        "quarter": 4,
+        "value": 7.0,
+        "decimals": 1,
+        "note": "[[{v}]] contacts a year, about one every seven weeks",
+        "source": "R6-06"
+      },
+      {
+        "label": "Q2 2026",
+        "year": 2026,
+        "quarter": 2,
+        "value": 3.1,
+        "decimals": 1,
+        "note": "[[{v}]] a year, about one every four months",
+        "source": "R6-06"
+      }
+    ],
+    "between": {
+      "years": [
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "value": null,
+      "note": "not published",
+      "source": "R6-06"
+    },
+    "event": {
+      "year": 2024,
+      "month": 9,
+      "label": "Sep 2024",
+      "note": "agent platform announced",
+      "source": "R6-08"
+    },
+    "causes": {
+      "block": "T-Mobile also names: problems removed before customers call; customers using the app",
+      "source": "R6-14"
+    },
+    "reminder": "{a} of {b} start with the software"
+  },
+  "headline": {
+    "a": "Of 100 contacts at T-Mobile US: how many did the software handle?",
+    "b": "How often one customer account contacts care in a year (T-Mobile US)"
+  }
+}

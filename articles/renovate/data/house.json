@@ -1,0 +1,60 @@
+{
+  "id": "house",
+  "reading": "A house in section. The part of it that the text is about is marked: the paint, the foundations and wiring, the supply line, the inspector's mark at the door, the closed back door.",
+  "sourceNote": "FIGURES.md gives no source ids for the margin scene; a state that carries a date names the ids FIGURES.md or text.md give for that date.",
+  "parts": {
+    "paint": "the agent everyone sees",
+    "foundations": "customer data, who is calling",
+    "wiring": "own software",
+    "rooms": "service: agent and staff",
+    "supply": "models from outside",
+    "mark": "gates"
+  },
+  "states": [
+    {
+      "field": [
+        "paint"
+      ],
+      "label": "what was announced",
+      "source": null
+    },
+    {
+      "field": [
+        "foundations",
+        "wiring"
+      ],
+      "label": "what T-Mobile did first",
+      "source": null
+    },
+    {
+      "field": [
+        "foundations"
+      ],
+      "unfinished": true,
+      "label": "Telekom: planned work",
+      "source": null
+    },
+    {
+      "field": [
+        "supply"
+      ],
+      "label": "bought from outside",
+      "source": null
+    },
+    {
+      "field": [
+        "mark"
+      ],
+      "label": "gates before launch",
+      "source": null
+    },
+    {
+      "field": [
+        "backdoor"
+      ],
+      "label": "no dismissals until 2028",
+      "source": "R11-14"
+    }
+  ],
+  "kicker": "THE HOUSE ·\nwhere the text is"
+}

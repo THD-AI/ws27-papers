@@ -1,0 +1,189 @@
+{
+ "generated": "2026-11-16",
+ "generated_by": "tools/other-half-data.mjs",
+ "inputs": [],
+ "source": "OWN-ARITH",
+ "what": "Distance 5: three real flips in one column fire one check. The smallest explanation of that check is two flips below it. Real errors and correction together cross the grid and no check fires.",
+ "distance": 5,
+ "qubit_position": "q = row * 5 + col",
+ "flip_checks": [
+  {
+   "id": "z0",
+   "asks_about": "flips",
+   "shape": "square",
+   "row": 0,
+   "col": 1,
+   "qubits": [
+    1,
+    2,
+    6,
+    7
+   ]
+  },
+  {
+   "id": "z1",
+   "asks_about": "flips",
+   "shape": "square",
+   "row": 0,
+   "col": 3,
+   "qubits": [
+    3,
+    4,
+    8,
+    9
+   ]
+  },
+  {
+   "id": "z10",
+   "asks_about": "flips",
+   "shape": "half",
+   "edge": "left",
+   "row": 2,
+   "col": -1,
+   "qubits": [
+    10,
+    15
+   ]
+  },
+  {
+   "id": "z11",
+   "asks_about": "flips",
+   "shape": "half",
+   "edge": "right",
+   "row": 3,
+   "col": 4,
+   "qubits": [
+    19,
+    24
+   ]
+  },
+  {
+   "id": "z2",
+   "asks_about": "flips",
+   "shape": "square",
+   "row": 1,
+   "col": 0,
+   "qubits": [
+    5,
+    6,
+    10,
+    11
+   ]
+  },
+  {
+   "id": "z3",
+   "asks_about": "flips",
+   "shape": "square",
+   "row": 1,
+   "col": 2,
+   "qubits": [
+    7,
+    8,
+    12,
+    13
+   ]
+  },
+  {
+   "id": "z4",
+   "asks_about": "flips",
+   "shape": "square",
+   "row": 2,
+   "col": 1,
+   "qubits": [
+    11,
+    12,
+    16,
+    17
+   ]
+  },
+  {
+   "id": "z5",
+   "asks_about": "flips",
+   "shape": "square",
+   "row": 2,
+   "col": 3,
+   "qubits": [
+    13,
+    14,
+    18,
+    19
+   ]
+  },
+  {
+   "id": "z6",
+   "asks_about": "flips",
+   "shape": "square",
+   "row": 3,
+   "col": 0,
+   "qubits": [
+    15,
+    16,
+    20,
+    21
+   ]
+  },
+  {
+   "id": "z7",
+   "asks_about": "flips",
+   "shape": "square",
+   "row": 3,
+   "col": 2,
+   "qubits": [
+    17,
+    18,
+    22,
+    23
+   ]
+  },
+  {
+   "id": "z8",
+   "asks_about": "flips",
+   "shape": "half",
+   "edge": "left",
+   "row": 0,
+   "col": -1,
+   "qubits": [
+    0,
+    5
+   ]
+  },
+  {
+   "id": "z9",
+   "asks_about": "flips",
+   "shape": "half",
+   "edge": "right",
+   "row": 1,
+   "col": 4,
+   "qubits": [
+    9,
+    14
+   ]
+  }
+ ],
+ "real_errors": [
+  2,
+  7,
+  12
+ ],
+ "fired_by_real_errors": [
+  "z4"
+ ],
+ "decoder_correction": [
+  17,
+  22
+ ],
+ "fired_by_correction_alone": [
+  "z4"
+ ],
+ "together": [
+  2,
+  7,
+  12,
+  17,
+  22
+ ],
+ "fired_together": [],
+ "crosses_from": "top edge",
+ "crosses_to": "bottom edge",
+ "checked": "the script recomputes the fired checks and stops if the example does not hold"
+}

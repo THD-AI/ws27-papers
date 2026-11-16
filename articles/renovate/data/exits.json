@@ -1,0 +1,90 @@
+{
+  "id": "exits",
+  "reading": "About four thousand positions a year leave Telekom in Germany by agreed routes, most by partial retirement; severance is the one that doubled.",
+  "source": "R12-01",
+  "sourceName": "Deutsche Telekom, HR Factbook 2025",
+  "tag": "company-reported",
+  "unit": {
+    "positionsPerMark": 25,
+    "note": "one mark is [[25]] full-time positions, rounded; exact totals above",
+    "source": "R12-01"
+  },
+  "years": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "routes": [
+    {
+      "label": "Partial retirement",
+      "values": [
+        2444,
+        2086,
+        2201,
+        2399,
+        2294
+      ],
+      "source": "R12-01"
+    },
+    {
+      "label": "Retirement of civil servants",
+      "values": [
+        630,
+        1183,
+        995,
+        1213,
+        595
+      ],
+      "source": "R12-01"
+    },
+    {
+      "label": "Severance",
+      "values": [
+        526,
+        619,
+        551,
+        760,
+        1016
+      ],
+      "accent": true,
+      "source": "R12-01"
+    },
+    {
+      "label": "Early retirement",
+      "values": [
+        66,
+        79,
+        54,
+        39,
+        47
+      ],
+      "source": "R12-01"
+    },
+    {
+      "label": "Transfers to public authorities",
+      "values": [
+        70,
+        49,
+        259,
+        37,
+        11
+      ],
+      "source": "R12-01"
+    }
+  ],
+  "totals": {
+    "values": [
+      3736,
+      4016,
+      4060,
+      4448,
+      3963
+    ],
+    "source": "R12-01",
+    "note": "totals added by this article",
+    "derivation": "Sum of the five routes of each year; not printed in the source."
+  },
+  "headline": "Deutsche Telekom in Germany: positions leaving by agreed routes, 2021 to 2025"
+}
