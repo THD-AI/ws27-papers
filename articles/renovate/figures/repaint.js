@@ -12,6 +12,8 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 2;
+// where scenes read as a sequence (tablet portrait, phone landscape): one still, the final state
+export const stills = [1];
 // wide: drawn narrower than its column (480 units in a 520 to 570 px frame),
 // so that its smallest lettering renders at 13 px or more on desktops
 const SIZE = { wide: [480, 420], tall: [360, 400] };

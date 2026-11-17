@@ -4,6 +4,15 @@ Read `SPEC.md` first (figure contract, design system). Each figure below says wh
 
 Honesty rules that override looks: where a value is not published, draw the absence (an empty slot with an italic note "not published"), never an estimate. Never connect two measured points with a line that suggests the path between them. Company-reported figures carry a small mono tag `company-reported`.
 
+## Web loop (17 November 2026)
+
+- **`plan`** (new, screen-only scene, 8 steps; step n = item n + 1 of section 9): one path of eight numbered stations, each with its short name and, in small italic type, its measure. The current station is in the field at full ink, earlier ones stay in ink, later ones are muted; the path is inked up to the current station. A thin bracket over 6 to 8: "they need step 5"; three notches after station 6 and "read → undoable → fraud-prone" in its label (keys in stages). One quiet hairline band runs under the whole path: "the staff stay throughout · no dismissals for business reasons until 31 Dec 2028" (R11-14). No dates or durations exist, so none are drawn; the figure says "order only · no dates". Wide: two rows of four, the path turns at the right and goes on from the left (720 × 408). Tall: the path runs down, a window shows the current station and its neighbours (360 × 380, about 375 px at 355 wide). Print: final state, all in ink. Data `data/plan.json`. Replaces the failed `roadmap` forms (icons, Gantt, ladder).
+- **`stills`**: walls, terms, repaint, exits, attitudes, obstacles and permits show one still, the final state, where scenes read as a sequence; plan too.
+- **`exits`**: route labels "Early retirement, civil servants" / "Early retirement, other staff"; wide labels break after the comma and are moved apart so none overlaps. Step 0 packs every year into one continuous stack (only the top row unfilled) and lifts the drawing under the title; it settles onto its base lines as the stacks split. The severance note sits over 2021 to 2023, clear of the 2024 marks.
+- **`attitudes`**: the value column stands clear of the strips by more than the pen ring reaches; question 1 notes "(the other option: create new jobs)".
+- **`numbers`**: month letters and year ticks in ink at 14 units wide (12.5 tall).
+- **`terms`**: the keys now hang from a hook on a split ring, three cut keys fanned unevenly (the upright pair under a round ring was read as a person).
+
 ## Drafts 7 to 9 (17 November 2026): three reader rounds
 
 Twelve readers per round; the log is in dotUni `docs/papers/innovation/loop-draft-6.md`.

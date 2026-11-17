@@ -25,6 +25,7 @@ const FIGS = {
   'roadmap': { role: 'wide', steps: 3 },
   'terms': { role: 'scene', steps: 2 },
   'repaint': { role: 'scene', steps: 2 },
+  'plan': { role: 'scene', steps: 8 },
 };
 const MM = 96 / 25.4;
 

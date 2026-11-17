@@ -184,7 +184,9 @@ function plateB(svg, C, d, tall, st, bare, big) {
   // announced. Everything arrives from XA on; the time line in step 4.
   // Each step is complete within the first 30% of its step.
   const B = d.plateB, W = tall ? 360 : 800, H = tall ? 440 : 500;
-  const S = tall ? { x0: 14, note: 12.5, mono: 12.5, small: 11.5, lab: 13.5, r: 4.2 } : { x0: 16, note: 14, mono: 14, small: 12, lab: 15, r: 5 };
+  // tick: the month letters and the years, in ink and larger than the tag,
+  // so they read at a laptop's scale (they were 12.5 px mid-grey at 1536 x 864)
+  const S = tall ? { x0: 14, note: 12.5, mono: 12.5, small: 11.5, tick: 12.5, lab: 13.5, r: 4.2 } : { x0: 16, note: 14, mono: 14, small: 12, tick: 14, lab: 15, r: 5 };
   if (big) { S.note = 13.5; S.mono = 13; S.small = 12; }
   const root = g(svg);
   const ink = { stroke: C.ink, 'stroke-width': 1.25, 'stroke-linecap': 'round' };
@@ -223,7 +225,7 @@ function plateB(svg, C, d, tall, st, bare, big) {
     for (let k = 0; k <= n; k++) {
       const x = rx0 + (k / n) * len;
       line(rg, x, ry, x, ry + (k === 0 || k === n ? 8 : 5), ink);
-      if (k < n) text(rg, x + len / n / 2, ry + 8 + S.small, B.strip.letters[k], { family: 'mono', size: S.small, fill: C.muted, anchor: 'middle' });
+      if (k < n) text(rg, x + len / n / 2, ry + 9 + S.tick, B.strip.letters[k], { family: 'mono', size: S.tick, fill: C.ink, anchor: 'middle' });
     }
     st.fade(rg, a, i === 0 ? XA[1] : a + 0.08);
     // contacts: whole dots, and a visibly smaller one for the part
@@ -237,7 +239,7 @@ function plateB(svg, C, d, tall, st, bare, big) {
     }
     st.fill(ds, a + 0.04, a + 0.14);
     st.fade(tg, a, i === 0 ? XA[1] : a + 0.08);
-    y = ry + 8 + S.small + (tall ? 26 : 44);
+    y = ry + 9 + S.tick + (tall ? 26 : 44);
     if (i === 0) {
       const bg = g(root);
       const yrs = B.between.years;
@@ -252,7 +254,7 @@ function plateB(svg, C, d, tall, st, bare, big) {
   {
     const fg = g(root);
     const ax = rx1 - len / (B.strip.months * 2);
-    const ya = rulerY[0] + 8 + S.small + 8, yb = rulerY[1] - 11;
+    const ya = rulerY[0] + 9 + S.tick + 8, yb = rulerY[1] - 11;
     const aw = { stroke: C.ink, 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' };
     line(fg, ax, ya, ax, yb, aw);
     line(fg, ax - 4, yb - 6, ax, yb, aw);
@@ -273,7 +275,7 @@ function plateB(svg, C, d, tall, st, bare, big) {
   const yl = g(root);
   for (let yr = Math.ceil(t0); yr <= Math.floor(t1); yr++) {
     line(yl, X(yr), ay, X(yr), ay + 5, ink);
-    text(yl, X(yr), ay + 6 + S.small, String(yr), { family: 'mono', size: S.small, anchor: 'middle', fill: C.muted });
+    text(yl, X(yr), ay + 7 + S.tick, String(yr), { family: 'mono', size: S.tick, anchor: 'middle', fill: C.ink });
   }
   B.points.forEach((p) => circle(yl, X(p.year + (p.quarter - 0.5) / 4), ay, tall ? 3.6 : 4.2, { fill: C.ink }));
   st.fade(yl, 4.06, 4.14);
@@ -281,7 +283,7 @@ function plateB(svg, C, d, tall, st, bare, big) {
   const eg = g(root);
   line(eg, evX, ay - 10, evX, ay + 10, { stroke: C.accent, 'stroke-width': 2.4, 'stroke-linecap': 'round' });
   const eo = { italic: true, size: S.note, fill: C.accent, weight: 600 };
-  text(eg, Math.min(tx1, Math.max(evX + 2, tx0 + textSize(B.event.note, eo).w + 2)), ay + 6 + S.small + S.note + 6, B.event.note, { ...eo, anchor: 'end' });
+  text(eg, Math.min(tx1, Math.max(evX + 2, tx0 + textSize(B.event.note, eo).w + 2)), ay + 7 + S.tick + S.note + 6, B.event.note, { ...eo, anchor: 'end' });
   st.fade(eg, 4.12, 4.2);
   const bg2 = g(root);
   const bx0 = X(B.points[0].year + 1);

@@ -14,7 +14,9 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 3;
-const SIZE = { wide: [580, 392], tall: [360, 374] };
+// where scenes read as a sequence (tablet portrait, phone landscape): one still, the final state
+export const stills = [2];
+const SIZE = { wide: [580, 410], tall: [360, 390] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 // '#rrggbb' or 'rgb(r, g, b)' -> [r, g, b]
@@ -50,7 +52,10 @@ function build(el, ctx) {
   // the strip takes what the country names and the numbers leave
   const names = [...new Set(d.panels.flatMap((p) => p.rows.map((r) => r.country)))];
   S.sx = S.x0 + Math.max(...names.map((c) => textSize(c, { family: 'sans', size: S.label }).w)) + 9;
-  const numW = textSize('100%', { family: 'mono', size: S.num, weight: 500 }).w + (tall ? 14 : 18);
+  // the value stands clear of the strip by more than the pen ring reaches
+  // out to its left, so the ring around 79% lies on no dot
+  const ringX = tall ? 5.5 : 7, valGap = ringX + (tall ? 7 : 9);
+  const numW = textSize('100%', { family: 'mono', size: S.num, weight: 500 }).w + valGap + ringX + 4;
   if (ctx.print) S.gap = tall ? 4 : 6;
   const maxPitch = ctx.print ? (tall ? 11 : 16) : tall ? 4.2 : 7.2;
   S.pitch = Math.min(maxPitch, (W - S.sx - S.x0 - numW - (S.cols / grp - 1) * S.gap) / S.cols);
@@ -58,7 +63,7 @@ function build(el, ctx) {
   const slot = cells(n, S.cols, { gx: S.pitch, gy: S.pitch + 0.6, group: grp, groupGap: S.gap });
   const stripH = S.rows * (S.pitch + 0.6);
   if (!tall) S.rowH = stripH + 9;
-  const valX = S.sx + slot.width + (tall ? 8 : 10);
+  const valX = S.sx + slot.width + valGap;
 
   const hd = g(svg, { 'data-role': 'title' });
   const hl = text(hd, S.x0, tall ? 14 : 18, d.headline, { family: 'sans', size: tall ? 12.5 : 15, weight: 600, width: W - 2 * S.x0, lh: tall ? 15.5 : 18 });
@@ -85,7 +90,9 @@ function build(el, ctx) {
     const head = g(pg);
     if (pi > 0) line(head, S.x0, y - S.panelGap / 2 - 5, W - S.x0, y - S.panelGap / 2 - 5, { stroke: C.hairline, 'stroke-width': 1 });
     const q = text(head, S.x0, y, `“${p.question}”`, { family: 'sans', size: S.q, weight: 500, width: W - 2 * S.x0 });
-    const tg = text(head, S.x0, q.bottom + S.tag + 1, p.survey, { family: 'mono', size: S.tag, fill: C.muted });
+    // a question asked as a choice between two answers says what the other was
+    const ch = p.choice ? text(head, S.x0, q.bottom + S.note + 1, p.choice, { italic: true, size: S.note, fill: C.muted, width: W - 2 * S.x0 }) : null;
+    const tg = text(head, S.x0, (ch || q).bottom + S.tag + 1, p.survey, { family: 'mono', size: S.tag, fill: C.muted });
     st.fade(head, a, a + 0.06);
     let sy = tg.bottom + 10;
     p.rows.forEach((r, ri) => {
@@ -121,7 +128,7 @@ function build(el, ctx) {
 
   if (ring) {
     const { val } = ring;
-    const pr = penRing(ring.pg, val.cx, val.cy - 0.5, val.w / 2 + (tall ? 5.5 : 7), S.num * 0.5 + (tall ? 3.6 : 4.4), { seed: 23, stroke: C.accent, width: tall ? 1.3 : 1.5 });
+    const pr = penRing(ring.pg, val.cx, val.cy - 0.5, val.w / 2 + ringX, S.num * 0.5 + (tall ? 3.6 : 4.4), { seed: 23, stroke: C.accent, width: tall ? 1.3 : 1.5 });
     pr.paths.forEach((p, k) => st.draw(p, ring.at + k * 0.02, ring.at + 0.08 + k * 0.01));
   }
   return { set: (s, t) => st.set(s, t) };

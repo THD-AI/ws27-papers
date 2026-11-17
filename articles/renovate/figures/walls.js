@@ -24,6 +24,8 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 3;
+// where scenes read as a sequence (tablet portrait, phone landscape): one still, the final state
+export const stills = [2];
 // tall: three panels stacked, short enough that the title, the drawing and
 // the caption share one phone screen
 export const aspect = { wide: 928 / 392, tall: 360 / 528 };

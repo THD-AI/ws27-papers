@@ -19,6 +19,8 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 3;
+// where scenes read as a sequence (tablet portrait, phone landscape): one still, the final state
+export const stills = [2];
 const SIZE = { wide: [552, 338], tall: [360, 398] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 

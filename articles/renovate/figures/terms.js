@@ -1,7 +1,7 @@
 // terms: what an AI system is, in building terms. Four objects, no people,
 // on one site, each with its everyday name and, under it in muted type, the
 // term it stands for. Step 0: the handbook alone, the part people picture.
-// Step 1: the plans archive, the ring of keys and the cable join on the same
+// Step 1: the plans archive, the bunch of keys on its ring and the cable join on the same
 // ground, and a bracket takes all four as the system. Four in a row on wide
 // frames, two rows of two on a phone and in a print column. Drawn in the
 // same slightly uneven pen line as walls and permits (seeded, so stable).
@@ -10,6 +10,8 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 2;
+// where scenes read as a sequence (tablet portrait, phone landscape): one still, the final state
+export const stills = [1];
 const SIZE = { wide: [580, 332], tall: [360, 540] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
@@ -60,17 +62,35 @@ function archive(P, C) {
 }
 
 function keys(P, C) {
-  // the ring with two keys on it
-  P.line(arc(30, 25, 11, -90, 275, 26));
-  [[24, 9], [36, -5]].forEach(([x, a]) => {
-    const k = g(P.root, { transform: `rotate(${a} ${x} 35)` });
+  // a bunch of keys on a split ring, hanging from a hook on a small board:
+  // three cut keys of different lengths and bows, fanned out unevenly, none
+  // reaching the ground. (Two upright keys under a round ring, standing on
+  // the ground, were read as a person.)
+  const cx = 29, cy = 22, rr = 9.5;
+  P.shape(box(cx - 14, 2, 28, 6), C.paper, 1.1);                   // the board
+  P.line([[cx, 8], [cx, cy - rr + 1.5], [cx + 3, cy - rr - 1]], 1.2);   // the hook
+  // each key in its own frame: the hole at (0, 0), the blade pointing down
+  const key = (ang, L, square, on) => {
+    // hung at its own point of the ring (degrees, 90 = the bottom), so the bows spread
+    const hx = cx + (rr - 1.2) * Math.cos(on * Math.PI / 180), hy = cy + (rr - 1.2) * Math.sin(on * Math.PI / 180);
+    const k = g(P.root, { transform: `translate(${hx.toFixed(1)} ${hy.toFixed(1)}) rotate(${ang})` });
     const K = P.at(k);
-    K.shape(arc(x, 43, 7, -90, 270, 18), C.paper);
-    K.thin(arc(x, 43, 2.2, -90, 270, 8));
-    K.line([[x, 50], [x, 96]]);
-    K.line([[x, 96], [x + 8, 96], [x + 8, 91], [x, 91]]);
-    K.line([[x, 85], [x + 6, 85], [x + 6, 81], [x, 81]]);
-  });
+    if (square) K.shape([[-4.8, -2.8], [4.8, -2.8], [4.8, 8.4], [-4.8, 8.4], [-4.8, -2.8]], C.paper, 1.2);
+    else K.shape(arc(0, 2.8, 5.4, -90, 270, 16), C.paper, 1.2);
+    K.thin(arc(0, 0, 1.5, -90, 270, 8));                     // the hole the ring runs through
+    // shoulder, blade with its cut on one side, an angled tip
+    const pts = [[-2.6, 8.4], [-2.6, L - 2.5], [0.4, L], [3, L - 3]];
+    for (let y = L - 5; y > 15; y -= 4.2) pts.push([5.4, y], [3, y - 2.1]);
+    pts.push([3, 13], [5.6, 11.5], [5.6, 8.4], [-2.6, 8.4]);
+    K.shape(pts, C.paper, 1.15);
+    K.hair([[0.2, 13.5], [0.2, L - 4.5]]);                    // the groove along the blade
+  };
+  key(24, 42, false, 128);
+  key(-3, 50, false, 92);
+  key(-27, 37, true, 56);
+  // the split ring: two turns, drawn over the bows where it threads them
+  P.line(arc(cx, cy, rr, -75, 262, 24), 1.3);
+  P.thin(arc(cx, cy, rr - 1.6, -50, 292, 22));
   // three doors: two open to the keys, the third shut and locked
   const top = 52;
   [62, 83, 104].forEach((x, i) => {

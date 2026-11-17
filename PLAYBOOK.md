@@ -104,7 +104,7 @@ The aim is every reader at 8 or more and a median near 9. Seven is acceptable wh
 - **Cut what fails three times.** The renovation-order figure failed as icons, as a Gantt chart and as a ladder. The numbered list with measures did the job.
 - **Readers write their own files.** Twelve reports per round fit into one working session only if each reader saves its report and returns only the scores.
 
-- **Render the reading material in one step, right before readers start.** In the second web round the paper pages predated that round's text fixes, and the fact checker checked stale wording. Device sheets, paper pages and the built site come from the same build.
+- **Render the reading material in one step, right before readers start.** In the second web round the paper pages predated that round's text fixes, and the fact checker checked stale wording. Device sheets, paper pages and the built site come from the same build. It happened again in the scroll-telling round: `shots --matrix` doesn't render print, so the PDF was older than the text. Since then the material for a round comes only from `tools/round.mjs`, which fails if print.pdf wasn't rendered in that run, and it writes a manifest with the commit.
 - **A layout rule touches every block type.** Centring the text column when there's no margin rail made the column jump sideways between body, scenes and stills. Check left edges of every text block on every device after any layout change.
 - **The paper and the web page are two versions.** The draft-5 restart was written for the paper and turned every scene but one into a static picture. Three web rounds then polished that page, and every gate passed, because no gate asked whether the page still told its story by scrolling. He saw it in one desktop read. A figure may have a print version and a web version, and a passage may be marked for the screen only (`@step n screen`).
 - **A web fix creates the next complaint.** Readers judge the experience as it is, so each fix needs a fresh look on all six devices, not only the one where the complaint came from.
@@ -119,6 +119,7 @@ node tools/shots.mjs <slug> [--quick|--matrix]   # screenshots, device matrix, p
 node tools/filmstrip.mjs <slug> <w> <h> <per>    # read-through sheets for readers
 node tools/devices.mjs <slug>              # read-through sheets for every device and orientation
 node tools/perf.mjs <slug>                 # scroll trace: long tasks, layout shift, frames
+node tools/round.mjs <slug> <outDir>       # ALL reading material for a round from one build, with a manifest
 node tools/cards.mjs                       # social preview images
 node .shots/lab/shoot.mjs name="fig=<id>&layout=wide&step=2&t=1"   # one figure state
 pdftocairo -r 110 -png .shots/<slug>/print.pdf <out>/page          # paper pages for readers

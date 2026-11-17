@@ -15,6 +15,8 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 2;
+// where scenes read as a sequence (tablet portrait, phone landscape): one still, the final state
+export const stills = [1];
 export const aspect = { wide: 580 / 422, tall: 360 / 386 };
 
 // '#rrggbb' or 'rgb(r, g, b)' -> [r, g, b]
