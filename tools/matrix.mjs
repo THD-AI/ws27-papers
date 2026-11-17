@@ -29,7 +29,7 @@ async function checkPage() {
   document.body.click();
 
   res.mode = matchMedia('(min-width: 1000px) and (min-height: 560px), (min-width: 640px) and (min-height: 450px) and (max-height: 559.98px)').matches ? 'side'
-    : matchMedia('(max-width: 999.98px) and (min-height: 560px)').matches ? 'top' : 'sequence';
+    : matchMedia('(max-width: 699.98px) and (min-height: 560px)').matches ? 'top' : 'sequence';
 
   // Hero: where it is, and whether the drawing itself (not the empty paper
   // of the image file) is inside the window and clear of the title and deck.
@@ -155,10 +155,12 @@ export async function runMatrix({ slug, out, open, settle, scrollTo, log }) {
           const ps = scene.querySelectorAll('.passage');
           const p = wh === 'first' ? ps[0] : ps[ps.length - 1];
           const stage = scene.querySelector('.scene-stage');
-          const top = matchMedia('(max-width: 999.98px) and (min-height: 560px)').matches;
-          const seq = matchMedia('(max-width: 639.98px) and (max-height: 559.98px), (max-height: 449.98px)').matches;
-          // sequence: the still that precedes the passage goes to the top of the window
-          const target = seq ? p.previousElementSibling : p;
+          const top = matchMedia('(max-width: 699.98px) and (min-height: 560px)').matches;
+          const seq = matchMedia('(max-width: 639.98px) and (max-height: 559.98px), (max-height: 449.98px), (min-width: 700px) and (max-width: 999.98px) and (min-height: 560px)').matches;
+          // sequence: the still that precedes the passage goes to the top of
+          // the window (a figure with a "stills" list may have none there)
+          const prev = p.previousElementSibling;
+          const target = seq && prev?.matches('.seq-still') ? prev : p;
           const offset = seq ? 8 : top ? stage.getBoundingClientRect().height + 18 : innerHeight * 0.24;
           scrollTo(0, Math.max(0, target.getBoundingClientRect().top + scrollY - offset));
         }, i, which);

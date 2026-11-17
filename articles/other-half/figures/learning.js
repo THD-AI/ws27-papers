@@ -204,10 +204,12 @@ function build(el, ctx) {
   text(tg, tall ? R.x : 16, 16, tall ? 'how often the decoder was wrong' : HEAD, { family: 'sans', size: 13, weight: 600 });
   if (tall) text(tg, 14, 33, tagStr, mono); else text(tg, W - 8, 16, tagStr, { ...mono, anchor: 'end' });
   if (!tall) {
-    const rot = g(tg, { transform: `translate(15 ${R.y + R.h}) rotate(-90)`, 'data-audit': 'skip' });
-    text(rot, 0, 0, 'share of runs in which the decoder was wrong', { family: 'sans', size: 12, fill: C.muted });
+    // rotated axis title, centred on the plate, its letters 10 units clear
+    // of the drawing's left edge so that no frame crops it
+    const rot = g(tg, { transform: `translate(21 ${R.y + R.h / 2}) rotate(-90)`, 'data-audit': 'skip' });
+    text(rot, 0, 0, 'share of runs in which the decoder was wrong', { family: 'sans', size: 12, fill: C.muted, anchor: 'middle' });
   }
-  st.fade(fr, 0, 0.12, [1, 1.15]).fade(fr5, 1.12, 1.3).fade(tg, 0, 0.12);
+  st.fade(fr, 0, 0.12, [1, 1.05]).fade(fr5, 1.04, 1.1).fade(tg, 0, 0.12);
 
   const p3 = panel(svg, d3, R), pa = panel(svg, a5, R, { x0: X5 }), pb = panel(svg, b5, R, { x0: X5 });
   const l3 = labels(svg, p3), la = labels(svg, pa, { fifth: false }), lb = labels(svg, pb, { fifth: true });
@@ -224,33 +226,33 @@ function build(el, ctx) {
   };
   // step 0: distance 3
   drawPanel(p3, 0.08, 0.86);
-  st.fade(t3, 0.05, 0.2, [1, 1.12]).fade(l3, 0.2, 0.4, [1, 1.12]);
-  if (dip) st.fade(dip, 0.86, 0.98, [1, 1.12]);
+  st.fade(t3, 0.05, 0.2, [1, 1.04]).fade(l3, 0.2, 0.4, [1, 1.04]);
+  if (dip) st.fade(dip, 0.86, 0.98, [1, 1.04]);
   // step 1: distance 3 becomes a faint inset; distance 5 after 66 million
   p3.root.querySelectorAll('path, line, circle').forEach((n) => n.setAttribute('vector-effect', 'non-scaling-stroke'));
   const I = tall ? { x: R.x + 12, y: R.y + R.h - 84, w: 104, h: 50 } : { x: R.x + 22, y: R.y + R.h - 98, w: 150, h: 62 };
   const ig = g(svg);
   rect(ig, I.x, I.y, I.w, I.h, { fill: 'none', stroke: C.hairline, 'stroke-width': 1 });
   text(ig, I.x, I.y - 6, tall ? `distance ${d3.distance}: ends below both` : `distance ${d3.distance}: the network ends below both`, mono);
-  st.fade(ig, 1.3, 1.45);
+  st.fade(ig, 1.06, 1.1);
   st.on((gg) => {
-    const m = ease(span(gg, 1.02, 1.4));
+    const m = ease(span(gg, 1, 1.08));
     if (m <= 0) { p3.root.removeAttribute('transform'); p3.root.style.opacity = ''; return; }
     const kx = lerp(1, I.w / R.w, m), ky = lerp(1, I.h / R.h, m);
     const tx = lerp(R.x, I.x, m), ty = lerp(R.y, I.y, m);
     p3.root.setAttribute('transform', `translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${kx.toFixed(4)} ${ky.toFixed(4)}) translate(${-R.x} ${-R.y})`);
     p3.root.style.opacity = lerp(1, 0.5, m).toFixed(3);
   });
-  drawPanel(pa, 1.3, 1.9);
-  st.fade(ta, 1.12, 1.3, [2.18, 2.24]).fade(la, 1.4, 1.6, [2.18, 2.24]);
+  drawPanel(pa, 1.1, 1.9);
+  st.fade(ta, 1.04, 1.1, [2.18, 2.24]).fade(la, 1.2, 1.4, [2.18, 2.24]);
   const na = g(svg);
   text(na, R.x + R.w * 0.42, R.y + (tall ? 50 : 62), 'same network, same number of examples: still above both', { ...noteO, size: tall ? 13 : 15, width: tall ? 160 : 240 });
   st.fade(na, 1.82, 1.98, [2.18, 2.24]);
   // step 2: the longer schedule; the 66-million lines stay, faint
   st.on((gg) => {
-    const m = ease(span(gg, 2.2, 2.4));
-    pa.body.style.opacity = gg < 1.3 ? '' : lerp(1, 0.38, m).toFixed(3);
-    show(pa.levels, ease(span(gg, 1.3, 1.45)) * (1 - m));
+    const m = ease(span(gg, 2.18, 2.26));
+    pa.body.style.opacity = gg < 1.1 ? '' : lerp(1, 0.38, m).toFixed(3);
+    show(pa.levels, ease(span(gg, 1.1, 1.25)) * (1 - m));
     if (gg >= 1.9) pa.ends.style.opacity = lerp(1, 0.5, m).toFixed(3);
   });
   drawPanel(pb, 2.22, 2.86);
@@ -278,7 +280,7 @@ function build(el, ctx) {
   const t1 = text(ra, tall ? 14 : R.x, by, res.a5, o);
   text(rb, tall ? 14 : R.x, by, res.b5, o);
   text(foot, tall ? 14 : 16, t1.bottom + 20, tall ? `${FOOT}\n${notCmp}` : FOOT, { ...mono, width: tall ? W - 28 : W - 20, lh: 15 });
-  st.fade(r3, 0.86, 0.98, [1, 1.12]).fade(ra, 1.84, 1.98, [2.18, 2.24]).fade(rb, 2.78, 2.88).fade(foot, 0.1, 0.25);
+  st.fade(r3, 0.86, 0.98, [1, 1.04]).fade(ra, 1.84, 1.98, [2.18, 2.24]).fade(rb, 2.78, 2.88).fade(foot, 0.1, 0.25);
 
   return { set: (s, t) => st.set(s, t) };
 }

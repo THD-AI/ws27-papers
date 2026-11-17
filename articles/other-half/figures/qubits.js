@@ -14,18 +14,24 @@ export const aspect = { wide: W / H, tall: W / H };
 
 function build(el, ctx) {
   const C = pal(ctx), rows = ctx.data.rows;
+  // Pinned in the margin rail (about 224 to 300 px) the drawing carries a
+  // title and a hairline frame, and its first state shows the one qubit
+  // large, so that the rail never reads as an empty box. The stills at the
+  // section starts (phones, print) keep the plain look.
+  const rail = !el.closest('.margin-still');
+  const dy = rail ? 6 : 0;
   const byD = (d) => rows.find((r) => r.distance === d);
   const D = rows.map((r) => r.distance);                 // 3, 5, 7, 9
   const dMax = D[D.length - 1], mid = (dMax - 1) / 2;
 
   // what each state shows
   const K = [
-    { d: 1, pitch: 36, cx: 112, cy: 100, mode: 0, box: 0, label: '1 qubit', sub: '', say: 'One qubit.' },
-    { d: D[0], pitch: 36, cx: 112, cy: 100, mode: 0, box: 0 },
-    { d: D[1], pitch: 27, cx: 112, cy: 100, mode: 0, box: 0 },
-    { d: D[2], pitch: 21, cx: 112, cy: 100, mode: 1, box: 0 },
-    { d: D[2], pitch: 15.5, cx: 84, cy: 100, mode: 1, box: 1, label: 'the other half', sub: 'the decoder' },
-    { d: D[3], pitch: 13.5, cx: 84, cy: 100, mode: 1, box: 1 },
+    { d: 1, pitch: rail ? 84 : 36, cx: 112, cy: 100 + dy, mode: 0, box: 0, label: '1 qubit', sub: rail ? 'on its own' : '', say: 'One qubit.' },
+    { d: D[0], pitch: 36, cx: 112, cy: 100 + dy, mode: 0, box: 0 },
+    { d: D[1], pitch: 27, cx: 112, cy: 100 + dy, mode: 0, box: 0 },
+    { d: D[2], pitch: 21, cx: 112, cy: 100 + dy, mode: 1, box: 0 },
+    { d: D[2], pitch: 15.5, cx: 84, cy: 100 + dy, mode: 1, box: 1, label: 'the other half', sub: 'the decoder' },
+    { d: D[3], pitch: 13.5, cx: 84, cy: 100 + dy, mode: 1, box: 1 },
   ];
   K.forEach((k, i) => {
     const r = byD(k.d);
@@ -39,6 +45,10 @@ function build(el, ctx) {
 
   const svg = svgRoot(el, W, H, K[0].say);
   svg.style.color = C.ink;
+  if (rail) {
+    text(svg, 4, 15, 'what one qubit takes', { family: 'sans', size: 13.5, weight: 600 });
+    rect(svg, 2.5, 24.5, W - 5, 168, { fill: 'none', stroke: C.hairline, 'stroke-width': 1, 'data-audit': 'skip' });
+  }
 
   // every dot of the largest grid, with the first state that has it
   const firstState = (d0) => K.findIndex((k) => k.d >= d0);
@@ -77,7 +87,7 @@ function build(el, ctx) {
   });
 
   // the box that reads the grid
-  const bx = 174, by = 82, bw = 38, bh = 36;
+  const bx = rail ? 166 : 174, by = 82 + dy, bw = 38, bh = 36;
   const gBox = g(svg);
   rect(gBox, bx - 5, by + 7, bw + 12, bh + 6, { fill: C.field, 'data-audit': 'skip' });
   rect(gBox, bx, by, bw, bh, { fill: 'none', stroke: C.ink, 'stroke-width': 1.25 });

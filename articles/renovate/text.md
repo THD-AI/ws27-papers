@@ -9,7 +9,7 @@ hero: none
 summary: Deutsche Telekom wants T-Mobile's AI-agent results in Germany. Why they can't be bolted on, and the order to rewire in, with the staff kept on.
 date: 2026-11-17
 keywords: AI agents, customer service, Deutsche Telekom, T-Mobile, innovation management, works council, AI Act
-card_alt: The same new cable in three walls: pulled through a timber frame, screwed onto plastered brick in a duct, and cut into the brick and plastered.
+card_alt: Card with the title Renovate, don't repaint, a cable cut into a plastered brick wall and plastered over in green, and the figure 32 of 100 T-Mobile contract customers' contacts served by an AI agent.
 seo_title: Renovate, don't repaint: AI agents at Deutsche Telekom and T-Mobile
 ---
 
@@ -85,13 +85,13 @@ Across its European countries, Telekom's own slides say, customers prove who the
 
 German firms in general say the same about their wiring. Of those that considered AI but don't use it, 45% named systems that don't fit together and 44% problems with their data. {{R7-06}}
 
-Brynjolfsson, Rock and Syverson call this pattern the productivity J-curve. A general-purpose technology pays off only after firms invest in things that don't show up as equipment: new processes, data, skills. While that investment runs, measured productivity lags, and only later does it rise. T-Mobile made that investment as part of building its agents, and its head of IT says it had to come first. Telekom's 14 ways of proving who's calling show that in Europe this work hasn't been done yet. {{BRS-2021}}
+Brynjolfsson, Rock and Syverson call this pattern the productivity J-curve: like the letter J, the curve dips before it rises. A general-purpose technology pays off only after firms invest in things that don't show up as equipment: new processes, data, skills. While that investment runs, measured productivity lags, and only later does it rise. T-Mobile made that investment as part of building its agents, and its head of IT says it had to come first. Telekom's 14 ways of proving who's calling show that in Europe this work hasn't been done yet. {{BRS-2021}}
 
 ## 4. Repainting
 
 Repainting is the duct on the surface in figure 1: an agent put in front of the customers while the wiring behind it stays as it was. It's cheaper and faster than renovating, and from the street it looks the same for a while. But because the wiring isn't touched, the saving has to come from somewhere, and it usually comes from the people.
 
-Klarna, a Swedish payment company, tried it. In February 2024 it said its assistant did work that, by its own estimate, equalled 700 service agents, and it had stopped replacing staff who left. In May 2025 its chief executive said: "Really, investing in the quality of human support is the way of the future for us", and the company began hiring service staff again. {{R12-14 R12-15}}
+Klarna, a Swedish payment company, tried it. In February 2024 it said its assistant did work that, by its own estimate, equalled 700 service agents. By then it had stopped hiring and wasn't replacing staff who left. In May 2025 its chief executive said: "Really, investing in the quality of human support is the way of the future for us", and the company began hiring service staff again. {{R12-14 R12-15}}
 
 Commonwealth Bank of Australia did it faster. In July 2025 it said 45 customer service jobs would go, replaced by a new voice bot. The union disputed the case for it, and in August the bank said its assessment "did not adequately consider all relevant business considerations" and that the roles weren't redundant after all. {{CBA-2025}}
 
@@ -99,13 +99,13 @@ Commonwealth Bank of Australia did it faster. In July 2025 it said 45 customer s
 Two public cases: the saving was announced or taken from the staff first, and taken back later. Klarna froze hiring rather than cutting; at Commonwealth Bank the roles were declared redundant. Sources: Klarna; Information Age on Commonwealth Bank.
 :::
 
-Two cases don't make a rule. But in both, the saving came from the people first and was taken back once it proved wrong: at Klarna over quality, at Commonwealth Bank because the work was still there.
+Two cases don't make a rule. But in both, the saving came from the people first and was taken back once it proved wrong: at Klarna over quality, at Commonwealth Bank because, the union showed, the work was still there.
 
 ## 5. Renovating with the staff at home
 
 T-Mobile did more than rewire. It gave the staff who stayed an assistant of their own, whose recommendations appeared in 74% of their conversations with customers, and where they use it the net promoter score was 12% higher in May 2026. In the one large study I found, of 5,172 support agents, AI help raised the cases solved per hour by 15%, and by about 30% for the least experienced. {{R6-06 R6-09 R4-29}}
 
-An American firm can also let people go while it rewires. T-Mobile booked 531 million dollars of severance by September 2026 under a 2025–2026 restructuring its filings describe as removing layers of management; they don't tie it to the agents. Telekom in Germany can't take that route. On 28 May 2026 it agreed with the union ver.di that there will be no dismissals for business reasons until 31 December 2028, for about 60,000 employees under its collective agreements. People still leave by agreed routes: partial retirement, early retirement, severance, and civil servants retiring. From 2021 to 2025, 20,223 full-time positions went that way across Telekom in Germany, about 4,000 a year. {{R6-06 R6-09 R6-11 R11-14 DGB-2026 R12-01}}
+An American firm can also let people go while it rewires. T-Mobile booked 531 million dollars of severance by September 2026 under a 2025–2026 restructuring its filings describe as reducing organisational layers; they don't tie it to the agents. Telekom in Germany can't take that route. On 28 May 2026 it agreed with the union ver.di that there will be no dismissals for business reasons until 31 December 2028, for about 60,000 employees under its collective agreements. People still leave by agreed routes: partial retirement, early retirement, severance, civil servants retiring, and transfers to public authorities. From 2021 to 2025, 20,223 full-time positions went that way across Telekom in Germany, about 4,000 a year. {{R6-06 R6-09 R6-11 R11-14 DGB-2026 R12-01}}
 
 :::figure exits wide
 Every full-time position that left Telekom in Germany by an agreed route, 2021 to 2025. One mark is 25 positions on wide screens, 50 on phones and in print. Source: Deutsche Telekom, HR Factbook 2025.
@@ -113,7 +113,7 @@ Every full-time position that left Telekom in Germany by an agreed route, 2021 t
 
 Severance is the route that grew: it almost doubled. So Telekom is already getting smaller, by agreement rather than by dismissal, and any saving from agents has to fit into those routes.
 
-So the staff stay while the walls are opened. I think that helps more than it hurts, and the one large study points the same way. The staff aren't against the work either. In two surveys that asked both countries the same questions, Germans were no more afraid of AI taking jobs than Americans. One German result stands out: 79% saw digital monitoring of workers negatively, the second-highest share in the European Union. That's the worry any German rollout has to answer first. {{R12-25 R12-28}}
+So the staff stay while the walls are opened. I think that helps more than it hurts, and the one large study points the same way. The staff aren't against the work either. In a survey that asked both countries the same question, Germans were no more afraid than Americans that AI will take jobs, and in another they trusted their government to regulate it more. One German result stands out: 79% saw digital monitoring of workers negatively, the second-highest share in the European Union. That's the worry any German rollout has to answer first. {{R12-25 R12-28}}
 
 :::figure attitudes column
 Three questions: two asked the same way in both countries, one across the EU. Sources: Ipsos for Google 2025; Ipsos AI Monitor 2025; Eurobarometer 2024 (EU only).
@@ -129,7 +129,7 @@ Reasons German firms gave in 2025 for not using AI after considering it. Several
 
 A survey by the European Investment Bank asked firms on both sides the same questions about generative AI: about as many European as American firms use it somewhere, 68% against 72%, but fewer use it in two or more parts of the business, 44% against 58%, and fewer in customer service, 22% against 29%. {{R10-01}}
 
-Cohen and Levinthal called the missing piece absorptive capacity: a firm can only take in outside knowledge if it already has related knowledge inside. A firm without its own people who understand the wiring can buy the handbook, but it can't install it. That's why I'd train the staff before the tools arrive, not after. {{CL-1990}}
+Cohen and Levinthal called the missing piece absorptive capacity, a firm's ability to take in what others know: it can only take in outside knowledge if it already has related knowledge inside. A firm without its own people who understand the wiring can buy the handbook, but it can't install it. That's why I'd train the staff before the tools arrive, not after. {{CL-1990}}
 
 ## 7. The law: the environment
 
@@ -163,16 +163,20 @@ I think that's a problem. A house built from one foreign supplier's parts is at 
 
 What I didn't find in Telekom's public plan is the order, and dates for the work in the walls; Telekom's own target is 2030. The order below isn't copied from T-Mobile, because T-Mobile's sequence can't be shown to have caused its result. It follows from what each step needs from the one before. It's a hypothesis, and the measure in step 1 is how it gets tested.
 
-The three German weights each have their step: the law in step 2, dependence in step 3, know-how in step 4. Steps 5 and 6 are the rewiring itself.
+The frames from the earlier sections each point to a step. The J-curve says the rewiring comes before the return: steps 5 and 6. Absorptive capacity says people learn before the tools arrive: step 4. A coordinated economy settles the rules with the staff first: step 2. And the three German weights each have their step: the law in step 2, dependence in step 3, know-how in step 4.
 
+:::steps
 1. **Measure first.** One measure for both countries, with its cost: requests finished without a person that didn't come back within a week, set against what the agent costs to build and run. Without it, the 2030 target can't be checked. *Measure:* the pair is published.
 2. **Works agreement.** The framework is agreed while the system is planned, not after it's built, with an annex for each new key, so the framework isn't renegotiated every time. The AI Act dates in section 7 set the latest deadlines. *Measure:* signed before the first agent acts. {{R11-07 R9-04 R9-05}}
 3. **Choose suppliers.** Keep the switch between model suppliers, and keep sensitive customer data on hosting Telekom controls in Germany. A switch means testing again, so its real length includes the tests and the works council's review. *Measure:* time to switch, tests included. {{R6-04}}
 4. **Train staff.** The service staff who stay learn the new tools before the tools reach customers, starting with the least experienced, for whom the measured gain is largest. *Measure:* cases per hour and repeat contacts. {{R4-29}}
 5. **One customer record.** Cut the 14 ways of proving who's calling to three and make the customer data usable before agents act on accounts: Telekom's own "simplify before automating", with a date. It's the biggest job on the list: identity, cleaning the data, and connecting systems that were never meant to talk to each other. An agent can't act on an account it can't identify, so everything after this step depends on it. *Measure:* callers recognised without questions. {{R6-05}}
-6. **Permissions in stages.** First let the agent read: show a bill, check an order. Then actions that can be undone, such as restarting a line. Changes that fraud could use come last, with a confirmation from the customer and a named person who answers for that kind of action. Before each stage the agent first runs alongside the staff without acting, then has to pass a test set of real past cases, each labelled with the right outcome by experienced staff; afterwards a sample of its conversations is reviewed, and reversed actions and complaints are counted, with a way back to the last stage. The keys are enforced by the systems, not by the model: the agent can only call what its connection allows, however a customer phrases the request. Customers will try to talk it into more, and some messages will carry hidden instructions, so the test set includes those attempts. Tests only make such tricks rarer; what limits the damage when one gets through is that the systems enforce the keys and the account holder confirms risky changes through a second channel, such as the app or a code to the registered number. Every action is logged. Frag Magenta can already change the bank account on a mobile contract after login; that's the key I'd review first. *Measure:* errors per thousand actions, stage by stage. {{R6-16}}
+6. **Permissions in stages.** First let the agent read: show a bill, check an order. Then actions that can be undone, such as restarting a line. Changes that fraud could use come last, with a confirmation from the customer and a named person who answers for that kind of action. Before each stage the agent first runs alongside the staff without acting, then has to pass a test set of real past cases, each labelled with the right outcome by experienced staff; afterwards a sample of its conversations is reviewed, and reversed actions and complaints are counted, with a way back to the last stage. The keys are enforced by the systems, not by the model: the agent can only call what its connection allows, however a customer phrases the request. Customers will try to talk it into more, and some messages will carry hidden instructions, so the test set includes those attempts. Tests only make such tricks rarer; what limits the damage when one gets through is that the systems enforce the keys and the account holder confirms risky changes through a second channel, such as the app, not a text message to a number that could itself have been taken over. Every action is logged. Frag Magenta can already change the bank account on a mobile contract after login; that's the key I'd review first. *Measure:* errors per thousand actions, stage by stage. {{R6-16}}
 7. **Acceptance.** Before the agent works on its own, the service staff who'll work beside it and the works council sign it off. *Measure:* accepted by both.
-8. **Run it.** A named team answers for the agents, nights included, and the cost of each finished request is watched like the electricity bill. What it finds goes back into the measure in step 1. Until the end of 2028 the return has to come from fewer repeat contacts, from staff moving to work software can't do, and from customer service's share of the roughly 4,000 who leave each year by the agreed routes. That's managed attrition, not repainting: nobody is removed to book the saving, and positions are left unfilled only once the agent has shown it carries the work. *Measure:* cost per finished request. {{R11-14 R12-01}}
+8. **Run it.** A named team answers for the agents, nights included, and the cost of each finished request is watched like the electricity bill. What it finds goes back into the measure in step 1. Until the end of 2028 the return has to come from fewer repeat contacts, from staff moving to work software can't do, and from customer service's share of the roughly 4,000 who leave each year by the agreed routes. That's managed attrition and voluntary exits, not repainting: nobody is removed to book the saving, and positions are left unfilled only once the agent has shown it carries the work. *Measure:* cost per finished request. {{R11-14 R12-01}}
+:::
+
+What Telekom can copy from T-Mobile, then, isn't the number. It's the order and the work in the walls: one customer record, identity cut to a few ways, and agents given keys only as fast as the house can carry them.
 
 ## Where this could be wrong
 

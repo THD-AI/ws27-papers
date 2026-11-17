@@ -55,7 +55,8 @@
   /* 32.5rem of Libre Franklin at 17px holds about 67 characters. */
   --measure: 32.5rem;
   --gap: 3rem;
-  --margin-col: 14rem;
+  /* the margin column grows with the window, 224 to 300 px */
+  --margin-col: clamp(14rem, calc(var(--pw) * 0.2), 18.75rem);
   --gutter: 1.5rem;
   /* Without a margin column the text column stands in the middle of the page. */
   --left: max(var(--gutter), calc((var(--pw) - var(--measure)) / 2));
@@ -301,20 +302,21 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
    always shows it whole. */
 .src-fold > summary { display: block; list-style: none; }
 .src-fold > summary::-webkit-details-marker { display: none; }
+.src-hide { display: none; }
+.src-fold[open] .src-show { display: none; }
+.src-fold[open] .src-hide { display: inline; }
 @media screen {
-  .src-fold > summary { cursor: pointer; }
-  .src-fold > summary h2.sec { margin-bottom: 0; padding-bottom: 1rem; }
-  .src-fold > summary .sec-title::after {
-    content: 'show';
-    margin-left: 0.9rem;
-    font: 500 0.72rem/1 var(--mono);
+  .sources > h2.sec { margin-bottom: 0.2rem; }
+  .src-fold > summary {
+    cursor: pointer;
+    padding: 0.6rem 0 1rem;
+    font: 500 0.72rem/1.4 var(--mono);
     letter-spacing: 0.09em;
     text-transform: uppercase;
     color: var(--accent-line);
-    vertical-align: 0.15em;
   }
-  .src-fold[open] > summary .sec-title::after { content: 'hide'; color: var(--muted); }
-  .src-fold > summary:hover .sec-title { text-decoration: underline; text-decoration-color: var(--accent-line); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+  .src-fold[open] > summary { color: var(--muted); }
+  .src-fold > summary:hover { text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
 }
 
 .colophon { font: 400 0.72rem/1.5 var(--mono); color: var(--muted); letter-spacing: 0.03em; }
@@ -349,14 +351,20 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   main.body > * { max-width: var(--measure); }
   main.body > h2.sec:first-of-type { margin-top: 2rem; }
 
-  /* Wide figures and wide tables reach out of the text column on both sides,
-     as far as the page allows (--out), and stay centred on the column. */
-  main.body { --out: max(0px, min(calc(var(--left) - var(--gutter)), 11rem)); }
+  /* Wide figures and wide tables reach out of the text column on both sides
+     by the same amount (--out, up to 13rem), centred on the column; where
+     the page has less room on the left than on the right, they reach out
+     further to the right. Only figures and tables leave the column: a wide
+     figure's caption keeps the column's left edge. */
+  main.body { --out: max(0px, min(calc(var(--left) - var(--gutter)), 13rem)); }
   main.body > .fig-wide, main.body > .table-frame.table-wide {
     max-width: none;
-    width: calc(min(100%, var(--measure)) + 2 * var(--out));
+    width: min(calc(100% + var(--out)), calc(var(--measure) + 26rem));
     margin-left: calc(-1 * var(--out));
   }
+  /* A figure in the text column may be drawn a little wider than the column
+     where its lettering needs it (article.js sizes the frame). */
+  .fig-column .fig-frame { max-width: none; }
 
   .colophon { margin: 5rem var(--gutter) 3rem var(--left); max-width: var(--measure); padding-top: 0.9rem; border-top: 1px solid var(--hairline); }
 
@@ -373,13 +381,21 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
     border: 1px solid var(--hairline);
     border-top: 1pt solid var(--ink);
     font: 400 0.8rem/1.4 var(--sans);
+    color: var(--ink);
+    white-space: normal;
+    text-align: left;
   }
   .src-pop:focus { outline: none; }
-  .src-pop h2 { margin: 0 0 0.6rem; font: 500 0.66rem/1.2 var(--mono); letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+  .src-pop .src-pop-head { margin: 0 0 0.6rem; font: 500 0.66rem/1.2 var(--mono); letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
   .src-pop ol { margin: 0; padding: 0; list-style: none; }
   .src-pop li { display: grid; grid-template-columns: 1.7rem 1fr; margin: 0 0 0.65rem; }
   .src-pop .src-title { display: inline-block; padding: 0.3rem 0; }
   .src-pop .src-title::after { content: '\00a0↗'; font-family: var(--mono); font-size: 0.85em; color: var(--muted); }
+}
+
+/* (On phones the caption of a wide figure is placed in 2e.) */
+@media screen and (min-width: 700px) {
+  main.body > .fig-wide > figcaption { margin-left: var(--out); }
 }
 
 /* Phones and tablets: the rows of the section list are 40 px or more, so a
@@ -419,8 +435,16 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .margin-still.as-block { float: none; width: 12rem; margin: 0.2rem 0 1.2rem; }
 }
 
+/* One left edge for all text on a page, per window. Where scenes stand
+   beside their passages, or a margin column is kept, the text column stands
+   at the left of a 62rem block centred in the window: the scene's figure
+   and the margin column use the room to its right. Elsewhere the column
+   stands in the middle. (The scene conditions are those of 2d.) */
+@media screen and (min-width: 1000px) and (min-height: 560px), screen and (min-width: 640px) and (min-height: 450px) and (max-height: 559.98px) {
+  :root { --left: max(var(--gutter), calc((var(--pw) - 62rem) / 2)); }
+}
 @media screen and (min-width: 900px) {
-  :root { --left: max(var(--gutter), calc((var(--pw) - var(--measure) - var(--gap) - var(--margin-col)) / 2)); }
+  html:has(.rail) { --left: max(var(--gutter), calc((var(--pw) - 62rem) / 2)); }
 
   /* In the margin column, top-aligned with the block that follows, and
      scrolling with the text. No "top": the still keeps the place it has in
@@ -432,22 +456,6 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
     float: none;
     width: var(--margin-col);
     margin: 0.3rem 0 0;
-  }
-
-  /* With a margin column, wide figures start at the text's left edge and
-     run across the margin column. */
-  main.body > .fig-wide, main.body > .table-frame.table-wide { width: min(100%, 58rem); margin-left: 0; }
-}
-
-/* A page without a margin scene keeps no margin column: from 1000 px the
-   text column stands in the middle of the page, and wide figures reach out
-   on both sides of it as far as they did across the margin column (58rem). */
-@media screen and (min-width: 1000px) {
-  html:not(:has(.rail)) { --left: max(var(--gutter), calc((var(--pw) - var(--measure)) / 2)); }
-  html:not(:has(.rail)) main.body { --out: max(0px, min(calc(var(--left) - var(--gutter)), 12.75rem)); }
-  html:not(:has(.rail)) main.body > .fig-wide, html:not(:has(.rail)) main.body > .table-frame.table-wide {
-    width: calc(min(100%, var(--measure)) + 2 * var(--out));
-    margin-left: calc(-1 * var(--out));
   }
 }
 
@@ -523,12 +531,17 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
    of the window (--pitch; a long passage takes its own height), so two or
    three passages are on screen together. The one at the reading line is in
    full ink, its neighbours step back but stay readable. */
-@media screen and (min-height: 560px), screen and (min-width: 640px) and (min-height: 450px) {
+/* Only a passage whose step has passed steps back, in a grey that keeps
+   8:1 against the paper; never by opacity, so accent kickers and marks keep
+   their own contrast. Passages still to come are in full ink. */
+@media screen and (min-width: 1000px) and (min-height: 560px), screen and (min-width: 640px) and (min-height: 450px) and (max-height: 559.98px), screen and (max-width: 699.98px) and (min-height: 560px) {
   .scene { --pitch: clamp(15rem, 45vh, 26rem); }
   .passage { min-height: var(--pitch); padding-bottom: 1.5rem; }
   .passage > :last-child { margin-bottom: 0; }
-  .scene.is-live .passage { opacity: 0.7; transition: opacity 0.25s ease; }
-  .scene.is-live .passage.is-active, .scene.is-live .passage.is-current { opacity: 1; }
+  .scene.is-live .passage { transition: color 0.25s ease; }
+  .scene.is-live .passage.is-read { color: #4A4D55; }
+  /* a focused link or mark in a passage is never scrolled under a pinned figure */
+  .scene .passage :is(a, button) { scroll-margin-top: calc(var(--stage-h, 0px) + 1rem); }
 }
 
 /* Side by side: the passages in a column on the left, the figure on the
@@ -544,11 +557,12 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
     --pad: clamp(1.5rem, calc((var(--pw) - 62rem) * 0.2), 4rem);
     display: grid;
     /* the passages keep a readable column of at least 20rem */
-    grid-template-columns: clamp(20rem, 30%, 23rem) minmax(0, 1fr);
+    grid-template-columns: clamp(20rem, 26%, 23rem) minmax(0, 1fr);
     column-gap: var(--gap);
     align-items: start;
     max-width: none !important;
-    margin: 2rem calc(var(--pad) - var(--gutter)) 2.4rem calc(var(--pad) - var(--left));
+    /* the passages keep the text column's left edge */
+    margin: 2rem calc(var(--pad) - var(--gutter)) 2.4rem 0;
   }
   .scene-stage {
     grid-column: 2; grid-row: 1;
@@ -568,12 +582,14 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
    takes the full height. */
 @media screen and (min-width: 1000px) and (min-height: 560px), screen and (min-width: 640px) and (min-height: 450px) and (max-height: 559.98px) {
   .scene-stage figcaption { display: none; }
-  .scene-caption { display: block; grid-column: 1 / -1; grid-row: 2; max-width: var(--measure); margin: 0.6rem 0 0 calc(var(--left) - var(--pad)); padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
+  .scene-caption { display: block; grid-column: 1 / -1; grid-row: 2; max-width: var(--measure); margin: 0.6rem 0 0; padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
 }
 
-/* Pinned on top: the figure across the page, the passages close together
-   under it. article.js keeps the figure short enough for four lines of text. */
-@media screen and (max-width: 999.98px) and (min-height: 560px) {
+/* Pinned on top (phones held upright, under 700 px wide): the figure across
+   the page, the passages close together under it. article.js keeps the
+   figure short enough for four lines of text. Tablets held upright read a
+   scene as a sequence (below). */
+@media screen and (max-width: 699.98px) and (min-height: 560px) {
   .scene { --pitch: clamp(13rem, 35svh, 22rem); max-width: none !important; margin: 0 calc(-1 * var(--gutter)) 0 calc(-1 * var(--left)); }
   .scene-stage {
     position: sticky; top: 0; z-index: 3;
@@ -586,18 +602,21 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .scene-text, .scene-caption { max-width: var(--measure); margin-left: var(--left); margin-right: var(--gutter); }
   .scene-text { padding: 1.4rem 0 0.4rem; }
   .scene-caption { margin-bottom: 2rem; padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
-  /* a passage already read nearly vanishes as it slides under the pinned
-     figure, so no half-cut grey paragraph shows at the figure's edge */
-  .scene.is-live .passage:has(~ .passage.is-active) { opacity: 0.2; }
+  /* a passage already read is hidden once it slides under the pinned
+     figure (article.js), so no half-cut paragraph shows at the figure's edge */
+  .scene.is-live .passage.is-under { visibility: hidden; }
 }
 
 /* A sequence: windows both narrow and short, or lower than 450 px, where
-   nothing can be pinned at a readable size. Every passage is preceded by a
-   still of its step. */
-@media screen and (max-width: 639.98px) and (max-height: 559.98px), screen and (max-height: 449.98px) {
+   nothing can be pinned at a readable size, and tablets held upright (700
+   to 999 px wide, 560 px high or more). The passages are read in order with
+   stills of the figure between them: one before each step, or after the
+   first passage of the steps the figure names (its "stills" export). */
+@media screen and (max-width: 639.98px) and (max-height: 559.98px), screen and (max-height: 449.98px), screen and (min-width: 700px) and (max-width: 999.98px) and (min-height: 560px) {
   .scene-stage { display: none; }
   .seq-still { display: block; margin: 1.6rem 0 1rem calc(var(--gutter) - var(--left)); }
   .passage { margin-bottom: 1.4rem; }
+  .passage + .seq-still { margin-top: 0.4rem; }
   .scene-caption { margin: 0 0 2rem; padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
   main.body > .scene { max-width: none; }
   .scene-text > .passage, .scene-caption { max-width: var(--measure); }
@@ -614,6 +633,12 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 }
 @keyframes hero-drift-field { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, 13.5vh, 0); } }
 @keyframes hero-drift-line { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, 5.25vh, 0); } }
+
+/* Tablets: captions and the place labels about 10% larger. */
+@media screen and (min-width: 700px) and (max-width: 1199.98px) {
+  figcaption, .scene-caption { font-size: 0.925rem; }
+  .fig-where { font-size: 0.75rem; }
+}
 
 @media screen and (prefers-reduced-motion: reduce) {
   .scene.is-live .passage { transition: none; }
@@ -750,6 +775,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   td { padding: 1.2mm 2.5mm 1.2mm 0; }
 
   .sources { margin-top: 6mm; }
+  .src-fold > summary { display: none; }
   .src-total { display: none; }
   .src-list { font-size: 6.8pt; line-height: 1.34; }
   .src-list li { grid-template-columns: 5.5mm 1fr; margin-bottom: 1.3mm; }
@@ -759,4 +785,28 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 
   /* Index page, if someone prints it */
   body.index main.body { column-count: 1; }
+}
+
+/* Index: each article title is a heading of its own. */
+.index-h { margin: 0; font: inherit; letter-spacing: inherit; }
+
+/* The renovation in order: the numbered steps drawn as one path, each step a
+   station on an accent line, its measure a small tag. Same in print, with the
+   line and the stations kept. */
+.steps ol { list-style: none; counter-reset: step; margin: 1.6rem 0 2rem; padding: 0; position: relative; }
+.steps ol::before { content: ''; position: absolute; left: 0.95rem; top: 1.2rem; bottom: 1.2rem; width: 2px; background: var(--accent-field); }
+.steps li { counter-increment: step; position: relative; padding: 0 0 1.15rem 3.1rem; margin: 0; }
+.steps li::before {
+  content: counter(step); position: absolute; left: 0; top: -0.05rem;
+  width: 1.9rem; height: 1.9rem; border-radius: 50%; display: grid; place-items: center;
+  background: var(--paper); border: 2px solid var(--accent-line); color: var(--accent-line);
+  font: 600 0.85rem/1 var(--mono); font-variant-numeric: tabular-nums lining-nums;
+}
+.steps li > strong:first-child { display: block; font-weight: 600; margin-bottom: 0.15rem; }
+.steps li em { font-style: normal; font: 500 0.72rem/1.4 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-line); }
+@media print {
+  .steps ol { margin: 0.6em 0 0.8em; }
+  .steps li { padding: 0 0 0.5em 2.2em; }
+  .steps li::before { width: 1.45em; height: 1.45em; font-size: 7.5pt; border-width: 1.2px; }
+  .steps ol::before { left: 0.7em; width: 1.2px; }
 }

@@ -9,13 +9,12 @@
 //     by the lab page, cropped here with CSS), the case in plain words and one
 //     sourced number from data/numbers.json.
 //   The other half: its hero drawing beside the title.
-// Also writes lib/site/card.png, a two-up card for the article list, and
-// lib/site/favicon.svg and lib/site/apple-touch-icon.png, copied to the site
-// root by the build.
+// Also writes lib/site/card.png, the card for the article list, and
+// lib/site/favicon.svg, lib/site/favicon-48.png and
+// lib/site/apple-touch-icon.png, copied to the site root by the build.
 //
-// Every card is checked at feed size (about 550 px wide): all text is 26 px
-// or more. The layouts favour the full 1.91:1 feed card; apps that crop to a
-// centre square show only part of each title.
+// Every card is checked at feed size (about 500 px wide), as a centre
+// 630 x 630 square and with the bottom-left corner covered as X does.
 
 import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -89,74 +88,88 @@ ${css}
 ${body}
 </body></html>`;
 
-// Renovate: title and the case on the left, the wall and the number on the right.
+// Layout rules, from the social audit:
+//   - no text below 34 px on the 1200 px canvas (about 14 px at feed size);
+//   - the bottom 90 px of the left third stays empty, because X lays the
+//     domain over that corner;
+//   - the centre 630 x 630 square (WhatsApp, some mobile views) holds the key
+//     part of the drawing; the title may run past it.
+
+// Renovate: title, case and byline on the left; on the green field, the wall
+// with its socket and corner just right of centre, and the number below it.
 function renovateHtml({ fm, wall, num }) {
   return shell(`
   .bar { background: ${GREEN}; }
-  h1 { position: absolute; left: 64px; top: 50px; width: 600px; font: 500 92px/0.98 'Newsreader', serif; letter-spacing: -0.02em; }
-  .case { position: absolute; left: 66px; top: 260px; width: 560px; font: 500 33px/1.22 'Libre Franklin', sans-serif; color: ${INK}; }
-  .by { position: absolute; left: 66px; bottom: 44px; width: 560px; }
-  .field { position: absolute; left: 676px; top: 0; right: 0; bottom: 0; background: ${GREEN_FIELD}; }
-  .wall { left: 708px; top: 34px; }
-  .num { position: absolute; left: 712px; top: 398px; width: 470px; }
-  .num .big { font: 500 96px/1 'Newsreader', serif; color: ${GREEN}; letter-spacing: -0.02em; white-space: nowrap; }
-  .num .big span { font-size: 56px; color: ${INK}; }
-  .num .lab { margin-top: 10px; font: 500 30px/1.18 'Libre Franklin', sans-serif; color: ${INK}; }
-  .num .src { margin-top: 10px; font: 400 26px/1 'JetBrains Mono', monospace; color: ${MUTED}; }
+  h1 { position: absolute; left: 64px; top: 48px; width: 520px; font: 500 88px/0.98 'Newsreader', serif; letter-spacing: -0.02em; }
+  .case { position: absolute; left: 66px; top: 252px; width: 480px; font: 500 36px/1.2 'Libre Franklin', sans-serif; color: ${INK}; }
+  .by { position: absolute; left: 66px; top: 470px; width: 480px; font-size: 34px; }
+  .field { position: absolute; left: 576px; top: 0; right: 0; bottom: 0; background: ${GREEN_FIELD}; }
+  .wall { left: 600px; top: 26px; }
+  .num { position: absolute; left: 606px; top: 334px; width: 572px; }
+  .num .big { font: 500 88px/1 'Newsreader', serif; color: ${GREEN}; letter-spacing: -0.02em; white-space: nowrap; }
+  .num .big span { font-size: 52px; color: ${INK}; }
+  .num .lab { margin-top: 8px; font: 500 34px/1.16 'Libre Franklin', sans-serif; color: ${INK}; text-wrap: balance; }
+  .num .src { margin-top: 10px; font: 400 34px/1 'JetBrains Mono', monospace; color: ${MUTED}; letter-spacing: -0.02em; }
   .nw { white-space: nowrap; }
 `, `<div class="bar"></div>
 <div class="field"></div>
-${wallCrop(wall, 1.2)}
+${wallCrop(wall, 1.0)}
 <h1>${esc(curly(fm.title))}</h1>
-<p class="case">Why Deutsche Telekom can\u2019t bolt <span class="nw">T-Mobile\u2019s</span> AI agents onto Germany</p>
+<p class="case">Why Deutsche Telekom can’t bolt <span class="nw">T-Mobile’s</span> AI agents onto Germany</p>
+<p class="by"><b>${esc(fm.author)}</b></p>
 <div class="num"><p class="big">${num.value} <span>of ${num.total}</span></p>
-<p class="lab">contacts at <span class="nw">T-Mobile</span> start with an AI agent</p>
-<p class="src">company figure, Q2 2026</p></div>
-<p class="by"><b>${esc(fm.author)}</b> · TH Deggendorf<br>winter semester 2026/27</p>`);
+<p class="lab">contract customers’ contacts at <span class="nw">T-Mobile</span> were served by an AI agent</p>
+<p class="src">company figure, Q2 2026</p></div>`);
 }
 
-// The other half: title and byline on the left, the hero drawing on the right.
+// The other half: kicker, title and byline on the left; the hero drawing with
+// the cryostat just right of centre.
 function otherHalfHtml({ fm, hero }) {
   const kicker = esc(String(fm.context || '').split('·')[0].trim());
   return shell(`
   .bar { background: ${BLUE}; }
-  .kicker { position: absolute; left: 64px; top: 52px; font: 500 26px/1 'JetBrains Mono', monospace; letter-spacing: 0.06em; text-transform: uppercase; color: ${BLUE}; }
-  h1 { position: absolute; left: 62px; top: 112px; width: 560px; font: 500 76px/1.02 'Newsreader', serif; letter-spacing: -0.02em; }
-  .by { position: absolute; left: 64px; bottom: 50px; width: 560px; }
-  .pic { position: absolute; left: 560px; top: 150px; width: 660px; height: 440px; }
+  .kicker { position: absolute; left: 64px; top: 50px; font: 500 34px/1 'JetBrains Mono', monospace; letter-spacing: 0.02em; text-transform: uppercase; color: ${BLUE}; }
+  h1 { position: absolute; left: 62px; top: 112px; width: 500px; font: 500 70px/1.02 'Newsreader', serif; letter-spacing: -0.02em; }
+  .by { position: absolute; left: 64px; top: 450px; font-size: 34px; white-space: nowrap; }
+  .pic { position: absolute; left: 488px; top: 176px; width: 630px; height: 420px; }
   .pic img { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: multiply; }
 `, `<div class="bar"></div>
 <p class="kicker">${kicker}</p>
 <h1>${esc(curly(fm.title))}</h1>
 <div class="pic"><img src="${hero.field}" alt=""><img src="${hero.line}" alt=""></div>
-<p class="by"><b>${esc(fm.author)}</b><br>TH Deggendorf · winter semester 2026/27</p>`);
+<p class="by"><b>${esc(fm.author)}</b></p>`);
 }
 
-// Index: the two articles side by side, each title over its own drawing.
+// Index: the two titles stacked in the centre over both drawings side by
+// side, so the centre square reads as one picture. The coloured wings at
+// the sides carry each article's subject in the wide feed card.
 function indexHtml({ a, b, wall, hero }) {
   return shell(`
-  .half { position: absolute; top: 0; bottom: 0; width: 600px; overflow: hidden; }
-  .half.l { left: 0; background: ${GREEN_FIELD}; }
-  .half.r { left: 600px; background: ${BLUE_FIELD}; }
-  .half h2 { position: absolute; left: 48px; top: 40px; width: 520px; font: 500 60px/1.0 'Newsreader', serif; letter-spacing: -0.02em; }
-  .half .k { position: absolute; left: 50px; bottom: 34px; font: 500 26px/1 'JetBrains Mono', monospace; letter-spacing: 0.04em; text-transform: uppercase; }
-  .l .k { color: ${GREEN}; } .r .k { color: ${BLUE}; }
-  .wall { left: 64px; top: 196px; }
-  .r .pic { position: absolute; left: 30px; top: 200px; width: 540px; height: 360px; }
-  .r .pic img { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: multiply; }
-  .r .pic img.f { opacity: 0; }
-  .rule { position: absolute; left: 599px; top: 0; bottom: 0; width: 2px; background: ${INK}; }
-`, `<div class="half l">
-  ${wallCrop(wall, 1.24)}
-  <h2>${esc(curly(a.title))}</h2>
-  <p class="k">AI agents at Telekom</p>
+  .wing { position: absolute; top: 0; bottom: 0; width: 236px; }
+  .wing.l { left: 0; background: ${GREEN_FIELD}; }
+  .wing.r { right: 0; background: ${BLUE_FIELD}; }
+  .wing .k { position: absolute; top: 250px; font: 500 34px/1.2 'JetBrains Mono', monospace; letter-spacing: -0.01em; text-transform: uppercase; }
+  .wing.l .k { left: 28px; color: ${GREEN}; }
+  .wing.r .k { right: 28px; text-align: right; color: ${BLUE}; }
+  .titles { position: absolute; left: 270px; width: 660px; top: 40px; text-align: center; }
+  .titles h2 { font: 500 57px/1.0 'Newsreader', serif; letter-spacing: -0.02em; }
+  .titles h2 + h2 { margin-top: 18px; }
+  .titles h2 i { font-style: normal; display: inline-block; width: 22px; height: 22px; margin-right: 14px; vertical-align: 6px; }
+  .plate { position: absolute; left: 264px; top: 292px; width: 672px; height: 270px; }
+  .plate .wall { left: 0; top: 0; }
+  .plate .pic { position: absolute; left: 332px; top: 18px; width: 345px; height: 230px; }
+  .plate .pic img { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: multiply; }
+  .plate .pic img.f { opacity: 0.55; }
+`, `<div class="wing l"><p class="k">AI agents<br>at Telekom</p></div>
+<div class="wing r"><p class="k">Quantum<br>decoders</p></div>
+<div class="titles">
+  <h2><i style="background:${GREEN}"></i>${esc(curly(a.title))}</h2>
+  <h2><i style="background:${BLUE}"></i>${esc(curly(b.title))}</h2>
 </div>
-<div class="half r">
+<div class="plate">
+  ${wallCrop(wall, 0.86)}
   <div class="pic"><img class="f" src="${hero.field}" alt=""><img src="${hero.line}" alt=""></div>
-  <h2>${esc(curly(b.title))}</h2>
-  <p class="k">Quantum decoders</p>
-</div>
-<div class="rule"></div>`);
+</div>`);
 }
 
 const page = await browser.newPage();
@@ -192,7 +205,10 @@ writeFileSync(join(ROOT, 'lib', 'site', 'favicon.svg'), icon);
 await page.setViewport({ width: 180, height: 180, deviceScaleFactor: 1 });
 await page.setContent(`<html><body style="margin:0">${icon.replace('<svg ', '<svg width="180" height="180" ')}</body></html>`);
 await page.screenshot({ path: join(ROOT, 'lib', 'site', 'apple-touch-icon.png'), clip: { x: 0, y: 0, width: 180, height: 180 } });
-console.log('icons: lib/site/favicon.svg, lib/site/apple-touch-icon.png');
+await page.setViewport({ width: 48, height: 48, deviceScaleFactor: 1 });
+await page.setContent(`<html><body style="margin:0;background:transparent">${icon.replace('<svg ', '<svg width="48" height="48" ')}</body></html>`);
+await page.screenshot({ path: join(ROOT, 'lib', 'site', 'favicon-48.png'), clip: { x: 0, y: 0, width: 48, height: 48 }, omitBackground: true });
+console.log('icons: lib/site/favicon.svg, lib/site/apple-touch-icon.png, lib/site/favicon-48.png');
 
 await browser.close();
 server.close();

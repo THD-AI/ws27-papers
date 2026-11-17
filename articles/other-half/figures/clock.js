@@ -8,7 +8,7 @@
 // different kinds of number and are never drawn as two lengths of one kind.
 // Every value is from data/clock.json.
 import {
-  mountFigure, svgRoot, g, line, rect, circle, path, bracket, leader, penRing, stage, fmt,
+  mountFigure, svgRoot, g, line, rect, circle, path, bracket, leader, penRing, stage, fmt, ease, span,
 } from '../../../lib/fig.js';
 import { pal, dotPlate, text, floor } from './shared.js';
 
@@ -86,6 +86,9 @@ function build(el, ctx) {
       : text(h2, t2.right + 14, y2, `needs [[${us(net.value)}]] for one round`, noteO);
     const q2 = narrow ? text(h2, B.x, n2.bottom + 13, 'quoted in the 2024 paper', mono) : text(h2, n2.right + 14, n2.y + n2.h - 3.5, 'quoted in the 2024 paper', mono);
     st.fade(h2t, -1, 0).fade(h2, 1.08, 1.3);
+    // the lane the answers will run along: a faint hairline from the start
+    const lane = line(root, B.x, by + bh, B.x + B.w, by + bh, { stroke: C.hairline, 'stroke-width': 1, 'data-audit': 'skip' });
+    st.fade(lane, -1, 0);
     const py = (narrow ? q2.bottom - 30 : n2.bottom) + 16;
     const right = B.x + B.w;
     const blocks = [1, 2, 3].map((k) => {
@@ -154,6 +157,18 @@ function build(el, ctx) {
     }
     text(ax, B.x, ay + (narrow ? 36 : 38), narrow ? 'the start of a run · millionths of a second (µs)' : 'the start of a run · time in millionths of a second (µs)', { ...mono, width: B.w, lh: 15 });
     st.fade(ax, -1, 0);
+    // Until the rounds start to pile up (step 2) the axis sits just under the
+    // network's lane, so no empty band opens between the lanes and the axis;
+    // it moves down to make room as the first waiting rounds arrive.
+    if (!print) {
+      const early = (narrow ? q2.bottom : n2.bottom) + (narrow ? 22 : 30);
+      const lift = Math.min(0, early - ay);
+      st.on((gg) => {
+        const m = ease(span(gg, 2.2, 2.42));
+        const v = m >= 1 ? '' : `translate(0 ${(lift * (1 - m)).toFixed(2)})`;
+        if ((ax.getAttribute('transform') || '') !== v) { if (v) ax.setAttribute('transform', v); else ax.removeAttribute('transform'); }
+      });
+    }
     return root;
   }
 

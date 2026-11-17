@@ -263,7 +263,7 @@
         "bound": "about",
         "show": "≈ $3 bn",
         "status": "ahead",
-        "text": "of Core Adjusted EBITDA by 2027 against 2025"
+        "text": "of Core Adjusted EBITDA (an operating profit measure) by 2027 against 2025"
       },
       "de": {
         "value": 2.5,
@@ -294,7 +294,7 @@
         "value": 531,
         "show": "$531 m",
         "status": "reported",
-        "text": "of severance to September 2026, in a restructuring of management layers that the filings don't tie to the agents"
+        "text": "of severance to September 2026, in a restructuring that reduced organisational layers that the filings don't tie to the agents"
       },
       "de": {
         "value": null,

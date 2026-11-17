@@ -8,6 +8,8 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 5;
+// where the scene reads as a sequence: the end of plate A and of plate B
+export const stills = [2, 4];
 export const aspect = { wide: 800 / 500, tall: 360 / 440 };
 
 const fill = (tpl, v, dec = 0) => tpl.replace('{v}', fmt(v, dec));
@@ -148,12 +150,20 @@ function plateA(svg, C, d, tall, st, keep, big) {
   }
   nt(gF, 2.52, 2.74);
 
-  // wide: until the release's bracket arrives the grid stands alone, so it
-  // stands in the middle of the frame; it moves to its place beside the
-  // notes as they arrive
-  if (!tall && !keep) {
-    const dx0 = 400 - (L.gx + (L.p * cols) / 2);
-    st.on((gg) => body.setAttribute('transform', `translate(${(dx0 * (1 - ease(span(gg, 0.6, 0.8)))).toFixed(2)} 0)`));
+  // Until the notes over the grid arrive (step 1) the grid stands right
+  // under the headline, with its own note under it, so step 0 reads complete
+  // and no empty band strands the headline; it moves down to make room just
+  // before the bracket over the 32 is drawn. Wide: until the release's
+  // bracket arrives the grid also stands in the middle of the frame, and it
+  // moves to its place beside the notes as they arrive.
+  if (!keep) {
+    const lift = tall ? 118 : 100, y0b = tall ? 40 : 0;
+    const dx0 = tall ? 0 : 400 - (L.gx + (L.p * cols) / 2);
+    st.on((gg) => {
+      const dx = dx0 * (1 - ease(span(gg, 0.6, 0.8)));
+      const dy = y0b - lift * (1 - ease(span(gg, 1.28, 1.44)));
+      body.setAttribute('transform', `translate(${dx.toFixed(2)} ${dy.toFixed(2)})`);
+    });
   }
 
   return { root, grid, box: { x: L.gx, y: L.gy, s: L.p * cols } };

@@ -102,6 +102,10 @@ The aim is every reader at 8 or more and a median near 9. Seven is acceptable wh
 - **Cut what fails three times.** The renovation-order figure failed as icons, as a Gantt chart and as a ladder. The numbered list with measures did the job.
 - **Readers write their own files.** Twelve reports per round fit into one working session only if each reader saves its report and returns only the scores.
 
+- **Render the reading material in one step, right before readers start.** In the second web round the paper pages predated that round's text fixes, and the fact checker checked stale wording. Device sheets, paper pages and the built site come from the same build.
+- **A layout rule touches every block type.** Centring the text column when there's no margin rail made the column jump sideways between body, scenes and stills. Check left edges of every text block on every device after any layout change.
+- **A web fix creates the next complaint.** Readers judge the experience as it is, so each fix needs a fresh look on all six devices, not only the one where the complaint came from.
+
 ## Tools
 
 ```

@@ -101,7 +101,9 @@ Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
   }
 
   // ---- screen: the large grid ---------------------------------------------
-  const B = tall ? { cx: 180, cy: 146, pitch: 72 } : { cx: 250, cy: 222, pitch: 96 };
+  // the large grid fills the frame in steps 0 to 3; the space the two copies
+  // need from step 4 on is where its notes and the count stand meanwhile
+  const B = tall ? { cx: 180, cy: 166, pitch: 84 } : { cx: 250, cy: 228, pitch: 108 };
   const gridG = g(svg);
   const M = grid(gridG, { checks: d.checks, d: d.distance, ...B, C });
   const p = B.pitch, pos = M.pos;
@@ -170,17 +172,17 @@ Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
 
   // ---- notes beside (wide) or under (tall) the large grid -----------------
   const N = tall
-    ? { x: 22, y: 296, w: 316 }
+    ? { x: 22, y: 330, w: 316 }
     : { x: 458, y: 150, w: 236 };
   const s0 = g(svg);
   if (tall) {
-    const a = text(s0, 22, 300, `[[${d.storing_qubits}]] storing qubits, never read directly`, { ...noteO, width: 140 });
+    const a = text(s0, 22, 334, `[[${d.storing_qubits}]] storing qubits, never read directly`, { ...noteO, width: 140 });
     const q = M.qubits[6];
     leader(s0, a.x + 30, a.y - 4, q.x - 4, q.y + M.qr + 4, { stroke: C.muted });
-    const b = text(s0, 196, 300, `[[${d.helpers}]] checks, each asks its neighbours one question`, { ...noteO, width: 150 });
+    const b = text(s0, 196, 334, `[[${d.helpers}]] checks, each asks its neighbours one question`, { ...noteO, width: 150 });
     const t = M.tiles.z3;
     leader(s0, b.x + 84, b.y - 4, t.c[0] + 3, t.c[1] + 5, { stroke: C.muted });
-    text(s0, W / 2, 392, `${d.storing_qubits} + ${d.helpers} = ${d.total}`, { family: 'mono', size: 15, weight: 500, anchor: 'middle' });
+    text(s0, W / 2, 424, `${d.storing_qubits} + ${d.helpers} = ${d.total}`, { family: 'mono', size: 15, weight: 500, anchor: 'middle' });
   } else {
     const q = M.qubits[2];
     const a = text(s0, N.x, q.y + 5, `[[${d.storing_qubits}]] storing qubits, never read directly`, { ...noteO, width: N.w });
@@ -188,7 +190,7 @@ Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
     const t = M.tiles.z3;
     const b = text(s0, N.x, t.c[1] + 5, `[[${d.helpers}]] checks, each asks its neighbours one question`, { ...noteO, width: N.w });
     leader(s0, b.x - 6, t.c[1], t.c[0] + 4, t.c[1], { stroke: C.muted });
-    text(s0, N.x, 392, `${d.storing_qubits} + ${d.helpers} = ${d.total}`, { family: 'mono', size: 16, weight: 500 });
+    text(s0, N.x, 420, `${d.storing_qubits} + ${d.helpers} = ${d.total}`, { family: 'mono', size: 16, weight: 500 });
   }
   st.fade(s0, 0.55, 0.85, [1, 1.12]);
 
@@ -214,7 +216,7 @@ Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
   st.fade(s2, 2.55, 2.85, [3, 3.12]);
 
   const s3 = g(svg);
-  text(s3, tall ? W / 2 : N.x, tall ? 316 : N.y, `[[${firedLabel}.]]\nWhich errors?`, { ...noteO, size: tall ? 15 : 17, lh: tall ? 21 : 24, anchor: tall ? 'middle' : 'start' });
+  text(s3, tall ? W / 2 : N.x, tall ? 350 : N.y, `[[${firedLabel}.]]\nWhich errors?`, { ...noteO, size: tall ? 15 : 17, lh: tall ? 21 : 24, anchor: tall ? 'middle' : 'start' });
   st.fade(s3, 3.5, 3.75, [4, 4.15]);
 
   // ---- the two explanations -------------------------------------------------
