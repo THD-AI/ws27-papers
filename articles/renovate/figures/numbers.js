@@ -1,7 +1,8 @@
 // numbers: what the 40% and the 55% are.
 // Plate A (steps 0 to 2): 100 contacts as a 10 by 10 grid.
-// Plate B (steps 3 and 4): contacts per account in a year, at the two dates
-// that are public. Print: both plates side by side.
+// Plate B (steps 3 and 4): contacts per account in a year, the two published
+// values as large numbers on one date axis, nothing drawn between them.
+// Print: both plates side by side.
 import {
   mountFigure, svgRoot, colors, g, line, circle, rect, text, cells, plate,
   leader, bracket, penRing, stage, fmt, span, ease, lerp, linear, textSize,
@@ -40,7 +41,7 @@ function plateA(svg, C, d, tall, st, keep, big) {
   // so the first pinned frame is never an empty band under the title
   const baseG = g(grid);
   for (let i = 0; i < n; i++) { const [x, y] = at(i); circle(baseG, x, y, L.rBase, { fill: C.ink }); }
-  st.fade(baseG, 0, 0.06);
+  st.fade(baseG, 0, 0.1);
   // release: 40 carry a dashed outline; nothing is filled
   const dashed = [], discs = [];
   for (let k = 0; k < A.release.value; k++) {
@@ -56,11 +57,11 @@ function plateA(svg, C, d, tall, st, keep, big) {
     circle(grid, x, y, L.rBase, { fill: C.accent, 'data-audit': 'skip' }).dataset.k = k;
   }
   const cores = [...grid.querySelectorAll('circle[data-k]')];
-  st.fill(discs, 1.05, 1.5).fill(cores, 1.05, 1.5);
+  st.fill(discs, 1.04, 1.42).fill(cores, 1.04, 1.42);
   dashed.forEach((el, k) => {
-    const a = 0.48 + (k / dashed.length) * 0.26;
-    if (k < A.slide.value) st.fade(el, a, a + 0.08, [1.05 + (k / A.slide.value) * 0.4, 1.12 + (k / A.slide.value) * 0.4]);
-    else st.fade(el, a, a + 0.08);
+    const a = 0.32 + (k / dashed.length) * 0.32;
+    if (k < A.slide.value) st.fade(el, a, a + 0.1, [1.04 + (k / A.slide.value) * 0.32, 1.12 + (k / A.slide.value) * 0.32]);
+    else st.fade(el, a, a + 0.1);
   });
 
   const hide = keep ? undefined : [3.0, 3.08];
@@ -69,14 +70,14 @@ function plateA(svg, C, d, tall, st, keep, big) {
 
   const gH = g(root, { 'data-role': 'title' });
   const hA = text(gH, tall ? 14 : 16, tall ? 13 : 17, d.headline.a, { family: 'sans', size: tall ? 12 : 13.5, weight: 600, width: tall ? 334 : 640, lh: 15 });
-  nt(gH, 0, 0.1);
+  nt(gH, 0, 0.12);
   // the plate's own note, under the grid
   const gT = g(notes);
   text(gT, L.gx + 2, L.bottomY, fill(A.total.note, A.total.value), o);
-  nt(gT, 0.36, 0.5);
+  nt(gT, 0.16, 0.3);
   const gTag = g(root);
   text(gTag, L.tagX, tall ? hA.bottom + 13 : L.tagY, d.tag, { family: 'mono', size: tall ? 11.5 : 12.5, fill: C.muted, anchor: 'end' });
-  nt(gTag, 0.36, 0.5);
+  nt(gTag, 0.2, 0.34);
 
   // release: a bracket beside the four rows
   const y0 = L.gy + 3, y1 = L.gy + rowsTop * L.p - 3;
@@ -93,16 +94,16 @@ function plateA(svg, C, d, tall, st, keep, big) {
   // four rows and starts at the bracket's top instead
   const dy = tall ? y0 - 1 - rel.y : (y0 + y1) / 2 - (rel.y + ov.bottom) / 2;
   relTxt.setAttribute('transform', `translate(0 ${dy.toFixed(1)})`);
-  if (keep) st.draw(br, 0.74, 0.88); else st.draw(br, 0.74, 0.88, hide);
-  st.fade(rel.el, 0.84, 0.96);
+  if (keep) st.draw(br, 0.66, 0.8); else st.draw(br, 0.66, 0.8, hide);
+  st.fade(rel.el, 0.76, 0.9);
   nt(relTxt, 0, 0.001);
-  nt(ovG, 1.8, 1.94);
+  nt(ovG, 1.76, 1.9);
 
   // the slide: a bracket over the 32, its note above
   const bx0 = L.gx + 3, bx1 = L.gx + (A.slide.value / rowsTop) * L.p - 3;
   const gS = g(notes);
   const sb = bracket(gS, bx1, L.top[0], bx0, L.top[0], tall ? 4.5 : 6, { stroke: C.ink });
-  if (keep) st.draw(sb, 1.46, 1.66); else st.draw(sb, 1.46, 1.66, hide);
+  if (keep) st.draw(sb, 1.44, 1.6); else st.draw(sb, 1.44, 1.6, hide);
   const gSn = g(notes);
   // the note, then the number on its own with clear space, ringed
   const [pre, post] = A.slide.note.split('[[{v}]]');
@@ -113,12 +114,12 @@ function plateA(svg, C, d, tall, st, keep, big) {
   text(gSn, num.right + (tall ? 12 : 14), L.top[2], post.trim(), o);
   {
     const pr = penRing(gSn, num.cx, num.cy - 0.5, num.w / 2 + (tall ? 6 : 7), numSize * 0.5 + (tall ? 3.6 : 4), { seed: 31, stroke: C.accent, width: tall ? 1.7 : 1.8 });
-    pr.paths.forEach((p, k) => st.draw(p, 1.74 + k * 0.03, 1.92 + k * 0.03));
+    pr.paths.forEach((p, k) => st.draw(p, 1.62 + k * 0.05, 1.78 + k * 0.04));
   }
-  nt(gSn, 1.6, 1.74);
+  nt(gSn, 1.54, 1.68);
   // at step 1 the slide's note sits on the bracket; at step 2 it makes room
   const drop = L.top[1] - L.top[2];
-  st.on((gg) => gSn.setAttribute('transform', `translate(0 ${(drop * (1 - ease(span(gg, 2.04, 2.28)))).toFixed(2)})`));
+  st.on((gg) => gSn.setAttribute('transform', `translate(0 ${(drop * (1 - ease(span(gg, 2.04, 2.34)))).toFixed(2)})`));
 
   // the eight that are only in the release
   const gN = g(notes);
@@ -135,12 +136,12 @@ function plateA(svg, C, d, tall, st, keep, big) {
     bracket(gN, ex1, L.top[0], ex0, L.top[0], 6, { stroke: C.muted, 'stroke-width': 1, 'stroke-dasharray': '3 3' });
     leader(gN, rest.x + 10, rest.bottom + 3, (ex0 + ex1) / 2, L.top[0] - 2.5, { stroke: C.muted });
   }
-  nt(gN, 1.8, 1.94);
+  nt(gN, 1.7, 1.84);
 
   // step 2: what the 32 are, and what is not known about them
   const gA = g(notes);
   text(gA, bx0, L.top[1], A.start.note, o);
-  nt(gA, 2.24, 2.42);
+  nt(gA, 2.3, 2.5);
   const gF = g(notes);
   bracket(gF, bx1, L.top[3], bx0, L.top[3], tall ? 4.5 : 6, { stroke: C.muted, 'stroke-width': 1, 'stroke-dasharray': '3 3.5' });
   {
@@ -148,7 +149,7 @@ function plateA(svg, C, d, tall, st, keep, big) {
     const fs = textSize(ftxt, fo);
     text(gF, bx0, L.top[4] - (fs.lines - 1) * fs.lh, ftxt, fo);
   }
-  nt(gF, 2.52, 2.74);
+  nt(gF, 2.56, 2.8);
 
   // Until the notes over the grid arrive (step 1) the grid stands right
   // under the headline, with its own note under it, so step 0 reads complete
@@ -160,8 +161,8 @@ function plateA(svg, C, d, tall, st, keep, big) {
     const lift = tall ? 118 : 100, y0b = tall ? 40 : 0;
     const dx0 = tall ? 0 : 400 - (L.gx + (L.p * cols) / 2);
     st.on((gg) => {
-      const dx = dx0 * (1 - ease(span(gg, 0.6, 0.8)));
-      const dy = y0b - lift * (1 - ease(span(gg, 1.28, 1.44)));
+      const dx = dx0 * (1 - ease(span(gg, 0.52, 0.74)));
+      const dy = y0b - lift * (1 - ease(span(gg, 1.26, 1.44)));
       body.setAttribute('transform', `translate(${dx.toFixed(2)} ${dy.toFixed(2)})`);
     });
   }
@@ -170,130 +171,121 @@ function plateA(svg, C, d, tall, st, keep, big) {
 }
 
 // ---------------------------------------------------------------------------
-// Plate B. Its headline and first ruler arrive while plate A leaves (XA).
+// Plate B. One date axis, 2021 to 2026, with the two published points as
+// large numbers over their dates; nothing is drawn between them (no line,
+// no arrow), because the path between is not published. It assembles in
+// order while plate A leaves (XA): the axis draws from the left, the first
+// number arrives, the note on the gap, the second number. Step 4 marks the
+// month the agents were announced and what T-Mobile names besides them.
 // ---------------------------------------------------------------------------
-// The hand-over from plate A to plate B, in g: plate A fades out and plate
-// B's headline and first ruler fade in over the same span.
-const XA = [3.02, 3.14];
+// plate A leaves over XA (quickly, so the grid never lies on the axis);
+// plate B's headline takes over the same place, its drawing follows
+const XA = [3.0, 3.14];
 
 function plateB(svg, C, d, tall, st, bare, big) {
-  // Two rulers of the same length, one above the other. A ruler is one year
-  // for one customer account, divided into its twelve months; a dot is one
-  // contact, evenly spaced from the yearly value. Under them a slim time
-  // line with the two measured points and the month the agents were
-  // announced. Everything arrives from XA on; the time line in step 4.
-  // Each step is complete within the first 30% of its step.
-  const B = d.plateB, W = tall ? 360 : 800, H = tall ? 440 : 500;
-  // tick: the month letters and the years, in ink and larger than the tag,
-  // so they read at a laptop's scale (they were 12.5 px mid-grey at 1536 x 864)
-  const S = tall ? { x0: 14, note: 12.5, mono: 12.5, small: 11.5, tick: 12.5, lab: 13.5, r: 4.2 } : { x0: 16, note: 14, mono: 14, small: 12, tick: 14, lab: 15, r: 5 };
+  const B = d.plateB, W = tall ? 360 : 800;
+  const S = tall
+    ? { x0: 14, note: 12.5, mono: 12.5, small: 11.5, tick: 12.5, big: 38, r: 4.6 }
+    : { x0: 16, note: 14, mono: 14, small: 12, tick: 14, big: 54, r: 5.5 };
   if (big) { S.note = 13.5; S.mono = 13; S.small = 12; }
   const root = g(svg);
   const ink = { stroke: C.ink, 'stroke-width': 1.25, 'stroke-linecap': 'round' };
 
   const hd = g(root);
   const h1 = text(hd, S.x0, tall ? 13 : 17, d.headline.b, { family: 'sans', size: tall ? 12 : 13.5, weight: 600, width: tall ? W - 2 * S.x0 : 620, lh: 15 });
-  st.fade(hd, 3.02, XA[1]);
-  // what T-Mobile names besides the agents: one block under the headline
+  st.fade(hd, XA[0], XA[1]);
+  // what T-Mobile names besides the agents (step 4): one block under the headline
   const cg = g(root);
   const cs = text(cg, S.x0, h1.bottom + S.note + 2, B.causes.block, { italic: true, size: S.note, width: W - 2 * S.x0 });
-  st.fade(cg, 4.16, 4.24);
+  st.fade(cg, 4.5, 4.7);
 
-  const rx0 = tall ? S.x0 + 4 : 96, rx1 = tall ? W - S.x0 - 4 : 540, len = rx1 - rx0;
-  let y = cs.bottom + (tall ? 20 : 58);
-  const rulerY = [];
-  B.points.forEach((p, i) => {
-    const a = XA[0] + i * 0.08;
-    const tg = g(root), rg = g(root);
-    const count = p.count.replace('{v}', fmt(p.value, p.decimals)), note = p.note.replace('{v}', fmt(p.value, p.decimals));
-    let ry;
-    if (tall) {
-      const l1 = text(tg, S.x0, y, p.label, { family: 'mono', size: S.lab, weight: 500 });
-      text(tg, l1.right + 14, y, count, { family: 'mono', size: S.mono, weight: 500 });
-      const n1 = text(tg, S.x0, l1.bottom + S.note, note, { italic: true, size: S.note, width: W - 2 * S.x0 });
-      ry = n1.bottom + 15;
-    } else {
-      ry = y + 6;
-      text(tg, S.x0, ry + 5, p.label, { family: 'mono', size: S.lab, weight: 500 });
-      const c1 = text(tg, rx1 + 24, ry - 6, count, { family: 'mono', size: S.mono, weight: 500 });
-      text(tg, rx1 + 24, c1.bottom + S.note + 1, note, { italic: true, size: S.note, width: W - rx1 - 40 });
-    }
-    rulerY.push(ry);
-    // the ruler: one year, twelve months
-    line(rg, rx0, ry, rx1, ry, ink);
-    const n = B.strip.months;
-    for (let k = 0; k <= n; k++) {
-      const x = rx0 + (k / n) * len;
-      line(rg, x, ry, x, ry + (k === 0 || k === n ? 8 : 5), ink);
-      if (k < n) text(rg, x + len / n / 2, ry + 9 + S.tick, B.strip.letters[k], { family: 'mono', size: S.tick, fill: C.ink, anchor: 'middle' });
-    }
-    st.fade(rg, a, i === 0 ? XA[1] : a + 0.08);
-    // contacts: whole dots, and a visibly smaller one for the part
-    const full = Math.floor(p.value + 1e-9), part = p.value - full;
-    const ds = [];
-    for (let k = 0; k < full + (part > 1e-6 ? 1 : 0); k++) {
-      const u = k < full ? (k + 0.5) / p.value : (full + part / 2) / p.value;
-      const c = circle(root, rx0 + u * len, ry, k < full ? S.r : S.r * 0.45, { fill: C.ink });
-      c.dataset.r = k < full ? S.r : S.r * 0.45;
-      ds.push(c);
-    }
-    st.fill(ds, a + 0.04, a + 0.14);
-    st.fade(tg, a, i === 0 ? XA[1] : a + 0.08);
-    y = ry + 9 + S.tick + (tall ? 26 : 44);
-    if (i === 0) {
-      const bg = g(root);
-      const yrs = B.between.years;
-      const bt = text(bg, tall ? S.x0 : rx0, y - (tall ? 6 : 8), B.between.note.replace('{a}', yrs[0]).replace('{b}', yrs[yrs.length - 1]), { italic: true, size: S.note, fill: C.muted });
-      st.fade(bg, 3.14, 3.22);
-      y = bt.bottom + (tall ? 22 : 40);
-    }
+  // the axis: whole years, from the start of the first to the end of the last
+  const A = B.axis;
+  const t0 = A.from.year, t1 = A.to.year + 1;
+  const tx0 = tall ? 22 : 60, tx1 = tall ? W - 22 : W - 60;
+  const X = linear(t0, t1, tx0, tx1);
+  const at = (p) => X(p.year + (p.quarter - 0.5) / 4);
+
+  // each point's lettering over its date: when, the number, its unit, a note
+  const nTop = cs.bottom + (tall ? 34 : 50) + S.big * 0.78;   // baseline of the big numbers
+  const blocks = B.points.map((p, i) => ({
+    p, x: at(p),
+    anchor: tall ? (i === 0 ? 'start' : 'end') : 'middle',
+    ax: tall ? (i === 0 ? S.x0 : W - S.x0) : at(p),
+    width: tall ? 150 : 230,
+  }));
+  const pg = blocks.map(() => g(root));
+  let low = 0;
+  blocks.forEach((b, i) => {
+    const { p } = b, o = { anchor: b.anchor };
+    text(pg[i], b.ax, nTop - S.big * 0.78 - 8, p.when, { family: 'mono', size: S.small, fill: C.muted, ...o });
+    const nm = text(pg[i], b.ax, nTop, fmt(p.value, p.decimals), { family: 'mono', size: S.big, weight: 600, ...o });
+    const un = text(pg[i], b.ax, nm.bottom + S.mono + 4, B.unitWord, { family: 'mono', size: S.mono, ...o, width: b.width });
+    const nt = text(pg[i], b.ax, un.bottom + S.note + 3, p.note.replace('{v}', fmt(p.value, p.decimals)), { italic: true, size: S.note, ...o, width: b.width });
+    b.bottom = nt.bottom;
+    b.num = nm;
+    low = Math.max(low, nt.bottom);
+  });
+  // under the lettering, room for the note on the gap and, under it, the
+  // bracket's note (step 4), so the two never meet
+  const evX = X(B.event.year + (B.event.month - 0.5) / 12);
+  const bx0 = blocks[0].x + S.r + 4;
+  const bo = { italic: true, size: S.note, width: evX - bx0 };
+  const bs = textSize(B.event.before, bo);
+  const yrs = B.between.years;
+  const gapTxt = B.between.note.replace('{a}', yrs[0]).replace('{b}', yrs[yrs.length - 1]);
+  const go = { italic: true, size: S.note, fill: C.muted, anchor: 'middle', width: tall ? 150 : 300 };
+  const gs = textSize(gapTxt, go);
+  const ay = low + 14 + gs.h + 12 + bs.h + 21;
+
+  // the axis draws from the left
+  const axl = line(root, tx0, ay, tx1, ay, ink);
+  st.draw(axl, 3.12, 3.38);
+  const yl = g(root);
+  for (let yr = t0; yr < t1; yr++) {
+    line(yl, X(yr), ay, X(yr), ay + 5, ink);
+    text(yl, X(yr + 0.5), ay + 7 + S.tick, String(yr), { family: 'mono', size: S.tick, anchor: 'middle', fill: C.ink });
+  }
+  line(yl, X(t1), ay, X(t1), ay + 5, ink);
+  st.fade(yl, 3.22, 3.38);
+
+  // the two points: a dot on the axis and a thin leader up to its number
+  blocks.forEach((b, i) => {
+    // the first number, then the gap, then the second
+    const a = i === 0 ? 3.36 : 3.62;
+    circle(pg[i], b.x, ay, S.r, { fill: C.ink });
+    leader(pg[i], b.x, b.bottom + 8, b.x, ay - S.r - 3, { stroke: C.muted, dot: false });
+    st.fade(pg[i], a, a + 0.14);
   });
 
-  // the fall from the first ruler to the second, as T-Mobile names it: an
-  // arrow down in the December column, from the first ruler to the second
-  {
-    const fg = g(root);
-    const ax = rx1 - len / (B.strip.months * 2);
-    const ya = rulerY[0] + 9 + S.tick + 8, yb = rulerY[1] - 11;
-    const aw = { stroke: C.ink, 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' };
-    line(fg, ax, ya, ax, yb, aw);
-    line(fg, ax - 4, yb - 6, ax, yb, aw);
-    line(fg, ax + 4, yb - 6, ax, yb, aw);
-    const fs = tall ? 15 : 17;
-    text(fg, ax - 9, (ya + yb) / 2 + fs * 0.36, B.fall.show.replace('{v}', fmt(B.fall.value)), { family: 'mono', size: fs, weight: 600, anchor: 'end' });
-    st.fade(fg, 3.18, 3.26);
-  }
+  // the gap: nothing drawn, said in words
+  const gg0 = g(root);
+  const gapX = (blocks[0].x + blocks[1].x) / 2;
+  text(gg0, gapX, low + 14 + S.note * 0.78, gapTxt, go);
+  st.fade(gg0, 3.5, 3.64);
 
-  // step 4: the time line
-  const tl = g(root);
-  const t0 = B.points[0].year + 0.55, t1 = B.points[1].year + 0.75;
-  const tx0 = rx0, tx1 = tall ? rx1 : 700;
-  const X = linear(t0, t1, tx0, tx1);
-  const ay = y + (tall ? 30 : 46);
-  const axl = line(tl, tx0, ay, tx1, ay, ink);
-  st.draw(axl, 4.02, 4.12);
-  const yl = g(root);
-  for (let yr = Math.ceil(t0); yr <= Math.floor(t1); yr++) {
-    line(yl, X(yr), ay, X(yr), ay + 5, ink);
-    text(yl, X(yr), ay + 7 + S.tick, String(yr), { family: 'mono', size: S.tick, anchor: 'middle', fill: C.ink });
-  }
-  B.points.forEach((p) => circle(yl, X(p.year + (p.quarter - 0.5) / 4), ay, tall ? 3.6 : 4.2, { fill: C.ink }));
-  st.fade(yl, 4.06, 4.14);
-  const evX = X(B.event.year + (B.event.month - 0.5) / 12);
+  // the fall as T-Mobile reports it, beside the second number: a label, not a path
+  const fgp = g(root);
+  const fs = tall ? 15 : 18, n2 = blocks[1].num, fx = n2.x - (tall ? 12 : 18);
+  text(fgp, fx, n2.y + S.big * 0.5, B.fall.show.replace('{v}', fmt(B.fall.value)), { family: 'mono', size: fs, weight: 600, anchor: 'end' });
+  text(fgp, fx, n2.y + S.big * 0.5 + S.small + 4, B.fall.against, { italic: true, size: S.small, anchor: 'end', fill: C.muted });
+  st.fade(fgp, 3.74, 3.88);
+
+  // step 4: the month the agents were announced
   const eg = g(root);
-  line(eg, evX, ay - 10, evX, ay + 10, { stroke: C.accent, 'stroke-width': 2.4, 'stroke-linecap': 'round' });
+  line(eg, evX, ay - 12, evX, ay + 4, { stroke: C.accent, 'stroke-width': 2.4, 'stroke-linecap': 'round' });
   const eo = { italic: true, size: S.note, fill: C.accent, weight: 600 };
-  text(eg, Math.min(tx1, Math.max(evX + 2, tx0 + textSize(B.event.note, eo).w + 2)), ay + 7 + S.tick + S.note + 6, B.event.note, { ...eo, anchor: 'end' });
-  st.fade(eg, 4.12, 4.2);
+  const ew = textSize(B.event.note, eo).w;
+  text(eg, Math.min(tx1, Math.max(evX + ew / 2, tx0 + ew)), ay + 7 + S.tick + S.note + 8, B.event.note, { ...eo, anchor: 'end' });
+  st.fade(eg, 4.04, 4.22);
   const bg2 = g(root);
-  const bx0 = X(B.points[0].year + 1);
-  bracket(bg2, bx0, ay - 13, evX - 3, ay - 13, -5, { stroke: C.ink, 'stroke-width': 1 });
-  text(bg2, bx0, ay - 21, B.event.before, { italic: true, size: S.note });
-  st.fade(bg2, 4.18, 4.26);
+  bracket(bg2, bx0, ay - 13, evX - 4, ay - 13, -5, { stroke: C.ink, 'stroke-width': 1 });
+  text(bg2, bx0, ay - 21 - (bs.lines - 1) * bs.lh, B.event.before, bo);
+  st.fade(bg2, 4.26, 4.46);
 
   if (!bare) {
     const tg = g(root);
-    text(tg, W - S.x0, tall ? H - 7 : 17, d.tag, { family: 'mono', size: S.small, fill: C.muted, anchor: 'end' });
+    text(tg, W - S.x0, tall ? ay + 7 + S.tick + S.note * 2 + 30 : 17, d.tag, { family: 'mono', size: S.small, fill: C.muted, anchor: 'end' });
     st.fade(tg, XA[0], XA[1]);
   }
   return { root };

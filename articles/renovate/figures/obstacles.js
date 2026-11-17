@@ -51,7 +51,7 @@ function build(el, ctx) {
   const whole = (v) => { const n = Math.round(v / U.percentPerDot); return { full: n, frac: 0, cells: n }; };
   const head = g(svg, { 'data-role': 'title' });
   text(head, tall ? 14 : 16, tall ? 14 : 18, d.headline, { family: 'sans', size: tall ? 12.5 : 14, weight: 600, width: W - 28, lh: 15.5 });
-  st.fade(head, 0, 0.06);
+  st.fade(head, 0, 0.12);
 
   // tall: short enough to stand pinned above the passages on a phone
   const S = tall
@@ -66,21 +66,22 @@ function build(el, ctx) {
   // Where the field is: step 0 on missing knowledge, step 1 on the two
   // legal rows. On paper the field stays on knowledge and the law rows keep
   // their quiet bracket, as the drawing was before it was told in steps.
-  const swap = (gg) => (ctx.print ? 0 : ease(span(gg, 1.0, 1.14)));
+  const swap = (gg) => (ctx.print ? 0 : ease(span(gg, 1.04, 1.4)));
   const first = d.rows.findIndex((r) => r.first);
   const legal = d.rows.map((r, i) => (r.legal ? i : -1)).filter((i) => i >= 0);
-  const weight = (i) => (i === first ? (gg) => 1 - swap(gg) : legal.includes(i) ? swap : () => 0);
+  // missing knowledge turns to the accent with its field, once all rows are there
+  const weight = (i) => (i === first ? (gg) => Math.min(ease(span(gg, 0.62, 0.8)), 1 - swap(gg)) : legal.includes(i) ? swap : () => 0);
   const band = (i0, i1) => {
     const y0 = rowY(i0) - S.label - 5, y1 = dotY(i1) + S.pitch + 5;
     return rect(svg, 0, y0, W, y1 - y0, { fill: C.field, 'data-audit': 'skip' });
   };
-  if (first >= 0) st.fade(band(first, first), 0.04, 0.12, ctx.print ? null : [1.0, 1.12]);
-  if (legal.length && !ctx.print) st.fade(band(legal[0], legal[legal.length - 1]), 1.02, 1.14);
+  if (first >= 0) st.fade(band(first, first), 0.64, 0.8, ctx.print ? null : [1.04, 1.36]);
+  if (legal.length && !ctx.print) st.fade(band(legal[0], legal[legal.length - 1]), 1.06, 1.4);
   if (first >= 0) {
     // at the right end of the band, on the line of the row's label; on the
     // narrow layout a little higher, clear of the ring on the value
     const fl = text(svg, W - (tall ? 12 : 16), rowY(first) - (tall ? 6 : 0), d.fieldLabel, { italic: true, size: S.note + 1, fill: C.accent, weight: 600, anchor: 'end' });
-    st.fade(fl.el, 0.2, 0.26);
+    st.fade(fl.el, 0.7, 0.84);
     // from step 1 it stays as a quiet note
     const tone = mixer(C.accent, C.muted);
     bind(st, fl.el.firstChild, 'fill', (gg) => tone(swap(gg)));
@@ -94,7 +95,7 @@ function build(el, ctx) {
     // in the free band between the two rows, right-aligned against the bracket
     const ly = tall ? rowY(la) + S.dotDy + S.pitch + 14 : (y0 + y1) / 2 + 5;
     const law = text(lg, bx - (tall ? 9 : 12), ly, d.lawLabel, { italic: true, size: S.note, fill: C.muted, anchor: 'end' });
-    st.fade(lg, 1.04, 1.14);
+    st.fade(lg, 1.36, 1.56);
     const tone = mixer(C.muted, C.accent);
     bind(st, br, 'stroke', (gg) => tone(swap(gg)));
     bind(st, law.el.firstChild, 'fill', (gg) => tone(swap(gg)));
@@ -121,14 +122,15 @@ function build(el, ctx) {
     line(ax, x, axY, x, axY + 5, { stroke: C.ink, 'stroke-width': 1.25 });
     text(ax, x, axY + 5 + S.axis, `${fmt(k * per)}${k === n ? '%' : ''}`, { family: 'mono', size: S.axis, fill: C.muted, anchor: k === 0 ? 'start' : k === n ? 'end' : 'middle' });
   }
-  st.fade(pl, 0, 0.08).fade(ax, 0.01, 0.09);
+  st.fade(pl, 0.06, 0.22).fade(ax, 0.08, 0.24);
 
   // rows: all six arrive in step 0
   let ringAt = null, firstRow = null;
   d.rows.forEach((r, i) => {
-    const a = 0.03 + i * 0.025, b = a + 0.12;
+    // the rows one after another, top down: name, dots, value
+    const a = 0.14 + i * 0.07, b = a + 0.22;
     const lab = text(svg, S.x0, rowY(i), r.label, { family: 'sans', size: S.label, weight: 500 });
-    st.fade(lab.el, a - 0.02, a + 0.04);
+    st.fade(lab.el, a - 0.02, a + 0.1);
     const u = whole(r.value);
     const dg = g(svg);
     const ds = dots(dg, slot, u, S.r, {}, S.x0, dotY(i));
@@ -138,7 +140,7 @@ function build(el, ctx) {
     const last = slot[u.cells - 1];
     const vx = S.x0 + last.x + S.pitch / 2 + (tall ? 7 : 9);
     const val = text(svg, vx, dotY(i) + S.pitch / 2 + S.num * 0.34, `${fmt(r.value)}%`, { family: 'mono', size: S.num, weight: 500 });
-    st.fade(val.el, b - 0.03, b + 0.02);
+    st.fade(val.el, b - 0.04, b + 0.06);
     if (i === first) { ringAt = val; firstRow = { x: S.x0 + slot[Math.min(u.full - 1, Math.round(n * 0.54))].x, y: dotY(i) + S.pitch / 2 }; }
   });
 
@@ -148,13 +150,13 @@ function build(el, ctx) {
   const unitNote = text(nt, nx, ny, U.note, { italic: true, size: S.note });
   const p0 = edge(unitNote, firstRow.x, firstRow.y);
   leader(nt, unitNote.x + 10, p0[1], firstRow.x + (tall ? 4 : 5), firstRow.y - S.r - 3, { stroke: C.muted });
-  st.fade(nt, 0.2, 0.27);
+  st.fade(nt, 0.4, 0.56);
   const foot = text(svg, W - S.x0 + (tall ? 0 : 2), H - (tall ? 9 : 12), d.note.text, { italic: true, size: S.note, anchor: 'end', fill: C.muted });
-  st.fade(foot.el, 0.22, 0.28);
+  st.fade(foot.el, 0.62, 0.76);
 
   // the pen ring on the number step 0 names, 72%; on screen it goes with the field
   const ring = penRing(svg, ringAt.cx, ringAt.cy - 0.5, ringAt.w / 2 + (tall ? 7 : 8.5), S.num * 0.5 + (tall ? 5.5 : 6.5), { seed: 11, stroke: C.accent, width: tall ? 1.35 : 1.5 });
-  ring.paths.forEach((p, k) => st.draw(p, 0.2 + k * 0.02, 0.28 + k * 0.01, ctx.print ? null : [1.0, 1.08]));
+  ring.paths.forEach((p, k) => st.draw(p, 0.72 + k * 0.05, 0.86 + k * 0.04, ctx.print ? null : [1.04, 1.3]));
 
   return { set: (s, t) => st.set(s, t) };
 }

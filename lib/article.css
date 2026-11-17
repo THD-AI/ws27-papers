@@ -180,10 +180,9 @@ h3 { margin: 2rem 0 0.6rem; font: 600 1.05rem/1.3 var(--sans); break-after: avoi
 main ul, main ol { margin: 0 0 1.1em; padding: 0 0 0 1.5rem; list-style: none; }
 main li { position: relative; margin: 0 0 0.55em; }
 main ul > li::before { content: '–'; position: absolute; left: -1.5rem; color: var(--muted); }
-main ol:not(.src-list):not(.index-list) { counter-reset: item; }
-main ol:not(.src-list):not(.index-list) > li { counter-increment: item; }
+/* The browser's own list-item counter, so that <ol start="n"> keeps its number. */
 main ol:not(.src-list):not(.index-list) > li::before {
-  content: counter(item);
+  content: counter(list-item);
   position: absolute; left: -1.5rem; top: 0.5em;
   font: 400 0.72rem/1 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums lining-nums;
 }
@@ -192,6 +191,9 @@ main ol:not(.src-list):not(.index-list) > li::before {
    as in the list at the end (article.js writes the numbers in). The numbers
    are set large enough to be read at a glance, in the accent. */
 .src { white-space: nowrap; }
+/* a short hyphenated name ("T-Mobile") is not broken at its hyphen on screen
+   (article.js, holdHyphens) */
+@media screen { .nobr { white-space: nowrap; } }
 .src-mark {
   all: unset;
   position: relative;
@@ -297,8 +299,10 @@ h2.sec + .where, h2.sec + .margin-still + .where, .passage > .where:first-child 
   }
   .fig-fold[open] > summary { color: var(--muted); }
   .fig-fold > summary:hover { text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
-  .fig.has-fold:has(> .fig-fold:not([open])) { display: flex; flex-direction: column; }
-  .fig.has-fold:has(> .fig-fold:not([open])) > figcaption { order: -1; margin: 0; }
+  /* the caption stays above the switch when it is opened too: the drawing
+     can be several windows long, and the caption must not jump below it */
+  .fig.has-fold { display: flex; flex-direction: column; }
+  .fig.has-fold > figcaption { order: -1; margin: 0; }
 }
 .margin-mark { display: block; height: 0; }
 
@@ -383,7 +387,12 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
      one side only. Only figures and tables leave the column: a wide figure's
      caption keeps the column's left edge. */
   main.body { --out: max(0px, min(calc(var(--left) - var(--gutter)), 13rem)); }
-  main.body > .fig-wide, main.body > .table-frame.table-wide {
+  /* The appendix keeps the page's width, so that its wide figures and
+     tables reach out as those in the text do; its text keeps the column. */
+  main.body > .appendix { max-width: none; }
+  main.body > .appendix > * { max-width: var(--measure); }
+  main.body > .fig-wide, main.body > .table-frame.table-wide,
+  main.body > .appendix > .fig-wide, main.body > .appendix > .table-frame.table-wide {
     max-width: none;
     width: calc(var(--measure) + 2 * var(--out));
     margin-left: calc(-1 * var(--out));
@@ -422,7 +431,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 
 /* (On phones the caption of a wide figure is placed in 2e.) */
 @media screen and (min-width: 700px) {
-  main.body > .fig-wide > figcaption { margin-left: var(--out); }
+  :is(main.body, main.body > .appendix) > .fig-wide > figcaption { margin-left: var(--out); }
 }
 
 /* Phones and tablets: the rows of the section list are 40 px or more, so a
@@ -472,13 +481,13 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   /* There a wide figure starts at the text column's edge and reaches out to
      the right, as a scene does, instead of hanging into the empty left of
      the window. */
-  main.body > .fig-wide { margin-left: 0; }
-  main.body > .fig-wide > figcaption { margin-left: 0; }
+  main.body > .fig-wide, main.body > .appendix > .fig-wide { margin-left: 0; }
+  main.body > .fig-wide > figcaption, main.body > .appendix > .fig-wide > figcaption { margin-left: 0; }
 }
 @media screen and (min-width: 900px) {
   html:has(.rail) { --left: max(var(--gutter), calc((var(--pw) - 62rem) / 2)); }
-  html:has(.rail) main.body > .fig-wide { margin-left: 0; }
-  html:has(.rail) main.body > .fig-wide > figcaption { margin-left: 0; }
+  html:has(.rail) :is(main.body, main.body > .appendix) > .fig-wide { margin-left: 0; }
+  html:has(.rail) :is(main.body, main.body > .appendix) > .fig-wide > figcaption { margin-left: 0; }
 
   /* In the margin column, top-aligned with the block that follows, and
      scrolling with the text. No "top": the still keeps the place it has in
@@ -611,9 +620,11 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .scene-text { grid-column: 1; grid-row: 1; padding-top: 0; }
   .scene-caption { display: none; }
   /* A passage's scroll length follows its words more than a fixed gap: a
-     one-sentence passage takes about a third of a window (never less than 14rem
-     of scroll for its step), a long one its own height and up to 3.5rem after it. */
-  .scene { --pitch: clamp(14rem, 33vh, 22rem); }
+     one-sentence passage takes 40% of a window (never less than 15rem), a
+     long one its own height and up to 3.5rem after it. The next step is
+     drawn over that scroll (article.js, updateScene), so it is never less
+     than about a third of a window (tools/motion.mjs). */
+  .scene { --pitch: clamp(15rem, 40vh, 26rem); }
   .passage { padding-bottom: clamp(1.5rem, calc(10vh - 2rem), 3.5rem); }
 }
 
@@ -704,12 +715,12 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   h2.sec { margin-top: 2.8rem; font-size: 1.28rem; }
 
   /* Figures use the whole width of the screen. */
-  main.body > .fig-column, main.body > .fig-wide { max-width: none; width: auto; margin-left: calc(-1 * var(--left)); margin-right: calc(-1 * var(--gutter)); }
+  :is(main.body, main.body > .appendix) > :is(.fig-column, .fig-wide) { max-width: none; width: auto; margin-left: calc(-1 * var(--left)); margin-right: calc(-1 * var(--gutter)); }
   .fig-column .fig-frame, .fig-wide .fig-frame { margin: 0 auto; }
   .fig-column figcaption, .fig-wide figcaption { margin-left: var(--left); margin-right: var(--gutter); }
 
   /* Tables wider than the screen scroll inside their own frame. */
-  main.body > .table-frame.table-wide { width: auto; margin-left: 0; }
+  :is(main.body, main.body > .appendix) > .table-frame.table-wide { width: auto; margin-left: 0; }
   .table-frame.table-wide table { min-width: 36rem; font-size: 0.8rem; }
   .table-frame.scrolls:not(.at-end) { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 3.5rem), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 3.5rem), transparent); }
   .table-hint { margin-top: -1.2rem; color: var(--accent-line); }
@@ -858,6 +869,8 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 @media print {
   .steps ol { margin: 0.6em 0 0.8em; }
   .steps li { padding: 0 0 0.5em 2.2em; }
-  .steps li::before { width: 1.45em; height: 1.45em; font-size: 7.5pt; border-width: 1.2px; }
+  /* Floated, not positioned: an absolutely placed marker is lost when its
+     item starts in the next column (steps 7 and 8 printed without numbers). */
+  .steps li::before { position: relative; float: left; top: 0; margin-left: -2.2em; width: 1.45em; height: 1.45em; font-size: 7.5pt; border-width: 1.2px; }
   .steps ol::before { left: 0.7em; width: 1.2px; }
 }

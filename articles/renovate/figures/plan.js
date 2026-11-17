@@ -1,31 +1,36 @@
 // plan: section 9, "The renovation, in order", as one path of eight numbered
 // stations. Each station has its short name and, in small type, its
-// measure. Step n makes station n + 1 the current one: it is in the field
-// at full ink, the stations before it stay in ink, the ones after it are
-// muted. The path is drawn in ink up to the current station.
+// measure. Step n (0 to 7) makes station n + 1 the current one: it is in the
+// field at full ink, the stations before it stay in ink, the ones after it
+// are muted. The path is drawn in ink up to the current station.
+//   Step 8 is the overview: every station in ink, none singled out. The
+//   text never scrolls to it; it is the still where scenes read as a
+//   sequence (stills = [8]) and the print state (steps - 1), so neither
+//   reads as "we are at step 8".
 //   Why the order holds, where the text says so: stations 6 to 8 sit under
 //   a thin bracket, "they need step 5" (one customer record); station 6
 //   hands its keys over in three stages (three notches on the path after
 //   it, named in its label).
-//   Under the whole path runs one quiet band: the staff stay throughout
-//   (no dismissals for business reasons until 31 Dec 2028).
+//   The staff: a separate note with a short band that stops at a marked
+//   end, 31 Dec 2028, and its scope (about 60,000 staff; about 4,000 a year
+//   leave by agreed routes). It is not drawn under the path: the path has
+//   no dates, so the figure cannot say at which step the protection ends.
 // No dates and no durations: they do not exist, so the stations are evenly
 // spaced and the figure says "order only". No people, no icons.
 // Wide: two rows of four, one path that turns at the right edge and goes
-// on from the left, like a line of text. Tall (phones): the path runs down;
-// a window shows the current station and its neighbours, and moves on with
-// the steps. Print (screen-only scene, kept sane): the final state, every
-// station in ink, nothing singled out.
+// on from the left, like a line of text. Tall (phones, pinned above the
+// passages): a compact strip, about a quarter of a phone screen. One line
+// of eight small numbered stations, "step 3 of 8" with the current
+// station's name and measure under it.
 import {
-  mountFigure, svgRoot, colors, g, h, path, circle, text, textSize, leader, bracket, stage, span, ease, clamp, lerp, pen,
+  mountFigure, svgRoot, colors, g, path, circle, text, bracket, stage, span, ease, clamp, lerp, pen,
 } from '../../../lib/fig.js';
 
-export const steps = 8;
-// where scenes read as a sequence: one still, the final state
-export const stills = [7];
-const SIZE = { wide: [720, 408], tall: [360, 380] };
+export const steps = 9;
+// where scenes read as a sequence: one still, the overview (no station singled out)
+export const stills = [8];
+const SIZE = { wide: [720, 432], tall: [360, 236] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
-let mounts = 0;
 
 // '#rrggbb' or 'rgb(r, g, b)' -> [r, g, b]
 function rgbOf(c) {
@@ -55,23 +60,45 @@ function build(el, ctx) {
   const st = stage();
   const N = d.steps.length;
   const S = tall
-    ? { head: 12.5, note: 11.5, name: 14, meas: 13, num: 12.5, mono: 12, r: 11.5, band: 16, staff: 12.5 }
-    : { head: 15, note: 12.5, name: 15, meas: 13.5, num: 13.5, mono: 12.5, r: 13, band: 18, staff: 13.5 };
+    ? { head: 13, note: 11.5, name: 15, meas: 13, num: 11.5, mono: 11.5, r: 10, staff: 12 }
+    : { head: 15, note: 12.5, name: 15, meas: 13.5, num: 13.5, mono: 12.5, r: 13, staff: 13 };
   const toInk = mixer(C.muted, C.ink);
   let seed = 31;
   const ink = (parent, pts, w = 1.35, stroke = C.ink, amp = 0.5) => path(parent, pen(pts, seed++, amp), {
     stroke, 'stroke-width': w, 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
   });
 
+  // where the current station is, as a number that moves on at each step;
+  // the overview (step 8, print) singles none out
+  const overview = (gg) => ctx.print || gg >= N - 1e-9;
+  function cur(gg) {
+    if (overview(gg)) return N - 1;
+    const s = Math.floor(gg + 1e-9), f = gg - s;
+    // the pen walks to the next station over most of the step (at step 0,
+    // to the first, once the path and the stations are there)
+    return clamp(s - 1 + ease(span(f, s === 0 ? 0.42 : 0.04, 0.86)), 0, N - 1);
+  }
+
   // --- title and the honesty note
-  const head = text(svg, 14, tall ? 15 : 20, d.headline, { family: 'sans', size: S.head, weight: 600, width: tall ? W - 28 : W - 200, lh: tall ? 15.5 : 0 });
-  const on = tall
-    ? text(svg, 14, head.bottom + S.note + 3, d.orderNote, { family: 'mono', size: S.note, fill: C.muted })
-    : text(svg, W - 14, 20, d.orderNote, { family: 'mono', size: S.note, fill: C.muted, anchor: 'end' });
-  st.fade(head.el, 0, 0.04).fade(on.el, 0, 0.04);
+  const head = text(svg, 14, tall ? 16 : 20, tall ? d.headShort : d.headline, { family: 'sans', size: S.head, weight: 600, width: tall ? 190 : W - 200 });
+  const on = text(svg, W - 14, tall ? 16 : 20, d.orderNote, { family: 'mono', size: S.note, fill: C.muted, anchor: 'end' });
+  st.fade(head.el, 0, 0.12).fade(on.el, 0.08, 0.2);
+
+  // --- the staff: a short band that stops at a marked end, and its words
+  const staff = (x, y, width) => {
+    const sg = g(svg);
+    const bw = tall ? 34 : 44, by = y - S.staff * 0.33;
+    path(sg, `M${x} ${by}L${x + bw} ${by}`, { stroke: C.hairline, 'stroke-width': tall ? 7 : 8, 'stroke-linecap': 'butt', 'data-audit': 'skip' });
+    path(sg, `M${x + bw} ${by - 7}L${x + bw} ${by + 7}`, { stroke: C.muted, 'stroke-width': 1.6, 'stroke-linecap': 'round' });
+    const tx = x + bw + 9;
+    const t1 = text(sg, tx, y, d.staff.label, { italic: true, size: S.staff, fill: C.ink, width: width - (tx - x) });
+    const t2 = text(sg, tx, t1.bottom + S.staff + 1, d.staff.detail, { italic: true, size: S.staff, fill: C.muted, width: width - (tx - x) });
+    st.fade(sg, 0.62, 0.8);
+    return t2.bottom;
+  };
 
   // --- one station's lettering: name, the stages (station 6), the measure,
-  // and (station 5, tall) why everything after needs it
+  // and (tall, station 5) why everything after needs it
   const label = (parent, x, y, s, i, width) => {
     const lg = g(parent);
     const nm = text(lg, x, y, s.name, { family: 'sans', size: S.name, weight: 600, width, lh: S.name * 1.15 });
@@ -94,9 +121,8 @@ function build(el, ctx) {
   const push = (p) => { pts.push(p); };
   const mark = (x, y) => { at.push(pts.length); push([x, y]); };
   let pos = [];              // station centres
-  let blocks = [];           // [x, y, width] of each station's lettering
-  let bandLabel;             // where "the staff stay throughout" goes
-  const strip = g(svg);      // what moves in the tall window
+  let blocks = [];           // [x, y, width] of each station's lettering (wide)
+  let info = null;           // tall: where the current station's lettering goes
 
   if (!tall) {
     const x0 = 48, sp = 168, lw = 150, r1 = head.bottom + 40;
@@ -108,9 +134,8 @@ function build(el, ctx) {
     for (let i = 0; i < 4; i++) b1 = Math.max(b1, label(tmp, 0, nameY(r1), d.steps[i], i, lw).bottom);
     for (let i = 4; i < N; i++) b2 = Math.max(b2, label(tmp, 0, 0, d.steps[i], i, lw).bottom);
     tmp.remove();
-    const ret = b1 + 22;                                   // the way back, under row 1
-    const staffY = ret + S.band / 2 + S.staff + 4;          // its band's lettering, under it
-    const r2 = staffY + 62;                                 // room for the bracket over 6 to 8
+    const ret = b1 + 22;                                    // the way back, under row 1
+    const r2 = ret + 64;                                    // room for the bracket over 6 to 8
     const R = 12, xr = W - 14, xl = 14, end = xs(3) + 104;
     push([x0 - 30, r1]);
     for (let i = 0; i < 4; i++) mark(xs(i), r1);
@@ -122,46 +147,29 @@ function build(el, ctx) {
     push([end, r2]);
     pos = d.steps.map((_, i) => [xs(i), i < 4 ? r1 : r2]);
     blocks = pos.map(([x, y]) => [x - S.r, nameY(y), lw]);
-    bandLabel = { x: W / 2, y: staffY, anchor: 'middle', width: W - 60 };
-    const H2 = Math.ceil(nameY(r2) + b2 + 10);
+    const sb = staff(14, nameY(r2) + b2 + 30, W - 28);
+    const H2 = Math.ceil(sb + 10);
     if (H2 > H || H2 < H - 12) svg.dataset.contentH = H2;
   } else {
-    // a column: the path at the left, the lettering beside it; the window
-    // between the title and the band's lettering shows about three stations
-    const px = 26, sp = 96, lx = px + S.r + 12, lw = W - lx - 12;
-    const wy0 = on.bottom + 8, wy1 = H - 40;
-    const y0 = wy0 + 22;
-    push([px, y0 - 40]);
-    for (let i = 0; i < N; i++) mark(px, y0 + i * sp);
-    push([px, y0 + (N - 1) * sp + 90]);
-    pos = d.steps.map((_, i) => [px, y0 + i * sp]);
-    blocks = pos.map(([, y]) => [lx, y + S.name * 0.36, lw]);
-    bandLabel = { x: 14, y: wy1 + S.staff + 6, anchor: 'start', width: W - 28 };
-    const id = `plan-window-${++mounts}`;
-    const cp = h('clipPath', { id }, svg);
-    h('rect', { x: 0, y: wy0, width: W, height: wy1 - wy0 }, cp);
-    strip.setAttribute('clip-path', `url(#${id})`);
-    // the window moves on with the steps; first and last stay at the edges
-    const inner = g(strip);
-    strip.inner = inner;
-    let last = '';
-    st.on((gg) => {
-      const c = clamp(cur(gg), 1, N - 2);
-      const v = `translate(0 ${(-(c - 1) * sp).toFixed(2)})`;
-      if (v !== last) { inner.setAttribute('transform', v); last = v; }
-    });
+    // one line of eight stations; the current one's lettering under it
+    const x0 = 26, x1 = W - 26, sp = (x1 - x0) / (N - 1);
+    const sy = Math.max(head.bottom, on.bottom) + 40;     // room for the bracket over 6 to 8
+    push([x0 - 14, sy]);
+    for (let i = 0; i < N; i++) mark(x0 + i * sp, sy);
+    push([x1 + 14, sy]);
+    pos = d.steps.map((_, i) => [x0 + i * sp, sy]);
+    info = { x: 14, y: sy + S.r + 22, width: W - 28 };
+    // the tallest station's lettering decides where the staff note goes
+    const tmp = g(svg);
+    let hb = 0;
+    d.steps.forEach((s, i) => { hb = Math.max(hb, label(tmp, info.x, info.y + S.mono + 4 + S.name, s, i, info.width).bottom); });
+    tmp.remove();
+    info.bottom = hb;
+    const sb = staff(14, hb + 22, W - 28);
+    const H2 = Math.ceil(sb + 8);
+    if (H2 > H || H2 < H - 12) svg.dataset.contentH = H2;
   }
-  const host = strip.inner || strip;
-  // tall: the lines run on outside the window (clipped); the lab's check
-  // cannot see the clip, so the moving lines are left out of it
-  if (tall) host.setAttribute('data-audit', 'skip');
-
-  // where the current station is, as a number that moves on at each step
-  function cur(gg) {
-    if (ctx.print) return N - 1;
-    const s = Math.floor(gg + 1e-9), f = gg - s;
-    return clamp(s - 1 + ease(span(f, 0, 0.22)), 0, N - 1);
-  }
+  const host = g(svg);
 
   // cumulative length to every point, for drawing the path up to a station
   const cum = [0];
@@ -169,32 +177,18 @@ function build(el, ctx) {
   const total = cum[cum.length - 1];
   const frac = at.map((k) => cum[k] / total);
 
-  // --- the band: the staff stay throughout, under the whole path
-  const band = path(host, pen(pts, 7, 0.4), {
-    stroke: C.hairline, 'stroke-width': S.band, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: 0.75, 'data-audit': 'skip',
-  });
-  st.fade(band, 0.02, 0.1);
-  const bl = text(svg, bandLabel.x, bandLabel.y, `${d.staff.label} · ${d.staff.detail}`, {
-    italic: true, size: S.staff, fill: C.muted, anchor: bandLabel.anchor, width: bandLabel.width,
-  });
-  if (tall) {
-    // joined to the band where it leaves the window
-    leader(svg, 26 + S.band / 2 + 4, bl.y - 3, 26 + S.band / 2 - 2, bl.y - 12, { stroke: C.muted, dot: false });
-  }
-  st.fade(bl.el, 0.04, 0.12);
-
   // --- the path: a muted line all the way, ink up to the current station
-  const base = ink(host, pts, 1.25, C.muted, 0.5);
+  const base = ink(host, pts, 1.25, C.muted, tall ? 0.35 : 0.5);
   base.setAttribute('opacity', 0.55);
-  st.fade(base, 0.02, 0.1);
-  const done = ink(host, pts, 1.6, C.ink, 0.5);
+  st.fade(base, 0.12, 0.3);
+  const done = ink(host, pts, 1.6, C.ink, tall ? 0.35 : 0.5);
   done.setAttribute('pathLength', '1');
   done.setAttribute('stroke-dasharray', '1 1');
   {
     let last = '';
     st.on((gg) => {
       const c = cur(gg), i = Math.floor(c), f = c - i;
-      const p = i >= N - 1 ? (ctx.print ? 1 : frac[N - 1]) : lerp(frac[i], frac[i + 1], f);
+      const p = overview(gg) ? 1 : i >= N - 1 ? frac[N - 1] : lerp(frac[i], frac[i + 1], f);
       const v = (1 - p).toFixed(4);
       if (v !== last) { done.setAttribute('stroke-dashoffset', v); last = v; }
     });
@@ -206,32 +200,28 @@ function build(el, ctx) {
   if (kStation >= 0) {
     const [ax, ay] = pos[kStation];
     const n = d.steps[kStation].stages.length;
+    const gap = tall ? 6 : 16, first = tall ? S.r + 6 : S.r + 18;
     for (let k = 0; k < n; k++) {
-      if (tall) {
-        const yy = ay + S.r + 12 + k * 13;
-        path(notches, `M${ax - 5} ${yy}L${ax + 5} ${yy}`, { stroke: 'currentColor', 'stroke-width': 1.6, 'stroke-linecap': 'round' });
-      } else {
-        const xx = ax + S.r + 18 + k * 16;
-        path(notches, `M${xx} ${ay - 6}L${xx} ${ay + 6}`, { stroke: 'currentColor', 'stroke-width': 1.6, 'stroke-linecap': 'round' });
-      }
+      const xx = ax + first + k * gap, hh = tall ? 5 : 6;
+      path(notches, `M${xx} ${ay - hh}L${xx} ${ay + hh}`, { stroke: 'currentColor', 'stroke-width': 1.6, 'stroke-linecap': 'round' });
     }
   }
 
-  // --- the bracket over 6 to 8: they need step 5 (wide)
+  // --- the bracket over 6 to 8: they need step 5
   const dep = g(host);
-  if (!tall) {
+  {
     const D = d.depends, [x5, y5] = pos[D.on];
-    // the bracket starts right after station 5 and runs over 6, 7 and 8
-    const bx0 = x5 + S.r + 7, bx1 = blocks[D.to][0] + blocks[D.to][2] - 6, by = y5 - S.r - 10;
-    bracket(dep, bx0, by, bx1, by, -6, { stroke: 'currentColor', 'stroke-width': 1 });
-    const nt = text(dep, bx0, by - 8, D.note, { italic: true, size: S.meas, width: bx1 - bx0 });
-    if (nt.lines > 1) svg.dataset.contentH = 'dependency note wraps';
-  } else {
-    // a rail beside the path from station 5 down past 8, a tick at each
-    const D = d.depends, rx = 8;
-    const [, ya] = pos[D.on], [, yb] = pos[D.to];
-    path(dep, `M${26 - S.r - 2} ${ya}L${rx} ${ya}L${rx} ${yb}`, { stroke: 'currentColor', 'stroke-width': 1, fill: 'none', 'stroke-linejoin': 'round' });
-    for (let i = D.from; i <= D.to; i++) path(dep, `M${rx} ${pos[i][1]}L${26 - S.r - 3} ${pos[i][1]}`, { stroke: 'currentColor', 'stroke-width': 1 });
+    if (!tall) {
+      // the bracket starts right after station 5 and runs over 6, 7 and 8
+      const bx0 = x5 + S.r + 7, bx1 = blocks[D.to][0] + blocks[D.to][2] - 6, by = y5 - S.r - 10;
+      bracket(dep, bx0, by, bx1, by, -6, { stroke: 'currentColor', 'stroke-width': 1 });
+      const nt = text(dep, bx0, by - 8, D.note, { italic: true, size: S.meas, width: bx1 - bx0 });
+      if (nt.lines > 1) svg.dataset.contentH = 'dependency note wraps';
+    } else {
+      const bx0 = pos[D.from][0] - S.r, bx1 = pos[D.to][0] + S.r, by = y5 - S.r - 7;
+      bracket(dep, bx0, by, bx1, by, -5, { stroke: 'currentColor', 'stroke-width': 1 });
+      text(dep, bx1, by - 7, D.tag, { italic: true, size: S.meas, anchor: 'end' });
+    }
   }
 
   // --- the stations
@@ -243,40 +233,55 @@ function build(el, ctx) {
     const acc = circle(sg, x, y, S.r + 3, { fill: 'none', stroke: C.accent, 'stroke-width': 1.8, 'data-audit': 'skip' });
     const num = text(sg, x, y + S.num * 0.36, String(i + 1), { family: 'mono', size: S.num, weight: 600, anchor: 'middle' });
     num.el.setAttribute('data-audit', 'skip');   // the number sits in its own circle on purpose
-    const [bx, by, bw] = blocks[i];
-    const lab = label(sg, bx, by, s, i, bw);
+    let lab;
+    if (!tall) {
+      const [bx, by, bw] = blocks[i];
+      lab = label(sg, bx, by, s, i, bw);
+    } else {
+      // under the strip: "step 3 of 8", then the name and the measure
+      lab = g(svg);
+      text(lab, info.x, info.y, d.stepWord.replace('{n}', i + 1).replace('{N}', N), { family: 'mono', size: S.mono, fill: C.muted });
+      label(lab, info.x, info.y + S.mono + 4 + S.name, s, i, info.width);
+    }
     return { sg, field, ring, acc, lab };
   });
+  // tall overview: what the strip is, where a station's lettering would be
+  let ov = null;
+  if (tall) {
+    ov = g(svg);
+    text(ov, info.x, info.y + S.mono + 4, d.overview, { italic: true, size: S.meas, width: info.width });
+  }
 
-  const fadeIn = (gg) => ease(span(gg, 0.02, 0.14));
+  const fadeIn = (gg) => ease(span(gg, 0.2, 0.4));
+  // the notches and the bracket arrive with the stations they belong to
+  st.fade(notches, 0.3, 0.46).fade(dep, 0.34, 0.52);
   let lastKey = '';
   st.on((gg) => {
+    const all = overview(gg);
     const c = cur(gg), a = fadeIn(gg);
-    const key = `${c.toFixed(4)}|${a.toFixed(3)}`;
+    const key = `${all}|${c.toFixed(4)}|${a.toFixed(3)}`;
     if (key === lastKey) return;
     lastKey = key;
     st8.forEach((o, i) => {
       // reached: 0 for a later station, 1 once the path has come to it
-      const reached = ctx.print ? 1 : clamp(c - i + 1);
-      const focus = ctx.print ? 0 : Math.max(0, 1 - Math.abs(c - i));
+      const reached = all ? 1 : clamp(c - i + 1);
+      const focus = all ? 0 : Math.max(0, 1 - Math.abs(c - i));
       o.sg.style.color = toInk(reached);
       o.sg.style.opacity = a >= 0.999 ? '' : a.toFixed(3);
       o.field.style.opacity = focus.toFixed(3);
       o.acc.style.opacity = focus.toFixed(3);
       o.ring.setAttribute('fill', focus > 0.5 ? C.field : C.paper);
       if (tall) {
-        // the window: the current station and its neighbours; the rest fade out
-        const dist = Math.abs(i - clamp(c, 1, N - 2));
-        o.sg.style.opacity = (a * (1 - clamp((dist - 1) / 0.5))).toFixed(3);
+        // only the current station's lettering; neighbours cross over quickly
+        const v = a * clamp((focus - 0.5) * 2);
+        o.lab.style.display = v <= 0.001 ? 'none' : '';
+        o.lab.style.opacity = v >= 0.999 ? '' : v.toFixed(3);
       }
     });
+    if (ov) { ov.style.display = all ? '' : 'none'; }
     const k = kStation >= 0 ? clamp(c - kStation + 1) : 0;
-    notches.style.color = toInk(ctx.print ? 1 : k);
-    dep.style.color = toInk(ctx.print ? 1 : clamp(c - d.depends.on + 1));
-    if (tall) {
-      const dist = Math.abs(d.depends.from - clamp(c, 1, N - 2));
-      dep.style.opacity = (1 - clamp((dist - 1.5) / 0.5)).toFixed(3);
-    }
+    notches.style.color = toInk(all ? 1 : k);
+    dep.style.color = toInk(all ? 1 : clamp(c - d.depends.on + 1));
   });
 
   return { set: (s, t) => st.set(s, t) };

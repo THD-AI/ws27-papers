@@ -41,7 +41,8 @@ const problems = [];
 // what a reader sees. The rule (lib/article.js, updateScene): the figure is
 // pinned, the passages scroll past it about a third of a window apart; the one
 // whose top has last passed the reading line is active; a new step is drawn
-// while its passage comes up (t 0 at 0.3 pitch below the line, 1 at the line).
+// while its passage comes up (t 0 as the passage before is read, 1 at the line;
+// tools/motion.mjs measures how far).
 async function walkScene(index) {
   const frame = () => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
   const scene = document.querySelectorAll('.scene')[index];
@@ -65,6 +66,7 @@ async function walkScene(index) {
   let prev = null;                 // the figure state at the last position
   let restFrom = null;             // where the last passage became active
   let pinnedUntil = null;          // the last position at which the figure was pinned
+  let alone = null;                // where a run of one passage in view began
   const stickyTop = parseFloat(getComputedStyle(stageEl).top) || 0;
 
   for (let y = Math.max(0, start); y <= end; y += 16) {
@@ -74,7 +76,7 @@ async function walkScene(index) {
     const floor = side ? 0 : Math.max(0, stage.bottom);          // text under a figure pinned on top is not seen
     // as readingLine() in lib/article.js: under a figure pinned on top, one pitch below it
     const pitchPx = parseFloat(scene.style.getPropertyValue('--pitch')) || Infinity;
-    const line = side ? vh * 0.5 : floor + Math.min(pitchPx, (vh - floor) * 0.4);
+    const line = side ? vh * 0.5 : floor + Math.min(pitchPx, (vh - floor) * 0.2);
     const seen = passages.filter((p) => { const w = words(p); return w.bottom > floor + 6 && w.top < vh - 6; });
     if (!seen.length) continue;
     const box = scene.getBoundingClientRect();
@@ -104,7 +106,14 @@ async function walkScene(index) {
       counts.push(seen.length);
       const longOne = seen.some((p) => words(p).height > (vh - floor) * 0.45);
       // the last passage rests alone at the line before the figure is let go
-      if (seen.length < 2 && passages.length > 1 && !longOne && k !== passages.length - 1) found.push(`y ${y}: only ${seen.length} passage in view`);
+      // (under a tall figure pinned on top, a short passage may stand alone
+      // for a moment while the one before slides under the figure and the
+      // next comes in: each step needs a long pitch of scroll to be drawn
+      // over. Alone for more than 12% of a window of scroll is a problem.)
+      if (seen.length < 2 && passages.length > 1 && !longOne && k !== passages.length - 1) {
+        alone = alone === null ? y : alone;
+        if (y - alone > vh * 0.12) found.push(`y ${y}: only ${seen.length} passage in view for ${Math.round(y - alone)} px`);
+      } else alone = null;
       if (seen.length > 4) found.push(`y ${y}: ${seen.length} passages in view`);
     }
 
@@ -112,7 +121,9 @@ async function walkScene(index) {
     const [step, t] = (figure.dataset.shown || '0:0').split(':').map(Number);
     if (prev) {
       if (step < prev.step || (step === prev.step && t < prev.t - 0.001)) found.push(`y ${y}: the figure went back from ${prev.step}:${prev.t} to ${step}:${t}`);
-      if (step > prev.step && prev.t < 0.999) found.push(`y ${y}: step ${prev.step} ended at t ${prev.t}`);
+      // (steps follow each other without a rest, so a sample 16 px before the
+      // end of a step may show it at 0.95 or more; tools/motion.mjs measures the drawing)
+      if (step > prev.step && prev.t < 0.95) found.push(`y ${y}: step ${prev.step} ended at t ${prev.t}`);
       if (step === prev.step && t - prev.t > 0.25) found.push(`y ${y}: t jumped from ${prev.t} to ${t} in 16 px`);
     }
     prev = { step, t };

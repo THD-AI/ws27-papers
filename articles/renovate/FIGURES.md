@@ -4,6 +4,15 @@ Read `SPEC.md` first (figure contract, design system). Each figure below says wh
 
 Honesty rules that override looks: where a value is not published, draw the absence (an empty slot with an italic note "not published"), never an estimate. Never connect two measured points with a line that suggests the path between them. Company-reported figures carry a small mono tag `company-reported`.
 
+## Twelve-reader round on the web page (17 November 2026)
+
+- **`plan`**: the staff band is no longer drawn under the path ("throughout" overreached: the protection ends on 31 Dec 2028, the plan has no dates). It is a separate note with a short band that stops at a marked end: "no dismissals for business reasons until 31 Dec 2028" / "about 60,000 staff · about 4,000 a year leave by agreed routes" (R11-14, DGB-2026, R12-01). A ninth state, step 8, is the overview: every station in ink, none in the field; it is the still where scenes read as a sequence (`stills = [8]`) and the print state. The text never scrolls to it (its `@step` lines stop at 7). Tall (phones, pinned): a compact strip, 360 × 236 (about 233 px at 355 wide, 28% of an 844 px screen): eight small numbered stations on one line, the bracket "need step 5" over 6 to 8, and under it "step n of 8" with the current station's name and measure. `data/house.json` says "no dismissals for business reasons until 31 Dec 2028".
+- **`exits`**: on phones the severance field reaches up over its route name, so name, "526 in 2021 → 1,016 in 2025" and its marks share one field; tall frame 360 × 398.
+- **`attitudes`**: one dot is 2% on screen (50 dots, one row per country at every width; the value at the end of the row; note "one dot is 2%, rounded"). Print keeps 5%.
+- **`permits`**: step 2 draws the German side as two rows: the row of step 1, now named "outside the framework: its own agreement · how long: not published", with the conciliation board as a muted note under it; and a new row "inside the framework agreement (2021): a short check" with a short check, build and launch (words inside the bars). The stamp and the dashed ghost are gone. Lengths stay schematic.
+- **`numbers`** steps 3–4: one date axis 2021 to 2026, the two published values as large numbers over their dates (7.0 at Q4 2021, 3.1 at Q2 2026), nothing drawn between them; "2022 to 2025: no figures published" in the gap; "−55% against Q4 2021" beside 3.1 as a label; step 4 adds the September 2024 mark, the bracket "first point almost three years before the agents" and T-Mobile's other causes. Plate A leaves first (3.00–3.14), then the axis draws and the numbers arrive in order (done by 3.88). The month rulers are gone.
+- **`walls`**: on phones the timber wall's cable enters in the first bay that leaves its tag "the same new cable" room inside the viewBox.
+
 ## Web loop (17 November 2026)
 
 - **`plan`** (new, screen-only scene, 8 steps; step n = item n + 1 of section 9): one path of eight numbered stations, each with its short name and, in small italic type, its measure. The current station is in the field at full ink, earlier ones stay in ink, later ones are muted; the path is inked up to the current station. A thin bracket over 6 to 8: "they need step 5"; three notches after station 6 and "read → undoable → fraud-prone" in its label (keys in stages). One quiet hairline band runs under the whole path: "the staff stay throughout · no dismissals for business reasons until 31 Dec 2028" (R11-14). No dates or durations exist, so none are drawn; the figure says "order only · no dates". Wide: two rows of four, the path turns at the right and goes on from the left (720 × 408). Tall: the path runs down, a window shows the current station and its neighbours (360 × 380, about 375 px at 355 wide). Print: final state, all in ink. Data `data/plan.json`. Replaces the failed `roadmap` forms (icons, Gantt, ladder).
@@ -170,3 +179,7 @@ On phones and in print each state is a small figure at the start of its section.
 ## Hero
 
 If `art/house-line.png` and `art/house-field.png` exist, the shell shows them behind the title (line layer over field layer, the field in the article's accent). If they do not exist, the title stands alone. Do not draw a substitute.
+
+## Pacing: steps spread over the passage again (17 November 2026)
+
+The earlier rounds made every step finish by t ≈ 0.3, which read as a slideshow ("bang, bang, bang"). Every Renovate scene (walls, terms, numbers, repaint, exits, attitudes, obstacles, permits, plan) now spreads each step over t ≈ 0 → 0.9 of its passage: pen lines drawn on at a readable pace, elements in reading order, each label after the thing it labels, eased. Final states and print are unchanged. `pairs` (one step, a fold) already ran to 0.92 and is unchanged.

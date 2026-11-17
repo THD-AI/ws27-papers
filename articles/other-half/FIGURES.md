@@ -2,6 +2,8 @@
 
 Read `SPEC.md` first (figure contract, design system). Each figure below says what a reader must take from it in five seconds, its steps, and its data. The data is in `data/<id>.json` with the source id on every entry; draw nothing that is not in the data. The article text is `text.md`; the step numbers below match its `@step` lines.
 
+Pacing (17 November 2026): each scene step draws across its passage, from t 0 to about 0.9, in reading order, with labels after what they label; a step does not finish in its first third. Only titles, lane titles, axes and frames stand from the start of a step. The author found the compressed timing of the web rounds rushed ("bang, bang, bang"); this restores the earlier pacing and keeps the layout fixes of those rounds.
+
 Three sizes, as in the storyboard: one large opening scene (the hero drawing), three scroll scenes (`lattice`, `clock`, `learning`), four figures in the text flow (`syndromes`, `line`, `suppression`, `noise`) and one small margin scene (`qubits`).
 
 Where the data comes from: `learning`, `noise`, `syndromes`, `lattice`, `line` and `qubits` are written by `node tools/other-half-data.mjs` from the group's result files and are never edited by hand. `clock` and `suppression` are copied by hand from the cited papers and were revised after the fact check of 16 November 2026. `data/results-summary.json` is not a figure: it holds every own number used in the text, with its file.

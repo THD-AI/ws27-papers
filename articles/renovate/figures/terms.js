@@ -166,10 +166,13 @@ function build(el, ctx) {
   const sc = Math.min(cellW / BOX, 1.18);
 
   const hd = text(svg, S.x0, 18, d.headline, { family: 'sans', size: S.head, weight: 600, width: W - 2 * S.x0 });
-  st.fade(hd.el, 0, 0.08);
+  st.fade(hd.el, 0, 0.12);
 
   // when each part arrives: the handbook in step 0, the others in step 1
-  const when = (k) => (k === 0 ? 0.02 : 1.05 + (k - 1) * 0.16);
+  // (the handbook alone takes its time; the three others follow one
+  // another, each ground, drawing, then its name)
+  const when = (k) => (k === 0 ? 0.12 : 1.04 + (k - 1) * 0.14);
+  const dur = (k) => (k === 0 ? 1.6 : 1);
   let y = hd.bottom + 12, bottom = y;
   const rows = Math.ceil(d.parts.length / S.cols);
   for (let r = 0; r < rows; r++) {
@@ -184,19 +187,19 @@ function build(el, ctx) {
       // the shared ground: one site, segment by segment
       const gx1 = c === 0 ? S.x0 : x - S.gap / 2, gx2 = c === S.cols - 1 ? W - S.x0 : x + cellW + S.gap / 2;
       const gl = at(svg).line([[gx1, ground + 0.5], [gx2, ground + 0.5]], 1.3);
-      st.draw(gl, a, a + 0.14);
+      st.draw(gl, a, a + 0.18 * dur(k));
       const pic = g(svg, { transform: `translate(${(x + (cellW - BOX * sc) / 2).toFixed(1)} ${top.toFixed(1)}) scale(${sc.toFixed(3)})` });
       DRAW[part.key](at(pic), C);
-      st.fade(pic, a, a + 0.18);
+      st.fade(pic, a + 0.04 * dur(k), a + 0.22 * dur(k));
       const lab = g(svg);
       const nm = text(lab, x, ground + 20, part.name, { family: 'sans', size: S.name, weight: 500, width: cellW, lh: S.name * 1.18 });
       const tm = text(lab, x, nm.bottom + S.term + 3, part.term, { family: 'sans', size: S.term, fill: ctx.print ? C.ink : C.muted, width: cellW, lh: S.term * 1.2 });
-      st.fade(lab, a + 0.04, a + 0.2);
+      st.fade(lab, a + 0.16 * dur(k), a + 0.3 * dur(k));
       rowBottom = Math.max(rowBottom, tm.bottom);
       if (k === 0) {
         // what people picture: said once, and it stays true in the end
         const nt = text(svg, x, tm.bottom + S.note + 7, d.alone, { italic: true, size: S.note, width: cellW, fill: C.ink });
-        st.fade(nt.el, 0.3, 0.5);
+        st.fade(nt.el, 0.66, 0.84);
         rowBottom = Math.max(rowBottom, nt.bottom);
       }
     }
@@ -207,9 +210,9 @@ function build(el, ctx) {
   // the system is all four: a bracket under the whole row, in the accent
   const by = bottom + 14;
   const br = bracket(svg, S.x0, by, W - S.x0, by, 7, { stroke: C.accent, 'stroke-width': 1.5 });
-  st.draw(br, 1.62, 1.86);
+  st.draw(br, 1.56, 1.78);
   const wh = text(svg, W / 2, by + S.note + 8, d.whole, { italic: true, size: S.note + 0.5, anchor: 'middle', fill: C.ink });
-  st.fade(wh.el, 1.78, 1.94);
+  st.fade(wh.el, 1.72, 1.88);
   svg.dataset.contentH = Math.round(wh.bottom + 4);
   return { set: (s, t) => st.set(s, t) };
 }

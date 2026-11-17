@@ -19,7 +19,7 @@ import {
 export const steps = 3;
 // where scenes read as a sequence (tablet portrait, phone landscape): one still, the final state
 export const stills = [2];
-export const aspect = { wide: 880 / 462, tall: 360 / 384 };
+export const aspect = { wide: 880 / 462, tall: 360 / 398 };
 
 // '#rrggbb' or 'rgb(r, g, b)' -> [r, g, b]
 function rgbOf(c) {
@@ -38,7 +38,7 @@ function mixer(a, b) {
 
 function build(el, ctx) {
   const C = colors(ctx), d = ctx.data, tall = ctx.layout === 'tall';
-  const W = tall ? 360 : 880, H = tall ? 384 : 462;
+  const W = tall ? 360 : 880, H = tall ? 398 : 462;
   const U = d.unit;
   const per = U.positionsPerMark;
   const svg = svgRoot(el, W, H, `${d.reading} Totals by year: `
@@ -48,7 +48,7 @@ function build(el, ctx) {
   const st = stage();
   const head = g(svg, { 'data-role': 'title' });
   text(head, tall ? 14 : 16, tall ? 14 : 18, d.headline, { family: 'sans', size: tall ? 12.5 : 14, weight: 600, width: W - 28, lh: 15.5 });
-  st.fade(head, 0, 0.06);
+  st.fade(head, 0, 0.12);
   // everything but the title and the note at the top right: at step 0 it is
   // lifted so the stacks open right under the title, and it settles on its
   // base line as the stacks split (no empty band between title and chart)
@@ -57,7 +57,7 @@ function build(el, ctx) {
   // wide lettering is at least 14 units, so the drawing is read at 11.5 px
   // from about 720 px across (a scene beside the text at 1366 x 768)
   const S = tall
-    ? { cols: 7, p: 8.2, r: 3.15, x0: 19, colGap: 9, bandGap: 21, label: 12, num: 11.5, note: 12.5, year: 11.5, bottom: 54 }
+    ? { cols: 7, p: 8.2, r: 3.15, x0: 19, colGap: 9, bandGap: 18, label: 12, num: 11.5, note: 12.5, year: 11.5, bottom: 54 }
     : { cols: 10, p: 11, r: 4.1, x0: 26, colGap: 26, bandGap: 15, label: 14, num: 14, note: 14, year: 14, bottom: 62 };
   if (!tall) Object.assign(S, U.marks || {});
   const colW = S.cols * S.p;
@@ -68,11 +68,14 @@ function build(el, ctx) {
   // bands from the bottom; each as high as its fullest year
   let y = base0;
   const bands = d.routes.map((r) => {
+    if (r.accent && tall) y -= 6;   // air between the field and the name under it
     // whole marks only: each group is rounded to the nearest mark
     const us = r.values.map((v) => { const n = Math.round(v / per); return { full: n, frac: 0, cells: n }; });
     const rows = Math.max(...us.map((u) => Math.ceil(u.cells / S.cols))) + (r.accent ? (tall ? 2 : 1) : 0);
     const b = { r, us, rows, base: y, top: y - rows * S.p };
-    y = b.top - S.bandGap - (r.accent && tall ? 7 : 0);
+    // tall: the severance field reaches up over its name, so name, note and
+    // marks share one field and cannot be read as another route's
+    y = b.top - S.bandGap - (r.accent && tall ? 26 : 0);
     return b;
   });
   const topY = bands[bands.length - 1].top;
@@ -82,25 +85,26 @@ function build(el, ctx) {
   const offset = d.years.map(() => 0);
   const compact = bands.map((b) => b.us.map((u, i) => { const at = offset[i]; offset[i] += u.cells; return at; }));
   const stackTop = offset.map((n) => base0 - Math.ceil(n / S.cols) * S.p);   // top of each year's stack
-  const split = (gg) => ease(span(gg, 1.0, 1.22));
+  const split = (gg) => ease(span(gg, 1.04, 1.6));
 
   // years under the columns
   const yg = g(chart);
   d.years.forEach((yr, i) => text(yg, colX(i) + colW / 2, base0 + S.year + 5, String(yr), { family: 'mono', size: S.year, anchor: 'middle', fill: C.muted }));
-  st.fade(yg, 0, 0.08);
+  st.fade(yg, 0.04, 0.2);
 
   // the colour of the marks: ink; at step 2 severance turns to the accent
   // and the others step back (not in print, which keeps them in ink)
   const back = mixer(C.ink, mixer(C.muted, C.paper)(0.35));
   const toAccent = mixer(C.ink, C.accent);
-  const focus = (gg) => ease(span(gg, 2.0, 2.16));
+  const focus = (gg) => ease(span(gg, 2.02, 2.4));
 
   let ringBox = null, ringBand = null;
   const allMarks = [], moving = [];
   bands.forEach((b, k) => {
     if (b.r.accent) {
-      const f = rect(chart, tall ? 0 : S.x0 - 12, b.top - 6, tall ? W : right - S.x0 + 24, b.rows * S.p + 12, { fill: C.field, 'data-audit': 'skip' });
-      st.fade(f, 2.0, 2.12);
+      const up = tall ? 24 : 0;   // tall: the field holds the route's name too
+      const f = rect(chart, tall ? 0 : S.x0 - 12, b.top - 6 - up, tall ? W : right - S.x0 + 24, b.rows * S.p + 12 + up, { fill: C.field, 'data-audit': 'skip' });
+      st.fade(f, 2.06, 2.34);
       ringBand = b;
     }
     const mg = g(chart, { fill: C.ink });
@@ -138,8 +142,8 @@ function build(el, ctx) {
     if (tall) {
       text(lg, S.x0, b.top - 6 - (b.r.accent ? 5 : 0), b.r.label, { family: 'sans', size: S.label, weight: 500 });
     }
-    const la = 1.06 + k * 0.03;
-    st.fade(lg, la, la + 0.08);
+    const la = 1.4 + k * 0.08;   // names after the groups have settled, bottom up
+    st.fade(lg, la, la + 0.16);
   });
   if (!tall) {
     // names at the right, joined to a bracket over their band. A name that
@@ -170,7 +174,7 @@ function build(el, ctx) {
     });
   }
   allMarks.sort((p, q) => p.key - q.key);
-  st.fill(allMarks.map((o) => o.c), 0.04, 0.2);
+  st.fill(allMarks.map((o) => o.c), 0.1, 0.6);   // the stacks rise row by row
 
   // totals above the columns: above each stack at step 0, on one line from step 1
   const ty = topY - (tall ? 24 : 16);
@@ -188,19 +192,19 @@ function build(el, ctx) {
     text(tt, colX(i) + colW / 2, ty, fmt(d.totals.values[i]), { family: 'mono', size: S.num, weight: 500, anchor: 'middle' });
     slide(tt, lift[i]);
   });
-  st.fade(tg, 0.16, 0.22);
+  st.fade(tg, 0.52, 0.68);
   // "about 4,000 a year" over the totals, at the left; it rides with them
   const ag = g(chart);
   text(ag, S.x0 + (tall ? 0 : -6), ty - (tall ? 17 : 26), d.average.text, { italic: true, size: S.note + (tall ? 0 : 1) });
   slide(ag, Math.min(...lift));
-  st.fade(ag, 0.18, 0.26);
+  st.fade(ag, 0.6, 0.76);
   // the whole drawing rises by as much as the tallest stack is short of the
   // split bands, so "about 4,000 a year" stays under the title
   slide(chart, -Math.min(...lift));
   const tn = g(svg);
   if (tall) text(tn, W - S.x0, ty - 17, d.totals.note, { italic: true, size: S.note, anchor: 'end', fill: C.muted });
   else text(tn, W - 8, 18, d.totals.note, { italic: true, size: S.note, fill: C.muted, anchor: 'end' });
-  st.fade(tn, 0.18, 0.26);
+  st.fade(tn, 0.64, 0.8);
 
   // unit note under the first column, joined to its last bottom-row mark
   const ug = g(chart);
@@ -213,8 +217,8 @@ function build(el, ctx) {
   const tagG = g(chart);
   if (tall) text(tagG, W - S.x0, un.y + un.h - 2, d.tag, { family: 'mono', size: 11.5, fill: C.muted, anchor: 'end' });
   else text(tagG, W - 8, H - 16, d.tag, { family: 'mono', size: S.note, fill: C.muted, anchor: 'end' });
-  st.fade(tagG, 0.2, 0.28);
-  st.fade(ug, 0.2, 0.28);
+  st.fade(ug, 0.7, 0.86);
+  st.fade(tagG, 0.74, 0.9);
 
   // step 2, severance: the note in the free rows of its band, and the pen ring
   const sev = ringBand.r.values, last = sev.length - 1;
@@ -241,9 +245,9 @@ function build(el, ctx) {
     const dy = (nt.cy - ringBox.cy) / ry, ex = ringBox.cx - rx * Math.sqrt(Math.max(0, 1 - dy * dy));
     leader(ng, nt.right + 5, nt.cy, ex - 2, nt.cy, { stroke: C.muted, dot: false });
   }
-  st.fade(ng, 2.06, 2.16);
+  st.fade(ng, 2.38, 2.56);
   const pr = penRing(chart, ringBox.cx, ringBox.cy, rx, ry, { seed: 5, stroke: C.accent, width: tall ? 1.4 : 1.7, start: -2.7 });
-  pr.paths.forEach((p, k) => st.draw(p, 2.08 + k * 0.02, 2.24 + k * 0.02));
+  pr.paths.forEach((p, k) => st.draw(p, 2.5 + k * 0.06, 2.76 + k * 0.05));
 
   return { set: (s, t) => st.set(s, t) };
 }

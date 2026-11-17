@@ -2,9 +2,9 @@
   "id": "attitudes",
   "reading": "Germans are no more afraid than Americans that AI will take jobs, and trust their government to regulate it more; what stands out is that Germans reject monitoring of workers.",
   "unit": {
-    "percentPerDot": 1,
-    "dotsPerStrip": 100,
-    "note": "one dot is [[1%]]",
+    "percentPerDot": 2,
+    "dotsPerStrip": 50,
+    "note": "one dot is [[2%]], rounded",
     "print": {
       "percentPerDot": 5,
       "dotsPerStrip": 20,
@@ -12,7 +12,10 @@
       "group": 5,
       "note": "one dot is [[5%]], rounded",
       "why": "In print the dots are larger and fewer, so that they stay legible at 100 dpi."
-    }
+    },
+    "rows": 1,
+    "group": 10,
+    "why": "One row per country at every width: 50 dots of 2% each (100 dots of 1% wrapped into two rows of 50 on tablets and phones, which read as broken). The exact value stands at the end of each row."
   },
   "panels": [
     {

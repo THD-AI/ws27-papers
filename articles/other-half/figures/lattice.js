@@ -108,16 +108,16 @@ Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
   const M = grid(gridG, { checks: d.checks, d: d.distance, ...B, C });
   const p = B.pitch, pos = M.pos;
 
-  // Every step's drawing is complete within the first 30% of its step, so
-  // the grid already shows what the passage describes while it is read.
+  // Each step draws across most of its passage (t 0 to about 0.9), in
+  // reading order, and the notes come after what they point at.
   // step 0: the grid is drawn from left to right
   const x0 = B.cx - 1.5 * p, xw = 3 * p;
   Object.values(M.tiles).forEach((t) => {
-    const a = 0.16 * ((t.c[0] - x0) / xw);
-    st.fade(t.base, a, a + 0.08);
-    if (t.helper) st.fade(t.helper, a + 0.04, a + 0.12);
+    const a = 0.04 + 0.5 * ((t.c[0] - x0) / xw);
+    st.fade(t.base, a, a + 0.18);
+    if (t.helper) st.fade(t.helper, a + 0.08, a + 0.22);
   });
-  M.qubits.forEach((q) => { const a = 0.16 * ((q.x - x0) / xw); st.fade(q.el, a, a + 0.08); });
+  M.qubits.forEach((q) => { const a = 0.02 + 0.5 * ((q.x - x0) / xw); st.fade(q.el, a, a + 0.16); });
 
   // the row of flips of the walk, and what fires
   const w1 = d.walk[0], w2 = d.walk[1];
@@ -125,19 +125,19 @@ Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
   const pA = pos(q1[0]), pB = pos(q2[0]);
   const row = line(M.gE, pA[0], pA[1], pB[0], pB[1] + p * 0.6, { stroke: C.ink, 'stroke-width': 1.5 });
   const edgeTick = line(M.gE, pB[0] - 9, pB[1] + p * 0.6, pB[0] + 9, pB[1] + p * 0.6, { stroke: C.ink, 'stroke-width': 1.5, 'stroke-linecap': 'round' });
-  st.draw(row, 2.06, 2.18, [3, 3.08]).fade(edgeTick, 2.14, 2.2, [3, 3.08]);
+  st.draw(row, 2.2, 2.5, [3, 3.2]).fade(edgeTick, 2.45, 2.55, [3, 3.2]);
   const e1 = errMark(M.gE, pA[0], pA[1], M.qr * 1.12, w1.errors[q1[0]], C);
   const e2 = errMark(M.gE, pB[0], pB[1], M.qr * 1.12, w2.errors[q2[0]], C);
   e1.setAttribute('data-audit', 'skip'); e2.setAttribute('data-audit', 'skip');
-  st.fade(e1, 1.02, 1.1, [3, 3.08]).fade(e2, 2.02, 2.1, [3, 3.08]);
+  st.fade(e1, 1.12, 1.32, [3, 3.2]).fade(e2, 2.12, 2.32, [3, 3.2]);
 
   // fired checks over the steps: [id, on from, on to, off from, off to]
   const fire = [];
   w1.fired.forEach((id) => {
     const stays = w2.fired.includes(id);
-    fire.push([id, 1.06, 1.16, stays ? 3 : 2.08, stays ? 3.08 : 2.18]);
+    fire.push([id, 1.32, 1.55, stays ? 3 : 2.32, stays ? 3.2 : 2.55]);
   });
-  ex.fired.forEach((id, i) => fire.push([id, 3.06 + i * 0.03, 3.14 + i * 0.03, 99, 100]));
+  ex.fired.forEach((id, i) => fire.push([id, 3.28 + i * 0.07, 3.5 + i * 0.07, 99, 100]));
   st.on((gg) => {
     const lv = {};
     for (const [id, a, b, c, e] of fire) lv[id] = Math.max(lv[id] || 0, ease(span(gg, a, b)) * (1 - ease(span(gg, c, e))));
@@ -160,13 +160,19 @@ Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
     const end = [q[0] + dx * k, q[1] + dy * k];
     line(joins, a[0], a[1], end[0], end[1], dash);
   }
-  st.fade(joins, 3.16, 3.26, [4, 4.06]);
-  gridG.querySelectorAll('path, circle, line').forEach((n) => n.setAttribute('vector-effect', 'non-scaling-stroke'));
+  st.fade(joins, 3.62, 3.9, [4, 4.18]);
+  // Strokes keep their width while the drawing shrinks. The attribute is
+  // set only while it is shrunk: with it, Chrome ignores pathLength for
+  // dashes, and the lines drawn on would appear in the wrong order.
+  const gridGVE = [...gridG.querySelectorAll('path, circle, line')];
+  let gridGVe = false;
+  const gridGKeep = (on) => { if (on === gridGVe) return; gridGVe = on; gridGVE.forEach((n) => (on ? n.setAttribute('vector-effect', 'non-scaling-stroke') : n.removeAttribute('vector-effect'))); };
 
   // steps 4 and 5: the grid moves aside and becomes the first of three
   const target = { cx: S.xs[0], cy: tall ? S.mainCy : S.cy, k: S.pitch / B.pitch };
   st.on((gg) => {
-    const m = ease(span(gg, 4, 4.14));
+    const m = ease(span(gg, 4.02, 4.45));
+    gridGKeep(m > 0);
     if (m <= 0) { gridG.removeAttribute('transform'); return; }
     const k = lerp(1, target.k, m), cx = lerp(B.cx, target.cx, m), cy = lerp(B.cy, target.cy, m);
     gridG.setAttribute('transform', `translate(${cx.toFixed(2)} ${cy.toFixed(2)}) scale(${k.toFixed(4)}) translate(${-B.cx} ${-B.cy})`);
@@ -194,16 +200,16 @@ Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
     leader(s0, b.x - 6, t.c[1], t.c[0] + 4, t.c[1], { stroke: C.muted });
     text(s0, N.x, 420, `${d.storing_qubits} + ${d.helpers} = ${d.total}`, { family: 'mono', size: 16, weight: 500 });
   }
-  st.fade(s0, 0.14, 0.24, [1, 1.06]);
+  st.fade(s0, 0.55, 0.85, [1, 1.12]);
 
   const s1 = g(svg);
   const n1 = text(s1, N.x, N.y, 'one flip: the two checks beside it fire', { ...noteO, width: tall ? 190 : N.w });
   if (!tall) { const t = M.tiles[w1.fired[0]]; leader(s1, n1.x - 6, n1.y + 9, t.c[0] + p * 0.14, t.c[1] - 2, { stroke: C.muted, dot: false }); }
-  st.fade(s1, 1.12, 1.22, [2, 2.06]);
+  st.fade(s1, 1.5, 1.75, [2, 2.12]);
 
   const key = g(svg);
   text(key, tall ? 236 : N.x, tall ? N.y : 236, KEY, { ...noteO, lh: tall ? 19 : 22 });
-  st.fade(key, 1.18, 1.28, [3, 3.06]);
+  st.fade(key, 1.7, 1.95, [3, 3.15]);
 
   const s2 = g(svg);
   if (tall) {
@@ -215,30 +221,30 @@ Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
     const b = text(s2, N.x, pB[1] + p * 0.6 + 5, 'and an end at the edge fires nothing', { ...noteO, width: N.w });
     leader(s2, b.x - 6, pB[1] + p * 0.6, pB[0] + 15, pB[1] + p * 0.6, { stroke: C.muted, dot: false });
   }
-  st.fade(s2, 2.14, 2.24, [3, 3.06]);
+  st.fade(s2, 2.55, 2.85, [3, 3.12]);
 
   const s3 = g(svg);
   text(s3, tall ? W / 2 : N.x, tall ? 350 : N.y, `[[${firedLabel}.]]\nWhich errors?`, { ...noteO, size: tall ? 15 : 17, lh: tall ? 21 : 24, anchor: tall ? 'middle' : 'start' });
-  st.fade(s3, 3.14, 3.24, [4, 4.06]);
+  st.fade(s3, 3.5, 3.75, [4, 4.15]);
 
   // ---- the two explanations -------------------------------------------------
   const lab = g(svg);
   if (tall) text(lab, S.xs[0], S.mainCy + ext + 24, firedLabel, { family: 'mono', size: monoS, anchor: 'middle', fill: C.muted });
   else text(lab, S.xs[0], S.noteY, `[[${firedLabel}.]]
 Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
-  st.fade(lab, 4.1, 4.18);
+  st.fade(lab, 4.4, 4.6);
 
   const c1 = copy(S.xs[1], S.cy, pm, notePm, nPm, true, 'plain matching picks this one');
-  st.fade(c1.grp, 4.08, 4.16).fade(c1.marks, 4.12, 4.18).fade(c1.ng, 4.14, 4.2).fill(c1.dotsEl, 4.16, 4.26).fade(c1.cnt, 4.22, 4.27);
-  c1.pr.paths.forEach((pp, k) => st.draw(pp, 4.2 + k * 0.02, 4.27 + k * 0.01));
+  st.fade(c1.grp, 4.38, 4.62).fade(c1.marks, 4.58, 4.76).fade(c1.ng, 4.66, 4.84).fill(c1.dotsEl, 4.72, 4.94).fade(c1.cnt, 4.86, 4.98);
+  c1.pr.paths.forEach((pp, k) => st.draw(pp, 4.8 + k * 0.03, 4.97 + k * 0.02));
   const c2 = copy(S.xs[2], S.cy, rt, noteRt, nRt, false, 'the more likely explanation');
-  st.fade(c2.grp, 5.02, 5.1).fade(c2.marks, 5.08, 5.14).fade(c2.ng, 5.1, 5.16).fill(c2.dotsEl, 5.12, 5.24).fade(c2.cnt, 5.2, 5.26);
+  st.fade(c2.grp, 5.08, 5.34).fade(c2.marks, 5.3, 5.5).fade(c2.ng, 5.42, 5.62).fill(c2.dotsEl, 5.5, 5.8).fade(c2.cnt, 5.72, 5.86);
 
   const tail = g(svg);
   const midX = tall ? W / 2 : (S.xs[1] + S.xs[2]) / 2;
   text(tail, midX, tall ? c2.bottom + 22 : 402, rest, { italic: true, size: tall ? 12.5 : 14, anchor: 'middle', fill: C.muted });
   text(tail, tall ? midX : W / 2, tall ? c2.bottom + 46 : 438, foot, { family: 'mono', size: tall ? 11.5 : 12.5, anchor: 'middle', fill: C.muted, lh: 15 });
-  st.fade(tail, 5.2, 5.28);
+  st.fade(tail, 5.8, 5.98);
 
   return { set: (s, t) => st.set(s, t) };
 }
