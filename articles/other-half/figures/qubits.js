@@ -26,7 +26,7 @@ function build(el, ctx) {
 
   // what each state shows
   const K = [
-    { d: 1, pitch: rail ? 84 : 36, cx: 112, cy: 100 + dy, mode: 0, box: 0, label: '1 qubit', sub: rail ? 'on its own' : '', say: 'One qubit.' },
+    { d: 1, pitch: 84, cx: 112, cy: 100 + dy, mode: 0, box: 0, label: '1 qubit', sub: 'on its own', say: 'One qubit.' },
     { d: D[0], pitch: 36, cx: 112, cy: 100 + dy, mode: 0, box: 0 },
     { d: D[1], pitch: 27, cx: 112, cy: 100 + dy, mode: 0, box: 0 },
     { d: D[2], pitch: 21, cx: 112, cy: 100 + dy, mode: 1, box: 0 },
@@ -45,8 +45,13 @@ function build(el, ctx) {
 
   const svg = svgRoot(el, W, H, K[0].say);
   svg.style.color = C.ink;
+  // the rail's header follows the state: what one qubit takes (states 0 to
+  // 3), what reads it (4), and the next step in size (5)
+  const heads = [];
   if (rail) {
-    text(svg, 4, 15, 'what one qubit takes', { family: 'sans', size: 13.5, weight: 600 });
+    const H0 = 'what one qubit takes';
+    const HS = [H0, H0, H0, H0, 'and what reads it', 'one step larger'];
+    [...new Set(HS)].forEach((h) => { const hg = g(svg); text(hg, 4, 15, h, { family: 'sans', size: 13.5, weight: 600 }); heads.push({ hg, at: HS.map((x, i) => (x === h ? i : -1)).filter((i) => i >= 0) }); });
     rect(svg, 2.5, 24.5, W - 5, 168, { fill: 'none', stroke: C.hairline, 'stroke-width': 1, 'data-audit': 'skip' });
   }
 
@@ -108,7 +113,9 @@ function build(el, ctx) {
     const a = K[k0], b = K[k1];
     const m = ease(clamp(u / 0.55));
     const pitch = lerp(a.pitch, b.pitch, m), cx = lerp(a.cx, b.cx, m), cy = lerp(a.cy, b.cy, m), mode = lerp(a.mode, b.mode, m);
-    const arrive = G <= 0 ? clamp(G + 1) : clamp((u - 0.38) / 0.62);
+    // state 0 is complete from the start: the one qubit never fades in
+    // under its label, so the opening never shows a label over an empty box
+    const arrive = G <= 0 ? 1 : clamp((u - 0.38) / 0.62);
     const sw = lerp(1.25, 1, mode).toFixed(2);
     const rStore = lerp(pitch * 0.19, 2.9, mode), rHelp = lerp(pitch * 0.085, 1.5, mode);
     for (const it of items) {
@@ -140,6 +147,15 @@ function build(el, ctx) {
       else if (i === k0) p = 1 - ease(clamp(u / 0.2));
       else if (i === k1) p = ease(clamp((u - 0.8) / 0.2));
       show(lb, p);
+    });
+    // the header changes with the label, in the same fade
+    const hv = (i) => heads.find((h) => h.at.includes(i));
+    heads.forEach((h) => {
+      let p = 0;
+      if (hv(k0) === hv(k1)) p = h === hv(k1) ? 1 : 0;
+      else if (h === hv(k0)) p = 1 - ease(clamp(u / 0.2));
+      else if (h === hv(k1)) p = ease(clamp((u - 0.8) / 0.2));
+      show(h.hg, p);
     });
     svg.setAttribute('aria-label', K[u >= 0.6 ? k1 : k0].say);
   }

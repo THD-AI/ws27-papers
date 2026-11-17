@@ -40,8 +40,8 @@ const problems = [];
 // Runs in the page: walks through one scene in steps of 16 px and reports
 // what a reader sees. The rule (lib/article.js, updateScene): the figure is
 // pinned, the passages scroll past it about 45% of a window apart; the one
-// whose top has last passed the reading line is active; t runs with the
-// scroll from 0 to 1 over half the way to the next passage, then rests.
+// whose top has last passed the reading line is active; a new step is drawn
+// while its passage comes up (t 0 at 0.3 pitch below the line, 1 at the line).
 async function walkScene(index) {
   const frame = () => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
   const scene = document.querySelectorAll('.scene')[index];

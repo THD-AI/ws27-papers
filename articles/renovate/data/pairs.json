@@ -257,13 +257,13 @@
     },
     {
       "n": 9,
-      "what": "Savings",
+      "what": "Profit effect",
       "us": {
         "value": 3,
         "bound": "about",
         "show": "≈ $3 bn",
         "status": "ahead",
-        "text": "of Core Adjusted EBITDA (an operating profit measure) by 2027 against 2025"
+        "text": "more Core Adjusted EBITDA (an operating profit measure) in 2027 than 2025, after network, AI and digital investment"
       },
       "de": {
         "value": 2.5,
@@ -272,7 +272,7 @@
         "status": "ahead",
         "text": "gross by 2030 against 2023, whole group outside the US"
       },
-      "why": "scope, measure and base year differ",
+      "why": "profit uplift against gross savings; scope and base year differ",
       "source": [
         "R6-06",
         "R6-02",

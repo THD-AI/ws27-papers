@@ -49,7 +49,7 @@ function build(el, ctx) {
     const x = (t) => B.x + (t / o.maxT) * B.w;
     const nT = Math.floor(o.maxT / T - 0.3);
     // lane 1: the chip
-    const h1 = g(root);
+    const h1 = g(root, { 'data-role': 'title' });
     const t1 = text(h1, B.x, 20, 'the chip asks: which checks fired?', sans);
     const n1g = g(root);
     const n1 = narrow
@@ -67,13 +67,13 @@ function build(el, ctx) {
     }
     // the opening state already shows what is compared: the chip's lane with
     // its first rounds and their pace, the network's lane title, the axis
-    st.fade(h1, -1, 0).fade(base, -1, 0).fill(ticks, -0.2, 0.5).fade(n1g, -1, 0);
+    st.fade(h1, -1, 0).fade(base, -1, 0).fill(ticks, -0.2, 0.2).fade(n1g, -1, 0);
     // step 0: what one gap is
     const gp = g(root), ka = narrow ? 3 : 5;
     bracket(gp, x(ka * T), L1 + 7, x((ka + 1) * T), L1 + 7, 4, { stroke: C.ink, 'stroke-width': 1 });
     const gn = text(gp, x((ka + 1.5) * T) + 16, L1 + 38, `[[${T}]] millionths of a second`, { ...noteO, size: narrow ? 14 : 16 });
     leader(gp, gn.x - 5, gn.y + 6, x((ka + 0.5) * T), L1 + 10, { stroke: C.muted, dot: false });
-    st.fade(gp, 0.5, 0.7, [1, 1.14]);
+    st.fade(gp, 0.12, 0.24, [1, 1.08]);
 
     // lane 2: the network of 2024
     const by = L1 + (narrow ? 50 : 96), bh = narrow ? 24 : 26;
@@ -85,7 +85,7 @@ function build(el, ctx) {
       ? text(h2, B.x, y2 + 18, `needs [[${us(net.value)}]] for one round`, noteO)
       : text(h2, t2.right + 14, y2, `needs [[${us(net.value)}]] for one round`, noteO);
     const q2 = narrow ? text(h2, B.x, n2.bottom + 13, 'quoted in the 2024 paper', mono) : text(h2, n2.right + 14, n2.y + n2.h - 3.5, 'quoted in the 2024 paper', mono);
-    st.fade(h2t, -1, 0).fade(h2, 1.08, 1.3);
+    st.fade(h2t, -1, 0).fade(h2, 1.04, 1.14);
     // the lane the answers will run along: a faint hairline from the start
     const lane = line(root, B.x, by + bh, B.x + B.w, by + bh, { stroke: C.hairline, 'stroke-width': 1, 'data-audit': 'skip' });
     st.fade(lane, -1, 0);
@@ -105,15 +105,15 @@ function build(el, ctx) {
       const lg = g(root, { class: 'fig-leader' });
       line(lg, a + 4, by - 3, x(k * T), L1 + 4, { stroke: C.ink, 'stroke-width': 0.8, 'stroke-opacity': 0.7 });
       circle(lg, x(k * T), L1 + 4, 1.5, { fill: C.ink });
-      const t0 = k === 1 ? 1.2 : 2.02 + (k - 2) * 0.2;
-      st.fade(grp, t0, t0 + 0.25).fade(lg, t0 + 0.2, t0 + 0.4);
+      const t0 = k === 1 ? 1 : 2 + (k - 2) * 0.08;
+      st.fade(grp, t0, t0 + 0.12).fade(lg, t0 + 0.08, t0 + 0.18);
       return { a, b, xe, open };
     });
     // step 1: the rounds that pass during the first answer
     const bk = g(root);
     bracket(bk, x(endOf(0)), L1 - 24, Math.min(right, x(endOf(1))), L1 - 24, -5, { stroke: C.ink, 'stroke-width': 1 });
     text(bk, (x(endOf(0)) + Math.min(right, x(endOf(1)))) / 2, L1 - 34, `about ${meanwhile} rounds meanwhile`, { family: 'mono', size: 12, weight: 500, anchor: 'middle' });
-    st.fade(bk, 1.55, 1.8);
+    st.fade(bk, 1.14, 1.24);
     // step 2: the rounds that wait, one dot each
     const pg = g(root), p = 5.2, cols = 7;
     let ringAt = null, pileBottom = py;
@@ -128,8 +128,8 @@ function build(el, ctx) {
       const cg = g(pg);
       const wt = text(cg, b.b, yb + 15, 'waiting', { family: 'mono', size: 12.5, anchor: 'end' });
       const ct = text(cg, wt.x - 15, yb + 15, String(n), { family: 'mono', size: 12.5, weight: 500, anchor: 'end' });
-      const a = 2.42 + (k - 1) * 0.12;
-      st.fill(els, a, a + 0.3).fade(cg, a + 0.24, a + 0.36);
+      const a = 2.08 + (k - 1) * 0.04;
+      st.fill(els, a, a + 0.1).fade(cg, a + 0.08, a + 0.12);
       ringAt = ct; pileBottom = Math.max(pileBottom, ct.bottom + 4);
     });
     const bn = g(root);
@@ -142,11 +142,11 @@ function build(el, ctx) {
       text(bn, B.x + 40, m2.bottom + 22, 'waiting after the third', noteO);
       ringAt = m3; pileBottom = m3.bottom + 4;
     } else text(bn, B.x, py + 12, 'rounds that wait\nfor an answer:\nthe backlog\ngrows without end', { ...noteO, size: 14.5, lh: 18 });
-    st.fade(bn, 2.78, 2.94);
+    st.fade(bn, 2.16, 2.24);
     let pr = null;
     if (ringAt) {
       pr = penRing(root, ringAt.cx, ringAt.cy, ringAt.w / 2 + 6.5, 10.5, { seed: 6, stroke: C.accent, width: 1.5 });
-      pr.paths.forEach((pp, k) => st.draw(pp, 2.86 + k * 0.03, 2.97 + k * 0.02));
+      pr.paths.forEach((pp, k) => st.draw(pp, 2.24 + k * 0.01, 2.28 + k * 0.01));
     }
     // the axis
     const ay = pileBottom + (narrow ? 18 : 34), ax = g(root);
@@ -164,7 +164,7 @@ function build(el, ctx) {
       const early = (narrow ? q2.bottom : n2.bottom) + (narrow ? 22 : 30);
       const lift = Math.min(0, early - ay);
       st.on((gg) => {
-        const m = ease(span(gg, 2.2, 2.42));
+        const m = ease(span(gg, 2, 2.1));
         const v = m >= 1 ? '' : `translate(0 ${(lift * (1 - m)).toFixed(2)})`;
         if ((ax.getAttribute('transform') || '') !== v) { if (v) ax.setAttribute('transform', v); else ax.removeAttribute('transform'); }
       });
@@ -243,34 +243,45 @@ function build(el, ctx) {
     const on = text(l4, xLast + 10, y4 + 9, 'claimed, 2025 preprint, not yet reviewed', { ...noteO, size: narrow ? 12.5 : 13.5 });
     if (on.right + 8 < right) line(l4, on.right + 8, y4 + 4.5, right, y4 + 4.5, { stroke: C.ink, 'stroke-width': 0.9, 'stroke-dasharray': '2 5' });
     const tg = text(l4, B.x, y4 + 28, narrow ? claim.tag_on_page.split(' · ').slice(1, 3).join(' · ') : claim.tag_on_page, { ...mono, width: B.w, lh: 15 });
-    // the axis: time after the last round
-    const ay = tg.bottom + (narrow ? 10 : 14);
-    line(base, xLast, ay, right, ay, { stroke: C.ink, 'stroke-width': 1.25 });
+    // the axis: time after the last round. It belongs to the lowest lane
+    // shown: until the claim's lane arrives (step 4) it sits just under
+    // lane 3, then moves down with it, so it never floats below empty space.
+    const ay = tg.bottom + (narrow ? 10 : 14), axg = g(root);
+    line(axg, xLast, ay, right, ay, { stroke: C.ink, 'stroke-width': 1.25 });
     for (let t = 0; t <= live.value + live.plus_minus; t += 20) {
-      line(base, x(t), ay, x(t), ay + 5, { stroke: C.ink, 'stroke-width': 1 });
-      text(base, x(t), ay + 18, t === 0 ? '0' : String(t), { ...mono, anchor: 'middle' });
+      line(axg, x(t), ay, x(t), ay + 5, { stroke: C.ink, 'stroke-width': 1 });
+      text(axg, x(t), ay + 18, t === 0 ? '0' : String(t), { ...mono, anchor: 'middle' });
     }
-    if (narrow) text(base, B.x, ay + 18, 'µs after', mono);
-    else text(base, xLast - 12, ay + 18, 'µs after the last round', { ...mono, anchor: 'end' });
+    if (narrow) text(axg, B.x, ay + 18, 'µs after', mono);
+    else text(axg, xLast - 12, ay + 18, 'µs after the last round', { ...mono, anchor: 'end' });
 
     const a = o.at;
-    st.fade(base, a, a + 0.22).draw(run, a + 0.2, a + 0.45).fade(l3, a + 0.2, a + 0.3).fade(after, a + 0.45, a + 0.6).fade(bg, a + 0.55, a + 0.72).fade(n3, a + 0.72, a + 0.9);
-    pr.paths.forEach((pp, k) => st.draw(pp, a + 0.84 + k * 0.03, a + 0.96 + k * 0.02));
-    st.fade(l4, 4.1, 4.6);
+    // complete within the first 30% of step 3
+    st.fade(base, a, a + 0.08).fade(axg, a, a + 0.08).draw(run, a + 0.04, a + 0.14).fade(l3, a + 0.04, a + 0.1).fade(after, a + 0.1, a + 0.16).fade(bg, a + 0.12, a + 0.2).fade(n3, a + 0.16, a + 0.22);
+    pr.paths.forEach((pp, k) => st.draw(pp, a + 0.18 + k * 0.02, a + 0.24 + k * 0.01));
+    st.fade(l4, 4.02, 4.14);
+    if (!o.final) {
+      const lift = Math.min(0, Math.max(big.bottom, same.bottom) + (narrow ? 14 : 18) - ay);
+      st.on((gg) => {
+        const m = ease(span(gg, 4, 4.1));
+        const v = m >= 1 ? '' : `translate(0 ${(lift * (1 - m)).toFixed(2)})`;
+        if ((axg.getAttribute('transform') || '') !== v) { if (v) axg.setAttribute('transform', v); else axg.removeAttribute('transform'); }
+      });
+    }
     return root;
   }
 
   if (print) {
     const A = viewA({ x: 20, w: 286 }, { maxT: 30, narrow: true });
-    const Bv = viewB({ x: 348, w: 356 }, { narrow: true, at: 3 });
+    const Bv = viewB({ x: 348, w: 356 }, { narrow: true, at: 3, final: true });
     line(svg, 327, 8, 327, H - 8, { stroke: C.hairline, 'stroke-width': 1 });
     void A; void Bv;
   } else {
     const box = tall ? { x: 14, w: 332 } : { x: 24, w: 672 };
     const A = viewA(box, { maxT: tall ? 30 : 76, narrow: tall });
-    viewB(box, { narrow: tall, at: 3.14 });
+    viewB(box, { narrow: tall, at: 3.04 });
     st.on((gg) => {
-      const out = Math.min(1, Math.max(0, (gg - 3) / 0.18));
+      const out = Math.min(1, Math.max(0, (gg - 3) / 0.08));
       A.style.opacity = out > 0 ? (1 - out).toFixed(3) : '';
       A.style.display = out >= 1 ? 'none' : '';
     });

@@ -84,10 +84,11 @@ async function checkPage() {
   await new Promise((ok) => setTimeout(ok, 200));
 
   // Elements that reach outside the window. The hero's empty paper and what
-  // is inside a frame that scrolls on its own do not count.
+  // is inside a frame that scrolls on its own do not count, nor what is only
+  // there for assistive technology (.vh, clipped to nothing).
   const wide = [];
   for (const el of document.querySelectorAll('body *')) {
-    if (el.closest('.hero, .table-frame, .skip') || (el.closest('svg') && el.tagName !== 'svg')) continue;
+    if (el.closest('.hero, .table-frame, .skip, .vh') || (el.closest('svg') && el.tagName !== 'svg')) continue;
     const r = el.getBoundingClientRect();
     if (!r.width || !r.height) continue;
     if (r.right > vw + 1 || r.left < -1) wide.push(`${el.tagName.toLowerCase()}.${[...el.classList].join('.')} ${Math.round(r.left)}..${Math.round(r.right)}`);
@@ -115,7 +116,9 @@ async function checkPage() {
     const role = el.dataset.role;
     const id = el.dataset.fig + (role === 'still' ? ' (still)' : role === 'margin' ? ' (margin)' : role === 'seq' ? ' (sequence)' : '');
     layouts[id] = `${el.dataset.mounted || '?'} ${Math.round(svg.getBoundingClientRect().width)}px ×${scale.toFixed(2)}`;
-    if (min < 10.95) small[id] = Math.min(small[id] ?? Infinity, Math.round(min * 10) / 10);
+    // a still of a scene read as a sequence may set its lettering at 10 px to fit the window's height
+    if (min < (role === 'seq' ? 9.95 : 10.95)) small[id] = Math.min(small[id] ?? Infinity, Math.round(min * 10) / 10);
+    if (role === 'seq' && svg.getBoundingClientRect().height > vh * 0.93) wide.push(`still of ${el.dataset.fig} taller than 92% of the window`);
     if (svg.getBoundingClientRect().height > vh && role === 'scene') wide.push(`pinned figure ${el.dataset.fig} taller than the window`);
   }
   res.wide = [...new Set(wide)];

@@ -67,7 +67,7 @@ function plateA(svg, C, d, tall, st, keep, big) {
   const nt = (grp, a, b) => st.fade(grp, a, b, hide);
   const o = { italic: true, size: L.note };
 
-  const gH = g(root);
+  const gH = g(root, { 'data-role': 'title' });
   const hA = text(gH, tall ? 14 : 16, tall ? 13 : 17, d.headline.a, { family: 'sans', size: tall ? 12 : 13.5, weight: 600, width: tall ? 334 : 640, lh: 15 });
   nt(gH, 0, 0.1);
   // the plate's own note, under the grid
@@ -174,7 +174,7 @@ function plateA(svg, C, d, tall, st, keep, big) {
 // ---------------------------------------------------------------------------
 // The hand-over from plate A to plate B, in g: plate A fades out and plate
 // B's headline and first ruler fade in over the same span.
-const XA = [3.02, 3.2];
+const XA = [3.02, 3.14];
 
 function plateB(svg, C, d, tall, st, bare, big) {
   // Two rulers of the same length, one above the other. A ruler is one year
@@ -182,6 +182,7 @@ function plateB(svg, C, d, tall, st, bare, big) {
   // contact, evenly spaced from the yearly value. Under them a slim time
   // line with the two measured points and the month the agents were
   // announced. Everything arrives from XA on; the time line in step 4.
+  // Each step is complete within the first 30% of its step.
   const B = d.plateB, W = tall ? 360 : 800, H = tall ? 440 : 500;
   const S = tall ? { x0: 14, note: 12.5, mono: 12.5, small: 11.5, lab: 13.5, r: 4.2 } : { x0: 16, note: 14, mono: 14, small: 12, lab: 15, r: 5 };
   if (big) { S.note = 13.5; S.mono = 13; S.small = 12; }
@@ -190,17 +191,17 @@ function plateB(svg, C, d, tall, st, bare, big) {
 
   const hd = g(root);
   const h1 = text(hd, S.x0, tall ? 13 : 17, d.headline.b, { family: 'sans', size: tall ? 12 : 13.5, weight: 600, width: tall ? W - 2 * S.x0 : 620, lh: 15 });
-  st.fade(hd, 3.06, XA[1]);
+  st.fade(hd, 3.02, XA[1]);
   // what T-Mobile names besides the agents: one block under the headline
   const cg = g(root);
   const cs = text(cg, S.x0, h1.bottom + S.note + 2, B.causes.block, { italic: true, size: S.note, width: W - 2 * S.x0 });
-  st.fade(cg, 4.5, 4.7);
+  st.fade(cg, 4.16, 4.24);
 
   const rx0 = tall ? S.x0 + 4 : 96, rx1 = tall ? W - S.x0 - 4 : 540, len = rx1 - rx0;
   let y = cs.bottom + (tall ? 20 : 58);
   const rulerY = [];
   B.points.forEach((p, i) => {
-    const a = XA[0] + i * 0.18;
+    const a = XA[0] + i * 0.08;
     const tg = g(root), rg = g(root);
     const count = p.count.replace('{v}', fmt(p.value, p.decimals)), note = p.note.replace('{v}', fmt(p.value, p.decimals));
     let ry;
@@ -224,7 +225,7 @@ function plateB(svg, C, d, tall, st, bare, big) {
       line(rg, x, ry, x, ry + (k === 0 || k === n ? 8 : 5), ink);
       if (k < n) text(rg, x + len / n / 2, ry + 8 + S.small, B.strip.letters[k], { family: 'mono', size: S.small, fill: C.muted, anchor: 'middle' });
     }
-    st.fade(rg, a, i === 0 ? XA[1] : a + 0.12);
+    st.fade(rg, a, i === 0 ? XA[1] : a + 0.08);
     // contacts: whole dots, and a visibly smaller one for the part
     const full = Math.floor(p.value + 1e-9), part = p.value - full;
     const ds = [];
@@ -234,14 +235,14 @@ function plateB(svg, C, d, tall, st, bare, big) {
       c.dataset.r = k < full ? S.r : S.r * 0.45;
       ds.push(c);
     }
-    st.fill(ds, a + 0.08, a + 0.28);
-    st.fade(tg, a, i === 0 ? XA[1] : a + 0.14);
+    st.fill(ds, a + 0.04, a + 0.14);
+    st.fade(tg, a, i === 0 ? XA[1] : a + 0.08);
     y = ry + 8 + S.small + (tall ? 26 : 44);
     if (i === 0) {
       const bg = g(root);
       const yrs = B.between.years;
       const bt = text(bg, tall ? S.x0 : rx0, y - (tall ? 6 : 8), B.between.note.replace('{a}', yrs[0]).replace('{b}', yrs[yrs.length - 1]), { italic: true, size: S.note, fill: C.muted });
-      st.fade(bg, 3.42, 3.56);
+      st.fade(bg, 3.14, 3.22);
       y = bt.bottom + (tall ? 22 : 40);
     }
   });
@@ -258,7 +259,7 @@ function plateB(svg, C, d, tall, st, bare, big) {
     line(fg, ax + 4, yb - 6, ax, yb, aw);
     const fs = tall ? 15 : 17;
     text(fg, ax - 9, (ya + yb) / 2 + fs * 0.36, B.fall.show.replace('{v}', fmt(B.fall.value)), { family: 'mono', size: fs, weight: 600, anchor: 'end' });
-    st.fade(fg, 3.48, 3.62);
+    st.fade(fg, 3.18, 3.26);
   }
 
   // step 4: the time line
@@ -268,25 +269,25 @@ function plateB(svg, C, d, tall, st, bare, big) {
   const X = linear(t0, t1, tx0, tx1);
   const ay = y + (tall ? 30 : 46);
   const axl = line(tl, tx0, ay, tx1, ay, ink);
-  st.draw(axl, 4.05, 4.28);
+  st.draw(axl, 4.02, 4.12);
   const yl = g(root);
   for (let yr = Math.ceil(t0); yr <= Math.floor(t1); yr++) {
     line(yl, X(yr), ay, X(yr), ay + 5, ink);
     text(yl, X(yr), ay + 6 + S.small, String(yr), { family: 'mono', size: S.small, anchor: 'middle', fill: C.muted });
   }
   B.points.forEach((p) => circle(yl, X(p.year + (p.quarter - 0.5) / 4), ay, tall ? 3.6 : 4.2, { fill: C.ink }));
-  st.fade(yl, 4.2, 4.34);
+  st.fade(yl, 4.06, 4.14);
   const evX = X(B.event.year + (B.event.month - 0.5) / 12);
   const eg = g(root);
   line(eg, evX, ay - 10, evX, ay + 10, { stroke: C.accent, 'stroke-width': 2.4, 'stroke-linecap': 'round' });
   const eo = { italic: true, size: S.note, fill: C.accent, weight: 600 };
   text(eg, Math.min(tx1, Math.max(evX + 2, tx0 + textSize(B.event.note, eo).w + 2)), ay + 6 + S.small + S.note + 6, B.event.note, { ...eo, anchor: 'end' });
-  st.fade(eg, 4.34, 4.5);
+  st.fade(eg, 4.12, 4.2);
   const bg2 = g(root);
   const bx0 = X(B.points[0].year + 1);
   bracket(bg2, bx0, ay - 13, evX - 3, ay - 13, -5, { stroke: C.ink, 'stroke-width': 1 });
   text(bg2, bx0, ay - 21, B.event.before, { italic: true, size: S.note });
-  st.fade(bg2, 4.56, 4.76);
+  st.fade(bg2, 4.18, 4.26);
 
   if (!bare) {
     const tg = g(root);

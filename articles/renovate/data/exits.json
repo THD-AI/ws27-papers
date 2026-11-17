@@ -5,15 +5,11 @@
   "sourceName": "Deutsche Telekom, HR Factbook 2025",
   "tag": "company-reported",
   "unit": {
-    "positionsPerMark": 25,
-    "note": "one mark is [[25]] full-time positions, rounded; exact totals above",
+    "positionsPerMark": 50,
+    "note": "one mark is [[50]] full-time positions, rounded; exact totals above",
     "source": "R12-01",
-    "print": {
-      "positionsPerMark": 50,
-      "marks": { "cols": 7, "p": 14.6, "r": 5.3 },
-      "note": "one mark is [[50]] full-time positions, rounded; exact totals above",
-      "why": "In print and on phones (the tall layout) the marks are larger and fewer, so that they stay legible at 100 dpi and the figure with its caption fits one phone screen. The figure caption in text.md has to name both units."
-    }
+    "marks": { "cols": 7, "p": 14.6, "r": 5.3 },
+    "why": "One scale on every device, screen and print: one mark is 50 positions, in marks large enough to stay round at 100 dpi. The caption in text.md says \"One mark is 50 positions\"."
   },
   "years": [
     2021,

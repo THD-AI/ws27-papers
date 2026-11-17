@@ -6,11 +6,11 @@ context: Innovation Management for AI · TH Deggendorf · winter semester 2026/2
 status: Draft for review, 17 November 2026
 accent: renovate
 hero: none
-summary: Deutsche Telekom wants T-Mobile's AI-agent results in Germany. Why they can't be bolted on, and the order to rewire in, with the staff kept on.
+summary: T-Mobile's AI agents now meet a third of its contract customers' contacts. Why Deutsche Telekom can't bolt that onto Germany, and what to rebuild first.
 date: 2026-11-17
 keywords: AI agents, customer service, Deutsche Telekom, T-Mobile, innovation management, works council, AI Act
 card_alt: Card with the title Renovate, don't repaint, a cable cut into a plastered brick wall and plastered over in green, and the figure 32 of 100 T-Mobile contract customers' contacts served by an AI agent.
-seo_title: Renovate, don't repaint: AI agents at Deutsche Telekom and T-Mobile
+seo_title: Renovate, don't repaint: AI agents at Telekom
 ---
 
 ## The short version
@@ -99,7 +99,7 @@ Commonwealth Bank of Australia did it faster. In July 2025 it said 45 customer s
 Two public cases: the saving was announced or taken from the staff first, and taken back later. Klarna froze hiring rather than cutting; at Commonwealth Bank the roles were declared redundant. Sources: Klarna; Information Age on Commonwealth Bank.
 :::
 
-Two cases don't make a rule. But in both, the saving came from the people first and was taken back once it proved wrong: at Klarna over quality, at Commonwealth Bank because, the union showed, the work was still there.
+Two cases don't make a rule. But in both, the saving came from the people first and was taken back once it proved wrong: at Klarna over quality, at Commonwealth Bank because, the union said, the work was still there.
 
 ## 5. Renovating with the staff at home
 
@@ -108,7 +108,7 @@ T-Mobile did more than rewire. It gave the staff who stayed an assistant of thei
 An American firm can also let people go while it rewires. T-Mobile booked 531 million dollars of severance by September 2026 under a 2025–2026 restructuring its filings describe as reducing organisational layers; they don't tie it to the agents. Telekom in Germany can't take that route. On 28 May 2026 it agreed with the union ver.di that there will be no dismissals for business reasons until 31 December 2028, for about 60,000 employees under its collective agreements. People still leave by agreed routes: partial retirement, early retirement, severance, civil servants retiring, and transfers to public authorities. From 2021 to 2025, 20,223 full-time positions went that way across Telekom in Germany, about 4,000 a year. {{R6-06 R6-09 R6-11 R11-14 DGB-2026 R12-01}}
 
 :::figure exits wide
-Every full-time position that left Telekom in Germany by an agreed route, 2021 to 2025. One mark is 25 positions on wide screens, 50 on phones and in print. Source: Deutsche Telekom, HR Factbook 2025.
+Every full-time position that left Telekom in Germany by an agreed route, 2021 to 2025. One mark is 50 positions. Source: Deutsche Telekom, HR Factbook 2025.
 :::
 
 Severance is the route that grew: it almost doubled. So Telekom is already getting smaller, by agreement rather than by dismissal, and any saving from agents has to fit into those routes.
@@ -163,7 +163,7 @@ I think that's a problem. A house built from one foreign supplier's parts is at 
 
 What I didn't find in Telekom's public plan is the order, and dates for the work in the walls; Telekom's own target is 2030. The order below isn't copied from T-Mobile, because T-Mobile's sequence can't be shown to have caused its result. It follows from what each step needs from the one before. It's a hypothesis, and the measure in step 1 is how it gets tested.
 
-The frames from the earlier sections each point to a step. The J-curve says the rewiring comes before the return: steps 5 and 6. Absorptive capacity says people learn before the tools arrive: step 4. A coordinated economy settles the rules with the staff first: step 2. And the three German weights each have their step: the law in step 2, dependence in step 3, know-how in step 4.
+The frames from the earlier sections each point to a step. The J-curve says the rewiring comes before the return: step 5, and the staged keys of step 6 that build on it. Absorptive capacity says people learn before the tools arrive: step 4. A coordinated economy settles the rules with the staff first: step 2. And the three German weights each have their step: the law in step 2, dependence in step 3, know-how in step 4.
 
 :::steps
 1. **Measure first.** One measure for both countries, with its cost: requests finished without a person that didn't come back within a week, set against what the agent costs to build and run. Without it, the 2030 target can't be checked. *Measure:* the pair is published.
@@ -176,7 +176,7 @@ The frames from the earlier sections each point to a step. The J-curve says the 
 8. **Run it.** A named team answers for the agents, nights included, and the cost of each finished request is watched like the electricity bill. What it finds goes back into the measure in step 1. Until the end of 2028 the return has to come from fewer repeat contacts, from staff moving to work software can't do, and from customer service's share of the roughly 4,000 who leave each year by the agreed routes. That's managed attrition and voluntary exits, not repainting: nobody is removed to book the saving, and positions are left unfilled only once the agent has shown it carries the work. *Measure:* cost per finished request. {{R11-14 R12-01}}
 :::
 
-What Telekom can copy from T-Mobile, then, isn't the number. It's the order and the work in the walls: one customer record, identity cut to a few ways, and agents given keys only as fast as the house can carry them.
+What Telekom can copy from T-Mobile, then, isn't the number. It's the work in the walls: one customer record, and callers recognised without questions. The order of the steps is my hypothesis, not T-Mobile's.
 
 ## Where this could be wrong
 
