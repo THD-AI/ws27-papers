@@ -76,9 +76,15 @@ async function open(viewport, query = '', features = [], prep = null) {
   return page;
 }
 
-// Lets the scroll engine run (one frame) and the fades finish.
+// Lets the scroll engine run (one frame), the fades finish and every step
+// that was triggered play to its end (lib/article.js sets data-moving on the
+// root while one plays; at most 8 s).
 const settle = (page, ms = 420) => page.evaluate((d) => new Promise((ok) => {
-  requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(ok, d)));
+  requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(() => {
+    const t0 = performance.now();
+    const wait = () => (!document.documentElement.dataset.moving || performance.now() - t0 > 8000 ? setTimeout(ok, 60) : requestAnimationFrame(wait));
+    wait();
+  }, d)));
 }), ms);
 
 async function shot(page, name, options = {}) {

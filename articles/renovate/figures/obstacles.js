@@ -17,6 +17,9 @@ import {
 export const steps = 2;
 // where scenes read as a sequence (tablet portrait, phone landscape): one still, the final state
 export const stills = [1];
+// seconds each step plays once triggered: six rows of dots, then a change
+// of field with its bracket
+export const durations = { large: [2.4, 1.6] };
 export const aspect = { wide: 580 / 422, tall: 360 / 386 };
 
 // '#rrggbb' or 'rgb(r, g, b)' -> [r, g, b]
@@ -66,17 +69,20 @@ function build(el, ctx) {
   // Where the field is: step 0 on missing knowledge, step 1 on the two
   // legal rows. On paper the field stays on knowledge and the law rows keep
   // their quiet bracket, as the drawing was before it was told in steps.
-  const swap = (gg) => (ctx.print ? 0 : ease(span(gg, 1.04, 1.4)));
+  // in reading order: knowledge gives the field up first (swapOut), then
+  // the two legal rows take it (swap), then the bracket, then its words
+  const swapOut = (gg) => (ctx.print ? 0 : ease(span(gg, 1.0, 1.34)));
+  const swap = (gg) => (ctx.print ? 0 : ease(span(gg, 1.12, 1.54)));
   const first = d.rows.findIndex((r) => r.first);
   const legal = d.rows.map((r, i) => (r.legal ? i : -1)).filter((i) => i >= 0);
   // missing knowledge turns to the accent with its field, once all rows are there
-  const weight = (i) => (i === first ? (gg) => Math.min(ease(span(gg, 0.62, 0.8)), 1 - swap(gg)) : legal.includes(i) ? swap : () => 0);
+  const weight = (i) => (i === first ? (gg) => Math.min(ease(span(gg, 0.62, 0.8)), 1 - swapOut(gg)) : legal.includes(i) ? swap : () => 0);
   const band = (i0, i1) => {
     const y0 = rowY(i0) - S.label - 5, y1 = dotY(i1) + S.pitch + 5;
     return rect(svg, 0, y0, W, y1 - y0, { fill: C.field, 'data-audit': 'skip' });
   };
-  if (first >= 0) st.fade(band(first, first), 0.64, 0.8, ctx.print ? null : [1.04, 1.36]);
-  if (legal.length && !ctx.print) st.fade(band(legal[0], legal[legal.length - 1]), 1.06, 1.4);
+  if (first >= 0) st.fade(band(first, first), 0.64, 0.8, ctx.print ? null : [1.0, 1.34]);
+  if (legal.length && !ctx.print) st.fade(band(legal[0], legal[legal.length - 1]), 1.12, 1.5);
   if (first >= 0) {
     // at the right end of the band, on the line of the row's label; on the
     // narrow layout a little higher, clear of the ring on the value
@@ -84,7 +90,7 @@ function build(el, ctx) {
     st.fade(fl.el, 0.7, 0.84);
     // from step 1 it stays as a quiet note
     const tone = mixer(C.accent, C.muted);
-    bind(st, fl.el.firstChild, 'fill', (gg) => tone(swap(gg)));
+    bind(st, fl.el.firstChild, 'fill', (gg) => tone(swapOut(gg)));
   }
   // the two rows about the law: a bracket at the right, from step 1
   if (legal.length) {
@@ -95,7 +101,7 @@ function build(el, ctx) {
     // in the free band between the two rows, right-aligned against the bracket
     const ly = tall ? rowY(la) + S.dotDy + S.pitch + 14 : (y0 + y1) / 2 + 5;
     const law = text(lg, bx - (tall ? 9 : 12), ly, d.lawLabel, { italic: true, size: S.note, fill: C.muted, anchor: 'end' });
-    st.fade(lg, 1.36, 1.56);
+    st.fade(br, 1.42, 1.64).fade(law.el, 1.6, 1.9);
     const tone = mixer(C.muted, C.accent);
     bind(st, br, 'stroke', (gg) => tone(swap(gg)));
     bind(st, law.el.firstChild, 'fill', (gg) => tone(swap(gg)));
@@ -156,7 +162,7 @@ function build(el, ctx) {
 
   // the pen ring on the number step 0 names, 72%; on screen it goes with the field
   const ring = penRing(svg, ringAt.cx, ringAt.cy - 0.5, ringAt.w / 2 + (tall ? 7 : 8.5), S.num * 0.5 + (tall ? 5.5 : 6.5), { seed: 11, stroke: C.accent, width: tall ? 1.35 : 1.5 });
-  ring.paths.forEach((p, k) => st.draw(p, 0.72 + k * 0.05, 0.86 + k * 0.04, ctx.print ? null : [1.04, 1.3]));
+  ring.paths.forEach((p, k) => st.draw(p, 0.72 + k * 0.05, 0.86 + k * 0.04, ctx.print ? null : [1.0, 1.28]));
 
   return { set: (s, t) => st.set(s, t) };
 }

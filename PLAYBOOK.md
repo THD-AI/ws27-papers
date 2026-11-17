@@ -86,7 +86,8 @@ Checked before every round, with the tools in `tools/`:
   - Readers get pages rendered with `pdftocairo`. MiKTeX's `pdftoppm` cuts slits into small dots, and readers took them for broken glyphs.
 - **Web.**
   - `node tools/perf.mjs <slug>` reports no long task over 50 ms while scrolling, a layout shift score below 0.05, and frames within budget at phone, tablet and laptop sizes in both orientations.
-  - **Motion.** `node tools/motion.mjs <slug>` (1536×864 and 390×844) flags no step: every scene step, figure in the text and margin still is drawn over at least a quarter of the window height of scroll, both by the engine's t and by the drawing's own visible change, and completes. Look at one `--frames` contact sheet per article.
+  - **Motion.** `node tools/motion.mjs <slug>` (1536×864 and 390×844) flags no step: nothing changes with the scroll between triggers, every triggered step plays by itself over 0.5–3.5 s of real time in at least 8 visible frames and ends complete, and a step played back takes at least 0.3 s. Look at one `--frames` contact sheet per article.
+  - **Timing.** `node tools/timing.mjs` reads both articles at 1536×864 and 390×844 as a wheel reader (100 px ticks, each after reading what it brings in) and a trackpad reader (continuous), both at 230 words a minute, in real time. It flags any step under 0.5 s, over 3.5 s, or complete only after its passage is half read; none may be flagged. Watch one `--video` per article before readers start.
   - Social cards render, and the metadata validates.
   - **Scroll telling.** Every figure that explains something in stages is a `:::scene`, with one passage per step; a static `:::figure` is chosen on purpose, with a reason in the round log. Compare the scene count with the last version he approved on the web. A paper rewrite must not quietly turn scenes into pictures.
   - **Desktop read.** Someone reads the whole page at 1536×864 and 1920×1080 (the common Windows laptop and monitor) before readers start. Each pinned figure fits the screen, and its lettering is readable.
@@ -108,7 +109,8 @@ The aim is every reader at 8 or more and a median near 9. Seven is acceptable wh
 - **Render the reading material in one step, right before readers start.** In the second web round the paper pages predated that round's text fixes, and the fact checker checked stale wording. Device sheets, paper pages and the built site come from the same build. It happened again in the scroll-telling round: `shots --matrix` doesn't render print, so the PDF was older than the text. Since then the material for a round comes only from `tools/round.mjs`, which fails if print.pdf wasn't rendered in that run, and it writes a manifest with the commit.
 - **A layout rule touches every block type.** Centring the text column when there's no margin rail made the column jump sideways between body, scenes and stills. Check left edges of every text block on every device after any layout change.
 - **The paper and the web page are two versions.** The draft-5 restart was written for the paper and turned every scene but one into a static picture. Three web rounds then polished that page, and every gate passed, because no gate asked whether the page still told its story by scrolling. He saw it in one desktop read. A figure may have a print version and a web version, and a passage may be marked for the screen only (`@step n screen`).
-- **Still screenshots can't show motion.** After the web rounds of 17 November every step of every scene was drawn in 30 to 60 px of scroll, a flick of the wheel, and figures in the text arrived complete before they came into view. The readers worked from screenshots and filmstrips and never caught it; he did, in one read: "just bang, bang, bang", "a slideshow". Motion is measured now (`tools/motion.mjs`), in pixels of scroll per step, and looked at in frame sequences.
+- **Still screenshots can't show motion.** After the web rounds of 17 November every step of every scene was drawn in 30 to 60 px of scroll, a flick of the wheel, and figures in the text arrived complete before they came into view. The readers worked from screenshots and filmstrips and never caught it; he did, in one read: "just bang, bang, bang", "a slideshow". Motion is measured now (`tools/motion.mjs`, `tools/timing.mjs`) and looked at in frame sequences and videos.
+- **A step must be triggered by the scroll and played by time.** A scroll-scrubbed step has no duration of its own: it lasts as long as the reader's scrolling. Drawn over 30–60 px it was one wheel tick, "bang, bang"; stretched to 320–400 px it lasted 10–30 s at reading pace and changed the figure while the passage before was still being read, a "jump scare" with a mouse wheel. Measure motion in seconds for real readers (a wheel, a trackpad), not in pixels of scroll.
 - **A web fix creates the next complaint.** Readers judge the experience as it is, so each fix needs a fresh look on all six devices, not only the one where the complaint came from.
 
 ## Tools
@@ -121,7 +123,9 @@ node tools/shots.mjs <slug> [--quick|--matrix]   # screenshots, device matrix, p
 node tools/filmstrip.mjs <slug> <w> <h> <per>    # read-through sheets for readers
 node tools/devices.mjs <slug>              # read-through sheets for every device and orientation
 node tools/perf.mjs <slug>                 # scroll trace: long tasks, layout shift, frames
-node tools/motion.mjs <slug> [--frames <scene>[:<step>]]   # scroll distance each step is drawn over; frame sequence of one step
+node tools/motion.mjs <slug> [--frames <scene>[:<step>]]   # each step triggered by scroll, played by time; frame sequence of one step
+node tools/timing.mjs [slug] [WxH] [--wheel|--trackpad]     # real-time durations for a wheel and a trackpad reader at reading pace
+node tools/timing.mjs --video [slug]       # reading-pace videos into .shots/video/
 node tools/round.mjs <slug> <outDir>       # ALL reading material for a round from one build, with a manifest
 node tools/cards.mjs                       # social preview images
 node .shots/lab/shoot.mjs name="fig=<id>&layout=wide&step=2&t=1"   # one figure state

@@ -13,6 +13,10 @@ import {
 import { pal, dotPlate, text, floor } from './shared.js';
 
 export const steps = 5;
+// seconds each step plays once triggered: the rounds tick in; the first
+// answer; the answers that follow and the rounds that wait; the second
+// view assembles; the claim's lane arrives
+export const durations = { large: [2.4, 2.0, 2.4, 2.4, 1.8] };
 const SIZE = { wide: [720, 472], tall: [360, 458] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
@@ -86,7 +90,7 @@ function build(el, ctx) {
       ? text(h2, B.x, y2 + 18, `needs [[${us(net.value)}]] for one round`, noteO)
       : text(h2, t2.right + 14, y2, `needs [[${us(net.value)}]] for one round`, noteO);
     const q2 = narrow ? text(h2, B.x, n2.bottom + 13, 'quoted in the 2024 paper', mono) : text(h2, n2.right + 14, n2.y + n2.h - 3.5, 'quoted in the 2024 paper', mono);
-    st.fade(h2t, -1, 0).fade(h2, 1.06, 1.26);
+    st.fade(h2t, -1, 0).fade(h2, 1.06, 1.28);
     // the lane the answers will run along: a faint hairline from the start
     const lane = line(root, B.x, by + bh, B.x + B.w, by + bh, { stroke: C.hairline, 'stroke-width': 1, 'data-audit': 'skip' });
     st.fade(lane, -1, 0);
@@ -106,15 +110,16 @@ function build(el, ctx) {
       const lg = g(root, { class: 'fig-leader' });
       line(lg, a + 4, by - 3, x(k * T), L1 + 4, { stroke: C.ink, 'stroke-width': 0.8, 'stroke-opacity': 0.7 });
       circle(lg, x(k * T), L1 + 4, 1.5, { fill: C.ink });
-      const t0 = k === 1 ? 1.2 : 2.14 + (k - 2) * 0.16;
+      const t0 = k === 1 ? 1.22 : 2.14 + (k - 2) * 0.16;
       st.fade(grp, t0, t0 + 0.25).fade(lg, t0 + 0.2, t0 + 0.4);
       return { a, b, xe, open };
     });
     // step 1: the rounds that pass during the first answer
-    const bk = g(root);
+    // the bracket, then its words, to the end of the step
+    const bk = g(root), bkt = g(bk);
     bracket(bk, x(endOf(0)), L1 - 24, Math.min(right, x(endOf(1))), L1 - 24, -5, { stroke: C.ink, 'stroke-width': 1 });
-    text(bk, (x(endOf(0)) + Math.min(right, x(endOf(1)))) / 2, L1 - 34, `about ${meanwhile} rounds meanwhile`, { family: 'mono', size: 12, weight: 500, anchor: 'middle' });
-    st.fade(bk, 1.6, 1.84);
+    text(bkt, (x(endOf(0)) + Math.min(right, x(endOf(1)))) / 2, L1 - 34, `about ${meanwhile} rounds meanwhile`, { family: 'mono', size: 12, weight: 500, anchor: 'middle' });
+    st.fade(bk, 1.58, 1.76).fade(bkt, 1.7, 1.92);
     // step 2: the rounds that wait, one dot each
     const pg = g(root), p = 5.2, cols = 7;
     let ringAt = null, pileBottom = py;
@@ -235,15 +240,18 @@ function build(el, ctx) {
     const pr = penRing(root, big.cx, big.cy, big.w / 2 + 8, 12, { seed: 8, stroke: C.accent, width: 1.5 });
     // lane 4: the claim
     y = Math.max(big.bottom, same.bottom) + (narrow ? 20 : 28);
-    text(l4, B.x, y, claim.label, small);
+    // in reading order (step 4): the lane and its blocks, the note on
+    // them, then the tag
+    const l4a = g(l4), l4b = g(l4), l4c = g(l4);
+    text(l4a, B.x, y, claim.label, small);
     const y4 = y + 9, w4 = Math.max(2.5, claim.below * s * 0.8);
     for (let k = 0; k <= nBack; k++) {
       const xx = x(-k * T);
-      path(l4, `M${(xx - w4).toFixed(1)} ${y4}L${xx.toFixed(1)} ${y4}L${xx.toFixed(1)} ${y4 + 9}L${(xx - w4).toFixed(1)} ${y4 + 9}`, { stroke: C.ink, 'stroke-width': 0.9, 'stroke-dasharray': '1.5 1.8' });
+      path(l4a, `M${(xx - w4).toFixed(1)} ${y4}L${xx.toFixed(1)} ${y4}L${xx.toFixed(1)} ${y4 + 9}L${(xx - w4).toFixed(1)} ${y4 + 9}`, { stroke: C.ink, 'stroke-width': 0.9, 'stroke-dasharray': '1.5 1.8' });
     }
-    const on = text(l4, xLast + 10, y4 + 9, 'claimed, 2025 preprint, not yet reviewed', { ...noteO, size: narrow ? 12.5 : 13.5 });
-    if (on.right + 8 < right) line(l4, on.right + 8, y4 + 4.5, right, y4 + 4.5, { stroke: C.ink, 'stroke-width': 0.9, 'stroke-dasharray': '2 5' });
-    const tg = text(l4, B.x, y4 + 28, narrow ? claim.tag_on_page.split(' · ').slice(1, 3).join(' · ') : claim.tag_on_page, { ...mono, width: B.w, lh: 15 });
+    const on = text(l4b, xLast + 10, y4 + 9, 'claimed, 2025 preprint, not yet reviewed', { ...noteO, size: narrow ? 12.5 : 13.5 });
+    if (on.right + 8 < right) line(l4b, on.right + 8, y4 + 4.5, right, y4 + 4.5, { stroke: C.ink, 'stroke-width': 0.9, 'stroke-dasharray': '2 5' });
+    const tg = text(l4c, B.x, y4 + 28, narrow ? claim.tag_on_page.split(' · ').slice(1, 3).join(' · ') : claim.tag_on_page, { ...mono, width: B.w, lh: 15 });
     // the axis: time after the last round. It belongs to the lowest lane
     // shown: until the claim's lane arrives (step 4) it sits just under
     // lane 3, then moves down with it, so it never floats below empty space.
@@ -261,11 +269,11 @@ function build(el, ctx) {
     // after the last round, the bracket and value, the note, the ring
     st.fade(base, a, a + 0.2).fade(axg, a, a + 0.2).draw(run, a + 0.16, a + 0.38).fade(l3, a + 0.16, a + 0.26).fade(after, a + 0.38, a + 0.52).fade(bg, a + 0.48, a + 0.62).fade(n3, a + 0.6, a + 0.72);
     pr.paths.forEach((pp, k) => st.draw(pp, a + 0.66 + k * 0.03, a + 0.76 + k * 0.02));
-    st.fade(l4, 4.22, 4.6);
+    st.fade(l4a, 4.2, 4.46).fade(l4b, 4.4, 4.66).fade(l4c, 4.62, 4.9);
     if (!o.final) {
       const lift = Math.min(0, Math.max(big.bottom, same.bottom) + (narrow ? 14 : 18) - ay);
       st.on((gg) => {
-        const m = ease(span(gg, 4.04, 4.3));
+        const m = ease(span(gg, 4.02, 4.32));
         const v = m >= 1 ? '' : `translate(0 ${(lift * (1 - m)).toFixed(2)})`;
         if ((axg.getAttribute('transform') || '') !== v) { if (v) axg.setAttribute('transform', v); else axg.removeAttribute('transform'); }
       });

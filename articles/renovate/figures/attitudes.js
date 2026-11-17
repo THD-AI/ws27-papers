@@ -17,6 +17,9 @@ import {
 export const steps = 3;
 // where scenes read as a sequence (tablet portrait, phone landscape): one still, the final state
 export const stills = [2];
+// seconds each step plays once triggered: title and two rows; two rows;
+// one row with its field, ring and note
+export const durations = { large: [2.2, 2.0, 1.6] };
 const SIZE = { wide: [580, 410], tall: [360, 390] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
@@ -82,7 +85,10 @@ function build(el, ctx) {
   d.panels.forEach((p, pi) => {
     // each step: the question, then its rows one after another, each row's
     // name, dots and value in reading order, spread over most of the step
-    const a = pi + (pi ? 0.04 : 0.16);
+    const a = pi + (pi ? 0.02 : 0.16);
+    // after the entry each row takes longer (k) and the rows lie further
+    // apart (P), so the step is drawn to its end, not done by two thirds
+    const k = pi ? 1.3 : 1, P = pi ? 0.34 : 0.3;
     let bLast = a;
     const pg = g(svg);
     if (!ctx.print && pi < d.panels.length - 1) {
@@ -101,31 +107,33 @@ function build(el, ctx) {
     st.fade(head, a, a + 0.16);
     let sy = tg.bottom + 10;
     p.rows.forEach((r, ri) => {
-      const b = a + 0.18 + ri * 0.24;
+      const b = a + 0.18 + ri * P;
       bLast = b;
       const mid = sy + stripH / 2;
       if (p.standsOut) {
         const f = rect(pg, 0, mid - S.rowH / 2 - 2, W, S.rowH + 4, { fill: C.field, 'data-audit': 'skip' });
-        st.fade(f, b - 0.04, b + 0.14);
+        st.fade(f, b - 0.04, b + 0.14 * k);
       }
       const count = Math.round(r.value / U.percentPerDot);
       const lab = text(pg, S.x0, mid + S.label * 0.34, r.country, { family: 'sans', size: S.label });
-      st.fade(lab.el, b, b + 0.12);
+      st.fade(lab.el, b, b + 0.12 * k);
       const pl = plate(pg, slot.filter((c) => c.i >= count), ctx.print ? (tall ? 1.1 : 1.5) : tall ? 0.7 : 0.95, p.standsOut ? C.muted : C.hairline, S.sx, sy);
       pl.setAttribute('opacity', p.standsOut ? 0.5 : 1);
-      st.fade(pl, b + 0.02, b + 0.12);
+      st.fade(pl, b + 0.02 * k, b + 0.12 * k);
       const ds = dots(g(pg), slot, count, S.r, { fill: p.standsOut ? C.accent : 'currentColor' }, S.sx, sy);
-      st.fill(ds, b + 0.04, b + 0.24);
+      st.fill(ds, b + 0.04 * k, b + 0.24 * k);
       // the number stands in its own column, clear of the dots
       const val = text(pg, valX, mid + S.num * 0.34, `${fmt(r.value)}%`, { family: 'mono', size: S.num, weight: 500 });
-      st.fade(val.el, b + 0.2, b + 0.3);
-      if (p.standsOut) ring = { val, pg, at: b + 0.3 };
+      st.fade(val.el, b + 0.2 * k, b + 0.3 * k);
+      if (p.standsOut) ring = { val, pg, at: b + 0.26 * k };
       sy += S.rowH;
     });
     if (p.note) {
       // where a second strip would be: the note says why there is none
       const nt = text(pg, S.sx, sy + S.note * 0.8 + 4, p.note, { italic: true, size: S.note, width: W - S.sx - S.x0 });
-      st.fade(nt.el, bLast + 0.4, bLast + 0.56);
+      // after the ring when the panel has one, else after its last row
+      const na = ring && ring.pg === pg ? ring.at + 0.14 : bLast + 0.4;
+      st.fade(nt.el, na, na + 0.2);
       sy = nt.bottom + 4;
     }
     y = sy + S.panelGap + S.q - 4;

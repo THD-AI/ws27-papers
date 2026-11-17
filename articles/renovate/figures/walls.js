@@ -26,6 +26,9 @@ import {
 export const steps = 3;
 // where scenes read as a sequence (tablet portrait, phone landscape): one still, the final state
 export const stills = [2];
+// seconds each step plays once triggered: three walls drawn; the cable
+// comes down to each; the three jobs done, each with its note
+export const durations = { large: [2.8, 2.0, 3.0] };
 // tall: three panels stacked, short enough that the title, the drawing and
 // the caption share one phone screen
 export const aspect = { wide: 928 / 392, tall: 360 / 528 };
@@ -249,12 +252,12 @@ function build(el, ctx) {
       ? [[b.entry - 30, b.cy], [b.entry - 10, b.cy + 3], [b.entry, b.cy + 10], [b.entry, b.top - 8]]
       : [[b.entry - 30, b.cy], [b.entry - 10, b.cy + 4], [b.entry, b.cy + 16], [b.entry, b.top - 8]];
     // step 1: the cable comes down to each wall, left to right
-    const ca = 1.06 + i * 0.1;
+    const ca = 1.02 + i * 0.12;
     st.draw(path(P, spline(arrive), cab), ca, ca + 0.4);
     const tip = g(P, { stroke: C.accent, 'stroke-width': 1.1, 'stroke-linecap': 'round' });
     path(tip, poly([[b.entry - 1.6, b.top - 8], [b.entry - 2.2, b.top - 3]]));
     path(tip, poly([[b.entry + 1.6, b.top - 8], [b.entry + 2.2, b.top - 3]]));
-    st.fade(tip, ca + 0.36, ca + 0.46, [2.0, 2.1]);
+    st.fade(tip, ca + 0.34, ca + 0.46, [2.0, 2.1]);
     const goIn = p.kind === 'timber' ? 2.02 : p.kind === 'surface' ? 2.18 : 2.34;
     st.draw(path(P, poly([[b.entry, b.top - 8], [b.entry, b.top]]), cab), goIn, goIn + 0.06);
 
@@ -291,7 +294,7 @@ function build(el, ctx) {
       leader(lead, sx, cn.bottom + 3, b.entry - 31, b.cy - 1, { stroke: C.muted });
     });
   }
-  st.fade(cg, 1.6, 1.76).fade(lead, 1.68, 1.84);
+  st.fade(cg, 1.62, 1.82).fade(lead, 1.7, 1.92);
 
   return { set: (s, t) => st.set(s, t) };
 }

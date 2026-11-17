@@ -4,6 +4,21 @@ Read `SPEC.md` first (figure contract, design system). Each figure below says wh
 
 Honesty rules that override looks: where a value is not published, draw the absence (an empty slot with an italic note "not published"), never an estimate. Never connect two measured points with a line that suggests the path between them. Company-reported figures carry a small mono tag `company-reported`.
 
+## Motion timing (17 November 2026): triggered by scroll, played by time
+
+A step now starts when its passage is reached and plays its timeline (t 0 to 1) over a set time; each figure exports `durations` in seconds, one per step (dotUni `docs/papers/innovation/loop-motion.md`). Inside a step things arrive in reading order at least 0.15 s apart, a label 0.2 to 0.4 s after what it names, and the timeline is busy over about 75% or more of t (measured as in `tools/timing.mjs`).
+
+- **`walls`** `[2.8, 2.0, 3.0]`: step 1, the cable starts at once (0.02) and the three arrive 0.12 apart; the tag and its leaders end at 0.92.
+- **`terms`** `[1.8, 2.4]`: step 0, the handbook, its name and the note "what people picture" spread over 0.02 to 0.92 (was done by 0.82 with a pause).
+- **`numbers`** `[2.4, 2.2, 1.6, 2.2, 2.0]`: step 2, the empty bracket and its words are separate (0.46, 0.62). Steps 3 and 4: plate B's arrivals overlap a little; step 4 now goes mark, its words, bracket, its words, T-Mobile's other causes, to 0.9 (was active 40%).
+- **`repaint`** `[2.4, 2.2]`: step 1, the two ways back 0.42 apart, each to its note.
+- **`exits`** `[2.6, 2.6, 1.6]`: step 2, severance takes the field from 0.0; the ring on 2025 comes before the note that names it (note last, to 0.92).
+- **`attitudes`** `[2.2, 2.0, 1.6]`: steps 1 and 2, each row takes longer and the rows lie further apart, so a step ends near 0.9; in step 2 the note follows the ring.
+- **`obstacles`** `[2.4, 1.6]`: step 1 in reading order: knowledge gives up the field (0.0 to 0.34), the two legal rows take it (0.12 to 0.54), the bracket, then its words (0.6 to 0.9). It used to stand still from 0.55.
+- **`permits`** `[2.0, 2.2, 2.2]`: steps 1 and 2 spread to about 0.9.
+- **`plan`** `[2.6, 1.8, 1.8, 1.8, 2.2, 1.8, 1.8, 1.8, 1.2]`: the pen walks with a soft ease over 0.03 to 0.9 (the cubic ease crept for half the step); the walk round the turn (step 4) is the longest. Step 0 now ends on its own small sequence: the ink runs to station 1, station 1 takes the field, then the staff note.
+- **`pairs`** (in-text) `medium: [2.0]`: ten rows 0.16 s apart; unchanged inside.
+
 ## Twelve-reader round on the web page (17 November 2026)
 
 - **`plan`**: the staff band is no longer drawn under the path ("throughout" overreached: the protection ends on 31 Dec 2028, the plan has no dates). It is a separate note with a short band that stops at a marked end: "no dismissals for business reasons until 31 Dec 2028" / "about 60,000 staff · about 4,000 a year leave by agreed routes" (R11-14, DGB-2026, R12-01). A ninth state, step 8, is the overview: every station in ink, none in the field; it is the still where scenes read as a sequence (`stills = [8]`) and the print state. The text never scrolls to it (its `@step` lines stop at 7). Tall (phones, pinned): a compact strip, 360 × 236 (about 233 px at 355 wide, 28% of an 844 px screen): eight small numbered stations on one line, the bracket "need step 5" over 6 to 8, and under it "step n of 8" with the current station's name and measure. `data/house.json` says "no dismissals for business reasons until 31 Dec 2028".

@@ -10,6 +10,9 @@ import {
 import { pal, grid, text, floor } from './shared.js';
 
 export const steps = 1;
+// seconds the drawing plays once 40% of it is in view: 256 squares, then
+// the one pattern enlarged
+export const durations = { medium: [2.0] };
 const SIZE = { wide: [720, 504], tall: [360, 760] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 

@@ -18,6 +18,16 @@ Honesty rules that override looks:
 - One vocabulary, the text's: storing qubit, helper, check, fires, flip, phase error, round, run, example, noise level. Not: data qubit, ancilla, stabilizer, syndrome, shot, detector, physical error rate. The file names keep the technical words; the page does not.
 - A flip is marked X, a phase error Z, both at once Y, as in the proposal's figure, with a three-line key in italic the first time they appear.
 
+## Motion timing (17 November 2026): triggered by scroll, played by time
+
+A step now starts when its passage is reached and plays its timeline (t 0 to 1) over a set time; each figure exports `durations` in seconds, one per step (dotUni `docs/papers/innovation/loop-motion.md`). Inside a step things arrive in reading order at least 0.15 s apart, a label 0.2 to 0.4 s after what it names, and the timeline is busy over about 75% or more of t.
+
+- **`lattice`** `[2.4, 1.8, 1.8, 1.8, 2.6, 2.4]`: step 0 starts with the leftmost tile at once; its notes arrive one by one (qubits, checks, the sum). Steps 1 to 3 overlap their arrivals a little (the error, the fired checks, the note, the key); step 5 starts at once.
+- **`clock`** `[2.4, 2.0, 2.4, 2.4, 1.8]`: step 1, the bracket and "about 22 rounds meanwhile" are separate, to 0.92. Step 4 goes the axis moving down, the claim's lane and blocks, its note, then its tag (was still from 0.54).
+- **`learning`** `[3.0, 2.8, 2.6]`: unchanged inside (already busy over 84–86%).
+- **`line`**, **`syndromes`**, **`noise`** `medium: [2.0]`; **`suppression`** `medium: [1.8]`: unchanged inside.
+- **`qubits`** (margin) `small: [0.6, 0.9, 1.0, 1.1, 1.0, 1.1]`: the new dots start while the grid still shrinks (from 0.3 of the change, not 0.38).
+
 ## `lattice` (scene, 6 steps): the smallest grid, and three fired checks with two explanations
 
 Five-second reading at the last step: "the same three fired checks can be explained in two ways; the standard decoder picks the one that is right one time in three, and the other is right six times in ten". Steps 0 to 2: "errors are never seen; only the checks next to them fire, and in a row of errors only the ends".

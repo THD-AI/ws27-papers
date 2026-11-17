@@ -6,10 +6,15 @@
 // steps and checks that
 //   - the figure is on screen whenever a passage of the scene is,
 //   - two or three passages are in view while the figure is pinned,
-//   - the active passage is the one at the reading line, and on screen,
+//   - the active passage is the one whose top has last passed the trigger
+//     line (65% of the window beside the figure; under a figure pinned on
+//     top, 40% of a pitch below the reading line), and it is on screen,
 //   - every passage becomes the active one, in order,
-//   - the figure's state moves forward with the scroll, without jumps, and a
-//     step is complete before the next one begins,
+//   - the figure's goal is the active passage's step, and once the step has
+//     played (window.__engine.finish(), lib/article.js) it shows that step
+//     complete: a passage always points at a figure that shows what it says.
+//     How a step plays over time is checked by tools/motion.mjs and
+//     tools/timing.mjs,
 //   - the figure rests about a third of a window after the last passage,
 //   - the place label does not stand twice (at the figure and in the text).
 // At 1440×900 and 390×844 it also scans the whole page for emptiness:
@@ -40,9 +45,8 @@ const problems = [];
 // Runs in the page: walks through one scene in steps of 16 px and reports
 // what a reader sees. The rule (lib/article.js, updateScene): the figure is
 // pinned, the passages scroll past it about a third of a window apart; the one
-// whose top has last passed the reading line is active; a new step is drawn
-// while its passage comes up (t 0 as the passage before is read, 1 at the line;
-// tools/motion.mjs measures how far).
+// whose top has last passed the trigger line is active, and its step is the
+// figure's goal, played over time.
 async function walkScene(index) {
   const frame = () => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
   const scene = document.querySelectorAll('.scene')[index];
@@ -63,7 +67,10 @@ async function walkScene(index) {
   const order = [];
   const shots = {};
   const counts = [];
-  let prev = null;                 // the figure state at the last position
+  const player = window.__engine.players.find((q) => q.slot.el === figure);
+  const seqSteps = player.seq;
+  const groupOf = [];
+  passages.forEach((p, i) => groupOf.push(i === 0 ? 0 : groupOf[i - 1] + (p.dataset.step !== passages[i - 1].dataset.step ? 1 : 0)));
   let restFrom = null;             // where the last passage became active
   let pinnedUntil = null;          // the last position at which the figure was pinned
   let alone = null;                // where a run of one passage in view began
@@ -74,9 +81,10 @@ async function walkScene(index) {
     await frame();
     const stage = stageEl.getBoundingClientRect();
     const floor = side ? 0 : Math.max(0, stage.bottom);          // text under a figure pinned on top is not seen
-    // as readingLine() in lib/article.js: under a figure pinned on top, one pitch below it
-    const pitchPx = parseFloat(scene.style.getPropertyValue('--pitch')) || Infinity;
-    const line = side ? vh * 0.5 : floor + Math.min(pitchPx, (vh - floor) * 0.2);
+    // as triggerLine() in lib/article.js
+    const pitchPx = parseFloat(scene.style.getPropertyValue('--pitch')) || 0;
+    const fl = Math.max(0, Math.min(vh * 0.8, stage.bottom));
+    const line = side ? vh * 0.65 : Math.min(vh - 24, fl + Math.min(pitchPx || Infinity, (vh - fl) * 0.2) + 0.4 * (pitchPx || vh * 0.3));
     const seen = passages.filter((p) => { const w = words(p); return w.bottom > floor + 6 && w.top < vh - 6; });
     if (!seen.length) continue;
     const box = scene.getBoundingClientRect();
@@ -92,12 +100,13 @@ async function walkScene(index) {
     if (order[order.length - 1] !== k) { order.push(k); shots[k] = y; }
     if (k === passages.length - 1 && restFrom === null) restFrom = y;
 
-    // the active passage is the one at the reading line
+    // the active passage is the one at the trigger line
     let want = 0;
+    let begun = passages[0].getBoundingClientRect().top <= line + 0.5 || (Math.min(stage.bottom, vh) - Math.max(stage.top, 0)) / Math.max(1, Math.min(stage.height, vh)) >= 0.4;
     passages.forEach((p, i) => { if (p.getBoundingClientRect().top <= line + 0.5) want = i; });
     // a passage whose words have left the window hands over to the next one
-    while (want < passages.length - 1 && words(passages[want]).bottom < floor + 12) want++;
-    if (k !== want) found.push(`y ${y}: passage ${k} is active, passage ${want} is at the reading line`);
+    while (want < passages.length - 1 && words(passages[want]).bottom < floor + 12) { want++; begun = true; }
+    if (k !== want) found.push(`y ${y}: passage ${k} is active, passage ${want} is at the trigger line`);
     const wk = words(passages[k]);
     if (pinned && !(wk.bottom > floor + 6 && wk.top < vh - 6)) found.push(`y ${y}: the active passage ${k} is not on screen`);
 
@@ -117,16 +126,12 @@ async function walkScene(index) {
       if (seen.length > 4) found.push(`y ${y}: ${seen.length} passages in view`);
     }
 
-    // the figure moves forward with the scroll, and a step is complete before the next begins
-    const [step, t] = (figure.dataset.shown || '0:0').split(':').map(Number);
-    if (prev) {
-      if (step < prev.step || (step === prev.step && t < prev.t - 0.001)) found.push(`y ${y}: the figure went back from ${prev.step}:${prev.t} to ${step}:${t}`);
-      // (steps follow each other without a rest, so a sample 16 px before the
-      // end of a step may show it at 0.95 or more; tools/motion.mjs measures the drawing)
-      if (step > prev.step && prev.t < 0.95) found.push(`y ${y}: step ${prev.step} ended at t ${prev.t}`);
-      if (step === prev.step && t - prev.t > 0.25) found.push(`y ${y}: t jumped from ${prev.t} to ${t} in 16 px`);
-    }
-    prev = { step, t };
+    // the goal is the active passage's step, and once played the figure shows it complete
+    const goal = begun ? groupOf[want] + 1 : 0;
+    if (player.goal !== goal) found.push(`y ${y}: the figure's goal is ${player.goal}, the passage at the line asks for ${goal}`);
+    window.__engine.finish();
+    const expect = goal ? `${seqSteps[goal - 1]}:1` : `${seqSteps[0]}:0`;
+    if (figure.dataset.shown !== expect) found.push(`y ${y}: once played the figure shows ${figure.dataset.shown}, the active passage needs ${expect}`);
 
     const label = scene.querySelector('.fig-where');
     if (label && label.textContent && getComputedStyle(label).visibility !== 'hidden') {
@@ -200,6 +205,8 @@ async function emptyScreens(page, helper, w, h) {
   for (let y = 0; y + h <= total; y += Math.round(h / 2)) {
     await page.evaluate((v) => scrollTo(0, v), y);
     await page.evaluate(() => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok))));
+    // the layout is judged with every triggered step played (lib/article.js)
+    await page.evaluate(() => window.__engine.finish());
     const b64 = await page.screenshot({ encoding: 'base64' });
     const res = await helper.evaluate(async (data) => {
       const img = new Image();

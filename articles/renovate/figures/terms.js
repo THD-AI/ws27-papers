@@ -12,6 +12,9 @@ import {
 export const steps = 2;
 // where scenes read as a sequence (tablet portrait, phone landscape): one still, the final state
 export const stills = [1];
+// seconds each step plays once triggered: the handbook alone, then three
+// pictures in a row and the bracket under all four
+export const durations = { large: [1.8, 2.4] };
 const SIZE = { wide: [580, 332], tall: [360, 540] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
@@ -166,13 +169,14 @@ function build(el, ctx) {
   const sc = Math.min(cellW / BOX, 1.18);
 
   const hd = text(svg, S.x0, 18, d.headline, { family: 'sans', size: S.head, weight: 600, width: W - 2 * S.x0 });
-  st.fade(hd.el, 0, 0.12);
+  st.fade(hd.el, 0.02, 0.18);
 
   // when each part arrives: the handbook in step 0, the others in step 1
   // (the handbook alone takes its time; the three others follow one
   // another, each ground, drawing, then its name)
-  const when = (k) => (k === 0 ? 0.12 : 1.04 + (k - 1) * 0.14);
-  const dur = (k) => (k === 0 ? 1.6 : 1);
+  // (the handbook spreads over the whole of step 0, its note last)
+  const when = (k) => (k === 0 ? 0.08 : 1.04 + (k - 1) * 0.14);
+  const dur = (k) => (k === 0 ? 2 : 1);
   let y = hd.bottom + 12, bottom = y;
   const rows = Math.ceil(d.parts.length / S.cols);
   for (let r = 0; r < rows; r++) {
@@ -199,7 +203,7 @@ function build(el, ctx) {
       if (k === 0) {
         // what people picture: said once, and it stays true in the end
         const nt = text(svg, x, tm.bottom + S.note + 7, d.alone, { italic: true, size: S.note, width: cellW, fill: C.ink });
-        st.fade(nt.el, 0.66, 0.84);
+        st.fade(nt.el, 0.58, 0.92);
         rowBottom = Math.max(rowBottom, nt.bottom);
       }
     }

@@ -80,7 +80,7 @@ async function checkPage() {
   // Every figure is brought into view once, so that figures in the text are
   // complete and everything displayed is mounted.
   const figs = [...document.querySelectorAll('[data-fig]')].filter((el) => el.getClientRects().length);
-  for (const el of figs) { el.scrollIntoView({ block: 'center' }); await frame(); }
+  for (const el of figs) { el.scrollIntoView({ block: 'center' }); await frame(); window.__engine?.finish(); }
   await new Promise((ok) => setTimeout(ok, 200));
 
   // Elements that reach outside the window. The hero's empty paper and what

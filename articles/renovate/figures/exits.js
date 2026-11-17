@@ -19,6 +19,9 @@ import {
 export const steps = 3;
 // where scenes read as a sequence (tablet portrait, phone landscape): one still, the final state
 export const stills = [2];
+// seconds each step plays once triggered: the stacks rise, they split into
+// their routes with the names, then severance takes the field
+export const durations = { large: [2.6, 2.6, 1.6] };
 export const aspect = { wide: 880 / 462, tall: 360 / 398 };
 
 // '#rrggbb' or 'rgb(r, g, b)' -> [r, g, b]
@@ -96,7 +99,7 @@ function build(el, ctx) {
   // and the others step back (not in print, which keeps them in ink)
   const back = mixer(C.ink, mixer(C.muted, C.paper)(0.35));
   const toAccent = mixer(C.ink, C.accent);
-  const focus = (gg) => ease(span(gg, 2.02, 2.4));
+  const focus = (gg) => ease(span(gg, 2.0, 2.42));
 
   let ringBox = null, ringBand = null;
   const allMarks = [], moving = [];
@@ -104,7 +107,7 @@ function build(el, ctx) {
     if (b.r.accent) {
       const up = tall ? 24 : 0;   // tall: the field holds the route's name too
       const f = rect(chart, tall ? 0 : S.x0 - 12, b.top - 6 - up, tall ? W : right - S.x0 + 24, b.rows * S.p + 12 + up, { fill: C.field, 'data-audit': 'skip' });
-      st.fade(f, 2.06, 2.34);
+      st.fade(f, 2.0, 2.36);
       ringBand = b;
     }
     const mg = g(chart, { fill: C.ink });
@@ -245,9 +248,10 @@ function build(el, ctx) {
     const dy = (nt.cy - ringBox.cy) / ry, ex = ringBox.cx - rx * Math.sqrt(Math.max(0, 1 - dy * dy));
     leader(ng, nt.right + 5, nt.cy, ex - 2, nt.cy, { stroke: C.muted, dot: false });
   }
-  st.fade(ng, 2.38, 2.56);
+  // the ring on 2025 first, then the note that names it, over the rest of the step
+  st.fade(ng, 2.58, 2.92);
   const pr = penRing(chart, ringBox.cx, ringBox.cy, rx, ry, { seed: 5, stroke: C.accent, width: tall ? 1.4 : 1.7, start: -2.7 });
-  pr.paths.forEach((p, k) => st.draw(p, 2.5 + k * 0.06, 2.76 + k * 0.05));
+  pr.paths.forEach((p, k) => st.draw(p, 2.32 + k * 0.06, 2.6 + k * 0.05));
 
   return { set: (s, t) => st.set(s, t) };
 }

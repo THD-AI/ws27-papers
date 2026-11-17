@@ -9,6 +9,10 @@ import {
 import { pal, surface, show } from './shared.js';
 
 export const steps = 6;
+// seconds each change plays at its marker, seen from the corner of the eye:
+// state 0 is there from the start; the larger grids bring more dots; the
+// box that reads it is drawn with its line
+export const durations = { small: [0.6, 0.9, 1.0, 1.1, 1.0, 1.1] };
 const W = 224, H = 256;
 export const aspect = { wide: W / H, tall: W / H };
 
@@ -115,7 +119,9 @@ function build(el, ctx) {
     const pitch = lerp(a.pitch, b.pitch, m), cx = lerp(a.cx, b.cx, m), cy = lerp(a.cy, b.cy, m), mode = lerp(a.mode, b.mode, m);
     // state 0 is complete from the start: the one qubit never fades in
     // under its label, so the opening never shows a label over an empty box
-    const arrive = G <= 0 ? 1 : clamp((u - 0.38) / 0.62);
+    // the new dots begin while the grid still shrinks, so no part of the
+    // change stands still
+    const arrive = G <= 0 ? 1 : clamp((u - 0.3) / 0.64);
     const sw = lerp(1.25, 1, mode).toFixed(2);
     const rStore = lerp(pitch * 0.19, 2.9, mode), rHelp = lerp(pitch * 0.085, 1.5, mode);
     for (const it of items) {

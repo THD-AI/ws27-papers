@@ -11,6 +11,10 @@ import {
 import { pal, pct, dotPlate, show, text, floor } from './shared.js';
 
 export const steps = 3;
+// seconds each step plays once triggered: the plate, eight seeds and the
+// level lines; then the plate changes and the distance 5 seeds are drawn
+// (twice): the longest steps of the article, each a whole chart
+export const durations = { large: [3.0, 2.8, 2.6] };
 const SIZE = { wide: [720, 474], tall: [360, 530] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 

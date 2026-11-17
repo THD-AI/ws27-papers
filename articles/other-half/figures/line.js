@@ -8,6 +8,9 @@ import {
 import { pal, grid, errMark, text, floor } from './shared.js';
 
 export const steps = 1;
+// seconds the drawing plays once 40% of it is in view: the grid three times
+// (what happened, what the chip reports, what the decoder adds), then the sum
+export const durations = { medium: [2.0] };
 const SIZE = { wide: [560, 400], tall: [360, 610] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 

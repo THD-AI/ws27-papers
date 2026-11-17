@@ -29,6 +29,10 @@ import {
 export const steps = 9;
 // where scenes read as a sequence: one still, the overview (no station singled out)
 export const stills = [8];
+// seconds each step plays once triggered: the entry draws the whole path,
+// a walk to the next station is shorter; the walk round the turn (4 to 5)
+// is the longest one; the overview is never scrolled to
+export const durations = { large: [2.6, 1.8, 1.8, 1.8, 2.2, 1.8, 1.8, 1.8, 1.2] };
 const SIZE = { wide: [720, 432], tall: [360, 236] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
@@ -71,18 +75,25 @@ function build(el, ctx) {
   // where the current station is, as a number that moves on at each step;
   // the overview (step 8, print) singles none out
   const overview = (gg) => ctx.print || gg >= N - 1e-9;
+  // half speed at both ends, never stopped in between: the pen keeps
+  // walking over the whole step (a cubic ease spent half the step creeping)
+  const soft = (x) => x * (0.5 + x * (1.5 - x));
   function cur(gg) {
     if (overview(gg)) return N - 1;
     const s = Math.floor(gg + 1e-9), f = gg - s;
-    // the pen walks to the next station over most of the step (at step 0,
-    // to the first, once the path and the stations are there)
-    return clamp(s - 1 + ease(span(f, s === 0 ? 0.42 : 0.04, 0.86)), 0, N - 1);
+    // the pen walks to the next station over the step; at step 0 it stays
+    // at the first station, which `arrive` brings in
+    return clamp(s - 1 + soft(span(f, 0.03, 0.9)), 0, N - 1);
   }
+  // step 0, once the path and the stations are there: the ink runs to
+  // station 1 (0.50 to 0.66), then station 1 takes the field (0.60 to 0.74)
+  const inkTo1 = (gg) => (gg >= 1 ? 1 : soft(span(gg, 0.5, 0.66)));
+  const arrive = (gg) => (gg >= 1 ? 1 : soft(span(gg, 0.6, 0.74)));
 
   // --- title and the honesty note
   const head = text(svg, 14, tall ? 16 : 20, tall ? d.headShort : d.headline, { family: 'sans', size: S.head, weight: 600, width: tall ? 190 : W - 200 });
   const on = text(svg, W - 14, tall ? 16 : 20, d.orderNote, { family: 'mono', size: S.note, fill: C.muted, anchor: 'end' });
-  st.fade(head.el, 0, 0.12).fade(on.el, 0.08, 0.2);
+  st.fade(head.el, 0.02, 0.12).fade(on.el, 0.1, 0.2);
 
   // --- the staff: a short band that stops at a marked end, and its words
   const staff = (x, y, width) => {
@@ -93,7 +104,7 @@ function build(el, ctx) {
     const tx = x + bw + 9;
     const t1 = text(sg, tx, y, d.staff.label, { italic: true, size: S.staff, fill: C.ink, width: width - (tx - x) });
     const t2 = text(sg, tx, t1.bottom + S.staff + 1, d.staff.detail, { italic: true, size: S.staff, fill: C.muted, width: width - (tx - x) });
-    st.fade(sg, 0.62, 0.8);
+    st.fade(sg, 0.7, 0.88);
     return t2.bottom;
   };
 
@@ -180,7 +191,7 @@ function build(el, ctx) {
   // --- the path: a muted line all the way, ink up to the current station
   const base = ink(host, pts, 1.25, C.muted, tall ? 0.35 : 0.5);
   base.setAttribute('opacity', 0.55);
-  st.fade(base, 0.12, 0.3);
+  st.fade(base, 0.16, 0.32);
   const done = ink(host, pts, 1.6, C.ink, tall ? 0.35 : 0.5);
   done.setAttribute('pathLength', '1');
   done.setAttribute('stroke-dasharray', '1 1');
@@ -188,7 +199,7 @@ function build(el, ctx) {
     let last = '';
     st.on((gg) => {
       const c = cur(gg), i = Math.floor(c), f = c - i;
-      const p = overview(gg) ? 1 : i >= N - 1 ? frac[N - 1] : lerp(frac[i], frac[i + 1], f);
+      const p = overview(gg) ? 1 : i >= N - 1 ? frac[N - 1] : lerp(frac[i], frac[i + 1], f) * (i === 0 && f === 0 ? inkTo1(gg) : 1);
       const v = (1 - p).toFixed(4);
       if (v !== last) { done.setAttribute('stroke-dashoffset', v); last = v; }
     });
@@ -252,20 +263,21 @@ function build(el, ctx) {
     text(ov, info.x, info.y + S.mono + 4, d.overview, { italic: true, size: S.meas, width: info.width });
   }
 
-  const fadeIn = (gg) => ease(span(gg, 0.2, 0.4));
-  // the notches and the bracket arrive with the stations they belong to
-  st.fade(notches, 0.3, 0.46).fade(dep, 0.34, 0.52);
+  const fadeIn = (gg) => ease(span(gg, 0.24, 0.42));
+  // the notches and the bracket arrive after the stations they belong to,
+  // in reading order (notches on the path, then the bracket and its note)
+  st.fade(notches, 0.34, 0.48).fade(dep, 0.4, 0.56);
   let lastKey = '';
   st.on((gg) => {
     const all = overview(gg);
-    const c = cur(gg), a = fadeIn(gg);
-    const key = `${all}|${c.toFixed(4)}|${a.toFixed(3)}`;
+    const c = cur(gg), a = fadeIn(gg), ar = arrive(gg);
+    const key = `${all}|${c.toFixed(4)}|${a.toFixed(3)}|${ar.toFixed(3)}`;
     if (key === lastKey) return;
     lastKey = key;
     st8.forEach((o, i) => {
       // reached: 0 for a later station, 1 once the path has come to it
       const reached = all ? 1 : clamp(c - i + 1);
-      const focus = all ? 0 : Math.max(0, 1 - Math.abs(c - i));
+      const focus = all ? 0 : Math.max(0, 1 - Math.abs(c - i)) * ar;
       o.sg.style.color = toInk(reached);
       o.sg.style.opacity = a >= 0.999 ? '' : a.toFixed(3);
       o.field.style.opacity = focus.toFixed(3);

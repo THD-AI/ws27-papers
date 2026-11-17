@@ -11,6 +11,10 @@ import {
 export const steps = 5;
 // where the scene reads as a sequence: the end of plate A and of plate B
 export const stills = [2, 4];
+// seconds each step plays once triggered: 100 contacts and the 40; the 32
+// with bracket and ring; the two notes of step 2; plate B assembling; the
+// three additions of step 4
+export const durations = { large: [2.4, 2.2, 1.6, 2.2, 2.0] };
 export const aspect = { wide: 800 / 500, tall: 360 / 440 };
 
 const fill = (tpl, v, dec = 0) => tpl.replace('{v}', fmt(v, dec));
@@ -74,10 +78,10 @@ function plateA(svg, C, d, tall, st, keep, big) {
   // the plate's own note, under the grid
   const gT = g(notes);
   text(gT, L.gx + 2, L.bottomY, fill(A.total.note, A.total.value), o);
-  nt(gT, 0.16, 0.3);
+  nt(gT, 0.1, 0.24);
   const gTag = g(root);
   text(gTag, L.tagX, tall ? hA.bottom + 13 : L.tagY, d.tag, { family: 'mono', size: tall ? 11.5 : 12.5, fill: C.muted, anchor: 'end' });
-  nt(gTag, 0.2, 0.34);
+  nt(gTag, 0.18, 0.32);
 
   // release: a bracket beside the four rows
   const y0 = L.gy + 3, y1 = L.gy + rowsTop * L.p - 3;
@@ -119,7 +123,7 @@ function plateA(svg, C, d, tall, st, keep, big) {
   nt(gSn, 1.54, 1.68);
   // at step 1 the slide's note sits on the bracket; at step 2 it makes room
   const drop = L.top[1] - L.top[2];
-  st.on((gg) => gSn.setAttribute('transform', `translate(0 ${(drop * (1 - ease(span(gg, 2.04, 2.34)))).toFixed(2)})`));
+  st.on((gg) => gSn.setAttribute('transform', `translate(0 ${(drop * (1 - ease(span(gg, 2.02, 2.32)))).toFixed(2)})`));
 
   // the eight that are only in the release
   const gN = g(notes);
@@ -141,15 +145,17 @@ function plateA(svg, C, d, tall, st, keep, big) {
   // step 2: what the 32 are, and what is not known about them
   const gA = g(notes);
   text(gA, bx0, L.top[1], A.start.note, o);
-  nt(gA, 2.3, 2.5);
-  const gF = g(notes);
-  bracket(gF, bx1, L.top[3], bx0, L.top[3], tall ? 4.5 : 6, { stroke: C.muted, 'stroke-width': 1, 'stroke-dasharray': '3 3.5' });
+  nt(gA, 2.24, 2.46);
+  // the empty bracket, then its words
+  const gF = g(notes), gFb = g(gF), gFt = g(gF);
+  bracket(gFb, bx1, L.top[3], bx0, L.top[3], tall ? 4.5 : 6, { stroke: C.muted, 'stroke-width': 1, 'stroke-dasharray': '3 3.5' });
   {
     const fo = { ...o, width: tall ? 250 : 330, fill: C.muted }, ftxt = fill(A.finished.note, A.slide.value);
     const fs = textSize(ftxt, fo);
-    text(gF, bx0, L.top[4] - (fs.lines - 1) * fs.lh, ftxt, fo);
+    text(gFt, bx0, L.top[4] - (fs.lines - 1) * fs.lh, ftxt, fo);
   }
-  nt(gF, 2.56, 2.8);
+  nt(gFb, 2.46, 2.66);
+  nt(gFt, 2.62, 2.9);
 
   // Until the notes over the grid arrive (step 1) the grid stands right
   // under the headline, with its own note under it, so step 0 reads complete
@@ -197,7 +203,7 @@ function plateB(svg, C, d, tall, st, bare, big) {
   // what T-Mobile names besides the agents (step 4): one block under the headline
   const cg = g(root);
   const cs = text(cg, S.x0, h1.bottom + S.note + 2, B.causes.block, { italic: true, size: S.note, width: W - 2 * S.x0 });
-  st.fade(cg, 4.5, 4.7);
+  st.fade(cg, 4.62, 4.9);
 
   // the axis: whole years, from the start of the first to the end of the last
   const A = B.axis;
@@ -240,48 +246,50 @@ function plateB(svg, C, d, tall, st, bare, big) {
 
   // the axis draws from the left
   const axl = line(root, tx0, ay, tx1, ay, ink);
-  st.draw(axl, 3.12, 3.38);
+  st.draw(axl, 3.1, 3.4);
   const yl = g(root);
   for (let yr = t0; yr < t1; yr++) {
     line(yl, X(yr), ay, X(yr), ay + 5, ink);
     text(yl, X(yr + 0.5), ay + 7 + S.tick, String(yr), { family: 'mono', size: S.tick, anchor: 'middle', fill: C.ink });
   }
   line(yl, X(t1), ay, X(t1), ay + 5, ink);
-  st.fade(yl, 3.22, 3.38);
+  st.fade(yl, 3.22, 3.42);
 
   // the two points: a dot on the axis and a thin leader up to its number
   blocks.forEach((b, i) => {
     // the first number, then the gap, then the second
     const a = i === 0 ? 3.36 : 3.62;
+    // each over 0.18 of the step, so the arrivals overlap a little
     circle(pg[i], b.x, ay, S.r, { fill: C.ink });
     leader(pg[i], b.x, b.bottom + 8, b.x, ay - S.r - 3, { stroke: C.muted, dot: false });
-    st.fade(pg[i], a, a + 0.14);
+    st.fade(pg[i], a, a + 0.18);
   });
 
   // the gap: nothing drawn, said in words
   const gg0 = g(root);
   const gapX = (blocks[0].x + blocks[1].x) / 2;
   text(gg0, gapX, low + 14 + S.note * 0.78, gapTxt, go);
-  st.fade(gg0, 3.5, 3.64);
+  st.fade(gg0, 3.5, 3.68);
 
   // the fall as T-Mobile reports it, beside the second number: a label, not a path
   const fgp = g(root);
   const fs = tall ? 15 : 18, n2 = blocks[1].num, fx = n2.x - (tall ? 12 : 18);
   text(fgp, fx, n2.y + S.big * 0.5, B.fall.show.replace('{v}', fmt(B.fall.value)), { family: 'mono', size: fs, weight: 600, anchor: 'end' });
   text(fgp, fx, n2.y + S.big * 0.5 + S.small + 4, B.fall.against, { italic: true, size: S.small, anchor: 'end', fill: C.muted });
-  st.fade(fgp, 3.74, 3.88);
+  st.fade(fgp, 3.76, 3.94);
 
   // step 4: the month the agents were announced
-  const eg = g(root);
-  line(eg, evX, ay - 12, evX, ay + 4, { stroke: C.accent, 'stroke-width': 2.4, 'stroke-linecap': 'round' });
+  const eg = g(root), egl = g(eg);
+  line(egl, evX, ay - 12, evX, ay + 4, { stroke: C.accent, 'stroke-width': 2.4, 'stroke-linecap': 'round' });
   const eo = { italic: true, size: S.note, fill: C.accent, weight: 600 };
   const ew = textSize(B.event.note, eo).w;
-  text(eg, Math.min(tx1, Math.max(evX + ew / 2, tx0 + ew)), ay + 7 + S.tick + S.note + 8, B.event.note, { ...eo, anchor: 'end' });
-  st.fade(eg, 4.04, 4.22);
+  const egt = text(eg, Math.min(tx1, Math.max(evX + ew / 2, tx0 + ew)), ay + 7 + S.tick + S.note + 8, B.event.note, { ...eo, anchor: 'end' });
+  // the mark, its words, the bracket, its words, then the other causes
+  st.fade(egl, 4.02, 4.2).fade(egt.el, 4.14, 4.36);
   const bg2 = g(root);
-  bracket(bg2, bx0, ay - 13, evX - 4, ay - 13, -5, { stroke: C.ink, 'stroke-width': 1 });
-  text(bg2, bx0, ay - 21 - (bs.lines - 1) * bs.lh, B.event.before, bo);
-  st.fade(bg2, 4.26, 4.46);
+  const br2 = bracket(bg2, bx0, ay - 13, evX - 4, ay - 13, -5, { stroke: C.ink, 'stroke-width': 1 });
+  const bt2 = text(bg2, bx0, ay - 21 - (bs.lines - 1) * bs.lh, B.event.before, bo);
+  st.fade(br2, 4.3, 4.5).fade(bt2.el, 4.44, 4.66);
 
   if (!bare) {
     const tg = g(root);

@@ -22,6 +22,9 @@ import {
 export const steps = 3;
 // where scenes read as a sequence (tablet portrait, phone landscape): one still, the final state
 export const stills = [2];
+// seconds each step plays once triggered: the American row; the German
+// row with its review; the second German row inside the framework
+export const durations = { large: [2.0, 2.2, 2.2] };
 const SIZE = { wide: [552, 400], tall: [360, 462] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
@@ -89,7 +92,7 @@ function build(el, ctx) {
   // --- Germany, Telekom
   const deY = y;
   const deK = mono(svg, X0, deY, d.rows.de.label, { caps: true, spacing: 0.6, fill: C.ink, weight: 500 });
-  st.fade(deK.el, 1.04, 1.16);
+  st.fade(deK.el, 1.02, 1.16);
   const de = S.de, fw = de.framework;
   // step 2 names the row it stands on: "outside the framework" (the long
   // review of step 1). Its line is kept free from the start, so nothing
@@ -98,7 +101,7 @@ function build(el, ctx) {
   // one line if it fits, else broken at its " · ", never mid-phrase
   const outS = textSize(wd.outside, oOpt).lines > 1 ? wd.outside.replace(' · ', ' ·\n') : wd.outside;
   const outT = text(svg, X0, deY + 21, outS, oOpt);
-  st.fade(outT.el, 2.02, 2.18);
+  st.fade(outT.el, 2.02, 2.2);
   // the review's label: on two lines over the review if they fit, else over the whole row
   // (two lines of about equal length)
   const rvW0 = Math.min(X(de.review[1]) - X(de.review[0]) - 8, Math.ceil(textSize(wd.review, MONO).w / 2) + 30);
@@ -107,47 +110,47 @@ function build(el, ctx) {
   const rvTop = outT.bottom + 4 + MONO.size;
   const lab2 = rvTop + (rv.lines - 1) * rv.lh, bar2 = lab2 + 7;
   const field = rect(svg, X(de.review[0]), bar2, X(de.review[1]) - X(de.review[0]), BH, { fill: C.field, 'data-audit': 'skip' });
-  st.fade(field, 1.2, 1.4);
-  box(svg, X(de.review[0]), X(de.review[1]), bar2, 1.12, 1.38);
+  st.fade(field, 1.18, 1.4);
+  box(svg, X(de.review[0]), X(de.review[1]), bar2, 1.1, 1.38);
   const lr = mono(svg, X(de.review[0]) + 1, rvTop, wd.review, { width: rvW });
-  st.fade(lr.el, 1.24, 1.38);
+  st.fade(lr.el, 1.24, 1.4);
   // the checks inside the review
   const checks = g(svg);
   de.checks.forEach((u) => diamond(checks, X(u), bar2 + BH / 2));
-  st.fade(checks, 1.38, 1.52);
-  box(svg, X(de.build[0]), X(de.build[1]), bar2, 1.48, 1.68);
-  const lb2 = mono(svg, X(de.build[0]) + 1, lab2, wd.build); st.fade(lb2.el, 1.56, 1.68);
-  twice(svg, [[X(de.launch[0]) + 6, bar2], [X1, bar2]], 1.66, 1.86);
-  twice(svg, [[X(de.launch[0]) + 6, bar2], [X(de.launch[0]) + 6, bar2 + BH], [X1, bar2 + BH]], 1.64, 1.86);
-  const lm2 = mono(svg, X(de.launch[0]) + 7, lab2, wd.launch); st.fade(lm2.el, 1.72, 1.84);
+  st.fade(checks, 1.38, 1.54);
+  box(svg, X(de.build[0]), X(de.build[1]), bar2, 1.5, 1.7);
+  const lb2 = mono(svg, X(de.build[0]) + 1, lab2, wd.build); st.fade(lb2.el, 1.58, 1.72);
+  twice(svg, [[X(de.launch[0]) + 6, bar2], [X1, bar2]], 1.68, 1.9);
+  twice(svg, [[X(de.launch[0]) + 6, bar2], [X(de.launch[0]) + 6, bar2 + BH], [X1, bar2 + BH]], 1.66, 1.9);
+  const lm2 = mono(svg, X(de.launch[0]) + 7, lab2, wd.launch); st.fade(lm2.el, 1.76, 1.92);
   // where real delays happen: no agreement, and the conciliation board decides
   const cOpt = { ...MONO, size: 11 };
   const cW = textSize(wd.conciliation, cOpt).w;
   const conc = mono(svg, X0, bar2 + BH + 16, wd.conciliation, { ...cOpt, width: cW <= X1 - X0 ? X1 - X0 : Math.ceil(cW / 2) + 30 });
-  st.fade(conc.el, 2.14, 2.3);
+  st.fade(conc.el, 2.15, 2.33);
 
   // step 2: the second row, inside the framework: a short check, then build
   // and launch. Its words stand inside its bars, so they cannot be read as
   // the other row's.
   const inT = text(svg, X0, conc.bottom + 24, wd.inside, oOpt);
-  st.fade(inT.el, 2.28, 2.42);
+  st.fade(inT.el, 2.31, 2.46);
   const BH2 = 30, bar3 = inT.bottom + 8;
   const fF = rect(svg, X(fw.review[0]), bar3, X(fw.review[1]) - X(fw.review[0]), BH2, { fill: C.field, 'data-audit': 'skip' });
-  st.fade(fF, 2.42, 2.56);
+  st.fade(fF, 2.46, 2.62);
   const box2 = (x0, x1, a, b) => twice(svg, [[x0, bar3], [x1, bar3], [x1, bar3 + BH2], [x0, bar3 + BH2], [x0, bar3]], a, b);
-  box2(X(fw.review[0]), X(fw.review[1]), 2.38, 2.54);
-  box2(X(fw.build[0]), X(fw.build[1]), 2.5, 2.66);
-  twice(svg, [[X(fw.launch[0]) + 6, bar3], [X1, bar3]], 2.6, 2.78);
-  twice(svg, [[X(fw.launch[0]) + 6, bar3], [X(fw.launch[0]) + 6, bar3 + BH2], [X1, bar3 + BH2]], 2.6, 2.78);
+  box2(X(fw.review[0]), X(fw.review[1]), 2.42, 2.6);
+  box2(X(fw.build[0]), X(fw.build[1]), 2.55, 2.73);
+  twice(svg, [[X(fw.launch[0]) + 6, bar3], [X1, bar3]], 2.66, 2.86);
+  twice(svg, [[X(fw.launch[0]) + 6, bar3], [X(fw.launch[0]) + 6, bar3 + BH2], [X1, bar3 + BH2]], 2.66, 2.86);
   // each word after its bar is drawn
   const inWord = (x0, x1, words, a) => {
     const s = words.find((w) => textSize(w, MONO).w <= x1 - x0 - 10) || words[words.length - 1];
     const t = mono(svg, x0 + 6, bar3 + BH2 / 2 + MONO.size * 0.34, s, { fill: C.ink });
-    st.fade(t.el, a, a + 0.1);
+    st.fade(t.el, a, a + 0.11);
   };
-  inWord(X(fw.review[0]), X(fw.review[1]), wd.check, 2.5);
-  inWord(X(fw.build[0]), X(fw.build[1]), [wd.build], 2.62);
-  inWord(X(fw.launch[0]) + 6, X1, [wd.launch], 2.74);
+  inWord(X(fw.review[0]), X(fw.review[1]), wd.check, 2.55);
+  inWord(X(fw.build[0]), X(fw.build[1]), [wd.build], 2.68);
+  inWord(X(fw.launch[0]) + 6, X1, [wd.launch], 2.81);
   y = bar3 + BH2 + 26;
 
   // --- the shared axis
