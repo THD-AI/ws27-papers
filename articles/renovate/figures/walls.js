@@ -6,15 +6,18 @@
 //           the brick showing only where the plaster has broken away at a
 //           lower corner.
 //   step 1: the same new cable arrives above each wall.
-//   step 2: the three jobs, all on one route in the installation zones of
-//           DIN 18015-3: in at the top right, across in the upper zone,
-//           down in the corner zone at the left, to a socket near the floor.
-//           Timber: holes bored in the studs, the cable
-//           pulled through behind the board to a socket; quick, nothing
-//           shows. Brick, repainted: a plastic duct screwed onto the
-//           surface and painted over; it works, but it sits on the wall.
-//           Brick, renovated: a channel cut, the cable laid, plastered
-//           over; the plaster stays as a scar (the one field).
+//   step 2: the three jobs. Timber: in through the top plate from the
+//           attic or ceiling space, straight down inside one stud bay
+//           behind the board to a socket near the floor; pulled through,
+//           quick, nothing shows. No run across the studs: behind finished
+//           board that would mean opening it at every stud. The two brick
+//           walls share one route in the installation zones of DIN
+//           18015-3: in at the top right, down to the upper zone (drawn at
+//           about 30 cm below the ceiling), across, down in the corner zone
+//           at the left, to a socket near the floor. On the surface: a
+//           plastic duct screwed onto the plaster and painted over. Cut in:
+//           a channel cut, the cable laid, plastered over; the plaster
+//           stays as a scar (the one field).
 // The final state reads alone: three walls with the cable in, done three ways.
 import {
   mountFigure, svgRoot, colors, h, g, path, rect, circle, text, leader, stage, rng, spline, lerp, pen,
@@ -61,11 +64,12 @@ function build(el, ctx) {
     st.fade(G, 0.02 + k * 0.06, 0.16 + k * 0.06);
     return t;
   });
-  // the route, the same in every wall, in the installation zones of DIN
-  // 18015-3: in at the top near the right side, across in the upper zone just
-  // under the top of the wall, down in the corner zone near the left side,
-  // into a socket near the floor. In the timber frame both vertical legs lie
-  // inside the end stud bays, and the run crosses the studs through holes.
+  // the brick route, in the installation zones of DIN 18015-3: in at the top
+  // near the right side, down to the upper zone (15 to 45 cm below the
+  // ceiling; drawn at about 30 cm of about 2.5 m, so some 16% of the wall
+  // height under its top), across, down in the corner zone near the left
+  // side, into a socket near the floor. The timber route is one straight
+  // drop through the top plate inside one stud bay.
   boxes.forEach((b) => {
     const w = b.x1 - b.x0, hh = b.floor - b.top;
     b.n = Math.round(w / 58);
@@ -73,11 +77,17 @@ function build(el, ctx) {
     const side = tall ? 18 : 20;
     b.entry = b.x1 - side;
     b.drop = b.x0 + side;
-    b.run = b.top + Math.max(13, Math.round(hh * 0.12));
+    b.run = b.top + Math.max(15, Math.round(hh * 0.16));
     b.sz = tall ? 12 : 13;
     b.sockY = b.floor - Math.max(14, Math.round(hh * 0.12));
     b.sockTop = b.sockY - b.sz / 2;
     b.mid = Math.round(lerp(b.run, b.sockTop, 0.55));
+  });
+  // the timber wall: entry and socket in the first stud bay, beside the corner
+  d.panels.forEach((p, i) => {
+    if (p.kind !== 'timber') return;
+    const b = boxes[i], k = tall ? Math.min(2, b.n - 1) : 0;   // stacked: room for the cable tag on the left
+    b.entry = b.drop = b.x0 + 5 + (k + 0.5) * b.bay;
   });
 
   let seed = 5;
@@ -145,7 +155,9 @@ function build(el, ctx) {
     st.fade(hd.el, 0.02 + i * 0.04, 0.16 + i * 0.04).fade(sb.el, 0.12 + i * 0.04, 0.26 + i * 0.04);
     twice(P, [[b.x0 - 8, b.floor], [b.x1 + 8, b.floor]], 0.02 + i * 0.03, 0.14 + i * 0.03);
 
-    const runPts = [[b.entry, b.top], [b.entry, b.run], [b.drop, b.run], [b.drop, b.sockTop]];
+    const runPts = p.kind === 'timber'
+      ? [[b.entry, b.top], [b.drop, b.sockTop]]
+      : [[b.entry, b.top], [b.entry, b.run], [b.drop, b.run], [b.drop, b.sockTop]];
     const lx = b.x0 + (tall ? 36 : 42);           // where each leader leaves its note
 
     if (p.kind === 'timber') {
@@ -157,17 +169,13 @@ function build(el, ctx) {
       studs.forEach((x) => [x - sw / 2, x + sw / 2].forEach((xx) => path(hidden, poly([[xx, b.top + plate], [xx, b.floor - plate]]))));
       st.fade(hidden, 0.3, 0.6);
       twice(P, [[b.x0, b.floor], [b.x0, b.top], [b.x1, b.top], [b.x1, b.floor]], 0.1, 0.42);
-      // the job: bore the studs in the upper zone, pull through, close nothing
-      const crossed = studs.filter((x) => x < b.entry - 4 && x > b.drop + 4);
-      const holes = g(P, { stroke: C.ink, 'stroke-width': 1, fill: C.paper });
-      crossed.forEach((x) => circle(holes, x, b.run, 3.2));
-      st.fade(holes, 2.02, 2.1);
+      // the job: through the top plate, down one bay, close nothing
       const solid = path(P, poly(runPts), cab);
       st.draw(solid, 2.08, 2.3, [2.32, 2.42]);
       st.fade(path(P, poly(runPts), hiddenCab), 2.32, 2.42);
       st.fade(socket(P, b), 2.3, 2.38);
-      // the leader rises in the first bay to the drop, not along a stud
-      marks.push({ x: b.drop + 3, y: b.mid, lx, at: [2.36, 2.46] });
+      // the leader meets the drop inside its bay, not on a stud
+      marks.push({ x: b.drop + 3, y: Math.round(lerp(b.top, b.sockTop, 0.72)), lx, at: [2.36, 2.46] });
     } else {
       st.fade(patch(P, b, i), 0.3, 0.62);
       twice(P, [[b.x0, b.floor], [b.x0, b.top], [b.x1, b.top], [b.x1, b.floor]], 0.14, 0.46);

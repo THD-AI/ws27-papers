@@ -39,21 +39,25 @@
       "source": "EU-2018-858"
     }
   },
+  "notesWhy": "Removed from the figure on 17 November 2026: readers found the italic notes under the axis heavy, and the article text says the same. Kept here so that nothing is lost.",
   "notes": [
     {
       "step": 0,
+      "inFigure": false,
       "lead": "United States, T-Mobile (Telekom's US subsidiary).",
       "text": "No works council; for this kind of decision the checks come afterwards, as court cases and state rules.",
       "source": ["R6-01", "R6-06", "R6-08", "R11-36", "R11-37", "R11-41", "R11-43"]
     },
     {
       "step": 1,
+      "inFigure": false,
       "lead": "Germany, Telekom.",
       "text": "The approval: the works council is told while planning, has to agree if the system can monitor staff, and a privacy review approves it. Until 2021 about six weeks per system.",
       "source": ["R11-05", "R11-07", "R11-08", "R11-21", "R11-12"]
     },
     {
       "step": 2,
+      "inFigure": false,
       "lead": "Type approval.",
       "text": "Since 2021 a standing agreement approves IT systems inside fixed rules: one that fits goes live after a quick check, one outside needs its own agreement.",
       "source": "R11-12"

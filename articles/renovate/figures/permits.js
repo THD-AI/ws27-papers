@@ -8,14 +8,15 @@
 //           shrinks to its short form and building moves forward. A dashed
 //           ghost keeps the long approval's length: a car outside the
 //           approved type needs its own approval.
-// Words in the drawing are car words; the company terms are in the notes
-// under the axis. Lengths are schematic (data/permits.json).
+// Words in the drawing are car words; the figure ends at the axis. The
+// company terms are in the article text (data/permits.json keeps them under
+// "notes", flagged "inFigure": false). Lengths are schematic.
 import {
   mountFigure, svgRoot, colors, g, path, rect, line, text, textSize, stage, span, ease, lerp, clamp, pen,
 } from '../../../lib/fig.js';
 
 export const steps = 3;
-const SIZE = { wide: [552, 434], tall: [360, 506] };
+const SIZE = { wide: [552, 288], tall: [360, 318] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 
@@ -41,17 +42,18 @@ function build(el, ctx) {
   };
   const mono = (parent, x, y, s, o = {}) => text(parent, x, y, s, { family: 'mono', size: 11.5, fill: C.muted, ...o });
   // a check: an open diamond, as a milestone on a site schedule
-  const diamond = (parent, x, y, r = 5.5) => path(parent, `M${x} ${y - r}L${x + r} ${y}L${x} ${y + r}L${x - r} ${y}Z`, {
-    stroke: C.accent, 'stroke-width': 1.6, 'stroke-linejoin': 'round', fill: C.paper,
+  const diamond = (parent, x, y, r = 7) => path(parent, `M${x} ${y - r}L${x + r} ${y}L${x} ${y + r}L${x - r} ${y}Z`, {
+    stroke: C.accent, 'stroke-width': 1.8, 'stroke-linejoin': 'round', fill: C.paper,
   });
-  // a small car, side view, in pen lines; (x, y) is the left end of its wheel line
+  // a small car, side view, in pen lines; (x, y) is the left end of its wheel
+  // line. Drawn a third larger than its 26-unit sketch, so that it reads in print.
   const car = (parent, x, y) => {
-    const c = g(parent);
-    const body = ink(c, [[x + 3, y], [x, y], [x, y - 5.5], [x + 5, y - 6.5], [x + 8, y - 11.5], [x + 17, y - 11.5], [x + 21, y - 6.5], [x + 26, y - 5.5], [x + 26, y], [x + 23, y]], 1.2);
-    const mid = ink(c, [[x + 10, y], [x + 16, y]], 1.2);
-    const r = 2.8;
-    for (const wx of [x + 6.5, x + 19.5]) path(c, `M${wx - r} ${y}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0`, { stroke: C.ink, 'stroke-width': 1.2, fill: 'none' });
-    void body; void mid;
+    const c = g(parent), k = 1.35;
+    const P = (pts) => pts.map(([a, b]) => [x + a * k, y + b * k]);
+    ink(c, P([[3, 0], [0, 0], [0, -5.5], [5, -6.5], [8, -11.5], [17, -11.5], [21, -6.5], [26, -5.5], [26, 0], [23, 0]]), 1.5, C.ink, 0.4);
+    ink(c, P([[10, 0], [16, 0]]), 1.5, C.ink, 0.3);
+    const r = 2.8 * k;
+    for (const wx of [x + 6.5 * k, x + 19.5 * k]) path(c, `M${wx - r} ${y}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0`, { stroke: C.ink, 'stroke-width': 1.5, fill: 'none' });
     return c;
   };
 
@@ -155,7 +157,7 @@ function build(el, ctx) {
   rect(sFrame, sx0, sy0, stW, stH, { fill: 'none', stroke: C.accent, 'stroke-width': 1.5, rx: 1.5 });
   rect(sFrame, sx0 + 2.2, sy0 + 2.2, stW - 4.4, stH - 4.4, { fill: 'none', stroke: C.accent, 'stroke-width': 0.6, rx: 1 });
   const stT = text(stamp, sx0 + stW / 2, sy0 + stH / 2 - 1.5, wd.stamp.join('\n'), {
-    family: 'mono', size: 9.5, weight: 600, fill: C.accent, anchor: 'middle', lh: 10.5, spacing: 0.3,
+    family: 'mono', size: ctx.print ? 10.5 : 9.5, weight: 600, fill: C.accent, anchor: 'middle', lh: ctx.print ? 11.5 : 10.5, spacing: 0.3,
   });
   // centre the two lines on the stamp
   stT.el.setAttribute('transform', `translate(0 ${(-(stT.h) / 2 + stT.lh * 0.5 + 2.5).toFixed(1)})`);
@@ -185,14 +187,7 @@ function build(el, ctx) {
   const startLine = line(svg, X0, bar1 - 2, X0, axY, { stroke: C.hairline, 'stroke-width': 1, 'stroke-dasharray': '2 3', 'data-audit': 'skip' });
   st.fade(startLine, 0.1, 0.2);
 
-  // --- notes, caption-like, with the company terms
-  y = axY + 44;
-  for (const n of d.notes) {
-    const t = text(svg, X0, y, `${n.lead} ${n.text}`, { italic: true, size: 12.5, fill: C.muted, width: X1 - X0, lh: 16 });
-    st.fade(t.el, n.step + 0.72, n.step + 0.86);
-    y = t.bottom + 8 + 12.5 * 0.8;
-  }
-  if (y - 4 > H) svg.dataset.contentH = Math.round(y - 4);
+  // the figure ends at the axis; the company notes stay in the data
 
   return { set(step, t) { st.set(step, clamp(t)); }, destroy() {} };
 }

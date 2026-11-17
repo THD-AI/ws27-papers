@@ -1,7 +1,9 @@
 // attitudes: the same question, asked in both countries. Three panels of
 // 100-dot strips, one dot is 1%: two rows of 50 per country (large enough
 // to count at laptop size), Germany above the United States, same left edge. The
-// third question was asked in the EU only and stands alone.
+// third question was asked in the EU only and stands alone. In print one dot
+// is 5% (data: unit.print), one row of 20 per country, so that the dots stay
+// round and countable on paper and on a screen at 100 dpi.
 import {
   mountFigure, svgRoot, colors, g, rect, line, text, textSize, cells, dots, plate, penRing, stage, fmt,
 } from '../../../lib/fig.js';
@@ -21,22 +23,27 @@ function build(el, ctx) {
   const S = tall
     ? { q: 12.5, tag: 11.5, label: 12, num: 12.5, note: 12.5, pitch: 4.0, gap: 1.6, r: 1.6, rows: 2, cols: 50, x0: 14, sx: 100, rowH: 21, panelGap: 22, top: 48 }
     : { q: 15, tag: 12.5, label: 14.5, num: 15, note: 14.5, pitch: 7.0, gap: 3, r: 2.9, rows: 2, cols: 50, x0: 16, sx: 112, rowH: 24, panelGap: 26, top: 50 };
-  const n = d.unit.dotsPerStrip;
+  const U = ctx.print && d.unit.print ? { ...d.unit, ...d.unit.print } : d.unit;
+  if (ctx.print) { S.rows = U.rows; S.cols = U.dotsPerStrip / U.rows; }
+  const grp = U.group || 10;
+  const n = U.dotsPerStrip;
   // the strip takes what the country names and the numbers leave
   const names = [...new Set(d.panels.flatMap((p) => p.rows.map((r) => r.country)))];
   S.sx = S.x0 + Math.max(...names.map((c) => textSize(c, { family: 'sans', size: S.label }).w)) + 9;
   const numW = textSize('100%', { family: 'mono', size: S.num, weight: 500 }).w + (tall ? 14 : 18);
-  S.pitch = Math.min(tall ? 4.2 : 7.2, (W - S.sx - S.x0 - numW - (S.cols / 10 - 1) * S.gap) / S.cols);
-  S.r = S.pitch * 0.41;
+  if (ctx.print) S.gap = tall ? 4 : 6;
+  const maxPitch = ctx.print ? (tall ? 11 : 16) : tall ? 4.2 : 7.2;
+  S.pitch = Math.min(maxPitch, (W - S.sx - S.x0 - numW - (S.cols / grp - 1) * S.gap) / S.cols);
+  S.r = S.pitch * (ctx.print ? 0.43 : 0.41);
   if (tall) S.top = 64;
-  const slot = cells(n, S.cols, { gx: S.pitch, gy: S.pitch + 0.6, group: 10, groupGap: S.gap });
+  const slot = cells(n, S.cols, { gx: S.pitch, gy: S.pitch + 0.6, group: grp, groupGap: S.gap });
   const stripH = S.rows * (S.pitch + 0.6);
   if (!tall) S.rowH = stripH + 9;
   const valX = S.sx + slot.width + (tall ? 8 : 10);
 
   const hd = g(svg);
   const hl = text(hd, S.x0, tall ? 14 : 18, d.headline, { family: 'sans', size: tall ? 12.5 : 15, weight: 600, width: W - 2 * S.x0, lh: tall ? 15.5 : 18 });
-  const un = text(hd, S.x0, hl.bottom + S.note + 2, d.unit.note, { italic: true, size: S.note });
+  const un = text(hd, S.x0, hl.bottom + S.note + 2, U.note, { italic: true, size: S.note });
   S.top = un.bottom + (tall ? 22 : 24);
   st.fade(hd, 0, 0.08);
 
@@ -56,10 +63,10 @@ function build(el, ctx) {
         const f = rect(svg, 0, mid - S.rowH / 2 - 2, W, S.rowH + 4, { fill: C.field, 'data-audit': 'skip' });
         st.fade(f, b, b + 0.1);
       }
-      const count = Math.round(r.value / d.unit.percentPerDot);
+      const count = Math.round(r.value / U.percentPerDot);
       const lab = text(svg, S.x0, mid + S.label * 0.34, r.country, { family: 'sans', size: S.label });
       st.fade(lab.el, b, b + 0.06);
-      const pl = plate(svg, slot.filter((c) => c.i >= count), tall ? 0.7 : 0.95, p.standsOut ? C.muted : C.hairline, S.sx, sy);
+      const pl = plate(svg, slot.filter((c) => c.i >= count), ctx.print ? (tall ? 1.1 : 1.5) : tall ? 0.7 : 0.95, p.standsOut ? C.muted : C.hairline, S.sx, sy);
       pl.setAttribute('opacity', p.standsOut ? 0.5 : 1);
       st.fade(pl, b - 0.04, b + 0.04);
       const ds = dots(g(svg), slot, count, S.r, { fill: p.standsOut ? C.accent : C.ink }, S.sx, sy);

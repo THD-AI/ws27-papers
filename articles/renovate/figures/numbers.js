@@ -22,7 +22,7 @@ function plateA(svg, C, d, tall, st, keep, big) {
     ? { p: 20.5, gx: 14, gy: 152, rBase: 2, rUnit: 6.7, note: 12.5, top: [141, 130, 112, 83, 72], bottomY: 378, relX: 229, relNoteX: 241, relW: 108, restX: 256, restY: 116, restW: 96, tagX: 346, tagY: 44 }
     : { p: 32, gx: 150, gy: 162, rBase: 2.8, rUnit: 10.2, note: 14, top: [148, 136, 113, 83, 71], bottomY: 495, relX: 484, relNoteX: 500, relW: 230, restX: 492, restY: 110, restW: 240, tagX: 786, tagY: 17 };
   if (big) L.note = 13.5;
-  if (tall) { L.restX = 244; L.restY = 270; L.restW = 108; }
+  if (tall) { L.restX = 244; L.restY = 292; L.restW = 108; }
   const root = g(svg), body = g(root, tall ? { transform: 'translate(0 40)' } : null), grid = g(body), notes = g(body);
   const n = A.total.value, cols = 10;
   const at = (i) => { const c = i % cols, r = Math.floor(i / cols); return [L.gx + L.p / 2 + c * L.p, L.gy + L.p / 2 + r * L.p]; };
@@ -80,9 +80,19 @@ function plateA(svg, C, d, tall, st, keep, big) {
   const br = bracket(gR, L.relX, y0, L.relX, y1, 5, { stroke: C.ink, 'stroke-width': 1 });
   const relTxt = g(gR);
   const rel = text(relTxt, L.relNoteX, 0, fill(A.release.note, A.release.value), { ...o, width: L.relW });
-  relTxt.setAttribute('transform', `translate(0 ${((y0 + y1) / 2 - (rel.y + rel.h / 2)).toFixed(1)})`);
+  // the 40 and the 32 come from two documents: the drawing nests one in the
+  // other, the note under the release says that nobody published the overlap
+  const ovG = g(relTxt);
+  const ovTxt = A.overlap.note.replace('{a}', fmt(A.release.value)).replace('{b}', fmt(A.slide.value));
+  const ov = text(ovG, L.relNoteX, rel.bottom + L.note * 0.78 + (tall ? 6 : 8), ovTxt, { ...o, width: L.relW, fill: C.muted });
+  // centred on the bracket; on the narrow plate the block is taller than the
+  // four rows and starts at the bracket's top instead
+  const dy = tall ? y0 - 1 - rel.y : (y0 + y1) / 2 - (rel.y + ov.bottom) / 2;
+  relTxt.setAttribute('transform', `translate(0 ${dy.toFixed(1)})`);
   if (keep) st.draw(br, 0.74, 0.88); else st.draw(br, 0.74, 0.88, hide);
-  nt(relTxt, 0.84, 0.96);
+  st.fade(rel.el, 0.84, 0.96);
+  nt(relTxt, 0, 0.001);
+  nt(ovG, 1.8, 1.94);
 
   // the slide: a bracket over the 32, its note above
   const bx0 = L.gx + 3, bx1 = L.gx + (A.slide.value / rowsTop) * L.p - 3;
@@ -162,6 +172,7 @@ function plateB(svg, C, d, tall, st, bare, big) {
 
   const rx0 = tall ? S.x0 + 4 : 96, rx1 = tall ? W - S.x0 - 4 : 540, len = rx1 - rx0;
   let y = cs.bottom + (tall ? 20 : 58);
+  const rulerY = [];
   B.points.forEach((p, i) => {
     const a = 3.4 + i * 0.2;
     const tg = g(root), rg = g(root);
@@ -178,6 +189,7 @@ function plateB(svg, C, d, tall, st, bare, big) {
       const c1 = text(tg, rx1 + 24, ry - 6, count, { family: 'mono', size: S.mono, weight: 500 });
       text(tg, rx1 + 24, c1.bottom + S.note + 1, note, { italic: true, size: S.note, width: W - rx1 - 40 });
     }
+    rulerY.push(ry);
     // the ruler: one year, twelve months
     line(rg, rx0, ry, rx1, ry, ink);
     const n = B.strip.months;
@@ -207,6 +219,21 @@ function plateB(svg, C, d, tall, st, bare, big) {
       y = bt.bottom + (tall ? 22 : 40);
     }
   });
+
+  // the fall from the first ruler to the second, as T-Mobile names it: an
+  // arrow down in the December column, from the first ruler to the second
+  {
+    const fg = g(root);
+    const ax = rx1 - len / (B.strip.months * 2);
+    const ya = rulerY[0] + 8 + S.small + 8, yb = rulerY[1] - 11;
+    const aw = { stroke: C.ink, 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' };
+    line(fg, ax, ya, ax, yb, aw);
+    line(fg, ax - 4, yb - 6, ax, yb, aw);
+    line(fg, ax + 4, yb - 6, ax, yb, aw);
+    const fs = tall ? 15 : 17;
+    text(fg, ax - 9, (ya + yb) / 2 + fs * 0.36, B.fall.show.replace('{v}', fmt(B.fall.value)), { family: 'mono', size: fs, weight: 600, anchor: 'end' });
+    st.fade(fg, 3.82, 3.96);
+  }
 
   // step 4: the time line
   const tl = g(root);

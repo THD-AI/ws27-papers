@@ -1,73 +1,85 @@
 {
   "id": "roadmap",
-  "reading": "A renovation schedule for an occupied house, seven rows on one time axis: survey; plan and choose materials; approval, alongside the planning; the trades trained first; the main supply; the rooms one after the other (read only, then actions that can be undone, then changes fraud could use); running it, from the first room on. A band along the bottom: the people stay at home throughout. An open diamond after each piece of work: inspected at every step.",
-  "headline": "Renovate in this order, with the people at home, and inspect as you go.",
-  "note": "Schematic lengths in arbitrary units on one shared axis: the order and the overlaps matter, no duration or date is measured. The everyday words are the analogy; the second line of each row is what the step means for Telekom.",
+  "reading": "The order of the work as a schedule on one axis, order rather than duration, each row with its measure: measure first; a works agreement whose framework is agreed while planning and which runs alongside to the end, amended as each permission stage opens; choose suppliers; train staff; one customer record, the longest piece of work; permissions in stages (read only, then undoable actions, then changes fraud could use), each opened only after a test set passes; and running it, without end, which leads back to measuring. Arrows show that the works agreement, the trained staff and the customer record must come before the first permission. A band along the bottom: the staff stay throughout.",
+  "headline": "Each step unlocks the next. The staff stay, and every permission is tested first.",
+  "note": "Positions on the axis show order and dependency only, in arbitrary units: no duration or date is measured. Bar lengths say which piece of work is larger than another, not by how much.",
   "span": 20,
-  "axis": { "start": "start", "time": "time · schematic, no dates" },
+  "axis": { "start": "start", "time": "order, not duration" },
   "rows": [
     {
-      "label": "Survey",
+      "label": "Measure first",
       "company": "one measure for both countries, with its cost",
-      "bars": [[0, 2]],
+      "measure": "the pair is published",
+      "bars": [[0, 2.5]],
       "source": "proposal",
       "note": "Telekom's 2030 targets have no measure that compares with T-Mobile's; the measure is the article's proposal (section 9, point 1)"
     },
     {
-      "label": "Plan and choose materials",
+      "label": "Works agreement",
+      "company": "framework agreed while planning; amended as each part opens",
+      "measure": "signed before the first agent acts",
+      "bars": [[1, 4]],
+      "alongside": true,
+      "source": "R11-07",
+      "note": "the framework is agreed while the system is planned; the agreement then runs alongside the work and is amended at every permission stage"
+    },
+    {
+      "label": "Choose suppliers",
       "company": "keep the switch between model suppliers; data hosted in Germany",
-      "bars": [[1.5, 5]],
-      "source": "R6-04 R6-24"
+      "measure": "time to switch supplier, tests included",
+      "bars": [[4, 7]],
+      "source": "R6-04",
+      "note": "follows the framework agreement, as choosing materials follows approval"
     },
     {
-      "label": "Approval",
-      "company": "works agreement and AI Act status settled while planning",
-      "bars": [[2, 5.5]],
-      "source": "R11-07 R9-04 R9-05",
-      "note": "runs alongside the planning, not after the building"
-    },
-    {
-      "label": "Trades first",
-      "company": "staff trained before the tools arrive, least experienced first",
-      "bars": [[4.5, 9.5]],
+      "label": "Train staff",
+      "company": "before the tools reach customers; least experienced first",
+      "measure": "cases per hour; repeat contacts",
+      "bars": [[5, 9.5]],
       "source": "R4-29",
       "note": "the least experienced gain most from the new tools (R4-29)"
     },
     {
-      "label": "The main supply",
-      "company": "14 ways of proving who calls cut to 3; one usable customer record",
-      "bars": [[5.5, 9.5]],
-      "source": "R6-05"
+      "label": "One customer record",
+      "company": "14 ways of proving who calls cut to 3",
+      "measure": "callers recognised without questions",
+      "bars": [[3, 11]],
+      "source": "R6-05",
+      "note": "the largest piece of work, so the longest bar"
     },
     {
-      "label": "Room by room",
-      "company": "the keys given in steps",
+      "label": "Permissions in stages",
+      "company": "what the agent may do, widened one stage at a time",
+      "measure": "errors per 1,000 actions, by stage",
+      "gate": { "label": "test set passes", "needs": "needs 2, 4, 5", "source": "proposal" },
       "segments": [
-        { "label": "read only", "span": [9.5, 12.5], "source": "proposal" },
-        { "label": "actions that can be undone", "span": [12.5, 15.5], "source": "proposal" },
-        { "label": "changes fraud could use", "span": [15.5, 18.5], "source": "R6-16", "note": "changing bank details after login already exists (R6-16)" }
+        { "label": "read only", "span": [12.2, 14.4], "source": "proposal" },
+        { "label": "undoable actions", "span": [14.8, 17], "source": "proposal" },
+        { "label": "changes fraud could use", "span": [17.4, 19.6], "source": "R6-16", "note": "changing bank details after login already exists in Frag Magenta (R6-16)" }
       ],
       "source": "proposal",
-      "note": "the article's own proposal (section 9, point 4)"
+      "note": "the article's own proposal (section 9, point 4): each stage opens only after its test set passes"
     },
     {
-      "label": "Running it",
-      "company": "a named team answers for it, nights included; cost per request watched",
-      "bars": [[12.5, 20]],
+      "label": "Run it",
+      "company": "a named team, nights included",
+      "measure": "cost per finished request",
+      "bars": [[13, 20]],
       "open": true,
-      "checks": [15.5, 18.5],
+      "back": "back to measuring",
       "source": "proposal",
-      "note": "starts after the first room and does not end"
+      "note": "starts once the first stage is open and does not end; what it measures feeds the next round of measuring"
     }
   ],
+  "depends": {
+    "into": "the first permission stage",
+    "from": [1, 3, 4],
+    "source": "proposal",
+    "note": "an agent can't act on an account it can't identify (row 5); staff are trained before the tools reach customers (row 4); the works agreement covers each stage before it opens (row 2)"
+  },
   "home": {
-    "label": "People at home throughout",
+    "label": "Staff stay throughout",
     "company": "no dismissals for business reasons until the end of 2028",
     "source": "R11-14"
-  },
-  "inspection": {
-    "label": "inspected at every step",
-    "source": "R11-07 R9-04 R9-05",
-    "note": "an open diamond after each work bar, and along the running: the inspection goes with the work, not after it"
   }
 }

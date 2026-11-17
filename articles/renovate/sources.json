@@ -34,6 +34,20 @@
     "url": "https://www.baunetzwissen.de/elektro/fachwissen/leitungen-verteiler/leitungsverlegung-und-installationszonen-153012",
     "type": "standard"
   },
+  "HS-2001": {
+    "title": "Varieties of Capitalism: The Institutional Foundations of Comparative Advantage",
+    "publisher": "Peter A. Hall, David Soskice (eds.), Oxford University Press",
+    "date": "2001",
+    "url": "https://doi.org/10.1093/0199247757.001.0001",
+    "type": "peer-reviewed"
+  },
+  "TOE-1990": {
+    "title": "The Processes of Technological Innovation (the technology–organisation–environment framework); summarised in J. Baker, \"The Technology–Organization–Environment Framework\", Information Systems Theory, 2012",
+    "publisher": "Louis G. Tornatzky, Mitchell Fleischer (eds.), Lexington Books",
+    "date": "1990",
+    "url": "https://doi.org/10.1007/978-1-4419-6108-2_12",
+    "type": "peer-reviewed"
+  },
   "R6-02": {
     "title": "Deutsche Telekom AI Investor Day (Oct. 5, 2026) Transcript",
     "publisher": "Deutsche Telekom",
@@ -116,6 +130,13 @@
     "url": "https://www.entrepreneur.com/business-news/klarna-ceo-reverses-course-by-hiring-more-humans-not-ai/491396",
     "type": "press"
   },
+  "CBA-2025": {
+    "title": "CBA reverses AI-driven job cuts, admits \"error\"",
+    "publisher": "Information Age (Australian Computer Society)",
+    "date": "2025-08-21",
+    "url": "https://ia.acs.org.au/article/2025/cba-reverses-ai-driven-job-cuts--admits--error-.html",
+    "type": "press"
+  },
   "R4-29": {
     "title": "Generative AI at Work",
     "publisher": "Brynjolfsson, Li, Raymond, Quarterly Journal of Economics 140(2): 889-942",
@@ -129,6 +150,13 @@
     "url": "https://www.telekom.com/de/newsroom/aktuelles/medieninformationen/2026/05/deutsche-telekom-und-ver-di-erzielen-tarifeinigung",
     "type": "company release",
     "date": "2026-05-28"
+  },
+  "DGB-2026": {
+    "title": "Tarifergebnis Deutsche Telekom: mehr Entgelt, Kündigungsschutz und erstmals Mitgliederbonus",
+    "publisher": "Deutscher Gewerkschaftsbund (DGB), Tarifmeldung",
+    "date": "2026",
+    "url": "https://www.dgb.de/service/weiterer-service/tarifmeldungen/tarifmeldung/tarifergebnis-deutsche-telekom-mehr-entgelt-kuendigungsschutz-und-erstmals-mitgliederbonus/",
+    "type": "union release"
   },
   "R12-01": {
     "title": "HR Factbook 2025, “Socially responsible staff reduction”",

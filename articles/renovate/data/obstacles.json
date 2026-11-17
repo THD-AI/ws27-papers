@@ -7,7 +7,14 @@
     "percentPerDot": 2,
     "dotsPerRow": 50,
     "note": "one dot is [[2%]] of firms, rounded",
-    "source": "R7-06"
+    "source": "R7-06",
+    "print": {
+      "percentPerDot": 4,
+      "dotsPerRow": 25,
+      "group": 5,
+      "note": "one dot is [[4%]] of firms, rounded",
+      "why": "In print the dots are larger and fewer, so that they stay legible at 100 dpi."
+    }
   },
   "note": {
     "text": "the six most named reasons are shown",

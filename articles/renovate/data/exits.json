@@ -7,7 +7,13 @@
   "unit": {
     "positionsPerMark": 25,
     "note": "one mark is [[25]] full-time positions, rounded; exact totals above",
-    "source": "R12-01"
+    "source": "R12-01",
+    "print": {
+      "positionsPerMark": 50,
+      "marks": { "cols": 7, "p": 14.6, "r": 5.3 },
+      "note": "one mark is [[50]] full-time positions, rounded; exact totals above",
+      "why": "In print the marks are larger and fewer, so that they stay legible at 100 dpi. The figure caption in text.md has to name both units."
+    }
   },
   "years": [
     2021,

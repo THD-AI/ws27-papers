@@ -520,9 +520,11 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .scene-caption { display: none; }
 }
 
-/* Short windows side by side: the caption would hang below the window, so it
-   follows the scene, as on phones, and the figure takes the full height. */
-@media screen and (min-width: 640px) and (max-height: 559.98px) {
+/* Side by side: the caption follows the scene, as on phones, so it is read
+   once after the passages instead of standing pinned under the figure for
+   several screens (readers took that for a repeated caption). The figure
+   takes the full height. */
+@media screen and (min-width: 1000px) and (min-height: 560px), screen and (min-width: 640px) and (max-height: 559.98px) {
   .scene-stage figcaption { display: none; }
   .scene-caption { display: block; grid-column: 1 / -1; grid-row: 2; max-width: var(--measure); margin: 0.6rem 0 0 calc(var(--left) - var(--pad)); padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
 }
@@ -602,6 +604,13 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 
 @media screen and (max-width: 480px) {
   .toc ol { columns: 1; }
+}
+
+/* The section list folds on phones, so the argument starts on the first
+   screen; on wider screens it is always open and the fold has no handle. */
+.toc-fold > summary { display: none; }
+@media screen and (max-width: 639.98px) {
+  .toc-fold > summary { display: list-item; cursor: pointer; padding: 0.6rem 0; font: 500 0.72rem/1.4 var(--mono); letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
 }
 
 /* ------------------------------------------------------------------------ */

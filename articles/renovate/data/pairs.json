@@ -128,7 +128,7 @@
         "value": 2.6,
         "show": "2.6 million",
         "status": "reported",
-        "text": "calls deflected by bots, first half of 2026 (Europe column of the slide; another slide gives [[2.1 million]] for Germany)"
+        "text": "calls handled by Frag Magenta, first half of 2026, by Telekom's release"
       },
       "why": "no American number, no German total",
       "source": [
@@ -294,7 +294,7 @@
         "value": 531,
         "show": "$531 m",
         "status": "reported",
-        "text": "of severance to September 2026"
+        "text": "of severance to September 2026, in a restructuring of management layers that the filings don't tie to the agents"
       },
       "de": {
         "value": null,
@@ -302,7 +302,7 @@
         "note": "No German figure is published.",
         "text": ""
       },
-      "why": "only one side is filed",
+      "why": "only one side is filed, and that side isn't tied to the agents",
       "source": [
         "R6-09",
         "R6-11"

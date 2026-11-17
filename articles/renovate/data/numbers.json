@@ -26,6 +26,11 @@
       "source": "R6-06",
       "derivation": "release value minus slide value; drawn, not printed as a number"
     },
+    "overlap": {
+      "note": "two documents; overlap not published",
+      "source": ["R6-01", "R6-06"],
+      "why": "The 40 comes from a press release, the 32 from an investor slide. Drawing the 32 inside the 40 is the figure's choice; the note says that nobody published the overlap."
+    },
     "start": {
       "note": "that is: they start with the software",
       "source": "R6-02"
@@ -85,6 +90,12 @@
       "value": null,
       "note": "{a} to {b}: no figures published",
       "source": "R6-06"
+    },
+    "fall": {
+      "value": 55,
+      "show": "−{v}%",
+      "source": "R6-06",
+      "derivation": "(7.0 − 3.1) / 7.0 = 55.7%; T-Mobile reports the fall as 55%"
     },
     "event": {
       "year": 2024,
