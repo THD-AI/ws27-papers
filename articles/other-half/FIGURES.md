@@ -22,11 +22,11 @@ Honesty rules that override looks:
 
 A step now starts when its passage is reached and plays its timeline (t 0 to 1) over a set time; each figure exports `durations` in seconds, one per step (dotUni `docs/papers/innovation/loop-motion.md`). Inside a step things arrive in reading order at least 0.15 s apart, a label 0.2 to 0.4 s after what it names, and the timeline is busy over about 75% or more of t.
 
-- **`lattice`** `[2.4, 1.8, 1.8, 1.8, 2.6, 2.4]`: step 0 starts with the leftmost tile at once; its notes arrive one by one (qubits, checks, the sum). Steps 1 to 3 overlap their arrivals a little (the error, the fired checks, the note, the key); step 5 starts at once.
-- **`clock`** `[2.4, 2.0, 2.4, 2.4, 1.8]`: step 1, the bracket and "about 22 rounds meanwhile" are separate, to 0.92. Step 4 goes the axis moving down, the claim's lane and blocks, its note, then its tag (was still from 0.54).
-- **`learning`** `[3.0, 2.8, 2.6]`: unchanged inside (already busy over 84–86%).
+- **`lattice`** `[2.4, 1.2, 1.8, 1.8, 2.6, 2.4]` (step 1 from 1.8 to 1.2 on 17 November: it completed up to 0.4 s after its passage was reached): step 0 starts with the leftmost tile at once; its notes arrive one by one (qubits, checks, the sum). Steps 1 to 3 overlap their arrivals a little (the error, the fired checks, the note, the key); step 5 starts at once.
+- **`clock`** `[2.4, 2.0, 1.5, 2.4, 1.8]` (step 2 from 2.4 to 1.5 on 17 November: it completed up to 2.1 s late): step 1, the bracket and "about 22 rounds meanwhile" are separate, to 0.92. Step 4 goes the axis moving down, the claim's lane and blocks, its note, then its tag; since 17 November spread over the whole step (axis 0 to 0.5, lane 0.08 to 0.5, note 0.4 to 0.72, tag 0.64 to 0.98), so no part of it happens in a flash of 0.13 to 0.3 s.
+- **`learning`** `[2.2, 2.0, 2.0]` (from `[3.0, 2.8, 2.6]` on 17 November: smooth but sleepy): unchanged inside (busy over 84–86%).
 - **`line`**, **`syndromes`**, **`noise`** `medium: [2.0]`; **`suppression`** `medium: [1.8]`: unchanged inside.
-- **`qubits`** (margin) `small: [0.6, 0.9, 1.0, 1.1, 1.0, 1.1]`: the new dots start while the grid still shrinks (from 0.3 of the change, not 0.38).
+- **`qubits`** (margin) `small: [1.3, 1.3, 1.3, 1.3, 1.3, 1.3]` (17 November: it changes in the reader's peripheral vision, and under a second a change went unnoticed): the new dots start while the grid still shrinks (from 0.3 of the change, not 0.38); the grid shrinks over 0.7 of the change (was 0.55), labels and header fade over 0.25 (0.33 s, was 0.2), the line to the box shows over 0.25, so no part of a change is concentrated in under 0.3 s.
 
 ## `lattice` (scene, 6 steps): the smallest grid, and three fired checks with two explanations
 

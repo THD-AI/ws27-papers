@@ -126,7 +126,7 @@ function layoutInPage() {
   });
   const sections = [...document.querySelectorAll('h2.sec')].map((h) => ({ id: h.id, top: top(h) }));
   const side = matchMedia('(min-width: 1000px) and (min-height: 560px), (min-width: 640px) and (min-height: 450px) and (max-height: 559.98px)').matches;
-  const topm = matchMedia('(max-width: 699.98px) and (min-height: 560px)').matches;
+  const topm = matchMedia('(max-width: 999.98px) and (min-height: 560px)').matches;
   return { slots, blocks, sections, mode: side ? 'side' : topm ? 'top' : 'seq', maxScroll: document.documentElement.scrollHeight - innerHeight, vh: innerHeight, rail: !!document.querySelector('.rail-pin')?.getClientRects().length };
 }
 

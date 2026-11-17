@@ -28,7 +28,14 @@ export const steps = 3;
 export const stills = [2];
 // seconds each step plays once triggered: three walls drawn; the cable
 // comes down to each; the three jobs done, each with its note
-export const durations = { large: [2.8, 2.0, 3.0] };
+// (step 2: timber, then the duct, then the channel, one after another:
+// about 0.7, 0.9 and 1.2 s, each with its note)
+export const durations = { large: [2.8, 1.2, 2.9] };
+// the engine plays t with a prompt start and a gentle end (article.js
+// soft()); T(sec, D) is the t at which `sec` seconds of a D-second step
+// have passed, so arrivals can be set in seconds
+const soft = (x) => x * (1.4 - 0.4 * x);
+const T = (sec, D) => soft(Math.min(1, Math.max(0, sec / D)));
 // tall: three panels stacked, short enough that the title, the drawing and
 // the caption share one phone screen
 export const aspect = { wide: 928 / 392, tall: 360 / 528 };
@@ -44,7 +51,9 @@ function build(el, ctx) {
   const st = stage();
   const S = tall
     ? { head: 13.5, sub: 11.5, where: 11.5, note: 13.5 }
-    : { head: 15, sub: 12.5, where: 11.5, note: 15 };
+    // wide: the smallest lettering is 13.5 of 928 units, so a frame of
+    // 800 px still shows it at 11.6 px (the engine picks wide from there)
+    : { head: 16, sub: 13.5, where: 13.5, note: 15.5 };
   const clipId = `walls-cut-${++mounts}`;
 
   // one box per panel: x0..x1 the wall, hy/wy/sy heading, where and sub
@@ -159,8 +168,19 @@ function build(el, ctx) {
   };
 
   const marks = [];      // where each note's leader points
+  // step 2 in the passage's order: each wall has its own stretch of time,
+  // its old timeline (o0..o1 in g) mapped into it
+  const D2 = durations.large[2];
+  const win = {
+    timber: [2 + T(0, D2), 2 + T(0.7, D2), 2.02, 2.6],
+    surface: [2 + T(0.7, D2), 2 + T(1.6, D2), 2.18, 2.82],
+    chase: [2 + T(1.6, D2), 2 + T(2.85, D2), 2.06, 2.92],
+  };
   d.panels.forEach((p, i) => {
     const b = boxes[i], P = g(svg);
+    const [w0, w1, o0, o1] = win[p.kind] || [2, 3, 2, 3];
+    const M = (x) => (x < 2 ? x : lerp(w0, w1, (x - o0) / (o1 - o0)));
+    const Ms = (a) => a && a.map(M);
     const hd = text(P, b.x0, b.hy, p.heading, { family: 'sans', size: S.head, weight: 600 });
     const sb = text(P, b.x0, b.sy, p.sub, { family: 'sans', size: S.sub, fill: C.muted });
     // step 0, panel by panel in reading order: heading, sub, the floor, the
@@ -185,11 +205,11 @@ function build(el, ctx) {
       twice(P, [[b.x0, b.floor], [b.x0, b.top], [b.x1, b.top], [b.x1, b.floor]], 0.2 + o, 0.5 + o);
       // the job: through the top plate, down one bay, close nothing
       const solid = path(P, poly(runPts), cab);
-      st.draw(solid, 2.08, 2.34, [2.38, 2.5]);
-      st.fade(path(P, poly(runPts), hiddenCab), 2.38, 2.5);
-      st.fade(socket(P, b), 2.3, 2.4);
+      st.draw(solid, M(2.08), M(2.34), Ms([2.38, 2.5]));
+      st.fade(path(P, poly(runPts), hiddenCab), M(2.38), M(2.5));
+      st.fade(socket(P, b), M(2.3), M(2.4));
       // the leader meets the drop inside its bay, not on a stud
-      marks.push({ x: b.drop + 3, y: Math.round(lerp(b.top, b.sockTop, 0.72)), lx, at: [2.44, 2.56] });
+      marks.push({ x: b.drop + 3, y: Math.round(lerp(b.top, b.sockTop, 0.72)), lx: b.drop + 3, at: Ms([2.44, 2.56]), vertical: true });
     } else {
       twice(P, [[b.x0, b.floor], [b.x0, b.top], [b.x1, b.top], [b.x1, b.floor]], 0.2 + o, 0.5 + o);
       st.fade(patch(P, b, i), 0.5 + o, 0.72 + o);
@@ -200,7 +220,7 @@ function build(el, ctx) {
       const dw = tall ? 5 : 5.5;
       const duct = band(b, dw);
       // the cable laid on the face, then the duct's cover closes over it
-      st.draw(path(P, poly(runPts), cab), 2.24, 2.4);
+      st.draw(path(P, poly(runPts), cab), M(2.24), M(2.4));
       const body = path(P, poly(duct, true), { fill: C.paper, stroke: 'none', 'data-audit': 'skip' });
       const edge = pline(P, [...duct, duct[0]], 1.25, C.ink, 0.25);
       const screws = g(P, { stroke: C.ink, 'stroke-width': 0.9, fill: C.paper, 'data-audit': 'skip' });
@@ -213,12 +233,12 @@ function build(el, ctx) {
         const y = lerp(b.run + dw, b.sockTop, f);
         circle(screws, b.drop, y, 1.9); path(screws, poly([[b.drop - 1.3, y], [b.drop + 1.3, y]]));
       });
-      st.fade(body, 2.44, 2.54).draw(edge, 2.4, 2.56).fade(screws, 2.52, 2.6);
-      st.fade(socket(P, b), 2.36, 2.44);
+      st.fade(body, M(2.44), M(2.54)).draw(edge, M(2.4), M(2.56)).fade(screws, M(2.52), M(2.6));
+      st.fade(socket(P, b), M(2.36), M(2.44));
       // painted over: the duct takes the wall's colour, a muted second edge
       const paint = pline(P, [...duct, duct[0]], 0.6, C.muted, 0.8);
-      st.draw(paint, 2.58, 2.7);
-      marks.push({ x: b.drop + dw + 2.5, y: b.mid, lx, at: [2.66, 2.78] });
+      st.draw(paint, M(2.58), M(2.7));
+      marks.push({ x: b.drop + dw + 2.5, y: b.mid, lx, at: Ms([2.66, 2.78]) });
     }
 
     if (p.kind === 'chase') {
@@ -235,16 +255,16 @@ function build(el, ctx) {
       path(cut, poly(chan, true), { fill: C.paper, stroke: 'none' });
       bricks(cut, b, { 'clip-path': `url(#${clipId})` });
       const cutEdge = pline(P, [...chan, chan[0]], 1, C.ink, 0.35);
-      st.fade(cut, 2.06, 2.24, [2.6, 2.74]);
-      st.draw(cutEdge, 2.06, 2.32, [2.6, 2.74]);
-      st.fade(plaster, 2.6, 2.74);
+      st.fade(cut, M(2.06), M(2.24), Ms([2.6, 2.74]));
+      st.draw(cutEdge, M(2.06), M(2.32), Ms([2.6, 2.74]));
+      st.fade(plaster, M(2.6), M(2.74));
       const scarEdge = path(P, pen(scarPts, 41 + i, 0.9), { stroke: C.muted, 'stroke-width': 1, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', 'data-audit': 'skip' });
-      st.draw(scarEdge, 2.64, 2.8);
+      st.draw(scarEdge, M(2.64), M(2.8));
       const solid = path(P, poly(runPts), cab);
-      st.draw(solid, 2.4, 2.58, [2.64, 2.76]);
-      st.fade(path(P, poly(runPts), hiddenCab), 2.68, 2.78);
-      st.fade(socket(P, b), 2.74, 2.82);
-      marks.push({ x: b.drop + pw + 1.5, y: b.mid, lx, at: [2.78, 2.88] });
+      st.draw(solid, M(2.4), M(2.58), Ms([2.64, 2.76]));
+      st.fade(path(P, poly(runPts), hiddenCab), M(2.68), M(2.78));
+      st.fade(socket(P, b), M(2.74), M(2.82));
+      marks.push({ x: b.drop + pw + 1.5, y: b.mid, lx, at: Ms([2.78, 2.88]) });
     }
 
     // the cable arrives (step 1) and goes in (step 2)
@@ -252,24 +272,26 @@ function build(el, ctx) {
       ? [[b.entry - 30, b.cy], [b.entry - 10, b.cy + 3], [b.entry, b.cy + 10], [b.entry, b.top - 8]]
       : [[b.entry - 30, b.cy], [b.entry - 10, b.cy + 4], [b.entry, b.cy + 16], [b.entry, b.top - 8]];
     // step 1: the cable comes down to each wall, left to right
-    const ca = 1.02 + i * 0.12;
-    st.draw(path(P, spline(arrive), cab), ca, ca + 0.4);
+    const ca = 1.02 + i * 0.14;
+    st.draw(path(P, spline(arrive), cab), ca, ca + 0.36);
     const tip = g(P, { stroke: C.accent, 'stroke-width': 1.1, 'stroke-linecap': 'round' });
     path(tip, poly([[b.entry - 1.6, b.top - 8], [b.entry - 2.2, b.top - 3]]));
     path(tip, poly([[b.entry + 1.6, b.top - 8], [b.entry + 2.2, b.top - 3]]));
-    st.fade(tip, ca + 0.34, ca + 0.46, [2.0, 2.1]);
-    const goIn = p.kind === 'timber' ? 2.02 : p.kind === 'surface' ? 2.18 : 2.34;
-    st.draw(path(P, poly([[b.entry, b.top - 8], [b.entry, b.top]]), cab), goIn, goIn + 0.06);
+    const goIn = M(p.kind === 'timber' ? 2.02 : p.kind === 'surface' ? 2.18 : 2.34);
+    st.fade(tip, ca + 0.34, ca + 0.46, [goIn - 0.02, goIn + 0.03]);
+    st.draw(path(P, poly([[b.entry, b.top - 8], [b.entry, b.top]]), cab), goIn, goIn + 0.05);
 
     // the job, one note per wall
     const m = marks[i];
-    const nt = text(P, b.x0, b.ny, p.note, { italic: true, size: S.note });
+    // the timber note stands under its drop, so the leader runs straight up
+    const nx = m.vertical ? Math.max(b.x0, Math.min(m.x - 30, b.x1 - textSize(p.note, { italic: true, size: S.note }).w)) : b.x0;
+    const nt = text(P, nx, b.ny, p.note, { italic: true, size: S.note });
     const ld = g(P);
     leader(ld, m.lx ?? m.x, nt.y - 3, m.x, m.y, { stroke: C.muted });
     // stacked: the effort follows the note on its line, to keep the panel short
     const ef = tall
       ? text(P, nt.right + 12, b.ny, p.effort, { italic: true, size: S.note, fill: C.muted })
-      : text(P, b.x0, b.ny + S.note * 1.25, p.effort, { italic: true, size: S.note, fill: C.muted });
+      : text(P, nx, b.ny + S.note * 1.25, p.effort, { italic: true, size: S.note, fill: C.muted });
     st.fade(ld, m.at[0], m.at[1]).fade(nt.el, m.at[0] + 0.02, m.at[1] + 0.02).fade(ef.el, m.at[0] + 0.04, m.at[1] + 0.04);
   });
 
@@ -294,7 +316,7 @@ function build(el, ctx) {
       leader(lead, sx, cn.bottom + 3, b.entry - 31, b.cy - 1, { stroke: C.muted });
     });
   }
-  st.fade(cg, 1.62, 1.82).fade(lead, 1.7, 1.92);
+  st.fade(cg, 1.5, 1.72).fade(lead, 1.66, 1.94);
 
   return { set: (s, t) => st.set(s, t) };
 }

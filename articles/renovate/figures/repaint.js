@@ -3,20 +3,22 @@
 // timelines on one shared month axis.
 //   step 0: the axis, the two tracks and the cuts (ink markers, italic
 //           notes above the track).
-//   step 1: the reversals in the accent: a bracket from the cut to the
-//           reversal, its length ("15 months", "weeks"), the reversal
-//           marker and its note under the bracket.
+//   step 1: Klarna's reversal in the accent: a bracket from the cut to
+//           the reversal, its length ("15 months"), the reversal marker
+//           and its note under the bracket.
+//   step 2: Commonwealth Bank's reversal, the same way ("weeks"); each
+//           case at its own passage.
 // Every date, word and number comes from data/repaint.json.
 import {
   mountFigure, svgRoot, colors, g, path, circle, text, textSize, stage, clamp, pen,
 } from '../../../lib/fig.js';
 
-export const steps = 2;
+export const steps = 3;
 // where scenes read as a sequence (tablet portrait, phone landscape): one still, the final state
-export const stills = [1];
+export const stills = [2];
 // seconds each step plays once triggered: the axis, both cases and their
-// cuts; then the way back, case by case
-export const durations = { large: [2.4, 2.2] };
+// cuts; then Klarna's way back; then Commonwealth Bank's
+export const durations = { large: [2.4, 2.0, 1.4] };
 // wide: drawn narrower than its column (480 units in a 520 to 570 px frame),
 // so that its smallest lettering renders at 13 px or more on desktops
 const SIZE = { wide: [480, 420], tall: [360, 400] };
@@ -73,7 +75,7 @@ function build(el, ctx) {
   // --- one row per case
   d.cases.forEach((c, i) => {
     const o = i * 0.2;                  // the second row follows the first a little later
-    const ob = i * 0.42;
+    const ob = i;                       // case i's way back is step 1 + i
     const R = g(svg);
     const kick = mono(R, X0, y, c.label, { caps: true, spacing: 0.6, fill: C.ink, weight: 500, width: X1 - X0 });
     st.fade(kick.el, 0.14 + o, 0.26 + o);
@@ -94,22 +96,22 @@ function build(el, ctx) {
 
     // the way back: bracket under the track, its length, the marker, the note
     const brY = lineY + 11;
-    twice(R, [[xc, lineY + 5], [xc, brY], [xb, brY], [xb, lineY + 5]], 1.02 + ob, 1.3 + ob, C.accent, 1.5);
+    twice(R, [[xc, lineY + 5], [xc, brY], [xb, brY], [xb, lineY + 5]], 1.02 + ob, 1.42 + ob, C.accent, 1.5);
     const lw = textSize(c.gap.label, { family: 'mono', size: S.mono, weight: 500 }).w;
     const fits = xb - xc >= lw + 12;
     const gl = fits
       ? mono(R, (xc + xb) / 2, brY + 15, c.gap.label, { anchor: 'middle', fill: C.accent, weight: 500 })
       : mono(R, xc - 7, brY + 4, c.gap.label, { anchor: 'end', fill: C.accent, weight: 500 });
-    st.fade(gl.el, 1.24 + ob, 1.4 + ob);
+    st.fade(gl.el, 1.36 + ob, 1.56 + ob);
     const mb = g(R);
     circle(mb, xb, lineY, 5.4, { fill: C.paper, stroke: C.accent, 'stroke-width': 1.5 });
     circle(mb, xb, lineY, 2.4, { fill: C.accent });
-    st.fade(mb, 1.26 + ob, 1.4 + ob);
+    st.fade(mb, 1.38 + ob, 1.58 + ob);
     const backTop = Math.max(brY + 10, gl.bottom + 9);
     const back = note(R, xb, backTop + S.note * 0.78, c.back, C.accent);
-    st.fade(back.el, 1.34 + ob, 1.54 + ob);
+    st.fade(back.el, 1.56 + ob, 1.92 + ob);
     const l2 = vleader(R, xb, brY + 2, back.y - 4, C.accent);
-    st.fade(l2, 1.3 + ob, 1.44 + ob);
+    st.fade(l2, 1.46 + ob, 1.64 + ob);
 
     y = back.bottom + 34;
   });

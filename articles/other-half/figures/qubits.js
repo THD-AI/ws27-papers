@@ -12,7 +12,7 @@ export const steps = 6;
 // seconds each change plays at its marker, seen from the corner of the eye:
 // state 0 is there from the start; the larger grids bring more dots; the
 // box that reads it is drawn with its line
-export const durations = { small: [0.6, 0.9, 1.0, 1.1, 1.0, 1.1] };
+export const durations = { small: [1.3, 1.3, 1.3, 1.3, 1.3, 1.3] };
 const W = 224, H = 256;
 export const aspect = { wide: W / H, tall: W / H };
 
@@ -115,7 +115,7 @@ function build(el, ctx) {
     const k1 = Math.max(0, Math.ceil(G - 1e-9)), k0 = Math.max(0, k1 - 1);
     const u = G <= 0 ? 1 : G - (k1 - 1);                       // progress into state k1
     const a = K[k0], b = K[k1];
-    const m = ease(clamp(u / 0.55));
+    const m = ease(clamp(u / 0.7));
     const pitch = lerp(a.pitch, b.pitch, m), cx = lerp(a.cx, b.cx, m), cy = lerp(a.cy, b.cy, m), mode = lerp(a.mode, b.mode, m);
     // state 0 is complete from the start: the one qubit never fades in
     // under its label, so the opening never shows a label over an empty box
@@ -142,7 +142,7 @@ function build(el, ctx) {
     const boxP = a.box && b.box ? 1 : b.box ? ease(clamp((u - 0.5) / 0.4)) : 0;
     show(gBox, boxP);
     const reach = cx + ((b.d - 1) / 2 + 0.5) * pitch + 5;
-    if (show(join, a.box && b.box ? 1 : b.box ? clamp((u - 0.45) / 0.1) : 0)) {
+    if (show(join, a.box && b.box ? 1 : b.box ? clamp((u - 0.45) / 0.25) : 0)) {
       join.setAttribute('x1', reach.toFixed(1));
       join.setAttribute('x2', (a.box && b.box ? bx : lerp(reach, bx, ease(clamp((u - 0.45) / 0.4)))).toFixed(1));
     }
@@ -150,8 +150,8 @@ function build(el, ctx) {
     labels.forEach((lb, i) => {
       let p = 0;
       if (k0 === k1) p = i === k1 ? 1 : 0;
-      else if (i === k0) p = 1 - ease(clamp(u / 0.2));
-      else if (i === k1) p = ease(clamp((u - 0.8) / 0.2));
+      else if (i === k0) p = 1 - ease(clamp(u / 0.25));
+      else if (i === k1) p = ease(clamp((u - 0.75) / 0.25));
       show(lb, p);
     });
     // the header changes with the label, in the same fade
@@ -159,8 +159,8 @@ function build(el, ctx) {
     heads.forEach((h) => {
       let p = 0;
       if (hv(k0) === hv(k1)) p = h === hv(k1) ? 1 : 0;
-      else if (h === hv(k0)) p = 1 - ease(clamp(u / 0.2));
-      else if (h === hv(k1)) p = ease(clamp((u - 0.8) / 0.2));
+      else if (h === hv(k0)) p = 1 - ease(clamp(u / 0.25));
+      else if (h === hv(k1)) p = ease(clamp((u - 0.75) / 0.25));
       show(h.hg, p);
     });
     svg.setAttribute('aria-label', K[u >= 0.6 ? k1 : k0].say);

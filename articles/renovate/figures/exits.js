@@ -21,7 +21,16 @@ export const steps = 3;
 export const stills = [2];
 // seconds each step plays once triggered: the stacks rise, they split into
 // their routes with the names, then severance takes the field
-export const durations = { large: [2.6, 2.6, 1.6] };
+// step 1 (2.4 s): the routes split off one after another, partial
+// retirement (the bottom band) first, transfers last, each name after its
+// band; step 2 (1.6 s): the severance band 0–0.8 s, then the ring 0.8–1.6
+export const durations = { large: [2.6, 2.4, 1.6] };
+// g = k + t at which `sec` seconds of step k have passed (the engine's soft
+// ease, article.js)
+const soft = (x) => x * (1.4 - 0.4 * x);
+const G = (k, sec) => k + soft(Math.min(1, Math.max(0, sec / durations.large[k])));
+// band k's own stretch of step 1 (bottom up), in seconds
+const bandWin = (k) => [0.05 + 0.3 * k, 0.6 + 0.3 * k];
 export const aspect = { wide: 880 / 462, tall: 360 / 398 };
 
 // '#rrggbb' or 'rgb(r, g, b)' -> [r, g, b]
@@ -88,7 +97,8 @@ function build(el, ctx) {
   const offset = d.years.map(() => 0);
   const compact = bands.map((b) => b.us.map((u, i) => { const at = offset[i]; offset[i] += u.cells; return at; }));
   const stackTop = offset.map((n) => base0 - Math.ceil(n / S.cols) * S.p);   // top of each year's stack
-  const split = (gg) => ease(span(gg, 1.04, 1.6));
+  const split = (gg) => ease(span(gg, G(1, 0.05), G(1, 1.8)));
+  const splitK = (gg, k) => ease(span(gg, G(1, bandWin(k)[0]), G(1, bandWin(k)[1])));
 
   // years under the columns
   const yg = g(chart);
@@ -99,7 +109,7 @@ function build(el, ctx) {
   // and the others step back (not in print, which keeps them in ink)
   const back = mixer(C.ink, mixer(C.muted, C.paper)(0.35));
   const toAccent = mixer(C.ink, C.accent);
-  const focus = (gg) => ease(span(gg, 2.0, 2.42));
+  const focus = (gg) => ease(span(gg, G(2, 0.02), G(2, 0.8)));
 
   let ringBox = null, ringBand = null;
   const allMarks = [], moving = [];
@@ -107,7 +117,7 @@ function build(el, ctx) {
     if (b.r.accent) {
       const up = tall ? 24 : 0;   // tall: the field holds the route's name too
       const f = rect(chart, tall ? 0 : S.x0 - 12, b.top - 6 - up, tall ? W : right - S.x0 + 24, b.rows * S.p + 12 + up, { fill: C.field, 'data-audit': 'skip' });
-      st.fade(f, 2.0, 2.36);
+      st.fade(f, G(2, 0.02), G(2, 0.7));
       ringBand = b;
     }
     const mg = g(chart, { fill: C.ink });
@@ -121,7 +131,7 @@ function build(el, ctx) {
         const dy = (base0 - (row + 0.5) * S.p) - (b.base + list[j].y);
         // step 0: the marks rise row by row through the whole stack
         allMarks.push({ c, key: row * 1000 + i * 20 + col });
-        if (dx || dy) moving.push({ c, dx, dy });
+        if (dx || dy) moving.push({ c, dx, dy, k });
       });
       if (b.r.accent && i === d.years.length - 1) {
         const rr = Math.ceil(u.cells / S.cols);
@@ -145,8 +155,8 @@ function build(el, ctx) {
     if (tall) {
       text(lg, S.x0, b.top - 6 - (b.r.accent ? 5 : 0), b.r.label, { family: 'sans', size: S.label, weight: 500 });
     }
-    const la = 1.4 + k * 0.08;   // names after the groups have settled, bottom up
-    st.fade(lg, la, la + 0.16);
+    // each name once its band has settled, bottom up
+    st.fade(lg, G(1, bandWin(k)[1] - 0.05), G(1, bandWin(k)[1] + 0.3));
   });
   if (!tall) {
     // names at the right, joined to a bracket over their band. A name that
@@ -168,12 +178,15 @@ function build(el, ctx) {
     });
   }
   {
-    let lastS = -1;
+    const lastS = bands.map(() => -1);
     st.on((gg) => {
-      const q = 1 - split(gg);
-      if (Math.abs(q - lastS) < 0.0005) return;
-      lastS = q;
-      for (const m of moving) m.c.setAttribute('transform', q ? `translate(${(m.dx * q).toFixed(2)} ${(m.dy * q).toFixed(2)})` : '');
+      const qs = bands.map((b, k) => 1 - splitK(gg, k));
+      for (const m of moving) {
+        const q = qs[m.k];
+        if (Math.abs(q - lastS[m.k]) < 0.0005) continue;
+        m.c.setAttribute('transform', q ? `translate(${(m.dx * q).toFixed(2)} ${(m.dy * q).toFixed(2)})` : '');
+      }
+      qs.forEach((q, k) => { if (Math.abs(q - lastS[k]) >= 0.0005) lastS[k] = q; });
     });
   }
   allMarks.sort((p, q) => p.key - q.key);
@@ -249,9 +262,9 @@ function build(el, ctx) {
     leader(ng, nt.right + 5, nt.cy, ex - 2, nt.cy, { stroke: C.muted, dot: false });
   }
   // the ring on 2025 first, then the note that names it, over the rest of the step
-  st.fade(ng, 2.58, 2.92);
+  st.fade(ng, G(2, 1.2), G(2, 1.58));
   const pr = penRing(chart, ringBox.cx, ringBox.cy, rx, ry, { seed: 5, stroke: C.accent, width: tall ? 1.4 : 1.7, start: -2.7 });
-  pr.paths.forEach((p, k) => st.draw(p, 2.32 + k * 0.06, 2.6 + k * 0.05));
+  pr.paths.forEach((p, k) => st.draw(p, G(2, 0.8 + k * 0.08), G(2, 1.3 + k * 0.06)));
 
   return { set: (s, t) => st.set(s, t) };
 }

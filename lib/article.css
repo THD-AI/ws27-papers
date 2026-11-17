@@ -579,7 +579,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 /* Only a passage whose step has passed steps back, in a grey that keeps
    8:1 against the paper; never by opacity, so accent kickers and marks keep
    their own contrast. Passages still to come are in full ink. */
-@media screen and (min-width: 1000px) and (min-height: 560px), screen and (min-width: 640px) and (min-height: 450px) and (max-height: 559.98px), screen and (max-width: 699.98px) and (min-height: 560px) {
+@media screen and (min-width: 1000px) and (min-height: 560px), screen and (min-width: 640px) and (min-height: 450px) and (max-height: 559.98px), screen and (max-width: 999.98px) and (min-height: 560px) {
   .scene { --pitch: clamp(15rem, 45vh, 26rem); }
   .passage { min-height: var(--pitch); padding-bottom: 1.5rem; }
   .passage > :last-child { margin-bottom: 0; }
@@ -637,11 +637,10 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .scene-caption { display: block; grid-column: 1 / -1; grid-row: 2; max-width: var(--measure); margin: 0.6rem 0 0; padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
 }
 
-/* Pinned on top (phones held upright, under 700 px wide): the figure across
-   the page, the passages close together under it. article.js keeps the
-   figure short enough for four lines of text. Tablets held upright read a
-   scene as a sequence (below). */
-@media screen and (max-width: 699.98px) and (min-height: 560px) {
+/* Pinned on top (phones and tablets held upright: under 1000 px wide, 560 px
+   high or more): the figure across the page, the passages close together
+   under it. article.js keeps the figure short enough for four lines of text. */
+@media screen and (max-width: 999.98px) and (min-height: 560px) {
   .scene { --pitch: clamp(13rem, 35svh, 22rem); max-width: none !important; margin: 0 calc(-1 * var(--gutter)) 0 calc(-1 * var(--left)); }
   .scene-stage {
     position: sticky; top: 0; z-index: 3;
@@ -659,12 +658,13 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .scene.is-live .passage.is-under { opacity: 0; pointer-events: none; }
 }
 
-/* A sequence: windows both narrow and short, or lower than 450 px, where
-   nothing can be pinned at a readable size, and tablets held upright (700
-   to 999 px wide, 560 px high or more). The passages are read in order with
-   stills of the figure between them: one before each step, or after the
-   first passage of the steps the figure names (its "stills" export). */
-@media screen and (max-width: 639.98px) and (max-height: 559.98px), screen and (max-height: 449.98px), screen and (min-width: 700px) and (max-width: 999.98px) and (min-height: 560px) {
+/* A sequence: windows lower than 450 px (a phone held sideways), and
+   windows under 640 px wide and under 560 px high, where nothing can be
+   pinned at a readable size. The passages are read in order with stills of
+   the figure between them: one before each step, or after the first passage
+   of the steps the figure names (its "stills" export). Each still fits 92%
+   of the window's height (article.js). */
+@media screen and (max-width: 639.98px) and (max-height: 559.98px), screen and (max-height: 449.98px) {
   .scene-stage { display: none; }
   /* in the text column; article.js centres the drawing on it */
   .seq-still { display: block; max-width: var(--measure); margin: 1.6rem 0 1rem; }
@@ -740,6 +740,25 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .toc-fold > summary { display: list-item; cursor: pointer; padding: 0.6rem 0; font: 500 0.72rem/1.4 var(--mono); letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
 }
 
+/* A folded figure: its caption and its switch keep the text column's left
+   edge wherever the figure itself reaches out of the column (L1, L2). */
+@media screen and (min-width: 700px) {
+  :is(main.body, main.body > .appendix) > .fig-wide.has-fold > figcaption,
+  :is(main.body, main.body > .appendix) > .fig-wide.has-fold > .fig-fold > summary { margin-left: var(--out); }
+}
+@media screen and (min-width: 1000px) and (min-height: 560px), screen and (min-width: 640px) and (min-height: 450px) and (max-height: 559.98px) {
+  :is(main.body, main.body > .appendix) > .fig-wide.has-fold > figcaption,
+  :is(main.body, main.body > .appendix) > .fig-wide.has-fold > .fig-fold > summary { margin-left: 0; }
+}
+@media screen and (min-width: 900px) {
+  html:has(.rail) :is(main.body, main.body > .appendix) > .fig-wide.has-fold > figcaption,
+  html:has(.rail) :is(main.body, main.body > .appendix) > .fig-wide.has-fold > .fig-fold > summary { margin-left: 0; }
+}
+@media screen and (max-width: 699.98px) {
+  :is(main.body, main.body > .appendix) > .has-fold > figcaption,
+  :is(main.body, main.body > .appendix) > .has-fold > .fig-fold > summary { margin-left: var(--left); margin-right: var(--gutter); }
+}
+
 /* ------------------------------------------------------------------------ */
 /* 3. Print: A4, two columns, 15mm margins, 7mm gutter                      */
 /* ------------------------------------------------------------------------ */
@@ -785,6 +804,8 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .scene-text, .passage { display: contents; }
   /* ":::scene <id> column": the figure is one block of the column flow. */
   .scene-column .scene-stage { column-span: none; margin: 2mm 0 4mm; }
+  /* ":::scene <id> web": the figure is for the screen; print keeps the passages. */
+  .scene-web .scene-stage { display: none !important; }
   /* An appendix starts on a page of its own, after the sources. */
   .appendix { column-span: all; break-before: page; }
   .appendix > h2, .appendix > p { max-width: 86.5mm; }
@@ -838,6 +859,9 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 
   .sources { margin-top: 6mm; }
   .src-fold > summary, .fig-fold > summary { display: none; }
+  /* A folded figure prints whole, its caption under it as on every other figure. */
+  .fig.has-fold { display: block; }
+  .fig.has-fold > figcaption { order: 0; margin: 4mm 0 0; }
   .src-total { display: none; }
   .src-list { font-size: 6.8pt; line-height: 1.34; }
   .src-list li { grid-template-columns: 5.5mm 1fr; margin-bottom: 1.3mm; }
@@ -869,8 +893,12 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 @media print {
   .steps ol { margin: 0.6em 0 0.8em; }
   .steps li { padding: 0 0 0.5em 2.2em; }
-  /* Floated, not positioned: an absolutely placed marker is lost when its
-     item starts in the next column (steps 7 and 8 printed without numbers). */
-  .steps li::before { position: relative; float: left; top: 0; margin-left: -2.2em; width: 1.45em; height: 1.45em; font-size: 7.5pt; border-width: 1.2px; }
+  /* Plain list numbers in print: a drawn marker (positioned or floated) is
+     lost or misplaced when its item starts in the next column. */
+  .steps ol { list-style: decimal outside; padding-left: 1.6em; }
+  .steps ol::before { display: none; }
+  .steps li { display: list-item; padding-left: 0.2em; }
+  .steps li::before { content: none; display: none; }
+  .steps li::marker { font: 600 7.5pt var(--mono); color: var(--accent-line); }
   .steps ol::before { left: 0.7em; width: 1.2px; }
 }

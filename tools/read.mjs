@@ -248,8 +248,8 @@ for (const [w, h] of (process.env.SIZES ? JSON.parse(process.env.SIZES) : [[1440
   await wait(200);
   const tag = `${w}x${h}`;
   // scenes as a sequence of stills: as MODES in lib/article.js (lower than
-  // 450 px, narrow and short, or a tablet held upright: 700 to 999 px wide)
-  const seq = h < 450 || (w < 640 && h < 560) || (w >= 700 && w < 1000 && h >= 560);
+  // 450 px, or under 640 px wide and under 560 px high)
+  const seq = h < 450 || (w < 640 && h < 560);
 
   const count = await page.evaluate(() => document.querySelectorAll('.scene').length);
   for (let i = 0; i < count && !seq; i++) {

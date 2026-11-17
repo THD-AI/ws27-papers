@@ -30,10 +30,10 @@ export const steps = 9;
 // where scenes read as a sequence: one still, the overview (no station singled out)
 export const stills = [8];
 // seconds each step plays once triggered: the entry draws the whole path,
-// a walk to the next station is shorter; the walk round the turn (4 to 5)
-// is the longest one; the overview is never scrolled to
-export const durations = { large: [2.6, 1.8, 1.8, 1.8, 2.2, 1.8, 1.8, 1.8, 1.2] };
-const SIZE = { wide: [720, 432], tall: [360, 236] };
+// a walk to the next station is short (one ring moving on), 1.2 s for the
+// last; the overview is never scrolled to
+export const durations = { large: [2.6, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.2, 1.2] };
+const SIZE = { wide: [720, 440], tall: [360, 236] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 // '#rrggbb' or 'rgb(r, g, b)' -> [r, g, b]
@@ -67,6 +67,7 @@ function build(el, ctx) {
     ? { head: 13, note: 11.5, name: 15, meas: 13, num: 11.5, mono: 11.5, r: 10, staff: 12 }
     : { head: 15, note: 12.5, name: 15, meas: 13.5, num: 13.5, mono: 12.5, r: 13, staff: 13 };
   const toInk = mixer(C.muted, C.ink);
+  const fillMix = mixer(C.paper, C.field);
   let seed = 31;
   const ink = (parent, pts, w = 1.35, stroke = C.ink, amp = 0.5) => path(parent, pen(pts, seed++, amp), {
     stroke, 'stroke-width': w, 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
@@ -74,7 +75,9 @@ function build(el, ctx) {
 
   // where the current station is, as a number that moves on at each step;
   // the overview (step 8, print) singles none out
-  const overview = (gg) => ctx.print || gg >= N - 1e-9;
+  // (it plays inside step 8, so the end of step 7 still shows station 8)
+  const ovP = (gg) => (ctx.print ? 1 : ease(span(gg, N + 0.02, N + 0.5)));
+  const overview = (gg) => ovP(gg) >= 0.999;
   // half speed at both ends, never stopped in between: the pen keeps
   // walking over the whole step (a cubic ease spent half the step creeping)
   const soft = (x) => x * (0.5 + x * (1.5 - x));
@@ -83,12 +86,34 @@ function build(el, ctx) {
     const s = Math.floor(gg + 1e-9), f = gg - s;
     // the pen walks to the next station over the step; at step 0 it stays
     // at the first station, which `arrive` brings in
-    return clamp(s - 1 + soft(span(f, 0.03, 0.9)), 0, N - 1);
+    return clamp(s - 1 + soft(span(f, 0.05, 0.7)), 0, N - 1);
   }
   // step 0, once the path and the stations are there: the ink runs to
   // station 1 (0.50 to 0.66), then station 1 takes the field (0.60 to 0.74)
   const inkTo1 = (gg) => (gg >= 1 ? 1 : soft(span(gg, 0.5, 0.66)));
   const arrive = (gg) => (gg >= 1 ? 1 : soft(span(gg, 0.6, 0.74)));
+  // how much station i is the current one: in a walk the ring leaves its
+  // station first (about 0.35 s), the pen walks, and the ring comes in at
+  // the next as the pen arrives; never in one frame
+  function focusOf(gg, i) {
+    if (gg < 1) return i === 0 ? arrive(gg) : 0;
+    const s = Math.min(N, Math.floor(gg + 1e-9)), f = gg - s;
+    if (s >= N) return i === N - 1 ? 1 - ovP(gg) : 0;
+    if (i === s - 1) return 1 - ease(span(f, 0.02, 0.38));
+    if (i === s) return ease(span(f, 0.6, 0.95));
+    return 0;
+  }
+  // tall: the current station's lettering, handed over in the middle of
+  // the walk (the old leaves, then the new comes), so the strip is never
+  // without a name for long
+  function letterOf(gg, i) {
+    if (gg < 1) return i === 0 ? clamp((arrive(gg) - 0.5) * 2) : 0;
+    const s = Math.min(N, Math.floor(gg + 1e-9)), f = gg - s;
+    if (s >= N) return i === N - 1 ? clamp(1 - ovP(gg) * 2) : 0;
+    if (i === s - 1) return 1 - ease(span(f, 0.3, 0.46));
+    if (i === s) return ease(span(f, 0.48, 0.66));
+    return 0;
+  }
 
   // --- title and the honesty note
   const head = text(svg, 14, tall ? 16 : 20, tall ? d.headShort : d.headline, { family: 'sans', size: S.head, weight: 600, width: tall ? 190 : W - 200 });
@@ -199,7 +224,7 @@ function build(el, ctx) {
     let last = '';
     st.on((gg) => {
       const c = cur(gg), i = Math.floor(c), f = c - i;
-      const p = overview(gg) ? 1 : i >= N - 1 ? frac[N - 1] : lerp(frac[i], frac[i + 1], f) * (i === 0 && f === 0 ? inkTo1(gg) : 1);
+      const p = i >= N - 1 ? lerp(frac[N - 1], 1, ovP(gg)) : lerp(frac[i], frac[i + 1], f) * (i === 0 && f === 0 ? inkTo1(gg) : 1);
       const v = (1 - p).toFixed(4);
       if (v !== last) { done.setAttribute('stroke-dashoffset', v); last = v; }
     });
@@ -269,28 +294,33 @@ function build(el, ctx) {
   st.fade(notches, 0.34, 0.48).fade(dep, 0.4, 0.56);
   let lastKey = '';
   st.on((gg) => {
-    const all = overview(gg);
-    const c = cur(gg), a = fadeIn(gg), ar = arrive(gg);
-    const key = `${all}|${c.toFixed(4)}|${a.toFixed(3)}|${ar.toFixed(3)}`;
+    const all = overview(gg), op = ovP(gg);
+    const c = cur(gg), a = fadeIn(gg);
+    const key = `${gg.toFixed(4)}|${a.toFixed(3)}`;
     if (key === lastKey) return;
     lastKey = key;
     st8.forEach((o, i) => {
       // reached: 0 for a later station, 1 once the path has come to it
       const reached = all ? 1 : clamp(c - i + 1);
-      const focus = all ? 0 : Math.max(0, 1 - Math.abs(c - i)) * ar;
+      const focus = all ? 0 : focusOf(gg, i);
       o.sg.style.color = toInk(reached);
       o.sg.style.opacity = a >= 0.999 ? '' : a.toFixed(3);
       o.field.style.opacity = focus.toFixed(3);
       o.acc.style.opacity = focus.toFixed(3);
-      o.ring.setAttribute('fill', focus > 0.5 ? C.field : C.paper);
+      const fl = fillMix(focus);
+      if (o.ring.getAttribute('fill') !== fl) o.ring.setAttribute('fill', fl);
       if (tall) {
         // only the current station's lettering; neighbours cross over quickly
-        const v = a * clamp((focus - 0.5) * 2);
+        const v = all ? 0 : a * letterOf(gg, i);
         o.lab.style.display = v <= 0.001 ? 'none' : '';
         o.lab.style.opacity = v >= 0.999 ? '' : v.toFixed(3);
       }
     });
-    if (ov) { ov.style.display = all ? '' : 'none'; }
+    if (ov) {
+      const v = a * clamp((op - 0.5) * 2);
+      ov.style.display = v <= 0.001 ? 'none' : '';
+      ov.style.opacity = v >= 0.999 ? '' : v.toFixed(3);
+    }
     const k = kStation >= 0 ? clamp(c - kStation + 1) : 0;
     notches.style.color = toInk(all ? 1 : k);
     dep.style.color = toInk(all ? 1 : clamp(c - d.depends.on + 1));

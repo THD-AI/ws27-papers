@@ -16,7 +16,7 @@ export const steps = 5;
 // seconds each step plays once triggered: the rounds tick in; the first
 // answer; the answers that follow and the rounds that wait; the second
 // view assembles; the claim's lane arrives
-export const durations = { large: [2.4, 2.0, 2.4, 2.4, 1.8] };
+export const durations = { large: [2.4, 2.0, 1.5, 2.4, 1.8] };
 const SIZE = { wide: [720, 472], tall: [360, 458] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
@@ -269,11 +269,11 @@ function build(el, ctx) {
     // after the last round, the bracket and value, the note, the ring
     st.fade(base, a, a + 0.2).fade(axg, a, a + 0.2).draw(run, a + 0.16, a + 0.38).fade(l3, a + 0.16, a + 0.26).fade(after, a + 0.38, a + 0.52).fade(bg, a + 0.48, a + 0.62).fade(n3, a + 0.6, a + 0.72);
     pr.paths.forEach((pp, k) => st.draw(pp, a + 0.66 + k * 0.03, a + 0.76 + k * 0.02));
-    st.fade(l4a, 4.2, 4.46).fade(l4b, 4.4, 4.66).fade(l4c, 4.62, 4.9);
+    st.fade(l4a, 4.08, 4.5).fade(l4b, 4.4, 4.72).fade(l4c, 4.64, 4.98);
     if (!o.final) {
       const lift = Math.min(0, Math.max(big.bottom, same.bottom) + (narrow ? 14 : 18) - ay);
       st.on((gg) => {
-        const m = ease(span(gg, 4.02, 4.32));
+        const m = ease(span(gg, 4, 4.5));
         const v = m >= 1 ? '' : `translate(0 ${(lift * (1 - m)).toFixed(2)})`;
         if ((axg.getAttribute('transform') || '') !== v) { if (v) axg.setAttribute('transform', v); else axg.removeAttribute('transform'); }
       });

@@ -11,7 +11,7 @@ export const steps = 6;
 // seconds each step plays once triggered: the grid and its notes; one flip;
 // a row of flips; the puzzle; the two explanations (the grid moves aside);
 // the second explanation and the counts
-export const durations = { large: [2.4, 1.8, 1.8, 1.8, 2.6, 2.4] };
+export const durations = { large: [2.4, 1.2, 1.8, 1.8, 2.6, 2.4] };
 const SIZE = { wide: [720, 450], tall: [360, 544] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 

@@ -1,0 +1,60 @@
+{
+  "id": "rewire",
+  "reading": "Two companies, one rewired and one not yet. United States, T-Mobile US: on one system that holds what the company knows about each customer, the share of chat conversations that never reached a person was about a quarter in mid-2024 and 78% in mid-2026, company figures; the two values are drawn as two separate strips of dots, one dot is 2%, nothing drawn between them. Germany and Europe, Deutsche Telekom: customers prove who they are in 14 different ways, which Telekom plans to cut to 3, a target; above that list its slide says \"Simplify before automating\".",
+  "headline": "Rewired, and not yet rewired",
+  "tag": "company-reported",
+  "us": {
+    "kicker": "United States · T-Mobile US",
+    "measure": "chat conversations that never reached a person",
+    "unit": 2,
+    "unitNote": "one dot is 2% of chats",
+    "points": [
+      {
+        "when": "mid-2024",
+        "value": 25,
+        "show": "about a quarter",
+        "source": "R6-06"
+      },
+      {
+        "when": "mid-2026",
+        "value": 78,
+        "show": "78%",
+        "source": "R6-06"
+      }
+    ],
+    "between": "nothing published in between; no line drawn",
+    "base": {
+      "label": "rebuilt underneath: one system holding what the company knows about each customer",
+      "source": [
+        "R6-02",
+        "R6-09"
+      ]
+    },
+    "source": [
+      "R6-02",
+      "R6-06",
+      "R6-09"
+    ]
+  },
+  "de": {
+    "kicker": "Germany and Europe · Deutsche Telekom",
+    "measure": "ways customers prove who they are, across its European countries",
+    "now": {
+      "value": 14,
+      "label": "today",
+      "source": "R6-05"
+    },
+    "plan": {
+      "value": 3,
+      "label": "planned: a target",
+      "source": "R6-05"
+    },
+    "quote": {
+      "text": "Simplify before automating",
+      "by": "Telekom's slide",
+      "source": "R6-05"
+    },
+    "source": "R6-05"
+  },
+  "why": "The share of chats is T-Mobile's own figure from its investor deck (R6-06): about a quarter in mid-2024, 78% in mid-2026; the values in between are not published, so the two strips are not joined. The rebuilt customer system is from T-Mobile's head of IT at the investor day (R6-02) and its annual report (R6-09). The 14 ways and the plan to cut them to 3 and the principle \"Simplify before automating\" are from Telekom's investor-day slides (R6-05); 3 is a plan, so it is drawn hollow."
+}
