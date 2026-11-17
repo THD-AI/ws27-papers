@@ -89,7 +89,8 @@ function keys(P, C) {
 
 function cable(P, C) {
   // two surface junction boxes on the wall, one cable run between them:
-  // the cable leaves each box through a gland and is clipped along the wall
+  // the cable leaves each box through a gland and runs unbroken to the
+  // other; every joint is inside a box, so nothing sits on the cable
   const top = 30, side = 32, cy = 90;
   [4, 88].forEach((x) => {
     P.shape(box(x, top, side, side), C.paper);              // the box
@@ -109,12 +110,6 @@ function cable(P, C) {
   P.line(curve([a, gy], [a, cy - 4], [a + 4, cy], [a + 10, cy], 8)
     .concat([[b - 10, cy]])
     .concat(curve([b - 10, cy], [b - 4, cy], [b, cy - 4], [b, gy], 8)), 2);
-  // clips across it, each nailed to the wall above and below the cable
-  [a + 24, 62, b - 24].forEach((x) => {
-    P.shape(box(x - 2.2, cy - 5.5, 4.4, 11), C.paper, 1);
-    circle(P.root, x, cy - 3.5, 0.75, { fill: C.ink });
-    circle(P.root, x, cy + 3.5, 0.75, { fill: C.ink });
-  });
 }
 
 const DRAW = { handbook, archive, keys, cable };

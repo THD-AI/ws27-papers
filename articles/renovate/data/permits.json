@@ -1,41 +1,56 @@
 {
   "id": "permits",
-  "headline": "Checks before the road, or after it",
-  "reading": "Two schedules for a new car on one time axis. United States: the maker designs, builds and certifies the car itself, it goes on the road, and the authority's tests and recalls come afterwards. Germany and the EU: an approval authority approves the type first, then the car is built and goes on the road. Once a type is approved, every car built to it goes on the road without its own approval; a car outside the approved type needs its own individual approval, the long way.",
-  "axis": { "time": "time", "start": "start" },
+  "headline": "Checks before launch, or after it",
+  "reading": "Two schedules for one kind of decision, putting a new IT system to work, on one time axis. United States, T-Mobile: the system is built and launched, and the checks come afterwards, as lawsuits and state rules. Germany, Telekom: the works council is told while the system is planned and has to agree if it can monitor staff, and a privacy review approves it; only then is it built and launched. Since 2021 a framework agreement keeps that review short for a system that fits its rules; a system outside the framework needs its own agreement, the long way, and if no agreement is reached, the conciliation board decides.",
+  "axis": { "time": "time", "start": "start", "scale": "schematic lengths" },
   "words": {
-    "permit": "approval",
-    "build": "build, self-certify",
-    "buildShort": "build",
-    "buildDe": "build",
-    "move": "on the road",
-    "inspections": "tests and recalls afterwards",
-    "stamp": ["TYPE", "APPROVED"],
-    "beyond": "a car outside the approved type: its own approval, the long way",
-    "source": ["FR-2020-28107", "EU-2018-858"]
+    "review": "works council and privacy review",
+    "build": "build",
+    "launch": "launch",
+    "afterwards": "lawsuits and state rules, afterwards",
+    "stamp": ["FRAMEWORK", "AGREEMENT", "2021"],
+    "beyond": "a system outside the framework: its own agreement, the long way",
+    "conciliation": "if no agreement: the conciliation board decides (§ 87(2) BetrVG)",
+    "source": ["R6-08", "R11-36", "R11-37", "R11-41", "R11-43", "R11-05", "R11-07", "R11-08", "R11-21", "R11-12"]
   },
   "schedule": {
-    "note": "Schematic lengths in arbitrary units on one shared axis: the order and the relative length matter, no duration is measured. Building has the same length on both sides. The long approval stands for a vehicle approved on its own, outside an approved type (EU-2018-858), and on the company side for the period before 2021 (about six weeks per system, R11-12) and for a system beyond the standing agreement (R11-12).",
-    "source": ["FR-2020-28107", "EU-2018-858", "R11-12"],
+    "note": "Schematic lengths in arbitrary units on one shared axis: the order and the relative length matter, no duration is measured. Building has the same length on both sides. The long review stands for the period before 2021 (about six weeks per system, R11-12) and for a system beyond the framework agreement, which needs its own agreement (R11-12); the short review for a system that fits the framework.",
+    "source": ["R11-12"],
     "span": 14,
-    "us": { "build": [0, 4], "move": [4, 14], "inspections": [7.5, 11] },
+    "us": { "build": [0, 4], "launch": [4, 14], "checks": [7, 9.5, 12] },
     "de": {
-      "permit": [0, 6],
+      "review": [0, 6],
       "build": [6, 10],
-      "move": [10, 14],
+      "launch": [10, 14],
       "checks": [1.2, 3, 4.8],
-      "standard": { "permit": [0, 3.5], "build": [3.5, 7.5], "move": [7.5, 14] }
+      "framework": { "review": [0, 4], "build": [4, 8], "launch": [8, 14] }
     }
   },
   "rows": {
     "us": {
-      "label": "United States",
-      "fact": "The maker certifies its own vehicles against the federal safety standards; NHTSA does not approve them before sale. NHTSA buys certified new cars, tests them, and pursues a recall when one does not comply.",
+      "label": "United States · T-Mobile",
+      "fact": "T-Mobile announced its agent platform in September 2024. There is no works council in the German sense; the checks come afterwards, as court cases (a staff body set up by T-Mobile was ordered dissolved, upheld on appeal in January 2024; a class action under California's privacy law against an AI customer-service provider) and state rules (California's regulations finalized in September 2025).",
+      "source": ["R6-08", "R11-36", "R11-37", "R11-41", "R11-43"]
+    },
+    "de": {
+      "label": "Germany · Telekom",
+      "fact": "The works council has to be told while the system is planned (§ 90 BetrVG) and has to agree to a technical system suited to monitoring staff (§ 87(1) no. 6); if no agreement is reached, the conciliation board decides (§ 87(2), § 76). Telekom's privacy and security assessment approves a system before it runs.",
+      "source": ["R11-05", "R11-07", "R11-08", "R11-21"]
+    },
+    "framework": {
+      "fact": "Since March 2021 a group framework agreement sets the rules for IT systems once; a system that fits goes ahead after the works council checks its profile, without a separate decision. Before, the IT committee had about six weeks per system. A system beyond the rules needs its own agreement.",
+      "source": "R11-12"
+    }
+  },
+  "carsNote": {
+    "inFigure": false,
+    "why": "Removed from the figure on 17 November 2026: in round 2, four of twelve readers found the car metaphor one too many in an article built on houses. The article text keeps the cars as a single comparison sentence; these are its facts.",
+    "us": {
+      "text": "The maker certifies its own vehicles against the federal safety standards; NHTSA does not approve them before sale. NHTSA buys certified new cars, tests them, and pursues a recall when one does not comply.",
       "source": "FR-2020-28107"
     },
     "de": {
-      "label": "Germany",
-      "fact": "A vehicle may be placed on the market, registered or put into service only once its type is approved (in Germany by the Kraftfahrt-Bundesamt). Each car built to the type comes with a certificate of conformity; a single vehicle outside an approved type needs an individual approval.",
+      "text": "A vehicle may be placed on the market, registered or put into service only once its type is approved (in Germany by the Kraftfahrt-Bundesamt). Each car built to the type comes with a certificate of conformity; a single vehicle outside an approved type needs an individual approval.",
       "source": "EU-2018-858"
     }
   },
@@ -52,13 +67,13 @@
       "step": 1,
       "inFigure": false,
       "lead": "Germany, Telekom.",
-      "text": "The approval: the works council is told while planning, has to agree if the system can monitor staff, and a privacy review approves it. Until 2021 about six weeks per system.",
+      "text": "The review: the works council is told while planning, has to agree if the system can monitor staff, and a privacy review approves it. Until 2021 about six weeks per system.",
       "source": ["R11-05", "R11-07", "R11-08", "R11-21", "R11-12"]
     },
     {
       "step": 2,
       "inFigure": false,
-      "lead": "Type approval.",
+      "lead": "Framework agreement.",
       "text": "Since 2021 a standing agreement approves IT systems inside fixed rules: one that fits goes live after a quick check, one outside needs its own agreement.",
       "source": "R11-12"
     }

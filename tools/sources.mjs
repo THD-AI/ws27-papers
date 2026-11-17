@@ -100,7 +100,7 @@ const OVERRIDES = {
   },
   'TOE-1990': {
     title: 'The Processes of Technological Innovation (the technology–organisation–environment framework); summarised in J. Baker, "The Technology–Organization–Environment Framework", Information Systems Theory, 2012',
-    publisher: 'Louis G. Tornatzky, Mitchell Fleischer (eds.), Lexington Books',
+    publisher: 'Louis G. Tornatzky, Mitchell Fleischer, Lexington Books',
     date: '1990',
     url: 'https://doi.org/10.1007/978-1-4419-6108-2_12',
     type: 'peer-reviewed',

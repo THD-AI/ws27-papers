@@ -24,6 +24,7 @@ const FIGS = {
   'permits': { role: 'column', steps: 3 },
   'roadmap': { role: 'wide', steps: 3 },
   'terms': { role: 'column', steps: 2 },
+  'repaint': { role: 'column', steps: 2 },
 };
 const MM = 96 / 25.4;
 

@@ -1,33 +1,38 @@
 {
   "id": "roadmap",
-  "reading": "The order of the work as a schedule on one axis, order rather than duration, each row with its measure: measure first; a works agreement whose framework is agreed while planning and which runs alongside to the end, amended as each permission stage opens; choose suppliers; train staff; one customer record, the longest piece of work; permissions in stages (read only, then undoable actions, then changes fraud could use), each opened only after a test set passes; and running it, without end, which leads back to measuring. Arrows show that the works agreement, the trained staff and the customer record must come before the first permission. A band along the bottom: the staff stay throughout.",
+  "reading": "The order of the work as a staircase of equal steps, each one step to the right of the one before, so position shows order only and widths mean nothing; each row with its measure: measure first; a works agreement whose framework is agreed while planning, with a thin line running on to the end and a new annex at each permission stage; choose suppliers; train staff; one customer record; permissions in stages (read only, then undoable actions, then changes fraud could use), each opened only after a test set passes; acceptance, signed off by the staff who will work with it; and running it, which leads back to measuring. Arrows show that the works agreement, the trained staff and the customer record must come before the first permission. A band along the bottom: the staff stay throughout. At the end of the axis: Telekom's target, 2030.",
   "headline": "Each step unlocks the next. The staff stay, and every permission is tested first.",
-  "note": "Positions on the axis show order and dependency only, in arbitrary units: no duration or date is measured. Bar lengths say which piece of work is larger than another, not by how much.",
-  "span": 20,
-  "axis": { "start": "start", "time": "order, not duration" },
+  "note": "Each step sits one place to the right of the step it follows. Positions show order and dependency only; every step has the same width, and no duration or date is measured. The only date drawn is Telekom's own target year at the end of the axis (R6-03).",
+  "positions": 10,
+  "axis": {
+    "start": "start",
+    "note": "one step after another; widths mean nothing",
+    "target": "Telekom's target: 2030",
+    "source": "R6-03"
+  },
   "rows": [
     {
       "label": "Measure first",
       "company": "one measure for both countries, with its cost",
       "measure": "the pair is published",
-      "bars": [[0, 2.5]],
+      "at": 0,
       "source": "proposal",
       "note": "Telekom's 2030 targets have no measure that compares with T-Mobile's; the measure is the article's proposal (section 9, point 1)"
     },
     {
       "label": "Works agreement",
-      "company": "framework agreed while planning; amended as each part opens",
+      "company": "framework agreed while planning; a new annex for each new key",
       "measure": "signed before the first agent acts",
-      "bars": [[1, 4]],
+      "at": 1,
       "alongside": true,
       "source": "R11-07",
-      "note": "the framework is agreed while the system is planned; the agreement then runs alongside the work and is amended at every permission stage"
+      "note": "the framework is agreed while the system is planned; the agreement then runs alongside the work and gets an annex at every permission stage"
     },
     {
       "label": "Choose suppliers",
       "company": "keep the switch between model suppliers; data hosted in Germany",
       "measure": "time to switch supplier, tests included",
-      "bars": [[4, 7]],
+      "at": 2,
       "source": "R6-04",
       "note": "follows the framework agreement, as choosing materials follows approval"
     },
@@ -35,7 +40,7 @@
       "label": "Train staff",
       "company": "before the tools reach customers; least experienced first",
       "measure": "cases per hour; repeat contacts",
-      "bars": [[5, 9.5]],
+      "at": 3,
       "source": "R4-29",
       "note": "the least experienced gain most from the new tools (R4-29)"
     },
@@ -43,9 +48,9 @@
       "label": "One customer record",
       "company": "14 ways of proving who calls cut to 3",
       "measure": "callers recognised without questions",
-      "bars": [[3, 11]],
+      "at": 4,
       "source": "R6-05",
-      "note": "the largest piece of work, so the longest bar"
+      "note": "the largest piece of work in the text; in the figure it has the same width as every other step"
     },
     {
       "label": "Permissions in stages",
@@ -53,22 +58,30 @@
       "measure": "errors per 1,000 actions, by stage",
       "gate": { "label": "test set passes", "needs": "needs 2, 4, 5", "source": "proposal" },
       "segments": [
-        { "label": "read only", "span": [12.2, 14.4], "source": "proposal" },
-        { "label": "undoable actions", "span": [14.8, 17], "source": "proposal" },
-        { "label": "changes fraud could use", "span": [17.4, 19.6], "source": "R6-16", "note": "changing bank details after login already exists in Frag Magenta (R6-16)" }
+        { "label": "read only", "at": 5, "source": "proposal" },
+        { "label": "undoable actions", "at": 6, "source": "proposal" },
+        { "label": "changes fraud could use", "at": 7, "source": "R6-16", "note": "changing bank details after login already exists in Frag Magenta (R6-16)" }
       ],
       "source": "proposal",
       "note": "the article's own proposal (section 9, point 4): each stage opens only after its test set passes"
     },
     {
+      "label": "Acceptance",
+      "company": "the staff who'll work with it sign it off",
+      "measure": "accepted by service team and works council",
+      "at": 8,
+      "source": "proposal",
+      "note": "a handover before running, as a building is accepted before it is used; added after a civil engineer's reading"
+    },
+    {
       "label": "Run it",
       "company": "a named team, nights included",
       "measure": "cost per finished request",
-      "bars": [[13, 20]],
+      "at": 9,
       "open": true,
       "back": "back to measuring",
       "source": "proposal",
-      "note": "starts once the first stage is open and does not end; what it measures feeds the next round of measuring"
+      "note": "starts once the work is accepted and does not end; what it measures feeds the next round of measuring"
     }
   ],
   "depends": {

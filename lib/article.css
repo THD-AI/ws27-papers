@@ -488,7 +488,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .scene { --pitch: clamp(15rem, 45vh, 26rem); }
   .passage { min-height: var(--pitch); padding-bottom: 1.5rem; }
   .passage > :last-child { margin-bottom: 0; }
-  .scene.is-live .passage { opacity: 0.55; transition: opacity 0.25s ease; }
+  .scene.is-live .passage { opacity: 0.7; transition: opacity 0.25s ease; }
   .scene.is-live .passage.is-active { opacity: 1; }
 }
 

@@ -27,9 +27,9 @@
       "derivation": "release value minus slide value; drawn, not printed as a number"
     },
     "overlap": {
-      "note": "two documents; overlap not published",
+      "note": "drawn on the same {t} to compare; whether the {a} include the {b} isn't published",
       "source": ["R6-01", "R6-06"],
-      "why": "The 40 comes from a press release, the 32 from an investor slide. Drawing the 32 inside the 40 is the figure's choice; the note says that nobody published the overlap."
+      "why": "The 40 comes from a press release, the 32 from an investor slide. Drawing the 32 inside the 40 on the same 100 is the figure's choice, made to compare them; the note says that nobody published whether the 40 include the 32."
     },
     "start": {
       "note": "that is: they start with the software",
