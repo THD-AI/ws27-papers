@@ -13,12 +13,40 @@
     "type": "official investor material",
     "date": "2026-10-05"
   },
-  "R10-50": {
-    "title": "Q2 2026 results",
-    "publisher": "Deutsche Telekom",
-    "url": "https://corporate-media.telekom.com/adobe/assets/urn:aaid:aem:36b7a6fc-361e-48b1-b871-9eac0457c5fc/original/as/dt-26q2-praesentation.pdf?attachment=true",
-    "type": "issuer investor deck",
-    "date": "2026-08-06"
+  "NAHB-2026": {
+    "title": "Wood framing continues to dominate single-family construction (Census Survey of Construction, 2025 completions)",
+    "publisher": "NAHB, Eye on Housing",
+    "date": "2026-09",
+    "url": "https://eyeonhousing.org/2026/09/wood-framing-continues-to-dominate-single-family-construction/",
+    "type": "statistics"
+  },
+  "DESTATIS-2021": {
+    "title": "Baugenehmigungen 2020 nach überwiegend verwendetem Baustoff (Destatis, reported by Baulinks)",
+    "publisher": "Federal Statistical Office (Destatis)",
+    "date": "2021-10",
+    "url": "https://www.baulinks.de/webplugin/2021/1028.php4",
+    "type": "statistics"
+  },
+  "BAUNETZ-DIN18015": {
+    "title": "Leitungsverlegung und Installationszonen (DIN 18015-3)",
+    "publisher": "Baunetz Wissen",
+    "date": "2016",
+    "url": "https://www.baunetzwissen.de/elektro/fachwissen/leitungen-verteiler/leitungsverlegung-und-installationszonen-153012",
+    "type": "standard"
+  },
+  "HS-2001": {
+    "title": "Varieties of Capitalism: The Institutional Foundations of Comparative Advantage",
+    "publisher": "Peter A. Hall, David Soskice (eds.), Oxford University Press",
+    "date": "2001",
+    "url": "https://doi.org/10.1093/0199247757.001.0001",
+    "type": "peer-reviewed"
+  },
+  "TOE-1990": {
+    "title": "The Processes of Technological Innovation (the technology–organisation–environment framework); summarised in J. Baker, \"The Technology–Organization–Environment Framework\", Information Systems Theory, 2012",
+    "publisher": "Louis G. Tornatzky, Mitchell Fleischer, Lexington Books",
+    "date": "1990",
+    "url": "https://doi.org/10.1007/978-1-4419-6108-2_12",
+    "type": "peer-reviewed"
   },
   "R6-02": {
     "title": "Deutsche Telekom AI Investor Day (Oct. 5, 2026) Transcript",
@@ -69,75 +97,12 @@
     "type": "company web page",
     "date": "2025-09-22"
   },
-  "R6-11": {
-    "title": "Quarterly Report on Form 10-Q, Q3 2026",
-    "publisher": "T-Mobile US",
-    "url": "https://www.sec.gov/Archives/edgar/data/1283699/000128369926000129/tmus-20260930.htm",
-    "type": "SEC filing",
-    "date": "2026-10-28"
-  },
   "R6-05": {
     "title": "AI Investor Day, “From AI Adoption to AI Impact”",
     "publisher": "Deutsche Telekom",
     "url": "https://corporate-media.telekom.com/adobe/assets/urn:aaid:aem:de1e78a5-2ea8-443e-b68b-9772b63b1336/original/as/2_261005_1005_AI%20Investor%20Day_Part%20Birgit%20%2B%20Kartik.pdf",
     "type": "official investor material",
     "date": "2026-10-05"
-  },
-  "R6-04": {
-    "title": "AI Investor Day, “AI in Customer Interactions”",
-    "publisher": "Deutsche Telekom",
-    "url": "https://corporate-media.telekom.com/adobe/assets/urn:aaid:aem:77825a91-444e-48c4-a955-f0db3ac1e4b9/original/as/04_260105_1010_AI_Investor_Day_Customer_Interaction_02.10.2026%20%282%29.pdf",
-    "type": "official investor material",
-    "date": "2026-10-05"
-  },
-  "R7-14": {
-    "title": "The 2026 Annual Single Market and Competitiveness Report, COM(2026) 46 final",
-    "publisher": "European Commission",
-    "url": "https://single-market-economy.ec.europa.eu/publications/2026-annual-single-market-and-competitiveness-report_en",
-    "type": "official report",
-    "date": "2026-01-30"
-  },
-  "R10-01": {
-    "title": "EIB Group Investment Survey 2026 - European Union overview",
-    "publisher": "European Investment Bank",
-    "url": "https://www.eib.org/files/publications/20260192-091126-eib-group-investment-survey-2026-eu-overview-en.pdf",
-    "type": "institutional survey",
-    "date": "2026-11-09"
-  },
-  "R1-03": {
-    "title": "AI Index Report 2026, Ch. 4 \"Economy\"",
-    "publisher": "Stanford HAI",
-    "url": "https://hai.stanford.edu/assets/files/ai_index_report_2026_chapter_4_economy.pdf",
-    "type": "institutional report",
-    "date": "2026"
-  },
-  "B-2025": {
-    "title": "Europas Weg in die digitale Souveränität",
-    "publisher": "Bitkom",
-    "date": "2025-11-13",
-    "url": "https://www.bitkom.org/Presse/Presseinformation/Europas-Weg-digitale-Souveraenitaet",
-    "type": "survey"
-  },
-  "SRG-2025": {
-    "title": "European Cloud Providers' Local Market Share Now Holds Steady at 15%",
-    "publisher": "Synergy Research Group",
-    "date": "2025-07-24",
-    "url": "https://srgresearch.com/articles/european-cloud-providers-local-market-share-now-holds-steady-at-15",
-    "type": "survey"
-  },
-  "R6-17": {
-    "title": "Annual Report 2025, Management report, Group strategy, “Data & AI”",
-    "publisher": "Deutsche Telekom",
-    "url": "https://report.telekom.com/annual-report-2025/management-report/group-strategy/data-ai.html",
-    "type": "annual report",
-    "date": "2026"
-  },
-  "R10-52": {
-    "title": "Capital Markets Day, Refinitiv transcript",
-    "publisher": "Deutsche Telekom",
-    "url": "https://corporate-media.telekom.com/adobe/assets/urn:aaid:aem:51539f16-9931-4580-873f-57569e5470d6/original/as/DL_241011-Transkript.data.pdf?attachment=true",
-    "type": "issuer-hosted event transcript",
-    "date": "2024-10-11"
   },
   "R7-06": {
     "title": "Gruende gegen die Nutzung von Technologien der kuenstlichen Intelligenz nach Beschaeftigtengroessenklassen, 2025",
@@ -146,26 +111,98 @@
     "type": "official statistics",
     "date": "2025-11-24"
   },
-  "R9-04": {
-    "title": "Regulation (EU) 2024/1689 (AI Act)",
-    "publisher": "European Union",
-    "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202401689",
-    "type": "legal text",
-    "date": "2024-07-12"
+  "BRS-2021": {
+    "title": "The Productivity J-Curve: How Intangibles Complement General Purpose Technologies. American Economic Journal: Macroeconomics 13(1), 333–372",
+    "publisher": "Erik Brynjolfsson, Daniel Rock, Chad Syverson",
+    "date": "2021-01",
+    "url": "https://doi.org/10.1257/mac.20180386",
+    "type": "peer-reviewed"
   },
-  "R9-05": {
-    "title": "Regulation (EU) 2026/1744 (Digital Omnibus on AI), amending the AI Act",
-    "publisher": "European Union",
-    "date": "2026-07-24",
-    "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202601744",
+  "R12-14": {
+    "title": "press release on the AI assistant's first month, 27 February 2024",
+    "publisher": "Klarna",
+    "url": "https://www.klarna.com/international/press/klarna-ai-assistant-handles-two-thirds-of-customer-service-chats-in-its-first-month/",
+    "type": "company press release"
+  },
+  "R12-15": {
+    "title": "Klarna hires service agents again, 9 May 2025",
+    "publisher": "Entrepreneur",
+    "url": "https://www.entrepreneur.com/business-news/klarna-ceo-reverses-course-by-hiring-more-humans-not-ai/491396",
+    "type": "press"
+  },
+  "CBA-2025": {
+    "title": "CBA reverses AI-driven job cuts, admits \"error\"",
+    "publisher": "Information Age (Australian Computer Society)",
+    "date": "2025-08-21",
+    "url": "https://ia.acs.org.au/article/2025/cba-reverses-ai-driven-job-cuts--admits--error-.html",
+    "type": "press"
+  },
+  "R4-29": {
+    "title": "Generative AI at Work",
+    "publisher": "Brynjolfsson, Li, Raymond, Quarterly Journal of Economics 140(2): 889-942",
+    "url": "https://www.eurekalert.org/news-releases/1071936",
+    "type": "peer-reviewed",
+    "date": "2025-02-04"
+  },
+  "R11-14": {
+    "title": "Deutsche Telekom und ver.di erzielen Tarifeinigung",
+    "publisher": "Deutsche Telekom",
+    "url": "https://www.telekom.com/de/newsroom/aktuelles/medieninformationen/2026/05/deutsche-telekom-und-ver-di-erzielen-tarifeinigung",
+    "type": "company release",
+    "date": "2026-05-28"
+  },
+  "DGB-2026": {
+    "title": "Tarifergebnis Deutsche Telekom: mehr Entgelt, Kündigungsschutz und erstmals Mitgliederbonus",
+    "publisher": "Deutscher Gewerkschaftsbund (DGB), Tarifmeldung",
+    "date": "2026",
+    "url": "https://www.dgb.de/service/weiterer-service/tarifmeldungen/tarifmeldung/tarifergebnis-deutsche-telekom-mehr-entgelt-kuendigungsschutz-und-erstmals-mitgliederbonus/",
+    "type": "union release"
+  },
+  "R12-01": {
+    "title": "HR Factbook 2025, “Socially responsible staff reduction”",
+    "publisher": "Deutsche Telekom",
+    "url": "https://report.telekom.com/hr-factbook/2025/costs-productivity/recruitment-mobility-and-attrition/socially-responsible-staff-reduction.html",
+    "type": "company report"
+  },
+  "R12-25": {
+    "title": "AI Index Report 2026, chapter 9, “Public Opinion”",
+    "publisher": "Stanford HAI",
+    "url": "https://hai.stanford.edu/assets/files/ai_index_report_2026_chapter_9_public_opinion.pdf",
+    "type": "institutional report"
+  },
+  "R12-28": {
+    "title": "Special Eurobarometer 554, Artificial Intelligence and the future of work",
+    "publisher": "European Commission",
+    "url": "https://cec-managers.org/wp-content/uploads/2025/02/Artificial-Intelligence-and-the-future-of-work_SP554__report_en.pdf",
+    "type": "official survey"
+  },
+  "R10-01": {
+    "title": "EIB Group Investment Survey 2026 - European Union overview",
+    "publisher": "European Investment Bank",
+    "url": "https://www.eib.org/files/publications/20260192-091126-eib-group-investment-survey-2026-eu-overview-en.pdf",
+    "type": "institutional survey",
+    "date": "2026-11-09"
+  },
+  "CL-1990": {
+    "title": "Absorptive Capacity: A New Perspective on Learning and Innovation. Administrative Science Quarterly 35(1), 128–152",
+    "publisher": "Wesley M. Cohen, Daniel A. Levinthal",
+    "date": "1990-03",
+    "url": "https://doi.org/10.2307/2393553",
+    "type": "peer-reviewed"
+  },
+  "FR-2020-28107": {
+    "title": "Notice regarding the applicability of NHTSA FMVSS test procedures to certifying manufacturers (85 FR 83143)",
+    "publisher": "National Highway Traffic Safety Administration, Federal Register",
+    "date": "2020-12-21",
+    "url": "https://www.govinfo.gov/content/pkg/FR-2020-12-21/html/2020-28107.htm",
     "type": "legal text"
   },
-  "R4-01": {
-    "title": "Regulation (EU) 2026/1744 (Digital Omnibus on AI)",
-    "publisher": "European Union",
-    "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202601744",
-    "type": "legal text",
-    "date": "2026-07-24"
+  "EU-2018-858": {
+    "title": "Regulation (EU) 2018/858 on the approval and market surveillance of motor vehicles and their trailers (Art. 6(4), recital 40)",
+    "publisher": "European Parliament and Council",
+    "date": "2018-05-30",
+    "url": "https://eur-lex.europa.eu/eli/reg/2018/858/oj",
+    "type": "legal text"
   },
   "R11-36": {
     "title": "29 U.S.C. § 158 (NLRA section 8)",
@@ -179,12 +216,6 @@
     "url": "https://cwa-union.org/news/releases/us-court-appeals-rejects-t-mobiles-baseless-attempt-reverse-nlrb-ruling-illegal",
     "type": "union release",
     "date": "2024-01-12"
-  },
-  "R11-40": {
-    "title": "47 CFR § 64.2010 (safeguards on disclosure of CPNI)",
-    "publisher": "United States",
-    "url": "https://www.law.cornell.edu/cfr/text/47/64.2010",
-    "type": "legal text"
   },
   "R11-41": {
     "title": "California Finalizes Regulations to Strengthen Consumers' Privacy",
@@ -231,13 +262,6 @@
     "type": "legal text",
     "date": "2016-05-04"
   },
-  "R11-14": {
-    "title": "Deutsche Telekom und ver.di erzielen Tarifeinigung",
-    "publisher": "Deutsche Telekom",
-    "url": "https://www.telekom.com/de/newsroom/aktuelles/medieninformationen/2026/05/deutsche-telekom-und-ver-di-erzielen-tarifeinigung",
-    "type": "company release",
-    "date": "2026-05-28"
-  },
   "R11-12": {
     "title": "Gute IT digital mitbestimmen (2022). Portrait über beschleunigte Mitbestimmungsverfahren und digitale Zusammenarbeit bei der Deutschen Telekom AG",
     "publisher": "H. Bargmann, Betriebs- und Dienstvereinbarungen Nr. 024, Hans-Böckler-Stiftung",
@@ -245,46 +269,67 @@
     "type": "union-affiliated case study",
     "date": "2022-09"
   },
-  "R11-30": {
-    "title": "Etablierte Strukturen nutzen, um Bots und KI zu regeln (2023)",
-    "publisher": "J. Grasy, B. Seibold, Portrait Nr. 033, Heidelberg Materials AG",
-    "url": "https://www.boeckler.de/fpdf/HBS-008714/p_mbf_bvd_portrait_33_2023.pdf",
-    "type": "union-affiliated case study",
-    "date": "2023-10"
+  "R9-04": {
+    "title": "Regulation (EU) 2024/1689 (AI Act)",
+    "publisher": "European Union",
+    "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202401689",
+    "type": "legal text",
+    "date": "2024-07-12"
   },
-  "R11-45": {
-    "title": "AI Investor Day transcript",
+  "R9-05": {
+    "title": "Regulation (EU) 2026/1744 (Digital Omnibus on AI), amending the AI Act",
+    "publisher": "European Union",
+    "date": "2026-07-24",
+    "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202601744",
+    "type": "legal text"
+  },
+  "B-2025": {
+    "title": "Europas Weg in die digitale Souveränität",
+    "publisher": "Bitkom",
+    "date": "2025-11-13",
+    "url": "https://www.bitkom.org/Presse/Presseinformation/Europas-Weg-digitale-Souveraenitaet",
+    "type": "survey"
+  },
+  "R6-24": {
+    "title": "Germany's first AI factory for industry officially goes into operation in Munich",
     "publisher": "Deutsche Telekom",
-    "url": "https://corporate-media.telekom.com/adobe/assets/urn:aaid:aem:5f06dc2a-d1c8-491d-a4ad-c2ae675f9310/original/as/DT%20AI%20Investor%20Day%20-%20Transcript.pdf",
-    "type": "investor material",
+    "url": "https://www.telekom.com/en/newsroom/latest-updates/media-information/2026/2/germany-s-first-ai-factory-for-industry",
+    "type": "company press release",
+    "date": "2026-02-04"
+  },
+  "R6-17": {
+    "title": "Annual Report 2025, Management report, Group strategy, “Data & AI”",
+    "publisher": "Deutsche Telekom",
+    "url": "https://report.telekom.com/annual-report-2025/management-report/group-strategy/data-ai.html",
+    "type": "annual report",
+    "date": "2026"
+  },
+  "R6-04": {
+    "title": "AI Investor Day, “AI in Customer Interactions”",
+    "publisher": "Deutsche Telekom",
+    "url": "https://corporate-media.telekom.com/adobe/assets/urn:aaid:aem:77825a91-444e-48c4-a955-f0db3ac1e4b9/original/as/04_260105_1010_AI_Investor_Day_Customer_Interaction_02.10.2026%20%282%29.pdf",
+    "type": "official investor material",
     "date": "2026-10-05"
   },
-  "R11-25": {
-    "title": "Organized Labor Versus Robots? Evidence from Micro Data",
-    "publisher": "S. Findeisen, W. Dauth, O. Schlenker, ZEW Discussion Paper 25-005",
-    "url": "https://zew.de/fileadmin/FTP/dp/dp25005.pdf",
-    "type": "discussion paper",
-    "date": "2025-01"
+  "R6-11": {
+    "title": "Quarterly Report on Form 10-Q, Q3 2026",
+    "publisher": "T-Mobile US",
+    "url": "https://www.sec.gov/Archives/edgar/data/1283699/000128369926000129/tmus-20260930.htm",
+    "type": "SEC filing",
+    "date": "2026-10-28"
   },
-  "R11-27": {
-    "title": "Nutzung und Verwendung von Künstlicher Intelligenz in Betrieben in Baden-Württemberg",
-    "publisher": "J. Gasparro, J. S. Wiemann, IAW-Kurzbericht 1/2026",
-    "url": "https://www.iaw.edu/files/dokumente/ab%20Januar%202026/iaw_kurzbericht_2026_01.pdf",
-    "type": "institute study",
-    "date": "2026-07-01"
-  },
-  "R11-24": {
-    "title": "Do German Works Councils Counter or Foster the Implementation of Digital Technologies?",
-    "publisher": "S. Genz, L. Bellmann, B. Matthes, IZA DP 11616",
-    "url": "https://docs.iza.org/dp11616.pdf",
-    "type": "discussion paper",
-    "date": "2018-06"
-  },
-  "R12-01": {
-    "title": "HR Factbook 2025, “Socially responsible staff reduction”",
+  "R10-50": {
+    "title": "Q2 2026 results",
     "publisher": "Deutsche Telekom",
-    "url": "https://report.telekom.com/hr-factbook/2025/costs-productivity/recruitment-mobility-and-attrition/socially-responsible-staff-reduction.html",
-    "type": "company report"
+    "url": "https://corporate-media.telekom.com/adobe/assets/urn:aaid:aem:36b7a6fc-361e-48b1-b871-9eac0457c5fc/original/as/dt-26q2-praesentation.pdf?attachment=true",
+    "type": "issuer investor deck",
+    "date": "2026-08-06"
+  },
+  "R11-40": {
+    "title": "47 CFR § 64.2010 (safeguards on disclosure of CPNI)",
+    "publisher": "United States",
+    "url": "https://www.law.cornell.edu/cfr/text/47/64.2010",
+    "type": "legal text"
   },
   "R11-34": {
     "title": "Termination & Retaliation",
@@ -297,66 +342,5 @@
     "publisher": "United States",
     "url": "https://www.law.cornell.edu/uscode/text/29/2102",
     "type": "legal text"
-  },
-  "R11-38": {
-    "title": "Form 8-K of 24 Aug 2023",
-    "publisher": "T-Mobile US",
-    "url": "https://www.sec.gov/Archives/edgar/data/1283699/000119312523219679/d507613d8k.htm",
-    "type": "SEC filing",
-    "date": "2023-08-24"
-  },
-  "R12-11": {
-    "title": "T-Mobile US headcount from DT's Q2 2026 report, 10 August 2026",
-    "publisher": "Light Reading",
-    "url": "https://www.lightreading.com/business-transformation/t-mobile-us-has-just-cut-more-than-4-500-jobs-in-latest-shakeup",
-    "type": "trade press"
-  },
-  "R12-25": {
-    "title": "AI Index Report 2026, chapter 9, “Public Opinion”",
-    "publisher": "Stanford HAI",
-    "url": "https://hai.stanford.edu/assets/files/ai_index_report_2026_chapter_9_public_opinion.pdf",
-    "type": "institutional report"
-  },
-  "R12-28": {
-    "title": "Special Eurobarometer 554, Artificial Intelligence and the future of work",
-    "publisher": "European Commission",
-    "url": "https://cec-managers.org/wp-content/uploads/2025/02/Artificial-Intelligence-and-the-future-of-work_SP554__report_en.pdf",
-    "type": "official survey"
-  },
-  "R12-20": {
-    "title": "Vodafone cuts about 2,300 jobs in Germany, 9 November 2026",
-    "publisher": "Börsen-Zeitung",
-    "url": "https://www.boersen-zeitung.de/unternehmen-branchen/vodafone-baut-in-deutschland-rund-2300-stellen-ab-2",
-    "type": "press"
-  },
-  "R12-21": {
-    "title": "Telefónica Germany job cuts and store closures, 23 July 2026",
-    "publisher": "Light Reading",
-    "url": "https://www.lightreading.com/business-transformation/eurobites-telef-nica-germany-plans-jobs-cuts-store-closures",
-    "type": "trade press"
-  },
-  "R12-14": {
-    "title": "press release on the AI assistant's first month, 27 February 2024",
-    "publisher": "Klarna",
-    "url": "https://www.klarna.com/international/press/klarna-ai-assistant-handles-two-thirds-of-customer-service-chats-in-its-first-month/",
-    "type": "company press release"
-  },
-  "R12-15": {
-    "title": "Klarna hires service agents again, 9 May 2025",
-    "publisher": "Entrepreneur",
-    "url": "https://www.entrepreneur.com/business-news/klarna-ceo-reverses-course-by-hiring-more-humans-not-ai/491396",
-    "type": "press"
-  },
-  "R12-34": {
-    "title": "What makes transplants thrive",
-    "publisher": "Pil and MacDuffie, Journal of World Business 34(4), 1999, 372–391",
-    "url": "https://ideas.repec.org/a/eee/worbus/v34y1999i4p372-391.html",
-    "type": "peer-reviewed (abstract)"
-  },
-  "R12-37": {
-    "title": "Management Practices Across Firms and Countries",
-    "publisher": "Bloom, Genakos, Sadun, Van Reenen, NBER WP 17850 / AMP 26(1), 2012",
-    "url": "https://www.nber.org/papers/w17850",
-    "type": "working paper (abstract)"
   }
 }

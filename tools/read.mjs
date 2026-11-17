@@ -167,7 +167,10 @@ function blockGaps() {
     const stage = b.el.querySelector('.scene-stage').getBoundingClientRect();
     const sticky = getComputedStyle(b.el.querySelector('.scene-text')).position === 'sticky';
     const side = getComputedStyle(b.el).display === 'grid';
-    const tail = b.r.bottom - text.bottom;
+    // a caption that follows the scene is reading matter, not an empty stretch
+    const cap = b.el.querySelector('.scene-caption');
+    const capR = cap && getComputedStyle(cap).display !== 'none' ? cap.getBoundingClientRect() : null;
+    const tail = (capR && capR.height ? capR.top : b.r.bottom) - text.bottom;
     if (side && !sticky && tail > 6 * rem) out.push(`${Math.round(tail)}px empty at the end of scene "${b.el.dataset.scene}"`);
   }
   return out;

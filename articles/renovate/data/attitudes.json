@@ -4,7 +4,15 @@
   "unit": {
     "percentPerDot": 1,
     "dotsPerStrip": 100,
-    "note": "one dot is [[1%]]"
+    "note": "one dot is [[1%]]",
+    "print": {
+      "percentPerDot": 5,
+      "dotsPerStrip": 20,
+      "rows": 1,
+      "group": 5,
+      "note": "one dot is [[5%]], rounded",
+      "why": "In print the dots are larger and fewer, so that they stay legible at 100 dpi."
+    }
   },
   "panels": [
     {

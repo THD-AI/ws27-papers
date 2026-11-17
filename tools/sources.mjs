@@ -46,6 +46,87 @@ const OVERRIDES = {
     type: 'survey',
   },
 
+  // The building analogy (draft 5): opened on 16 November 2026, not in the dossiers.
+  'NAHB-2026': {
+    title: 'Wood framing continues to dominate single-family construction (Census Survey of Construction, 2025 completions)',
+    publisher: 'NAHB, Eye on Housing',
+    date: '2026-09',
+    url: 'https://eyeonhousing.org/2026/09/wood-framing-continues-to-dominate-single-family-construction/',
+    type: 'statistics',
+  },
+  'DESTATIS-2021': {
+    title: 'Baugenehmigungen 2020 nach überwiegend verwendetem Baustoff (Destatis, reported by Baulinks)',
+    publisher: 'Federal Statistical Office (Destatis)',
+    date: '2021-10',
+    url: 'https://www.baulinks.de/webplugin/2021/1028.php4',
+    type: 'statistics',
+  },
+  'BAUNETZ-DIN18015': {
+    title: 'Leitungsverlegung und Installationszonen (DIN 18015-3)',
+    publisher: 'Baunetz Wissen',
+    date: '2016',
+    url: 'https://www.baunetzwissen.de/elektro/fachwissen/leitungen-verteiler/leitungsverlegung-und-installationszonen-153012',
+    type: 'standard',
+  },
+
+  // Draft 6 (17 November 2026): the approval analogy and two peer-reviewed frames, opened that day.
+  'FR-2020-28107': {
+    title: 'Notice regarding the applicability of NHTSA FMVSS test procedures to certifying manufacturers (85 FR 83143)',
+    publisher: 'National Highway Traffic Safety Administration, Federal Register',
+    date: '2020-12-21',
+    url: 'https://www.govinfo.gov/content/pkg/FR-2020-12-21/html/2020-28107.htm',
+    type: 'legal text',
+  },
+  'EU-2018-858': {
+    title: 'Regulation (EU) 2018/858 on the approval and market surveillance of motor vehicles and their trailers (Art. 6(4), recital 40)',
+    publisher: 'European Parliament and Council',
+    date: '2018-05-30',
+    url: 'https://eur-lex.europa.eu/eli/reg/2018/858/oj',
+    type: 'legal text',
+  },
+  'BRS-2021': {
+    title: 'The Productivity J-Curve: How Intangibles Complement General Purpose Technologies. American Economic Journal: Macroeconomics 13(1), 333–372',
+    publisher: 'Erik Brynjolfsson, Daniel Rock, Chad Syverson',
+    date: '2021-01',
+    url: 'https://doi.org/10.1257/mac.20180386',
+    type: 'peer-reviewed',
+  },
+  'HS-2001': {
+    title: 'Varieties of Capitalism: The Institutional Foundations of Comparative Advantage',
+    publisher: 'Peter A. Hall, David Soskice (eds.), Oxford University Press',
+    date: '2001',
+    url: 'https://doi.org/10.1093/0199247757.001.0001',
+    type: 'peer-reviewed',
+  },
+  'TOE-1990': {
+    title: 'The Processes of Technological Innovation (the technology–organisation–environment framework); summarised in J. Baker, "The Technology–Organization–Environment Framework", Information Systems Theory, 2012',
+    publisher: 'Louis G. Tornatzky, Mitchell Fleischer, Lexington Books',
+    date: '1990',
+    url: 'https://doi.org/10.1007/978-1-4419-6108-2_12',
+    type: 'peer-reviewed',
+  },
+  'CBA-2025': {
+    title: 'CBA reverses AI-driven job cuts, admits "error"',
+    publisher: 'Information Age (Australian Computer Society)',
+    date: '2025-08-21',
+    url: 'https://ia.acs.org.au/article/2025/cba-reverses-ai-driven-job-cuts--admits--error-.html',
+    type: 'press',
+  },
+  'DGB-2026': {
+    title: 'Tarifergebnis Deutsche Telekom: mehr Entgelt, Kündigungsschutz und erstmals Mitgliederbonus',
+    publisher: 'Deutscher Gewerkschaftsbund (DGB), Tarifmeldung',
+    date: '2026',
+    url: 'https://www.dgb.de/service/weiterer-service/tarifmeldungen/tarifmeldung/tarifergebnis-deutsche-telekom-mehr-entgelt-kuendigungsschutz-und-erstmals-mitgliederbonus/',
+    type: 'union release',
+  },
+  'CL-1990': {
+    title: 'Absorptive Capacity: A New Perspective on Learning and Innovation. Administrative Science Quarterly 35(1), 128–152',
+    publisher: 'Wesley M. Cohen, Daniel A. Levinthal',
+    date: '1990-03',
+    url: 'https://doi.org/10.2307/2393553',
+    type: 'peer-reviewed',
+  },
+
   // The dossier row reads "Regulation (EU) 2026/1744 ..., recitals 38, 40";
   // the automatic cut kept only the tail.
   'R9-05': {

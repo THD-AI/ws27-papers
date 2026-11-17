@@ -60,9 +60,10 @@ const browser = await puppeteer.launch({ executablePath: CHROME, headless: true 
 const log = [];
 const written = [];
 
-async function open(viewport, query = '', features = []) {
+async function open(viewport, query = '', features = [], prep = null) {
   const page = await browser.newPage();
   await page.setViewport(viewport);
+  if (prep) await prep(page);
   if (features.length) await page.emulateMediaFeatures(features);
   const tag = `[${viewport.width}px${query ? ` ${query}` : ''}]`;
   page.on('console', (m) => { if (['error', 'warn'].includes(m.type())) log.push(`${tag} console.${m.type()}: ${m.text()}`); });
@@ -233,8 +234,23 @@ if (!quick) {
 }
 
 // --- print ------------------------------------------------------------------
+// Google Fonts serves variable fonts to browsers, and Chrome embeds those in a
+// PDF as Type 3 glyphs, which some viewers draw jagged. A plain client gets
+// static TrueType files instead, so the PDF fetches the font CSS that way and
+// embeds real outlines.
+async function staticFonts(page) {
+  await page.setCacheEnabled(false);
+  await page.setRequestInterception(true);
+  page.on('request', async (req) => {
+    if (!req.url().startsWith('https://fonts.googleapis.com/')) { req.continue(); return; }
+    try {
+      const r = await fetch(req.url());
+      req.respond({ status: r.status, contentType: 'text/css', headers: { 'access-control-allow-origin': '*' }, body: await r.text() });
+    } catch { req.continue(); }
+  });
+}
 async function pdf(query, name) {
-  const page = await open({ width: 1240, height: 1754 }, query);
+  const page = await open({ width: 1240, height: 1754 }, query, [], staticFonts);
   await page.emulateMediaType('print');
   await settle(page, 200);
   await page.pdf({ path: join(out, name), preferCSSPageSize: true, printBackground: true });

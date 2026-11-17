@@ -21,18 +21,23 @@ function build(el, ctx) {
   const S = tall
     ? { head: 12, what: 13, val: 13.5, desc: 12, why: 12.5, num: 12, lh: 15.5 }
     : { head: 12.5, what: 13.5, val: 14, desc: 13, why: 14, num: 13, lh: 16.5 };
-  const mark = (parent, cx, cy, open) => circle(parent, cx, cy, 4, open
-    ? { fill: C.paper, stroke: C.ink, 'stroke-width': 1.6 } : { fill: C.ink });
+  // in print the marks are larger plain circles, so that they stay round on
+  // paper and on a screen at 100 dpi
+  const MR = ctx.print ? 5.4 : 4, MX = ctx.print ? 2 : 0;
+  const mark = (parent, cx, cy, open) => circle(parent, cx, cy, open ? MR - 0.9 : MR, open
+    ? { fill: C.paper, stroke: C.ink, 'stroke-width': ctx.print ? 1.8 : 1.6 } : { fill: C.ink });
 
   // one value; returns the height it took
   function cell(parent, x, y, w, v) {
     const base = y + 13 + S.val * 0.36;
     if (v.value === null || (v.value === undefined && !v.range)) {
-      line(parent, x, y + 13, x + 54, y + 13, { stroke: C.ink, 'stroke-width': 1.25, 'stroke-dasharray': '2 4', 'stroke-linecap': 'round' });
+      line(parent, x, y + 13, x + 54, y + 13, ctx.print
+        ? { stroke: C.ink, 'stroke-width': 1.4, 'stroke-dasharray': '6 4' }
+        : { stroke: C.ink, 'stroke-width': 1.25, 'stroke-dasharray': '2 4', 'stroke-linecap': 'round' });
       text(parent, x + 62, y + 13 + 4.5, v.absent, { italic: true, size: S.why, fill: C.muted });
     } else {
-      mark(parent, x + 4.5, y + 13, v.status !== 'reported');
-      text(parent, x + 16, base, v.show, { family: 'mono', size: S.val, weight: 500 });
+      mark(parent, x + 4.5 + MX, y + 13, v.status !== 'reported');
+      text(parent, x + 16 + 2 * MX, base, v.show, { family: 'mono', size: S.val, weight: 500 });
     }
     if (!v.text) return 26;
     const dsc = text(parent, x, y + 13 + 9 + S.desc, v.text, { family: 'sans', size: S.desc, width: w, lh: S.lh });
@@ -40,10 +45,10 @@ function build(el, ctx) {
   }
   function key(parent, x, y) {
     const o = { family: 'sans', size: S.desc - 0.5, fill: C.muted };
-    mark(parent, x + 4, y - 4, false);
-    const a = text(parent, x + 13, y, d.key.reported, o);
-    mark(parent, a.right + 18, y - 4, true);
-    return text(parent, a.right + 27, y, d.key.open, o);
+    mark(parent, x + 4 + MX, y - 4, false);
+    const a = text(parent, x + 13 + 2 * MX, y, d.key.reported, o);
+    mark(parent, a.right + 18 + MX, y - 4, true);
+    return text(parent, a.right + 27 + 2 * MX, y, d.key.open, o);
   }
 
   const rowsG = [];

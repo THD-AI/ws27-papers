@@ -19,10 +19,10 @@ const fill = (tpl, v, dec = 0) => tpl.replace('{v}', fmt(v, dec));
 function plateA(svg, C, d, tall, st, keep, big) {
   const A = d.plateA;
   const L = tall
-    ? { p: 20.5, gx: 14, gy: 152, rBase: 2, rUnit: 6.7, note: 12.5, top: [141, 130, 112, 88, 77], bottomY: 378, relX: 229, relNoteX: 241, relW: 108, restX: 256, restY: 116, restW: 96, tagX: 346, tagY: 44 }
-    : { p: 32, gx: 150, gy: 162, rBase: 2.8, rUnit: 10.2, note: 14, top: [148, 136, 114, 88, 76], bottomY: 495, relX: 484, relNoteX: 500, relW: 230, restX: 492, restY: 110, restW: 240, tagX: 786, tagY: 17 };
+    ? { p: 20.5, gx: 14, gy: 152, rBase: 2, rUnit: 6.7, note: 12.5, top: [141, 130, 112, 83, 72], bottomY: 378, relX: 229, relNoteX: 241, relW: 108, restX: 256, restY: 116, restW: 96, tagX: 346, tagY: 44 }
+    : { p: 32, gx: 150, gy: 162, rBase: 2.8, rUnit: 10.2, note: 14, top: [148, 136, 113, 83, 71], bottomY: 495, relX: 484, relNoteX: 500, relW: 230, restX: 492, restY: 110, restW: 240, tagX: 786, tagY: 17 };
   if (big) L.note = 13.5;
-  if (tall) { L.restX = 244; L.restY = 270; L.restW = 108; }
+  if (tall) { L.restX = 244; L.restY = 292; L.restW = 108; }
   const root = g(svg), body = g(root, tall ? { transform: 'translate(0 40)' } : null), grid = g(body), notes = g(body);
   const n = A.total.value, cols = 10;
   const at = (i) => { const c = i % cols, r = Math.floor(i / cols); return [L.gx + L.p / 2 + c * L.p, L.gy + L.p / 2 + r * L.p]; };
@@ -59,7 +59,7 @@ function plateA(svg, C, d, tall, st, keep, big) {
     else st.fade(el, a, a + 0.08);
   });
 
-  const hide = keep ? undefined : [3.0, 3.12];
+  const hide = keep ? undefined : [3.0, 3.08];
   const nt = (grp, a, b) => st.fade(grp, a, b, hide);
   const o = { italic: true, size: L.note };
 
@@ -80,9 +80,19 @@ function plateA(svg, C, d, tall, st, keep, big) {
   const br = bracket(gR, L.relX, y0, L.relX, y1, 5, { stroke: C.ink, 'stroke-width': 1 });
   const relTxt = g(gR);
   const rel = text(relTxt, L.relNoteX, 0, fill(A.release.note, A.release.value), { ...o, width: L.relW });
-  relTxt.setAttribute('transform', `translate(0 ${((y0 + y1) / 2 - (rel.y + rel.h / 2)).toFixed(1)})`);
+  // the 40 and the 32 come from two documents: the drawing nests one in the
+  // other, the note under the release says that nobody published the overlap
+  const ovG = g(relTxt);
+  const ovTxt = A.overlap.note.replace('{t}', fmt(A.total.value)).replace('{a}', fmt(A.release.value)).replace('{b}', fmt(A.slide.value));
+  const ov = text(ovG, L.relNoteX, rel.bottom + L.note * 0.78 + (tall ? 6 : 8), ovTxt, { ...o, width: L.relW, fill: C.muted });
+  // centred on the bracket; on the narrow plate the block is taller than the
+  // four rows and starts at the bracket's top instead
+  const dy = tall ? y0 - 1 - rel.y : (y0 + y1) / 2 - (rel.y + ov.bottom) / 2;
+  relTxt.setAttribute('transform', `translate(0 ${dy.toFixed(1)})`);
   if (keep) st.draw(br, 0.74, 0.88); else st.draw(br, 0.74, 0.88, hide);
-  nt(relTxt, 0.84, 0.96);
+  st.fade(rel.el, 0.84, 0.96);
+  nt(relTxt, 0, 0.001);
+  nt(ovG, 1.8, 1.94);
 
   // the slide: a bracket over the 32, its note above
   const bx0 = L.gx + 3, bx1 = L.gx + (A.slide.value / rowsTop) * L.p - 3;
@@ -93,10 +103,12 @@ function plateA(svg, C, d, tall, st, keep, big) {
   // the note, then the number on its own with clear space, ringed
   const [pre, post] = A.slide.note.split('[[{v}]]');
   const t1 = text(gSn, bx0, L.top[2], pre.trim(), o);
-  const num = text(gSn, t1.right + (tall ? 11 : 13), L.top[2], fmt(A.slide.value), { family: 'mono', size: L.note, weight: 500 });
-  text(gSn, num.right + (tall ? 11 : 13), L.top[2], post.trim(), o);
+  // the number that matters, larger than the notes so it is found first
+  const numSize = tall ? 16.5 : 18;
+  const num = text(gSn, t1.right + (tall ? 12 : 14), L.top[2], fmt(A.slide.value), { family: 'mono', size: numSize, weight: 600 });
+  text(gSn, num.right + (tall ? 12 : 14), L.top[2], post.trim(), o);
   {
-    const pr = penRing(gSn, num.cx, num.cy - 0.5, num.w / 2 + (tall ? 5.5 : 6.5), L.note * 0.5 + (tall ? 3.4 : 4), { seed: 31, stroke: C.accent, width: tall ? 1.3 : 1.5 });
+    const pr = penRing(gSn, num.cx, num.cy - 0.5, num.w / 2 + (tall ? 6 : 7), numSize * 0.5 + (tall ? 3.6 : 4), { seed: 31, stroke: C.accent, width: tall ? 1.7 : 1.8 });
     pr.paths.forEach((p, k) => st.draw(p, 1.74 + k * 0.03, 1.92 + k * 0.03));
   }
   nt(gSn, 1.6, 1.74);
@@ -106,13 +118,18 @@ function plateA(svg, C, d, tall, st, keep, big) {
 
   // the eight that are only in the release
   const gN = g(notes);
-  const rest = text(gN, L.restX, L.restY, A.rest.note, { ...o, width: L.restW });
+  // on the narrow plate it sits under the release's notes, clear of them
+  const restY = tall ? Math.max(L.restY, ov.bottom + dy + L.note + 12) : L.restY;
+  const rest = text(gN, L.restX, restY, A.rest.note, { ...o, width: L.restW });
   if (tall) {
     const [qx, qy] = at(order[A.release.value - 1]);
     leader(gN, rest.x + 6, rest.y - 3, qx + 3, qy + L.rUnit + 3.5, { stroke: C.muted });
   } else {
-    const [rx, ry] = at(order[A.slide.value + (tall ? 0 : rowsTop)]);
-    leader(gN, rest.x + (tall ? 6 : 10), rest.bottom + 3, rx + (tall ? 3 : 2), ry - L.rUnit - 3.5, { stroke: C.muted });
+    // a short bracket over the two columns of the eight, beside the one
+    // over the 32, so that the top edge reads as 32 | the rest
+    const ex0 = L.gx + (A.slide.value / rowsTop) * L.p + 3, ex1 = L.gx + cols * L.p - 3;
+    bracket(gN, ex1, L.top[0], ex0, L.top[0], 6, { stroke: C.muted, 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+    leader(gN, rest.x + 10, rest.bottom + 3, (ex0 + ex1) / 2, L.top[0] - 2.5, { stroke: C.muted });
   }
   nt(gN, 1.8, 1.94);
 
@@ -121,9 +138,9 @@ function plateA(svg, C, d, tall, st, keep, big) {
   text(gA, bx0, L.top[1], A.start.note, o);
   nt(gA, 2.24, 2.42);
   const gF = g(notes);
-  bracket(gF, bx1, L.top[3], bx0, L.top[3], tall ? 4.5 : 6, { stroke: C.ink, 'stroke-width': 1, 'stroke-dasharray': '3 3.5' });
+  bracket(gF, bx1, L.top[3], bx0, L.top[3], tall ? 4.5 : 6, { stroke: C.muted, 'stroke-width': 1, 'stroke-dasharray': '3 3.5' });
   {
-    const fo = { ...o, width: tall ? 250 : 330 }, ftxt = fill(A.finished.note, A.slide.value);
+    const fo = { ...o, width: tall ? 250 : 330, fill: C.muted }, ftxt = fill(A.finished.note, A.slide.value);
     const fs = textSize(ftxt, fo);
     text(gF, bx0, L.top[4] - (fs.lines - 1) * fs.lh, ftxt, fo);
   }
@@ -133,14 +150,18 @@ function plateA(svg, C, d, tall, st, keep, big) {
 }
 
 // ---------------------------------------------------------------------------
-// Plate B. Everything arrives from g = 3.3 on.
+// Plate B. Its headline and first ruler arrive while plate A leaves (XA).
 // ---------------------------------------------------------------------------
+// The hand-over from plate A to plate B, in g: plate A fades out and plate
+// B's headline and first ruler fade in over the same span.
+const XA = [3.02, 3.2];
+
 function plateB(svg, C, d, tall, st, bare, big) {
   // Two rulers of the same length, one above the other. A ruler is one year
   // for one customer account, divided into its twelve months; a dot is one
   // contact, evenly spaced from the yearly value. Under them a slim time
   // line with the two measured points and the month the agents were
-  // announced. Everything arrives from g = 3.3 on; the time line in step 4.
+  // announced. Everything arrives from XA on; the time line in step 4.
   const B = d.plateB, W = tall ? 360 : 800, H = tall ? 440 : 500;
   const S = tall ? { x0: 14, note: 12.5, mono: 12.5, small: 11.5, lab: 13.5, r: 4.2 } : { x0: 16, note: 14, mono: 14, small: 12, lab: 15, r: 5 };
   if (big) { S.note = 13.5; S.mono = 13; S.small = 12; }
@@ -149,7 +170,7 @@ function plateB(svg, C, d, tall, st, bare, big) {
 
   const hd = g(root);
   const h1 = text(hd, S.x0, tall ? 13 : 17, d.headline.b, { family: 'sans', size: tall ? 12 : 13.5, weight: 600, width: tall ? W - 2 * S.x0 : 620, lh: 15 });
-  st.fade(hd, 3.3, 3.44);
+  st.fade(hd, 3.06, XA[1]);
   // what T-Mobile names besides the agents: one block under the headline
   const cg = g(root);
   const cs = text(cg, S.x0, h1.bottom + S.note + 2, B.causes.block, { italic: true, size: S.note, width: W - 2 * S.x0 });
@@ -157,8 +178,9 @@ function plateB(svg, C, d, tall, st, bare, big) {
 
   const rx0 = tall ? S.x0 + 4 : 96, rx1 = tall ? W - S.x0 - 4 : 540, len = rx1 - rx0;
   let y = cs.bottom + (tall ? 20 : 58);
+  const rulerY = [];
   B.points.forEach((p, i) => {
-    const a = 3.4 + i * 0.2;
+    const a = XA[0] + i * 0.18;
     const tg = g(root), rg = g(root);
     const count = p.count.replace('{v}', fmt(p.value, p.decimals)), note = p.note.replace('{v}', fmt(p.value, p.decimals));
     let ry;
@@ -173,6 +195,7 @@ function plateB(svg, C, d, tall, st, bare, big) {
       const c1 = text(tg, rx1 + 24, ry - 6, count, { family: 'mono', size: S.mono, weight: 500 });
       text(tg, rx1 + 24, c1.bottom + S.note + 1, note, { italic: true, size: S.note, width: W - rx1 - 40 });
     }
+    rulerY.push(ry);
     // the ruler: one year, twelve months
     line(rg, rx0, ry, rx1, ry, ink);
     const n = B.strip.months;
@@ -181,7 +204,7 @@ function plateB(svg, C, d, tall, st, bare, big) {
       line(rg, x, ry, x, ry + (k === 0 || k === n ? 8 : 5), ink);
       if (k < n) text(rg, x + len / n / 2, ry + 8 + S.small, B.strip.letters[k], { family: 'mono', size: S.small, fill: C.muted, anchor: 'middle' });
     }
-    st.fade(rg, a, a + 0.12);
+    st.fade(rg, a, i === 0 ? XA[1] : a + 0.12);
     // contacts: whole dots, and a visibly smaller one for the part
     const full = Math.floor(p.value + 1e-9), part = p.value - full;
     const ds = [];
@@ -191,17 +214,32 @@ function plateB(svg, C, d, tall, st, bare, big) {
       c.dataset.r = k < full ? S.r : S.r * 0.45;
       ds.push(c);
     }
-    st.fill(ds, a + 0.1, a + 0.3);
-    st.fade(tg, a + 0.04, a + 0.18);
+    st.fill(ds, a + 0.08, a + 0.28);
+    st.fade(tg, a, i === 0 ? XA[1] : a + 0.14);
     y = ry + 8 + S.small + (tall ? 26 : 44);
     if (i === 0) {
       const bg = g(root);
       const yrs = B.between.years;
       const bt = text(bg, tall ? S.x0 : rx0, y - (tall ? 6 : 8), B.between.note.replace('{a}', yrs[0]).replace('{b}', yrs[yrs.length - 1]), { italic: true, size: S.note, fill: C.muted });
-      st.fade(bg, 3.8, 3.94);
+      st.fade(bg, 3.42, 3.56);
       y = bt.bottom + (tall ? 22 : 40);
     }
   });
+
+  // the fall from the first ruler to the second, as T-Mobile names it: an
+  // arrow down in the December column, from the first ruler to the second
+  {
+    const fg = g(root);
+    const ax = rx1 - len / (B.strip.months * 2);
+    const ya = rulerY[0] + 8 + S.small + 8, yb = rulerY[1] - 11;
+    const aw = { stroke: C.ink, 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' };
+    line(fg, ax, ya, ax, yb, aw);
+    line(fg, ax - 4, yb - 6, ax, yb, aw);
+    line(fg, ax + 4, yb - 6, ax, yb, aw);
+    const fs = tall ? 15 : 17;
+    text(fg, ax - 9, (ya + yb) / 2 + fs * 0.36, B.fall.show.replace('{v}', fmt(B.fall.value)), { family: 'mono', size: fs, weight: 600, anchor: 'end' });
+    st.fade(fg, 3.48, 3.62);
+  }
 
   // step 4: the time line
   const tl = g(root);
@@ -232,10 +270,13 @@ function plateB(svg, C, d, tall, st, bare, big) {
 
   if (!bare) {
     // plate A is gone; one line keeps what it showed
+    // at step 3 it stands where the time line will be, and gives way to it
     const rm = g(root);
-    text(rm, S.x0, tall ? H - 22 : H - 12, B.reminder.replace('{a}', fmt(d.plateA.slide.value)).replace('{b}', fmt(d.plateA.total.value)), { family: 'mono', size: S.small, fill: C.muted });
-    text(rm, W - S.x0, tall ? H - 7 : 17, d.tag, { family: 'mono', size: S.small, fill: C.muted, anchor: 'end' });
-    st.fade(rm, 3.4, 3.56);
+    text(rm, tall ? S.x0 : rx0, ay + 4, B.reminder.replace('{a}', fmt(d.plateA.slide.value)).replace('{b}', fmt(d.plateA.total.value)), { family: 'mono', size: S.small, fill: C.muted });
+    st.fade(rm, XA[0], XA[1], [4.0, 4.1]);
+    const tg = g(root);
+    text(tg, W - S.x0, tall ? H - 7 : 17, d.tag, { family: 'mono', size: S.small, fill: C.muted, anchor: 'end' });
+    st.fade(tg, XA[0], XA[1]);
   }
   return { root };
 }
@@ -260,9 +301,10 @@ function build(el, ctx) {
   }
 
   const A = plateA(svg, C, d, tall, st, false);
-  // plate A leaves; plate B keeps one line of it
+  // plate A leaves while plate B arrives over the same window (XA), so the
+  // two opacities add up to one and no scroll position shows an empty frame
   st.on((gg) => {
-    const p = 1 - ease(span(gg, 3.04, 3.3));
+    const p = 1 - ease(span(gg, XA[0], XA[1]));
     A.root.style.display = p <= 0.001 ? 'none' : '';
     A.root.style.opacity = p >= 0.999 ? '' : p.toFixed(3);
   });

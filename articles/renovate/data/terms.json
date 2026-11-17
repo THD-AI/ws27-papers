@@ -1,0 +1,34 @@
+{
+  "id": "terms",
+  "reading": "An AI system in building terms: what people picture as AI is mostly the handbook; the system is the handbook, the plans archive, the keys and the cables together.",
+  "sourceNote": "Definitions, not findings: the mapping is the analogy dictionary of plan-restart.md (section 1, 'Not Jarvis'), changed after the plan review to objects only, no people. No number is drawn.",
+  "headline": "An AI system, in building terms",
+  "parts": [
+    {
+      "key": "handbook",
+      "name": "a thick reference handbook",
+      "term": "language model: answers from what it once read",
+      "source": null
+    },
+    {
+      "key": "archive",
+      "name": "the plans archive: the company's own files",
+      "term": "retrieval: looks up the company's own documents first",
+      "source": null
+    },
+    {
+      "key": "keys",
+      "name": "a ring of keys",
+      "term": "AI agent: acts in a loop, only where its keys fit",
+      "source": null
+    },
+    {
+      "key": "cable",
+      "name": "a cable between two junction boxes",
+      "term": "connections: cables to other systems",
+      "source": null
+    }
+  ],
+  "alone": "what people picture as AI is mostly this",
+  "whole": "the system is all four together"
+}

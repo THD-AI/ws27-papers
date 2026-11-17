@@ -4,6 +4,43 @@ Read `SPEC.md` first (figure contract, design system). Each figure below says wh
 
 Honesty rules that override looks: where a value is not published, draw the absence (an empty slot with an italic note "not published"), never an estimate. Never connect two measured points with a line that suggests the path between them. Company-reported figures carry a small mono tag `company-reported`.
 
+## Drafts 7 to 9 (17 November 2026): three reader rounds
+
+Twelve readers per round; the log is in dotUni `docs/papers/innovation/loop-draft-6.md`.
+
+- **`permits`**: cars removed. The figure now shows the real schedules: T-Mobile build → launch, checks afterwards; Telekom works council and privacy review → build → launch; the 2021 framework agreement as the shortcut; the conciliation board note. The cars remain one sentence in the text.
+- **`roadmap`**: off the page since draft 9. It failed in all three rounds in three forms (icons, Gantt, ladder of equal steps). The numbered list with a measure per step carries section 9. The file stays for his decision.
+- **`repaint`** (new, column, 2 steps): "The saving first, taken back later", Klarna (leavers not replaced → hiring again, 15 months) and Commonwealth Bank (45 jobs to go → "error", weeks).
+- **`numbers`**: plates cross-fade, so the pinned figure is never blank; the 40/32 nesting note says the overlap isn't published; "−55%" mark.
+- **`walls`**: timber cable dropped from above into one bay; brick runs in the upper zone; sockets visibly above the floor; headings "On the surface, painted over" / "Cut in and plastered".
+- **`terms`**: one continuous cable between the junction boxes.
+- **Print**: larger units in the dot charts; static TrueType fonts.
+
+## Draft 6 (17 November 2026): the readers' fixes
+
+Six independent readers read draft 5 (dotUni `docs/papers/innovation/readers-draft-5.md`); the requirements and the loop are in `docs/papers/innovation/loop-draft-6.md`. Analogies need not all be construction (transcript `2026-11-17-003`): use the real-world picture that is true and explains best.
+
+- **`walls`**: the cable follows the DIN 18015-3 installation zones (along the upper zone, down beside a corner, to a socket near the floor) in all three walls; the brick walls read as plastered, with the brick visible only in the cut and in a broken-away patch.
+- **`terms`**: the cable joins two junction boxes (a lead between two wall sockets is a lethal double plug); the agent "acts in a loop".
+- **`permits`**: now cars, because buildings are inspected before occupancy in both countries. United States: the maker certifies itself, tests and recalls come afterwards (FR-2020-28107). Germany and the EU: type approval before any car is sold (EU-2018-858). The 2021 standing agreement is the type approval; a system outside it needs its own approval, the long way.
+- **`roadmap`**: a renovation schedule of an occupied house in a true order: survey, plan and materials, approval, trades first, the main supply, room by room with the keys in steps, running it; people at home throughout; inspected at every step.
+- **`obstacles`**: the accent is on missing knowledge, which the section is about; the law rows are marked quietly.
+- **`exits`**, **`attitudes`**: labels enlarged for laptop screens.
+- **`pairs`**: moved to an appendix; the text keeps a two-sentence summary.
+
+## Draft 5 (16 November 2026, evening): the building analogy
+
+Alexander's rule for this article (dotUni transcripts `2026-11-16-019`, `-020`): every hard idea is explained with an everyday analogy, and the main one is his father's, a civil engineer: American houses are timber frames, so new wiring is pulled through hollow walls; German houses are mostly masonry, so a new cable means a channel cut and plastered. **The analogy is drawn in its own world. No AI agents, robots, screens or office workers inside it.** The plan with the analogy dictionary and the storyboard is in arudaev/dotUni `docs/papers/innovation/plan-restart.md`.
+
+Retired in draft 5: `path` (its point did not come across; replaced by `permits`) and the margin scene `house` (distracting). Their files stay for reference; the text no longer uses them. The five house directions of the same day (`house-a` to `house-e`, branch `feat/renovate-house-directions`) were all rejected.
+
+New in draft 5:
+
+- **`walls`** (figure, column, 3 steps, the hero): the same new cable added to a timber stud wall and to a brick wall. Five-second reading: "the same job is quick in one wall and building work in the other". Sources: NAHB-2026, DESTATIS-2021, BAUNETZ-DIN18015.
+- **`terms`** (figure, column, 2 steps): four everyday pictures for the parts of an AI system: apprentice (language model), plans archive (retrieval), keys (an agent's permissions), wiring (connections). Five-second reading: "what people picture as AI is only the apprentice".
+- **`permits`** (figure, column, 3 steps): one decision as two construction schedules on one time axis: Germany checks before the work, the US after; a pre-approved standard design (Telekom's 2021 framework agreement) keeps the German permit short. Facts and ids from `data/path.json`.
+- **`roadmap`** (figure, wide, 5 steps): the renovation of an occupied building in order: survey, foundations, wiring with keys in steps, fit-out with the residents, inspection while building; "the residents stay" (no dismissals for business reasons until the end of 2028) under all phases.
+
 ## `numbers` (scene, 5 steps): what the 40% and the 55% are
 
 Five-second reading, steps 0 to 2: "the announcement said 40 of 100 contacts; the company's own slide says 32, and those are contacts that start with the software, not ones it finished". Steps 3 and 4: "a customer account contacted care 7 times a year in 2021 and about 3 times in 2026; the software agents arrived late in that fall".
@@ -42,7 +79,7 @@ Sources for all rows: R6-06, R6-02, R6-03, R6-04, R6-16, R6-12, R6-14, R6-09, R6
 
 Five-second reading: "missing knowledge comes first; the law comes second and third".
 
-Six rows of unit dots, one dot is 2 percentage points, 50 dots to a full row, counted from zero at the left. Order as given. The two legal rows in the accent, the others in ink. The value in mono at the end of each row. Note at the top row: "one dot is 2% of firms". Source R7-06 (Federal Statistical Office, 2025; firms that considered AI and do not use it; several answers possible; the six most named of the listed reasons are shown, and the figure's note says so).
+Six rows of unit dots, one dot is 2 percentage points, 50 dots to a full row, counted from zero at the left. Order as given. Missing knowledge in the accent; the two legal rows marked quietly, the others in ink. The value in mono at the end of each row. Note at the top row: "one dot is 2% of firms". Source R7-06 (Federal Statistical Office, 2025; firms that considered AI and do not use it; several answers possible; the six most named of the listed reasons are shown, and the figure's note says so).
 
 | Reason | % |
 | --- | --- |

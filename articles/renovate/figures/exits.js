@@ -1,10 +1,12 @@
 // exits: the agreed routes out of Telekom in Germany, 2021 to 2025. One
 // mark is 25 full-time positions. Each column is a stack of five groups;
 // the groups stand on shared base lines, so a route can be followed across
-// the years. Severance is the one field.
+// the years. Severance is the one field. In print one mark is 50 positions
+// (data: unit.print), in larger marks that stay round on paper and on a
+// screen at 100 dpi.
 import {
   mountFigure, svgRoot, colors, g, rect, line, text, textSize, cells, units, dots,
-  leader, bracket, penRing, stage, fmt,
+  leader, bracket, penRing, stage, fmt, measure, h, FONTS,
 } from '../../../lib/fig.js';
 
 export const steps = 1;
@@ -13,7 +15,8 @@ export const aspect = { wide: 880 / 448, tall: 360 / 492 };
 function build(el, ctx) {
   const C = colors(ctx), d = ctx.data, tall = ctx.layout === 'tall';
   const W = tall ? 360 : 880, H = tall ? 492 : 448;
-  const per = d.unit.positionsPerMark;
+  const U = ctx.print && d.unit.print ? { ...d.unit, ...d.unit.print } : d.unit;
+  const per = U.positionsPerMark;
   const svg = svgRoot(el, W, H, `${d.reading} Totals by year: `
     + d.years.map((y, i) => `${y} ${fmt(d.totals.values[i])}`).join(', ')
     + `. Severance: ${d.routes.find((r) => r.accent).values.map((v, i) => `${d.years[i]} ${fmt(v)}`).join(', ')}.`);
@@ -25,6 +28,7 @@ function build(el, ctx) {
   const S = tall
     ? { cols: 8, p: 7.1, r: 2.7, x0: 19, colGap: 9, bandGap: 24, label: 12, num: 11.5, note: 12.5, year: 11.5, bottom: 80 }
     : { cols: 10, p: 11, r: 4.1, x0: 26, colGap: 26, bandGap: 15, label: 13.5, num: 13, note: 14, year: 13, bottom: 62 };
+  if (ctx.print && !tall) Object.assign(S, U.marks || {});
   const colW = S.cols * S.p;
   const colX = (i) => S.x0 + i * (colW + S.colGap);
   const right = colX(d.years.length - 1) + colW;
@@ -95,7 +99,7 @@ function build(el, ctx) {
   // unit note under the first column, joined to its last bottom-row mark
   const ug = g(svg);
   const ux = tall ? S.x0 + colW + 14 : colX(0) + colW + 24;
-  const un = text(ug, ux, H - (tall ? 44 : 16), d.unit.note, { italic: true, size: S.note, width: tall ? 200 : 520 });
+  const un = text(ug, ux, H - (tall ? 44 : 16), U.note, { italic: true, size: S.note, width: tall ? 200 : 520 });
   leader(ug, un.x - 5, un.y + 7, colX(0) + colW - S.p / 2 + 2.5, bands[0].base - S.p / 2 + 3, { stroke: C.muted });
   const tagG = g(svg);
   if (tall) text(tagG, S.x0, ty - 17, d.tag, { family: 'mono', size: 11.5, fill: C.muted });
@@ -106,9 +110,22 @@ function build(el, ctx) {
   // severance: the note in the free rows of its band, and the pen ring
   const sev = ringBand.r.values, last = sev.length - 1;
   const ng = g(svg);
-  const noteStr = `[[${fmt(sev[0])}]] in ${d.years[0]} → [[${fmt(sev[last])}]] in ${d.years[last]}`;
+  // Upright sans with tabular lining figures: the mono zero, small and
+  // beside italics, was read as an 8 ("1,816").
   const rx = ringBox.w * (tall ? 0.6 : 0.66), ry = ringBox.h * (tall ? 0.72 : 0.74);
-  const nt = text(ng, tall ? S.x0 : colX(3) + colW - 4, ringBand.top + S.note * 0.72 - 1, noteStr, { italic: true, size: S.note, anchor: tall ? 'start' : 'end' });
+  const nSize = tall ? 14.5 : 16.5;
+  const pieces = [
+    { s: fmt(sev[0]), weight: 600 }, { s: ` in ${d.years[0]}  →  `, weight: 400 },
+    { s: fmt(sev[last]), weight: 600 }, { s: ` in ${d.years[last]}`, weight: 400 },
+  ].map((p) => ({ ...p, w: measure(p.s, { family: 'sans', size: nSize, weight: p.weight }) }));
+  const total = pieces.reduce((s, p) => s + p.w, 0);
+  const nBase = ringBand.top + nSize * 0.78 + (tall ? 1 : 0);
+  const nx0 = tall ? S.x0 : colX(3) + colW - 4 - total;
+  const te = h('text', { x: nx0.toFixed(1), y: nBase.toFixed(1), fill: C.ink, 'font-family': FONTS.sans, 'font-size': nSize }, ng);
+  te.style.whiteSpace = 'pre';
+  te.style.fontVariantNumeric = 'tabular-nums lining-nums';
+  pieces.forEach((p) => { h('tspan', { 'font-weight': p.weight }, te).textContent = p.s; });
+  const nt = { right: nx0 + total, cy: nBase - nSize * 0.36 };
   { // the leader ends on the ring itself
     const dy = (nt.cy - ringBox.cy) / ry, ex = ringBox.cx - rx * Math.sqrt(Math.max(0, 1 - dy * dy));
     leader(ng, nt.right + 5, nt.cy, ex - 2, nt.cy, { stroke: C.muted, dot: false });

@@ -128,7 +128,7 @@
         "value": 2.6,
         "show": "2.6 million",
         "status": "reported",
-        "text": "calls deflected by bots, first half of 2026 (Europe column of the slide; another slide gives [[2.1 million]] for Germany)"
+        "text": "calls handled by Frag Magenta, first half of 2026, by Telekom's release"
       },
       "why": "no American number, no German total",
       "source": [
@@ -175,14 +175,14 @@
         "value": 74,
         "show": "74%",
         "status": "reported",
-        "text": "of interactions use the assistant; satisfaction up [[12%]] where used"
+        "text": "of interactions show AI recommendations; satisfaction up [[12%]] where used"
       },
       "de": {
         "value": 12000,
         "bound": "more",
         "show": "> 12,000",
         "status": "reported",
-        "text": "staff on one desktop; calls [[7%]] shorter"
+        "text": "staff on one desktop (Germany and Europe); calls [[7%]] shorter"
       },
       "why": "both assist people; different measures",
       "source": [
@@ -263,7 +263,7 @@
         "bound": "about",
         "show": "≈ $3 bn",
         "status": "ahead",
-        "text": "of profit contribution by 2027 against 2025"
+        "text": "of Core Adjusted EBITDA by 2027 against 2025"
       },
       "de": {
         "value": 2.5,
@@ -294,7 +294,7 @@
         "value": 531,
         "show": "$531 m",
         "status": "reported",
-        "text": "of severance to September 2026"
+        "text": "of severance to September 2026, in a restructuring of management layers that the filings don't tie to the agents"
       },
       "de": {
         "value": null,
@@ -302,7 +302,7 @@
         "note": "No German figure is published.",
         "text": ""
       },
-      "why": "only one side is filed",
+      "why": "only one side is filed, and that side isn't tied to the agents",
       "source": [
         "R6-09",
         "R6-11"
