@@ -11,7 +11,7 @@
 //
 // Budgets (the playbook's web gate): no long task over 50 ms while
 // scrolling, layout shift under 0.05, at most 5% of frames over 25 ms.
-// Writes .shots/<slug>/perf.md and exits 1 if a budget is missed.
+// Writes .shots/perf-<slug>.md and exits 1 if a budget is missed.
 
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -34,7 +34,7 @@ const BUDGET = { longTaskMs: 50, cls: 0.05, slowFrameShare: 0.05, slowFrameMs: 2
 
 const { server, port } = await startServer(resolve('dist'), 0);
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: 'new', protocolTimeout: 600000, args: ['--hide-scrollbars'] });
-const out = join('.shots', slug); mkdirSync(out, { recursive: true });
+const out = '.shots'; mkdirSync(out, { recursive: true });
 const rows = []; let failed = false;
 
 for (const d of DEVICES) {
@@ -103,7 +103,7 @@ for (const d of DEVICES) {
 const md = [`# Scroll performance: ${slug}`, '', `Budgets: script time in any frame ≤ ${BUDGET.longTaskMs} ms while scrolling (long tasks from paint or raster are listed but not held against the page), layout shift < ${BUDGET.cls}, frames over ${BUDGET.slowFrameMs} ms ≤ ${BUDGET.slowFrameShare * 100}%. Phones run at 4× CPU slowdown, tablets at 2×.`, '',
   '| Device | Speed | Frame p95 | Slow frames | Script per frame (max) | Long tasks (max) | Layout shift | LCP | Load | Bytes | |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |',
   ...rows.map(({ d, sp, res, loadMs, bytes, ok }) => `| ${d.name} ${d.width}×${d.height} | ${sp.name} | ${res.p95.toFixed(1)} ms | ${(res.slowShare * 100).toFixed(1)}% | ${res.scriptMax.toFixed(0)} ms | ${res.longCount} (${res.longMax.toFixed(0)} ms) | ${res.cls.toFixed(3)} | ${res.lcp.toFixed(0)} ms | ${loadMs} ms | ${(bytes / 1024).toFixed(0)} KB | ${ok ? 'ok' : 'miss'} |`)].join('\n');
-writeFileSync(join(out, 'perf.md'), md + '\n');
-console.log(`perf: ${join(out, 'perf.md')}`);
+writeFileSync(join(out, `perf-${slug}.md`), md + '\n');
+console.log(`perf: ${join(out, `perf-${slug}.md`)}`);
 await browser.close(); server.close();
 process.exit(failed ? 1 : 0);

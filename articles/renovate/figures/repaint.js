@@ -12,7 +12,9 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 2;
-const SIZE = { wide: [552, 382], tall: [360, 400] };
+// wide: drawn narrower than its column (480 units in a 520 to 570 px frame),
+// so that its smallest lettering renders at 13 px or more on desktops
+const SIZE = { wide: [480, 420], tall: [360, 400] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 const monthIndex = (s) => { const [y, m] = String(s).split('-').map(Number); return y * 12 + (m - 1); };
@@ -29,7 +31,7 @@ function build(el, ctx) {
   const mw = (X1 - X0) / nM;
   const X = (month) => X0 + (monthIndex(month) - m0 + 0.5) * mw;   // middle of the month
   const XB = (k) => X0 + k * mw;                                     // boundary before month k
-  const S = tall ? { head: 14, note: 13, mono: 11.5 } : { head: 15, note: 13.5, mono: 11.5 };
+  const S = tall ? { head: 14, note: 13, mono: 11.5 } : { head: 15.5, note: 14, mono: 12 };
   let seed = 31;
   const ink = (parent, pts, w = 1.35, stroke = C.ink, amp = 0.5) => path(parent, pen(pts, seed++, amp), {
     stroke, 'stroke-width': w, 'stroke-linecap': 'round', 'stroke-linejoin': 'round',

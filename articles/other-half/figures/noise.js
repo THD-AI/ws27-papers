@@ -10,7 +10,7 @@ import {
 import { pal, dotPlate, text, floor } from './shared.js';
 
 export const steps = 1;
-const SIZE = { wide: [720, 452], tall: [360, 790] };
+const SIZE = { wide: [720, 452], tall: [360, 808] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 const WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'];

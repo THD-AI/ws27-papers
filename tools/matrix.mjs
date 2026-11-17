@@ -28,7 +28,7 @@ async function checkPage() {
   res.popover = pop ? (pop.left >= 0 && pop.right <= vw + 0.5 ? 'ok' : 'leaves the window') : 'none';
   document.body.click();
 
-  res.mode = matchMedia('(min-width: 1000px) and (min-height: 560px), (min-width: 640px) and (max-height: 559.98px)').matches ? 'side'
+  res.mode = matchMedia('(min-width: 1000px) and (min-height: 560px), (min-width: 640px) and (min-height: 450px) and (max-height: 559.98px)').matches ? 'side'
     : matchMedia('(max-width: 999.98px) and (min-height: 560px)').matches ? 'top' : 'sequence';
 
   // Hero: where it is, and whether the drawing itself (not the empty paper
@@ -156,7 +156,7 @@ export async function runMatrix({ slug, out, open, settle, scrollTo, log }) {
           const p = wh === 'first' ? ps[0] : ps[ps.length - 1];
           const stage = scene.querySelector('.scene-stage');
           const top = matchMedia('(max-width: 999.98px) and (min-height: 560px)').matches;
-          const seq = matchMedia('(max-height: 559.98px)').matches;
+          const seq = matchMedia('(max-width: 639.98px) and (max-height: 559.98px), (max-height: 449.98px)').matches;
           // sequence: the still that precedes the passage goes to the top of the window
           const target = seq ? p.previousElementSibling : p;
           const offset = seq ? 8 : top ? stage.getBoundingClientRect().height + 18 : innerHeight * 0.24;

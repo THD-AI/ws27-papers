@@ -72,7 +72,9 @@ async function walkScene(index) {
     await frame();
     const stage = stageEl.getBoundingClientRect();
     const floor = side ? 0 : Math.max(0, stage.bottom);          // text under a figure pinned on top is not seen
-    const line = side ? vh * 0.4 : floor + (vh - floor) * 0.4;
+    // as readingLine() in lib/article.js: under a figure pinned on top, one pitch below it
+    const pitchPx = parseFloat(scene.style.getPropertyValue('--pitch')) || Infinity;
+    const line = side ? vh * 0.4 : floor + Math.min(pitchPx, (vh - floor) * 0.4);
     const seen = passages.filter((p) => { const w = words(p); return w.bottom > floor + 6 && w.top < vh - 6; });
     if (!seen.length) continue;
     const box = scene.getBoundingClientRect();
@@ -227,7 +229,8 @@ for (const [w, h] of (process.env.SIZES ? JSON.parse(process.env.SIZES) : [[1440
   const wait = (ms = 380) => page.evaluate((d) => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(ok, d)))), ms);
   await wait(200);
   const tag = `${w}x${h}`;
-  const seq = h < 560;
+  // scenes as a sequence of stills: as MODES in lib/article.js (lower than 450 px, or narrow and short)
+  const seq = h < 450 || (w < 640 && h < 560);
 
   const count = await page.evaluate(() => document.querySelectorAll('.scene').length);
   for (let i = 0; i < count && !seq; i++) {

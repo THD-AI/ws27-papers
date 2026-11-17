@@ -6,10 +6,11 @@ context: Quantum Computing seminar · TH Deggendorf · winter semester 2026/27
 status: Draft for review, 16 November 2026
 accent: other-half
 hero: hero
-summary: The program that reads a quantum chip's errors decides whether the computer works. What it has to do, why a neural network does it better, and what that costs.
+summary: The program that reads a quantum chip's errors decides whether the computer works: what it does, why a neural network does it better, and the cost.
 date: 2026-11-16
 keywords: quantum error correction, surface code, neural network decoder, AlphaQubit, Google Willow, matching decoder
 card_alt: A quantum chip and the ordinary computer beside it that reads its errors.
+seo_title: The other half of a quantum computer: neural-network decoders for error correction
 ---
 
 Drawing: made with an image model from Alexander Rudaev's own line reference and reference photographs; the cryostat after a photograph by Lars Ploughman, CC BY-SA 2.0.

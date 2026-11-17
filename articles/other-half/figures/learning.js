@@ -132,6 +132,14 @@ function build(el, ctx) {
       let yy = cl.bottom;
       if (lv.table) yy = text(grp, lx, Math.max(y(lv.table.rate) + 14, yy + 14), `best possible at this size (lookup table): [[${pct(lv.table.rate)}]]`, { ...noteO, width: lw }).bottom;
       text(grp, lx, yy + 26, needs, { ...noteO, size: 13, fill: C.muted, width: lw });
+    } else if (close && tall) {
+      // phone plate: the curves cross the level lines on the left half, so the
+      // labels stand higher on the right with a leader down to the lines, and
+      // the lookup-table note goes under the end circles in two lines
+      const xr = R.x + R.w - 4;
+      const lt = text(grp, xr, yp - 44, 'plain matching and,\njust under it, correlated matching', { ...noteO, anchor: 'end', lh: 15 });
+      leader(grp, xr - 8, lt.bottom + 3, xr - 8, yp - 2, { stroke: C.muted, dot: false });
+      if (lv.table) text(grp, xr, y(lv.table.rate) + 19, `best possible at this size\n(lookup table): [[${pct(lv.table.rate)}]]`, { ...noteO, anchor: 'end', lh: 15 });
     } else if (close) {
       text(grp, R.x + R.w - 4, yp - 21, 'plain matching and,\njust under it, correlated matching', { ...noteO, anchor: 'end', lh: 15 });
       if (lv.table) text(grp, R.x + R.w - 4, y(lv.table.rate) + 15, `best possible at this size (lookup table): [[${pct(lv.table.rate)}]]`, { ...noteO, anchor: 'end' });
@@ -155,7 +163,7 @@ function build(el, ctx) {
     if (!vals.length) return null;
     const grp = g(parent), yp = pl.y(pl.pn.levels.plain.rate);
     const xa = pl.x(vals[0]), xb = pl.x(vals[vals.length - 1]), xm = (xa + xb) / 2;
-    const ny = pl.y(0.0098);
+    const ny = pl.y(tall ? 0.0088 : 0.0098);
     const nt = text(grp, inside ? pl.R.x + 44 : xm - 60, ny, `the lines first dip below plain matching at [[${vals.map((v) => M(v)).join(']] or [[')}]] million examples`, { ...noteO, width: inside ? 170 : 250, lh: inside ? 15 : 18 });
     leader(grp, xm, nt.y - 4, xm, yp + (inside ? 50 : 32), { stroke: C.muted, dot: false });
     return grp;
@@ -234,23 +242,23 @@ function build(el, ctx) {
     p3.root.style.opacity = lerp(1, 0.5, m).toFixed(3);
   });
   drawPanel(pa, 1.3, 1.9);
-  st.fade(ta, 1.12, 1.3, [2, 2.12]).fade(la, 1.4, 1.6, [2, 2.12]);
+  st.fade(ta, 1.12, 1.3, [2.18, 2.24]).fade(la, 1.4, 1.6, [2.18, 2.24]);
   const na = g(svg);
   text(na, R.x + R.w * 0.42, R.y + (tall ? 50 : 62), 'same network, same number of examples: still above both', { ...noteO, size: tall ? 13 : 15, width: tall ? 160 : 240 });
-  st.fade(na, 1.82, 1.98, [2, 2.12]);
+  st.fade(na, 1.82, 1.98, [2.18, 2.24]);
   // step 2: the longer schedule; the 66-million lines stay, faint
   st.on((gg) => {
-    const m = ease(span(gg, 2.02, 2.25));
+    const m = ease(span(gg, 2.2, 2.4));
     pa.body.style.opacity = gg < 1.3 ? '' : lerp(1, 0.38, m).toFixed(3);
     show(pa.levels, ease(span(gg, 1.3, 1.45)) * (1 - m));
     if (gg >= 1.9) pa.ends.style.opacity = lerp(1, 0.5, m).toFixed(3);
   });
-  drawPanel(pb, 2.1, 2.82);
-  st.fade(tb, 2.12, 2.3).fade(lb, 2.12, 2.3);
+  drawPanel(pb, 2.22, 2.86);
+  st.fade(tb, 2.24, 2.32).fade(lb, 2.24, 2.32);
   const ys = b5.final_network.per_seed.map((s) => pb.y(s.rate));
   const ry = (Math.min(...ys) + Math.max(...ys)) / 2;
   const pr = penRing(svg, pb.xe, ry, 8, (Math.max(...ys) - Math.min(...ys)) / 2 + 8, { seed: 4, stroke: C.accent, width: 1.5 });
-  pr.paths.forEach((pp, k) => st.draw(pp, 2.84 + k * 0.03, 2.97 + k * 0.02));
+  pr.paths.forEach((pp, k) => st.draw(pp, 2.87 + k * 0.03, 2.97 + k * 0.02));
   const nb = g(svg);
   if (tall) {
     text(nb, R.x + R.w * 0.44, R.y + R.h - 62, 'below plain matching, above correlated matching', { ...noteO, size: 13, width: 168, lh: 15 });
@@ -259,7 +267,7 @@ function build(el, ctx) {
     const nt = text(nb, pb.xe - 44, yl + 5, 'below plain matching, above correlated matching', { ...noteO, size: 14.5, anchor: 'end' });
     leader(nb, nt.right + 5, yl, pb.xe - 13, ry + 5, { stroke: C.muted, dot: false });
   }
-  st.fade(nb, 2.84, 2.98);
+  st.fade(nb, 2.87, 2.98);
 
   // under the plate: the end values, then how they were scored
   const by = R.y + R.h + (tall ? 58 : 62);
@@ -270,7 +278,7 @@ function build(el, ctx) {
   const t1 = text(ra, tall ? 14 : R.x, by, res.a5, o);
   text(rb, tall ? 14 : R.x, by, res.b5, o);
   text(foot, tall ? 14 : 16, t1.bottom + 20, tall ? `${FOOT}\n${notCmp}` : FOOT, { ...mono, width: tall ? W - 28 : W - 20, lh: 15 });
-  st.fade(r3, 0.86, 0.98, [1, 1.12]).fade(ra, 1.84, 1.98, [2, 2.12]).fade(rb, 2.84, 2.98).fade(foot, 0.1, 0.25);
+  st.fade(r3, 0.86, 0.98, [1, 1.12]).fade(ra, 1.84, 1.98, [2.18, 2.24]).fade(rb, 2.78, 2.88).fade(foot, 0.1, 0.25);
 
   return { set: (s, t) => st.set(s, t) };
 }

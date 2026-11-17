@@ -184,25 +184,28 @@ main ol:not(.src-list):not(.index-list) > li::before {
   font: 400 0.72rem/1 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums lining-nums;
 }
 
-/* Source marks: a small open ring and the number of sources behind it. */
+/* Source marks: a small open ring and the numbers of the sources behind it,
+   as in the list at the end (article.js writes the numbers in). The numbers
+   are set large enough to be read at a glance, in the accent. */
 .src { white-space: nowrap; }
 .src-mark {
   all: unset;
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.14em;
+  gap: 0.22em;
   margin-left: 0.3em;
-  vertical-align: 0.36em;
-  font: 400 0.64em/1 var(--mono);
+  vertical-align: 0.3em;
+  font: 500 max(0.72rem, 11.5px)/1 var(--mono);
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums lining-nums;
-  color: var(--muted);
+  color: var(--accent-line);
   cursor: pointer;
 }
 /* The mark is small; this invisible pad of 40 by 40 px makes it easy to hit. */
 .src-mark::after { content: ''; position: absolute; left: 50%; top: 50%; width: 40px; height: 40px; translate: -50% -50%; }
-.src-ring { width: 0.62em; height: 0.62em; border: 1px solid currentColor; border-radius: 50%; }
-.src-mark:hover, .src-mark[aria-expanded='true'] { color: var(--accent-line); }
+.src-ring { flex: none; width: 0.6em; height: 0.6em; border: 1px solid currentColor; border-radius: 50%; }
+.src-mark:hover .src-count { text-decoration: underline; text-underline-offset: 0.18em; }
 .src-mark[aria-expanded='true'] .src-ring { background: var(--accent-line); border-color: var(--accent-line); }
 .src-mark:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .src-print { display: none; }
@@ -293,6 +296,26 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 .src-title { font-weight: 500; }
 .src-meta { display: block; color: var(--muted); font-size: 0.94em; }
 .src-host { display: block; font-family: var(--mono); font-size: 0.9em; overflow-wrap: anywhere; }
+/* The list folds behind its heading on screen: open from 1000 px, closed
+   below (article.js), so that it does not take six phone screens. Paper
+   always shows it whole. */
+.src-fold > summary { display: block; list-style: none; }
+.src-fold > summary::-webkit-details-marker { display: none; }
+@media screen {
+  .src-fold > summary { cursor: pointer; }
+  .src-fold > summary h2.sec { margin-bottom: 0; padding-bottom: 1rem; }
+  .src-fold > summary .sec-title::after {
+    content: 'show';
+    margin-left: 0.9rem;
+    font: 500 0.72rem/1 var(--mono);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent-line);
+    vertical-align: 0.15em;
+  }
+  .src-fold[open] > summary .sec-title::after { content: 'hide'; color: var(--muted); }
+  .src-fold > summary:hover .sec-title { text-decoration: underline; text-decoration-color: var(--accent-line); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+}
 
 .colophon { font: 400 0.72rem/1.5 var(--mono); color: var(--muted); letter-spacing: 0.03em; }
 .colophon a { display: inline-block; padding: 0.75rem 0; }
@@ -366,7 +389,11 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .toc ol { column-gap: 1.5rem; }
 }
 
-/* Very large windows: everything a little larger, so the page holds its place. */
+/* Large and very large windows: everything a little larger, so the page
+   holds its place. */
+@media screen and (min-width: 1600px) {
+  html { font-size: 109%; }
+}
 @media screen and (min-width: 2000px) {
   html { font-size: 118%; }
 }
@@ -410,6 +437,18 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   /* With a margin column, wide figures start at the text's left edge and
      run across the margin column. */
   main.body > .fig-wide, main.body > .table-frame.table-wide { width: min(100%, 58rem); margin-left: 0; }
+}
+
+/* A page without a margin scene keeps no margin column: from 1000 px the
+   text column stands in the middle of the page, and wide figures reach out
+   on both sides of it as far as they did across the margin column (58rem). */
+@media screen and (min-width: 1000px) {
+  html:not(:has(.rail)) { --left: max(var(--gutter), calc((var(--pw) - var(--measure)) / 2)); }
+  html:not(:has(.rail)) main.body { --out: max(0px, min(calc(var(--left) - var(--gutter)), 12.75rem)); }
+  html:not(:has(.rail)) main.body > .fig-wide, html:not(:has(.rail)) main.body > .table-frame.table-wide {
+    width: calc(min(100%, var(--measure)) + 2 * var(--out));
+    margin-left: calc(-1 * var(--out));
+  }
 }
 
 /* Where the margin column fits and the window is tall enough, the margin
@@ -484,25 +523,28 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
    of the window (--pitch; a long passage takes its own height), so two or
    three passages are on screen together. The one at the reading line is in
    full ink, its neighbours step back but stay readable. */
-@media screen and (min-height: 560px), screen and (min-width: 640px) {
+@media screen and (min-height: 560px), screen and (min-width: 640px) and (min-height: 450px) {
   .scene { --pitch: clamp(15rem, 45vh, 26rem); }
   .passage { min-height: var(--pitch); padding-bottom: 1.5rem; }
   .passage > :last-child { margin-bottom: 0; }
   .scene.is-live .passage { opacity: 0.7; transition: opacity 0.25s ease; }
-  .scene.is-live .passage.is-active { opacity: 1; }
+  .scene.is-live .passage.is-active, .scene.is-live .passage.is-current { opacity: 1; }
 }
 
 /* Side by side: the passages in a column on the left, the figure on the
    right with the rest of the page width. Both start at the top of the scene,
    directly after the paragraph before it; the figure is then pinned in the
    middle of the window (--stage-top, set by article.js) until the scene ends. */
-/* Also in short windows from 640 px wide (a laptop window made low, a phone
-   held sideways): the figure fills the height beside the passages. */
-@media screen and (min-width: 1000px) and (min-height: 560px), screen and (min-width: 640px) and (max-height: 559.98px) {
+/* Also in short windows from 640 px wide and 450 px high (a laptop window
+   made low, about 496 px): the figure fills the height beside the passages.
+   Lower than 450 px (a phone held sideways) the figure would shrink until
+   its lettering cannot be read, so scenes become a sequence of stills. */
+@media screen and (min-width: 1000px) and (min-height: 560px), screen and (min-width: 640px) and (min-height: 450px) and (max-height: 559.98px) {
   .scene {
     --pad: clamp(1.5rem, calc((var(--pw) - 62rem) * 0.2), 4rem);
     display: grid;
-    grid-template-columns: clamp(17.5rem, 26%, 22rem) minmax(0, 1fr);
+    /* the passages keep a readable column of at least 20rem */
+    grid-template-columns: clamp(20rem, 30%, 23rem) minmax(0, 1fr);
     column-gap: var(--gap);
     align-items: start;
     max-width: none !important;
@@ -524,7 +566,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
    once after the passages instead of standing pinned under the figure for
    several screens (readers took that for a repeated caption). The figure
    takes the full height. */
-@media screen and (min-width: 1000px) and (min-height: 560px), screen and (min-width: 640px) and (max-height: 559.98px) {
+@media screen and (min-width: 1000px) and (min-height: 560px), screen and (min-width: 640px) and (min-height: 450px) and (max-height: 559.98px) {
   .scene-stage figcaption { display: none; }
   .scene-caption { display: block; grid-column: 1 / -1; grid-row: 2; max-width: var(--measure); margin: 0.6rem 0 0 calc(var(--left) - var(--pad)); padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
 }
@@ -549,9 +591,10 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .scene.is-live .passage:has(~ .passage.is-active) { opacity: 0.2; }
 }
 
-/* A sequence: windows both narrow and short, where nothing can be pinned.
-   Every passage is preceded by a still of its step. */
-@media screen and (max-width: 639.98px) and (max-height: 559.98px) {
+/* A sequence: windows both narrow and short, or lower than 450 px, where
+   nothing can be pinned at a readable size. Every passage is preceded by a
+   still of its step. */
+@media screen and (max-width: 639.98px) and (max-height: 559.98px), screen and (max-height: 449.98px) {
   .scene-stage { display: none; }
   .seq-still { display: block; margin: 1.6rem 0 1rem calc(var(--gutter) - var(--left)); }
   .passage { margin-bottom: 1.4rem; }
@@ -597,7 +640,9 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 
   /* Tables wider than the screen scroll inside their own frame. */
   main.body > .table-frame.table-wide { width: auto; margin-left: 0; }
-  .table-frame.table-wide table { min-width: 36rem; }
+  .table-frame.table-wide table { min-width: 36rem; font-size: 0.8rem; }
+  .table-frame.scrolls:not(.at-end) { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 3.5rem), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 3.5rem), transparent); }
+  .table-hint { margin-top: -1.2rem; color: var(--accent-line); }
   table.cols-2 th:first-child, table.cols-2 td:first-child { width: 42%; }
   th, td { padding-right: 0.7rem; }
 }
@@ -705,6 +750,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   td { padding: 1.2mm 2.5mm 1.2mm 0; }
 
   .sources { margin-top: 6mm; }
+  .src-total { display: none; }
   .src-list { font-size: 6.8pt; line-height: 1.34; }
   .src-list li { grid-template-columns: 5.5mm 1fr; margin-bottom: 1.3mm; }
   .src-n { font-size: 6.4pt; line-height: 1.5; }

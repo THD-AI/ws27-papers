@@ -13,7 +13,7 @@ import {
 import { pal, dotPlate, text, floor } from './shared.js';
 
 export const steps = 5;
-const SIZE = { wide: [720, 472], tall: [360, 440] };
+const SIZE = { wide: [720, 472], tall: [360, 458] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 function build(el, ctx) {
@@ -65,24 +65,27 @@ function build(el, ctx) {
       circle(tg, x(k * T), L1 - 14, narrow ? 2.1 : 2.3, { fill: C.ink });
       ticks.push(tg);
     }
-    st.fade(h1, 0, 0.15).fade(base, 0, 0.15).fill(ticks, 0.1, 0.72).fade(n1g, 0.6, 0.8);
+    // the opening state already shows what is compared: the chip's lane with
+    // its first rounds and their pace, the network's lane title, the axis
+    st.fade(h1, -1, 0).fade(base, -1, 0).fill(ticks, -0.2, 0.5).fade(n1g, -1, 0);
     // step 0: what one gap is
     const gp = g(root), ka = narrow ? 3 : 5;
     bracket(gp, x(ka * T), L1 + 7, x((ka + 1) * T), L1 + 7, 4, { stroke: C.ink, 'stroke-width': 1 });
     const gn = text(gp, x((ka + 1.5) * T) + 16, L1 + 38, `[[${T}]] millionths of a second`, { ...noteO, size: narrow ? 14 : 16 });
     leader(gp, gn.x - 5, gn.y + 6, x((ka + 0.5) * T), L1 + 10, { stroke: C.muted, dot: false });
-    st.fade(gp, 0.78, 0.96, [1, 1.14]);
+    st.fade(gp, 0.5, 0.7, [1, 1.14]);
 
     // lane 2: the network of 2024
     const by = L1 + (narrow ? 50 : 96), bh = narrow ? 24 : 26;
     const y2 = by + bh + 19;
     const h2 = g(root);
-    const t2 = text(h2, B.x, y2, net.label, sans);
+    const h2t = g(root);
+    const t2 = text(h2t, B.x, y2, net.label, sans);
     const n2 = narrow
       ? text(h2, B.x, y2 + 18, `needs [[${us(net.value)}]] for one round`, noteO)
       : text(h2, t2.right + 14, y2, `needs [[${us(net.value)}]] for one round`, noteO);
     const q2 = narrow ? text(h2, B.x, n2.bottom + 13, 'quoted in the 2024 paper', mono) : text(h2, n2.right + 14, n2.y + n2.h - 3.5, 'quoted in the 2024 paper', mono);
-    st.fade(h2, 1.08, 1.3);
+    st.fade(h2t, -1, 0).fade(h2, 1.08, 1.3);
     const py = (narrow ? q2.bottom - 30 : n2.bottom) + 16;
     const right = B.x + B.w;
     const blocks = [1, 2, 3].map((k) => {
@@ -150,7 +153,7 @@ function build(el, ctx) {
       text(ax, x(t), ay + 19, t === 0 ? '0' : String(t), { ...mono, anchor: t === 0 ? 'start' : 'middle' });
     }
     text(ax, B.x, ay + (narrow ? 36 : 38), narrow ? 'the start of a run · millionths of a second (µs)' : 'the start of a run · time in millionths of a second (µs)', { ...mono, width: B.w, lh: 15 });
-    st.fade(ax, 0, 0.15);
+    st.fade(ax, -1, 0);
     return root;
   }
 

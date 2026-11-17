@@ -24,14 +24,16 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 3;
-export const aspect = { wide: 928 / 392, tall: 360 / 734 };
+// tall: three panels stacked, short enough that the title, the drawing and
+// the caption share one phone screen
+export const aspect = { wide: 928 / 392, tall: 360 / 528 };
 let mounts = 0;
 
 const poly = (pts, close) => pts.map((q, i) => `${i ? 'L' : 'M'}${q[0].toFixed(1)} ${q[1].toFixed(1)}`).join('') + (close ? 'Z' : '');
 
 function build(el, ctx) {
   const C = colors(ctx), d = ctx.data, tall = ctx.layout === 'tall';
-  const W = tall ? 360 : 928, H = tall ? 734 : 392;
+  const W = tall ? 360 : 928, H = tall ? 528 : 392;
   const svg = svgRoot(el, W, H, d.reading);
   svg.style.color = C.ink;
   const st = stage();
@@ -45,8 +47,8 @@ function build(el, ctx) {
   // baseline (the effort line follows it)
   const boxes = d.panels.map((p, i) => {
     if (tall) {
-      const by = 4 + i * 252 - (i === 2 ? 26 : 0);   // the last panel shares the header above it
-      return { x0: 16, x1: 344, gy: by + 14, hy: by + 40, sy: by + 57, cy: by + 72, top: by + 96, floor: by + 192, ny: by + 214 };
+      const by = 2 + i * 182 - (i === 2 ? 18 : 0);   // the last panel shares the header above it
+      return { x0: 16, x1: 344, gy: by + 12, hy: by + 33, sy: by + 48, cy: by + 59, top: by + 79, floor: by + 153, ny: by + 170 };
     }
     const w = 270, gap = (W - 40 - 3 * w) / 2, x0 = 20 + i * (w + gap);
     return { x0, x1: x0 + w, gy: 18, hy: 50, sy: 68, cy: 102, top: 130, floor: 318, ny: 354 };
@@ -77,9 +79,9 @@ function build(el, ctx) {
     const side = tall ? 18 : 20;
     b.entry = b.x1 - side;
     b.drop = b.x0 + side;
-    b.run = b.top + Math.max(15, Math.round(hh * 0.16));
+    b.run = b.top + Math.max(tall ? 10 : 15, Math.round(hh * 0.16));
     b.sz = tall ? 12 : 13;
-    b.sockY = b.floor - Math.max(20, Math.round(hh * 0.17));
+    b.sockY = b.floor - Math.max(tall ? 12 : 20, Math.round(hh * 0.17));
     b.sockTop = b.sockY - b.sz / 2;
     b.mid = Math.round(lerp(b.run, b.sockTop, 0.55));
   });
@@ -131,7 +133,7 @@ function build(el, ctx) {
   };
   // plaster broken away at the lower right corner: a ragged edge, brick behind
   const patch = (parent, b, i) => {
-    const r = rng(70 + i), rx = tall ? 66 : 84, ry = tall ? 40 : 56, n = 9;
+    const r = rng(70 + i), rx = tall ? 66 : 84, ry = tall ? 32 : 56, n = 9;
     const edge = [];
     for (let k = 0; k <= n; k++) {
       const a = (k / n) * Math.PI / 2;
@@ -234,7 +236,9 @@ function build(el, ctx) {
     }
 
     // the cable arrives (step 1) and goes in (step 2)
-    const arrive = [[b.entry - 30, b.cy], [b.entry - 10, b.cy + 4], [b.entry, b.cy + 16], [b.entry, b.top - 8]];
+    const arrive = tall
+      ? [[b.entry - 30, b.cy], [b.entry - 10, b.cy + 3], [b.entry, b.cy + 10], [b.entry, b.top - 8]]
+      : [[b.entry - 30, b.cy], [b.entry - 10, b.cy + 4], [b.entry, b.cy + 16], [b.entry, b.top - 8]];
     st.draw(path(P, spline(arrive), cab), 1.04, 1.5);
     const tip = g(P, { stroke: C.accent, 'stroke-width': 1.1, 'stroke-linecap': 'round' });
     path(tip, poly([[b.entry - 1.6, b.top - 8], [b.entry - 2.2, b.top - 3]]));
@@ -248,7 +252,10 @@ function build(el, ctx) {
     const nt = text(P, b.x0, b.ny, p.note, { italic: true, size: S.note });
     const ld = g(P);
     leader(ld, m.lx ?? m.x, nt.y - 3, m.x, m.y, { stroke: C.muted });
-    const ef = text(P, b.x0, b.ny + S.note * 1.25, p.effort, { italic: true, size: S.note, fill: C.muted });
+    // stacked: the effort follows the note on its line, to keep the panel short
+    const ef = tall
+      ? text(P, nt.right + 12, b.ny, p.effort, { italic: true, size: S.note, fill: C.muted })
+      : text(P, b.x0, b.ny + S.note * 1.25, p.effort, { italic: true, size: S.note, fill: C.muted });
     st.fade(nt.el, m.at[0], m.at[1]).fade(ld, m.at[0] + 0.02, m.at[1] + 0.02).fade(ef.el, m.at[0] + 0.03, m.at[1] + 0.04);
   });
 
@@ -257,7 +264,7 @@ function build(el, ctx) {
   if (tall) {
     // stacked: each wall has its own tag
     boxes.forEach((b, i) => {
-      const cn = text(cg, b.entry - 40, b.cy + 6, d.cable.label, { italic: true, size: S.note, anchor: 'end' });
+      const cn = text(cg, b.entry - 40, b.cy + 5, d.cable.label, { italic: true, size: S.note, anchor: 'end' });
       leader(lead, cn.right + 4, cn.y + cn.h / 2, b.entry - 31, b.cy + 0.5, { stroke: C.muted });
     });
   } else {

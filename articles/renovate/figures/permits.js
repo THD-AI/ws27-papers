@@ -1,9 +1,9 @@
 // permits: one decision, putting a new IT system to work, as two schedules
 // on one time axis.
-//   step 0: United States ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· T-Mobile. build ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ launch (open-ended), with the
+//   step 0: United States, T-Mobile. build -> launch (open-ended), with the
 //           checks afterwards (accent diamonds inside the launch period):
 //           lawsuits and state rules.
-//   step 1: Germany ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Telekom. The works council and privacy review first
+//   step 1: Germany, Telekom. The works council and privacy review first
 //           (the field, with the same diamonds: the checks), then build, then
 //           launch.
 //   step 2: a "framework agreement 2021" stamp lands on the German review; it
@@ -19,7 +19,7 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 3;
-const SIZE = { wide: [552, 318], tall: [360, 378] };
+const SIZE = { wide: [552, 338], tall: [360, 398] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 
@@ -32,7 +32,7 @@ function build(el, ctx) {
   const S = d.schedule, wd = d.words;
   const X0 = 16, X1 = W - 16;
   const X = (u) => X0 + (u / S.span) * (X1 - X0);
-  const BH = 40;                          // bar height
+  const BH = 50;                          // bar height: room for the stamp inside the short review
   const MONO = { family: 'mono', size: 11.5 };
   let seed = 11;
   const ink = (parent, pts, w = 1.35, stroke = C.ink, amp = 0.55) => path(parent, pen(pts, seed++, amp), {
@@ -56,7 +56,7 @@ function build(el, ctx) {
   st.fade(head.el, 0, 0.08);
   let y = head.bottom + 22;
 
-  // --- United States ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· T-Mobile
+  // --- United States, T-Mobile
   const usY = y;
   const usK = mono(svg, X0, usY, d.rows.us.label, { caps: true, spacing: 0.6, fill: C.ink, weight: 500 });
   st.fade(usK.el, 0.04, 0.14);
@@ -83,7 +83,7 @@ function build(el, ctx) {
   st.fade(li.el, 0.62, 0.74);
   y = bar1 + BH + (below ? 44 : 30);
 
-  // --- Germany ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Telekom
+  // --- Germany, Telekom
   const deY = y;
   const deK = mono(svg, X0, deY, d.rows.de.label, { caps: true, spacing: 0.6, fill: C.ink, weight: 500 });
   st.fade(deK.el, 1.02, 1.12);
@@ -147,20 +147,23 @@ function build(el, ctx) {
     clipR.setAttribute('width', (X1 + 5 - (X(de.launch[0]) + 5 + dx)).toFixed(2));
   });
 
-  // the stamp on the short review: three lines, a little taller than the bar
+  // the stamp on the short review: inside the bar, clear of its edges, its
+  // label and the dashed outline of the old review. Two lines where the
+  // short review is wide enough, else three.
   const sw = X(fw.review[1]) - X(fw.review[0]);
-  const sDrop = lift ? 0 : 3;               // a little low when the label sits right above it
-  const stamp = g(svg, { transform: `rotate(-4 ${X(fw.review[0]) + sw / 2} ${bar2 + BH / 2 + sDrop})` });
+  const stamp = g(svg, { transform: `rotate(-2.5 ${X(fw.review[0]) + sw / 2} ${bar2 + BH / 2})` });
   const sFrame = g(stamp, { 'data-audit': 'skip' });
   const sOpt = { family: 'mono', size: ctx.print ? 10.5 : 9.5, weight: 600, fill: C.accent, anchor: 'middle', lh: ctx.print ? 11 : 10.2, spacing: 0.3 };
-  const sTxt = textSize(wd.stamp.join('\n'), sOpt);
-  const stW = Math.min(sw - 6, Math.ceil(sTxt.w) + 16), stH = sTxt.lines * sTxt.lh + 6;
-  const sx0 = X(fw.review[0]) + (sw - stW) / 2, sy0 = bar2 + BH / 2 + sDrop - stH / 2;
+  const two = [wd.stamp[0], wd.stamp.slice(1).join(' ')];
+  const sLines = textSize(two.join('\n'), sOpt).w + 14 <= sw - 12 ? two : wd.stamp;
+  const sTxt = textSize(sLines.join('\n'), sOpt);
+  const stW = Math.min(sw - 12, Math.ceil(sTxt.w) + 14), stH = Math.min(BH - 8, sTxt.lines * sTxt.lh + 4);
+  const sx0 = X(fw.review[0]) + (sw - stW) / 2, sy0 = bar2 + BH / 2 - stH / 2;
   rect(sFrame, sx0, sy0, stW, stH, { fill: C.paper, stroke: C.accent, 'stroke-width': 1.5, rx: 1.5 });
   rect(sFrame, sx0 + 2.2, sy0 + 2.2, stW - 4.4, stH - 4.4, { fill: 'none', stroke: C.accent, 'stroke-width': 0.6, rx: 1 });
   // first baseline so that the block sits in the middle of the stamp
   const base0 = sy0 + stH / 2 - (sTxt.lines - 1) * sTxt.lh / 2 + sOpt.size * 0.36;
-  text(stamp, sx0 + stW / 2, base0, wd.stamp.join('\n'), sOpt);
+  text(stamp, sx0 + stW / 2, base0, sLines.join('\n'), sOpt);
   st.fade(stamp, 2.08, 2.24);
 
   // the old review, in place: a faint dashed outline of the step-1 bar

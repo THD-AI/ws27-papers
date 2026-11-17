@@ -34,9 +34,11 @@ function plateA(svg, C, d, tall, st, keep, big) {
   for (let i = rowsTop * cols; i < n; i++) order.push(i);
 
   // every contact
-  const base = [];
-  for (let i = 0; i < n; i++) { const [x, y] = at(i); const c = circle(grid, x, y, L.rBase, { fill: C.ink }); c.dataset.r = L.rBase; base.push(c); }
-  st.fill(base, 0.04, 0.42);
+  // they are there as soon as the scene pins: one quick fade, not a count,
+  // so the first pinned frame is never an empty band under the title
+  const baseG = g(grid);
+  for (let i = 0; i < n; i++) { const [x, y] = at(i); circle(baseG, x, y, L.rBase, { fill: C.ink }); }
+  st.fade(baseG, 0, 0.06);
   // release: 40 carry a dashed outline; nothing is filled
   const dashed = [], discs = [];
   for (let k = 0; k < A.release.value; k++) {
@@ -145,6 +147,14 @@ function plateA(svg, C, d, tall, st, keep, big) {
     text(gF, bx0, L.top[4] - (fs.lines - 1) * fs.lh, ftxt, fo);
   }
   nt(gF, 2.52, 2.74);
+
+  // wide: until the release's bracket arrives the grid stands alone, so it
+  // stands in the middle of the frame; it moves to its place beside the
+  // notes as they arrive
+  if (!tall && !keep) {
+    const dx0 = 400 - (L.gx + (L.p * cols) / 2);
+    st.on((gg) => body.setAttribute('transform', `translate(${(dx0 * (1 - ease(span(gg, 0.6, 0.8)))).toFixed(2)} 0)`));
+  }
 
   return { root, grid, box: { x: L.gx, y: L.gy, s: L.p * cols } };
 }
@@ -269,11 +279,6 @@ function plateB(svg, C, d, tall, st, bare, big) {
   st.fade(bg2, 4.56, 4.76);
 
   if (!bare) {
-    // plate A is gone; one line keeps what it showed
-    // at step 3 it stands where the time line will be, and gives way to it
-    const rm = g(root);
-    text(rm, tall ? S.x0 : rx0, ay + 4, B.reminder.replace('{a}', fmt(d.plateA.slide.value)).replace('{b}', fmt(d.plateA.total.value)), { family: 'mono', size: S.small, fill: C.muted });
-    st.fade(rm, XA[0], XA[1], [4.0, 4.1]);
     const tg = g(root);
     text(tg, W - S.x0, tall ? H - 7 : 17, d.tag, { family: 'mono', size: S.small, fill: C.muted, anchor: 'end' });
     st.fade(tg, XA[0], XA[1]);

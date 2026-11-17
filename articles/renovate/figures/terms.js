@@ -139,7 +139,9 @@ function build(el, ctx) {
 
   const S = tall
     ? { x0: 12, cols: 2, gap: 16, head: 13.5, name: 13, term: 12.5, note: 13.5, rowGap: 14 }
-    : { x0: 10, cols: 4, gap: 12, head: 15.5, name: 14, term: 13.5, note: 14.5, rowGap: 0 };
+    // wide: shown from about 464 px up; at the 520 px of a text column on an
+    // upright tablet the terms render at 13 px, never under 11.6
+    : { x0: 10, cols: 4, gap: 12, head: 15.5, name: 14.5, term: 14.5, note: 14.5, rowGap: 0 };
   const cellW = (W - 2 * S.x0 - (S.cols - 1) * S.gap) / S.cols;
   const sc = Math.min(cellW / BOX, 1.18);
 
