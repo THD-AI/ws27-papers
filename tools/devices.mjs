@@ -19,6 +19,8 @@ const DEVICES = [
   ['tablet-portrait', 820, 1180, 4],
   ['tablet-landscape', 1180, 820, 3],
   ['laptop', 1440, 900, 3],
+  ['windows-laptop', 1536, 864, 3],
+  ['small-laptop', 1366, 768, 3],
   ['desktop', 1920, 1080, 3],
 ];
 

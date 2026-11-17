@@ -87,6 +87,8 @@ Checked before every round, with the tools in `tools/`:
 - **Web.**
   - `node tools/perf.mjs <slug>` reports no long task over 50 ms while scrolling, a layout shift score below 0.05, and frames within budget at phone, tablet and laptop sizes in both orientations.
   - Social cards render, and the metadata validates.
+  - **Scroll telling.** Every figure that explains something in stages is a `:::scene`, with one passage per step; a static `:::figure` is chosen on purpose, with a reason in the round log. Compare the scene count with the last version he approved on the web. A paper rewrite must not quietly turn scenes into pictures.
+  - **Desktop read.** Someone reads the whole page at 1536×864 and 1920×1080 (the common Windows laptop and monitor) before readers start. Each pinned figure fits the screen, and its lettering is readable.
 - **Text.** No em dashes (en dashes only), no invisible characters, and dotUni's text gate passes for the records.
 
 ## Stop rule
@@ -104,6 +106,7 @@ The aim is every reader at 8 or more and a median near 9. Seven is acceptable wh
 
 - **Render the reading material in one step, right before readers start.** In the second web round the paper pages predated that round's text fixes, and the fact checker checked stale wording. Device sheets, paper pages and the built site come from the same build.
 - **A layout rule touches every block type.** Centring the text column when there's no margin rail made the column jump sideways between body, scenes and stills. Check left edges of every text block on every device after any layout change.
+- **The paper and the web page are two versions.** The draft-5 restart was written for the paper and turned every scene but one into a static picture. Three web rounds then polished that page, and every gate passed, because no gate asked whether the page still told its story by scrolling. He saw it in one desktop read. A figure may have a print version and a web version, and a passage may be marked for the screen only (`@step n screen`).
 - **A web fix creates the next complaint.** Readers judge the experience as it is, so each fix needs a fresh look on all six devices, not only the one where the complaint came from.
 
 ## Tools

@@ -75,9 +75,13 @@ A designed table, not a chart. Ten rows. Columns: what is counted; United States
 
 Sources for all rows: R6-06, R6-02, R6-03, R6-04, R6-16, R6-12, R6-14, R6-09, R6-11, R6-01, R10-50. The figure's own note: "None compares fully; row 6 does in part."
 
-## `obstacles` (figure, column): why German firms decided against AI
+## `obstacles` (scene, 2 steps): why German firms decided against AI
 
 Five-second reading: "missing knowledge comes first; the law comes second and third".
+
+- Step 0: all six rows; missing knowledge in the field and the accent, 72% ringed, "first: know-how".
+- Step 1: unclear legal consequences (62%) and data protection (60%) take the field and the accent with the bracket "the law: second and third" (section 7 picks them up); missing knowledge back to plain ink, its label stays, muted.
+- Print: as before, knowledge in the field and the law rows marked quietly by the bracket.
 
 Six rows of unit dots, one dot is 2 percentage points, 50 dots to a full row, counted from zero at the left. Order as given. Missing knowledge in the accent; the two legal rows marked quietly, the others in ink. The value in mono at the end of each row. Note at the top row: "one dot is 2% of firms". Source R7-06 (Federal Statistical Office, 2025; firms that considered AI and do not use it; several answers possible; the six most named of the listed reasons are shown, and the figure's note says so).
 
@@ -107,9 +111,14 @@ Two horizontal tracks, United States above, Germany below. At the left of each a
 - Step 8: the queue becomes a sieve: dots that fit a small template pass without stopping, note "since 2021: a profile checked against agreed rules"; one dot of a different shape is led aside to a closed box with a question mark, "a screen that listens to calls: own agreement, not public" (R11-12).
 - Phone layout (`tall`): the two tracks run top to bottom, side by side.
 
-## `exits` (figure, wide): the agreed routes out
+## `exits` (scene, 3 steps): the agreed routes out
 
 Five-second reading: "about four thousand positions a year leave Telekom in Germany by agreed routes, most by partial retirement; severance is the one that doubled".
+
+- Step 0: one stack of marks per year, routes not told apart, the totals above each stack and "about 4,000 a year" (data: `average`, 20,223 over five years, rounded as in the text).
+- Step 1: each stack splits into the five routes on shared base lines; route labels arrive.
+- Step 2: severance in the field and the accent, "526 in 2021 → 1,016 in 2025" and the ring; the other routes step back to a muted grey (screen only; print keeps them in ink).
+- One mark is 50 positions (data: `unit`), not 25 as the paragraph below first said.
 
 Five columns, 2021 to 2025. Each column is a stack of unit marks, one mark is 25 full-time positions, grouped by route in this order from the bottom: partial retirement, retirement of civil servants, severance, early retirement, transfers to public authorities. Routes are told apart by position and a label at the right edge joined by a thin leader, not by a colour legend. Severance marks in the accent; one pen-like ring around the 2025 severance group with the italic note "526 in 2021 → 1,016 in 2025". The yearly total in mono above each column. Source R12-01 (Deutsche Telekom, HR Factbook 2025). The totals are the article's own addition; say so in a small note.
 
@@ -122,9 +131,11 @@ Five columns, 2021 to 2025. Each column is a stack of unit marks, one mark is 25
 | Transfers to public authorities | 70 | 49 | 259 | 37 | 11 |
 | Total | 3,736 | 4,016 | 4,060 | 4,448 | 3,963 |
 
-## `attitudes` (figure, column): the same questions in both countries
+## `attitudes` (scene, 3 steps): the same questions in both countries
 
 Five-second reading: "Germans are not more wary of AI than Americans; what stands out is that Germans reject monitoring of workers".
+
+Step n shows question n in full ink; the questions before it stay and step back to the muted colour. The third (EU only, 79%) is the one in the field, the worry the text says to answer first. Print shows all three in ink, as before.
 
 Three small panels, each a pair of 100-dot strips (one dot is 1%).
 

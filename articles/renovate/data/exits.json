@@ -88,5 +88,10 @@
     "note": "totals added by this article",
     "derivation": "Sum of the five routes of each year; not printed in the source."
   },
+  "average": {
+    "text": "about 4,000 a year",
+    "source": "R12-01",
+    "derivation": "20,223 positions over the five years (the sum of the totals above), about 4,045 a year, rounded as in the text."
+  },
   "headline": "Germany · Deutsche Telekom: positions leaving by agreed routes, 2021 to 2025"
 }

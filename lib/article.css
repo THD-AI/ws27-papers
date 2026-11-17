@@ -708,7 +708,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   html { font-size: 10pt; background: none; }
   body { background: none; font-size: 9.2pt; line-height: 13pt; overflow: visible; }
 
-  .skip, .toc, .rail, .colophon, .src-mark, .scene-caption, .src-pop, .seq-still, .table-hint { display: none !important; }
+  .skip, .toc, .rail, .colophon, .src-mark, .scene-caption, .src-pop, .seq-still, .table-hint, .screen-only { display: none !important; }
 
   a { text-decoration: none; }
   p { margin-bottom: 0.6em; orphans: 2; widows: 2; hyphens: auto; }
