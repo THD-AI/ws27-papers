@@ -22,7 +22,7 @@ Slugs: `renovate` (Innovation) and `other-half` (Quantum).
 
 ## Text format (`text.md`)
 
-Front matter: `title`, `deck`, `author`, `context`, `status`, `accent`. Then Markdown with these additions:
+Front matter: `title`, `deck`, `author`, `context`, `status`, `accent`. For search and sharing: `summary` (the meta description, under 160 characters), `date` (ISO), `keywords`, `card_alt` (the preview image's alt text), and optionally `draft: false` to allow indexing. `node tools/cards.mjs` writes the preview image to `art/card.png`. Then Markdown with these additions:
 
 - `{{ID ID}}` at the end of a paragraph or list item: the ids of its sources in `sources.json`. Rendered as one small mark at the end of the passage. Selecting it opens the sources of that passage (title, publisher, link). In print the mark becomes bracketed numbers and a numbered list of sources is set at the end. Unknown ids fail the build.
 - `:::scene <id>` … `:::` wraps passages that scroll beside one pinned figure. Inside, a line `@step n` sets the step shown while the following passages are in view. A line `@caption …` gives the caption used in print and on phones.

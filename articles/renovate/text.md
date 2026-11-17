@@ -6,6 +6,10 @@ context: Innovation Management for AI · TH Deggendorf · winter semester 2026/2
 status: Draft for review, 17 November 2026
 accent: renovate
 hero: none
+summary: Deutsche Telekom wants T-Mobile's AI-agent results in Germany. Why they can't be bolted on, and the order to rewire in, with the staff kept on.
+date: 2026-11-17
+keywords: AI agents, customer service, Deutsche Telekom, T-Mobile, innovation management, works council, AI Act
+card_alt: The same new cable in three walls: pulled through a timber frame, screwed onto plastered brick in a duct, and cut into the brick and plastered.
 ---
 
 ## The short version
