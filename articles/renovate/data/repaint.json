@@ -1,8 +1,8 @@
 {
   "id": "repaint",
-  "headline": "Cut first, taken back later",
+  "headline": "The saving first, taken back later",
   "sub": "two public cases; not a rule",
-  "reading": "Two timelines on one month axis from January 2024 to December 2025. Klarna, Sweden: in February 2024 the company said its assistant did the work of 700 service agents, by its own estimate; in May 2025 its chief executive said it would invest in human support, and it hired service staff again, 15 months later. Commonwealth Bank of Australia: in July 2025 it cut 45 service jobs for a voice bot; in August 2025, weeks later, it called this an error and said the roles were not redundant. Two public cases, not a rule.",
+  "reading": "Two timelines on one month axis from January 2024 to December 2025. Klarna, Sweden: in February 2024 the company said its assistant did the work of 700 service agents, by its own estimate, and staff who left were not replaced; in May 2025 its chief executive said it would invest in human support, and it hired service staff again, 15 months later. Commonwealth Bank of Australia: in July 2025 it announced that 45 service jobs would go, replaced by a voice bot; in August 2025, weeks later, it called this an error and said the roles were not redundant. Two public cases, not a rule.",
   "axis": {
     "from": "2024-01",
     "to": "2025-12",
@@ -15,8 +15,8 @@
       "cut": {
         "month": "2024-02",
         "date": "Feb 2024",
-        "text": "assistant does the work of 700 agents (company estimate)",
-        "source": "R12-14"
+        "text": "assistant does the work of 700 agents (company estimate); leavers not replaced",
+        "source": ["R12-14", "R12-15"]
       },
       "back": {
         "month": "2025-05",
@@ -32,7 +32,7 @@
       "cut": {
         "month": "2025-07",
         "date": "Jul 2025",
-        "text": "45 service jobs cut for a voice bot",
+        "text": "45 service jobs to go, replaced by a voice bot",
         "source": "CBA-2025"
       },
       "back": {

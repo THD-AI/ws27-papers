@@ -4,6 +4,18 @@ Read `SPEC.md` first (figure contract, design system). Each figure below says wh
 
 Honesty rules that override looks: where a value is not published, draw the absence (an empty slot with an italic note "not published"), never an estimate. Never connect two measured points with a line that suggests the path between them. Company-reported figures carry a small mono tag `company-reported`.
 
+## Drafts 7 to 9 (17 November 2026): three reader rounds
+
+Twelve readers per round; the log is in dotUni `docs/papers/innovation/loop-draft-6.md`.
+
+- **`permits`**: cars removed. The figure now shows the real schedules: T-Mobile build → launch, checks afterwards; Telekom works council and privacy review → build → launch; the 2021 framework agreement as the shortcut; the conciliation board note. The cars remain one sentence in the text.
+- **`roadmap`**: off the page since draft 9. It failed in all three rounds in three forms (icons, Gantt, ladder of equal steps). The numbered list with a measure per step carries section 9. The file stays for his decision.
+- **`repaint`** (new, column, 2 steps): "The saving first, taken back later", Klarna (leavers not replaced → hiring again, 15 months) and Commonwealth Bank (45 jobs to go → "error", weeks).
+- **`numbers`**: plates cross-fade, so the pinned figure is never blank; the 40/32 nesting note says the overlap isn't published; "−55%" mark.
+- **`walls`**: timber cable dropped from above into one bay; brick runs in the upper zone; sockets visibly above the floor; headings "On the surface, painted over" / "Cut in and plastered".
+- **`terms`**: one continuous cable between the junction boxes.
+- **Print**: larger units in the dot charts; static TrueType fonts.
+
 ## Draft 6 (17 November 2026): the readers' fixes
 
 Six independent readers read draft 5 (dotUni `docs/papers/innovation/readers-draft-5.md`); the requirements and the loop are in `docs/papers/innovation/loop-draft-6.md`. Analogies need not all be construction (transcript `2026-11-17-003`): use the real-world picture that is true and explains best.

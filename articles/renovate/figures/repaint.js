@@ -12,7 +12,7 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 2;
-const SIZE = { wide: [552, 382], tall: [360, 382] };
+const SIZE = { wide: [552, 382], tall: [360, 400] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 const monthIndex = (s) => { const [y, m] = String(s).split('-').map(Number); return y * 12 + (m - 1); };

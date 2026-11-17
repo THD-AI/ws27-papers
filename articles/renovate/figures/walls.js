@@ -79,7 +79,7 @@ function build(el, ctx) {
     b.drop = b.x0 + side;
     b.run = b.top + Math.max(15, Math.round(hh * 0.16));
     b.sz = tall ? 12 : 13;
-    b.sockY = b.floor - Math.max(14, Math.round(hh * 0.12));
+    b.sockY = b.floor - Math.max(20, Math.round(hh * 0.17));
     b.sockTop = b.sockY - b.sz / 2;
     b.mid = Math.round(lerp(b.run, b.sockTop, 0.55));
   });
