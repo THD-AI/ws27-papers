@@ -15,6 +15,12 @@ if (!slug) { console.error('usage: node tools/devices.mjs <slug> [outDir]'); pro
 const out = outArg || join('.shots', slug, 'devices');
 const DEVICES = [
   ['phone-portrait', 390, 844, 6],
+  // the devices he reads on (18 November): a 360 x 800 phone, the iPhone SE,
+  // the Surface Pro 10 at 200% in both orientations
+  ['phone-360', 360, 800, 6],
+  ['iphone-se', 375, 667, 6],
+  ['surface-portrait', 960, 1440, 4],
+  ['surface-landscape', 1440, 960, 3],
   ['phone-landscape', 844, 390, 4],
   ['tablet-portrait', 820, 1180, 4],
   ['tablet-landscape', 1180, 820, 3],

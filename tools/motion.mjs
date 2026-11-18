@@ -22,7 +22,7 @@
 // stretch inside it (dead time over 40% is listed as a warning: the figure's
 // own timeline idles). Scenes read as a sequence of stills (tablets upright,
 // short windows, and on top any scene whose figure cannot be pinned legibly
-// in 45% of the window) have no motion by design and are skipped.
+// in its share of the window) have no motion by design and are skipped.
 //
 // --frames writes a frame sequence over one step of one scene, on a clock
 // the tool drives (tools/clock.mjs), and a contact sheet: .shots/<slug>/motion/

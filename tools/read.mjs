@@ -262,7 +262,7 @@ for (const [w, h] of (process.env.SIZES ? JSON.parse(process.env.SIZES) : [[1440
       return scene.dataset.scene;
     }, i);
     if (asSeq) {
-      console.log(`${tag} scene ${asSeq}: read as stills (its figure cannot be pinned legibly in 45% of the window)`);
+      console.log(`${tag} scene ${asSeq}: read as stills (its figure cannot be pinned legibly in its share of the window)`);
       await wait();
       await page.screenshot({ path: join(out, `${tag}-${asSeq}-start.png`) });
       continue;
