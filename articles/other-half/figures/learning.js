@@ -134,7 +134,7 @@ function build(el, ctx) {
       text(grp, lx, close ? yp - 4 : yp + 4.5, 'plain matching', noteO);
       const cl = text(grp, lx, close ? yc + 14 : yc + 4.5, 'correlated matching', noteO);
       let yy = cl.bottom;
-      if (lv.table) yy = text(grp, lx, Math.max(y(lv.table.rate) + 14, yy + 14), `best possible at this size (lookup table): [[${pct(lv.table.rate)}]]`, { ...noteO, width: lw }).bottom;
+      if (lv.table) yy = text(grp, lx, Math.max(y(lv.table.rate) + 14, yy + 14), `lookup table, our estimate of the best: [[${pct(lv.table.rate)}]]`, { ...noteO, width: lw }).bottom;
       text(grp, lx, yy + 26, needs, { ...noteO, size: 13, fill: C.muted, width: lw });
     } else if (close && tall) {
       // phone plate: the curves cross the level lines on the left half, so the
@@ -143,10 +143,10 @@ function build(el, ctx) {
       const xr = R.x + R.w - 4;
       const lt = text(grp, xr, yp - 44, 'plain matching and,\njust under it, correlated matching', { ...noteO, anchor: 'end', lh: 15 });
       leader(grp, xr - 8, lt.bottom + 3, xr - 8, yp - 2, { stroke: C.muted, dot: false });
-      if (lv.table) text(grp, xr, y(lv.table.rate) + 19, `best possible at this size\n(lookup table): [[${pct(lv.table.rate)}]]`, { ...noteO, anchor: 'end', lh: 15 });
+      if (lv.table) text(grp, xr, y(lv.table.rate) + 19, `lookup table, our\nestimate of the best:[[${pct(lv.table.rate)}]]`, { ...noteO, anchor: 'end', lh: 15 });
     } else if (close) {
       text(grp, R.x + R.w - 4, yp - 21, 'plain matching and,\njust under it, correlated matching', { ...noteO, anchor: 'end', lh: 15 });
-      if (lv.table) text(grp, R.x + R.w - 4, y(lv.table.rate) + 15, `best possible at this size (lookup table): [[${pct(lv.table.rate)}]]`, { ...noteO, anchor: 'end' });
+      if (lv.table) text(grp, R.x + R.w - 4, y(lv.table.rate) + 15, `lookup table, our estimate of the best: [[${pct(lv.table.rate)}]]`, { ...noteO, anchor: 'end' });
     } else {
       text(grp, R.x + 6, yp - 6, 'plain matching', noteO);
       text(grp, R.x + 6, yc - 6, 'correlated matching', noteO);
