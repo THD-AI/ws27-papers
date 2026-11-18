@@ -17,12 +17,12 @@ seo_title: Renovate, don't repaint: AI agents at Telekom
 
 Software agents now do a large part of customer service at T-Mobile, Deutsche Telekom's American subsidiary. Telekom told investors on 5 October 2026 that it wants the same in Europe by 2030. {{R6-01 R6-03}} I wanted to know whether that can be copied.
 
-I should say where I stand: I'm a student in Germany, and I want this to work here. My answer is that it can't be bought and bolted onto a company. It depends on two buildings: the company's own systems, and the country it works in.
+A note on my position: I study in Germany, and I would like this to work here. My answer is that it can't be bought and bolted onto a company. It depends on two buildings: the company's own systems, and the country it works in.
 
 :::scene walls
 
 @step 0
-My father, a civil engineer, gave me the picture for both. In America 94% of new family homes have timber frames: a new cable is pulled down through the hollow wall behind the board. In Germany about two in three residential buildings approved in 2020 were brick or other masonry: a new cable runs in a channel cut into the wall and plastered over. {{NAHB-2026 DESTATIS-2021 BAUNETZ-DIN18015}} A brick house is solid and built to stand. But once it needs new pipes, cables or a network, the work is heavy and slow.
+A picture from house building serves for both. In America 94% of new family homes have timber frames: a new cable is pulled down through the hollow wall behind the board. In Germany about two in three residential buildings approved in 2020 were brick or other masonry: a new cable runs in a channel cut into the wall and plastered over. {{NAHB-2026 DESTATIS-2021 BAUNETZ-DIN18015}} A brick house is solid and built to stand. But once it needs new pipes, cables or a network, the work is heavy and slow.
 
 @step 1 screen
 Take one new cable to three walls: a timber frame, and the same plastered brick wall twice. The cable is the same in all three; only the wall decides how much work it is.
@@ -35,7 +35,7 @@ In the timber frame the cable drops from above into one hollow bay, and nothing 
 
 Here the walls are the conditions a firm works under, and the cables are the connections between its systems. American walls open fast. German walls protect the people inside and are built to last, and every new opening is cut and plastered again. Political economists have names for the two kinds of country: liberal and coordinated market economies, with the United States and Germany as the standard examples. In the liberal kind a firm can hire and let people go quickly and buy its software from next door. In Germany two mechanisms matter here: protection against dismissal, which keeps the staff in the house, and co-determination, which gives them a say in the plans before the work starts. {{HS-2001}} The houses are only a picture of that difference. They prove nothing about software.
 
-Inside its timber walls, T-Mobile's wiring was as tangled as anyone's, and it rewired while its agents went in. Telekom's wiring in Europe is a row of old houses, each wired differently, and Telekom says so itself. The research on how firms adopt new technology sorts what speeds or slows them into three places: the technology, the organisation and the environment. {{TOE-1990}} In Germany each has its weight: know-how that doesn't reach the firms, laws that check a system before it runs, and technology bought from America. And the staff stay. That's what I mean by renovating: making the systems usable for software agents, so the people are enabled by them, not replaced, as I see many American companies and start-ups doing.
+Inside its timber walls, T-Mobile's wiring was as tangled as anyone's, and it rewired while its agents went in. Telekom's wiring in Europe is a row of old houses, each wired differently, and Telekom says so itself. The research on how firms adopt new technology sorts what speeds or slows them into three places: the technology, the organisation and the environment. {{TOE-1990}} In Germany each has its weight: know-how that doesn't reach the firms, laws that check a system before it runs, and technology bought from America. And the staff stay. That is what this article means by renovating: making the systems usable for software agents, so that people are enabled by them rather than replaced, the route many American companies and start-ups take.
 
 The order I'd follow, in brief: measure first, agree the rules with the works council, keep the choice of supplier open, train the staff, build one customer record, and hand the agent its keys one stage at a time. Then give it a team that answers for it.
 
@@ -55,7 +55,7 @@ The language model is the handbook: it answers fluently from what it once read, 
 
 The handbook can be bought. But it has to be tested on the company's own cases before it gets any keys, and the version in use is fixed; the tests run again whenever the model, its instructions, the documents or the connections change.
 
-The keys are the part I'd be most careful with. They're enforced by the systems, not by the model: the agent can only call what its connection allows, however a customer phrases the request. Customers will try to talk it into more, and some messages will carry hidden instructions, so the tests include those attempts. Tests only make such tricks rarer. What limits the damage is that the account holder confirms risky changes through a second channel, such as the app, not a text message to a number that could itself have been taken over. Every action is logged.
+The keys need the most care. They're enforced by the systems, not by the model: the agent can only call what its connection allows, however a customer phrases the request. Customers will try to talk it into more, and some messages will carry hidden instructions, so the tests include those attempts. Tests only make such tricks rarer. What limits the damage is that the account holder confirms risky changes through a second channel, such as the app, not a text message to a number that could itself have been taken over. Every action is logged.
 
 Everything else the company builds itself. That's most of the work.
 
@@ -101,7 +101,7 @@ Can Germany be measured against it? Not from outside. I put every American figur
 
 @step 1
 @where Germany and Europe · Deutsche Telekom
-**Telekom's houses are many, and each is wired differently.** Across its European countries, Telekom's own slides say, customers prove who they are in 14 different ways, to be cut to three, and customer data sits in separate systems that still have to be made usable for agents. Above that list the slide states a principle: "Simplify before automating". {{R6-05}} It's the line I agree with most.
+**Telekom's houses are many, and each is wired differently.** Across its European countries, Telekom's own slides say, customers prove who they are in 14 different ways, to be cut to three, and customer data sits in separate systems that still have to be made usable for agents. Above that list the slide states a principle: "Simplify before automating". {{R6-05}} Those three words are this article's argument.
 
 In Germany it already runs Frag Magenta, a chat and phone assistant for more than 380 kinds of request. After login it can show a bill or change the bank account on a mobile contract; otherwise it hands over to staff with a summary. {{R6-16 R6-02}}
 
@@ -128,11 +128,11 @@ Commonwealth Bank of Australia did it faster. It said in July 2025 that 45 custo
 
 :::
 
-Neither company is American or German, and two cases don't make a rule. So why use them? Because as examples they're good: both show the repainting route clearly. In both, the saving came from the people first, and it was taken back once it proved wrong: at Klarna over quality, at Commonwealth Bank because, the union said, the work was still there. That's repainting, and it didn't hold.
+Neither company is American or German, and two cases don't make a rule. So why use them? Because both show the repainting route clearly. In both, the saving came from the people first, and it was taken back once it proved wrong: at Klarna over quality, at Commonwealth Bank because, the union said, the work was still there. That's repainting, and it didn't hold.
 
 ## 5. Renovating with the staff at home
 
-T-Mobile did more than rewire. It gave the staff who stayed an assistant of their own, whose recommendations appeared in 74% of their conversations with customers, and where they use it the net promoter score was 12% higher in May 2026. {{R6-06 R6-09}} In the one large study I found, of 5,172 support agents, AI help raised the cases solved per hour by 15%, and by about 30% for the least experienced, twice the average gain. {{R4-29}} That's the part I'd copy.
+T-Mobile did more than rewire. It gave the staff who stayed an assistant of their own, whose recommendations appeared in 74% of their conversations with customers, and where they use it the net promoter score was 12% higher in May 2026. {{R6-06 R6-09}} In the one large study I found, of 5,172 support agents, AI help raised the cases solved per hour by 15%, and by about 30% for the least experienced, twice the average gain. {{R4-29}} That part is worth copying.
 
 An American firm can also let people go while it rewires. T-Mobile booked 531 million dollars of severance by September 2026, almost twice its billing write-off, under a 2025–2026 restructuring its filings describe as reducing organisational layers. {{R6-06 R6-09 R6-11}} They don't tie it to the agents.
 
@@ -156,7 +156,7 @@ Severance is the route that grew: it almost doubled. So Telekom already lets abo
 @caption Three questions: two asked the same way in both countries, one across the EU. Sources: Ipsos for Google (fieldwork 2025); Ipsos AI Monitor 2025; Eurobarometer 2024 (EU only).
 
 @step 0
-So the staff stay while the walls are opened, and German opinion isn't more hostile to that than American. Asked in both countries whether AI will create or eliminate jobs, fewer Germans (61%) than Americans (67%) expected it to eliminate them. {{R12-25}} That's the public, not Telekom's service staff. Still, I think the staff staying helps more than it hurts, since help lifts the least experienced most.
+So the staff stay while the walls are opened, and German opinion isn't more hostile to that than American. Asked in both countries whether AI will create or eliminate jobs, fewer Germans (61%) than Americans (67%) expected it to eliminate them. {{R12-25}} That's the public, not Telekom's service staff. Still, on the evidence above, keeping the staff helps more than it hurts, since help lifts the least experienced most.
 
 @step 1
 In another survey, of 30 countries, 49% of Germans trusted their government to regulate AI responsibly, against 31% of Americans, the lowest share of all thirty. {{R12-25}} Germans trust the rule-maker more.
@@ -173,7 +173,7 @@ One German result stands out: 79% saw digital monitoring of workers negatively, 
 @caption Reasons German firms with ten or more employees gave in 2025 for not using AI after considering it. Several answers were possible; the six most named are shown. Source: Federal Statistical Office.
 
 @step 0
-The first German weight sits in the organisation: people who can do the work. German firms that had considered AI but don't use it were asked why, and most often, 72% of them, they named missing knowledge, ahead of the law. {{R7-06}} That's the education problem I see in Germany.
+The first German weight sits in the organisation: people who can do the work. German firms that had considered AI but don't use it were asked why, and most often, 72% of them, they named missing knowledge, ahead of the law. {{R7-06}} The bottleneck is knowledge, not law.
 
 @step 1 screen
 The law comes next: unclear legal consequences, 62%, and data protection, 60%. Section 7 returns to both.
@@ -182,7 +182,7 @@ The law comes next: unclear legal consequences, 62%, and data protection, 60%. S
 
 A survey by the European Investment Bank asked firms on both sides the same questions about generative AI. About as many European as American firms use it somewhere, 68% against 72%. The gap opens further in: 44% against 58% use it in two or more parts of the business, and 22% against 29% in customer service. {{R10-01}} Europe tries it; America builds it in.
 
-Cohen and Levinthal called the missing piece absorptive capacity, a firm's ability to take in what others know: it can only take in outside knowledge if it already has related knowledge inside. {{CL-1990}} A firm without its own people who understand the wiring can buy the handbook, but it can't install it. That's why I'd train the staff before the tools arrive. Not after.
+Cohen and Levinthal called the missing piece absorptive capacity, a firm's ability to take in what others know: it can only take in outside knowledge if it already has related knowledge inside. {{CL-1990}} A firm without its own people who understand the wiring can buy the handbook, but it can't install it. So the plan trains the staff before the tools arrive. Not after.
 
 ## 7. The law: the environment
 
@@ -201,7 +201,7 @@ At T-Mobile the checks came after. In T-Mobile's public material I found no chec
 At Telekom the works council, elected by the staff, has to be told while the system is still being planned; since 2021 the law names AI expressly. If a system is suited to monitoring staff, the works council has to agree under § 87(1) no. 6 of the Works Constitution Act, and a screen that listens to service calls very likely is. Telekom's own privacy and security experts approve a system before it runs, and the data protection regulation requires an impact assessment before risky processing. {{R11-05 R11-07 R11-08 R11-21 R11-22}} Three checks, all before launch.
 
 @step 2
-Telekom has had a shortcut since 2021, the way an approved car type covers every car built to it. Before, its works council's IT committee took six weeks per case, sometimes with more than a hundred cases in one meeting. After a pilot that began in 2018, a group agreement in March 2021 set the rules once. Now a department fills in a profile of its system, the company and the works council check it against the agreed rules, and if nothing goes beyond the rules no separate decision is needed. {{R11-12 R11-07 R11-08}} It's the model I'd use for the agents too.
+Telekom has had a shortcut since 2021, the way an approved car type covers every car built to it. Before, its works council's IT committee took six weeks per case, sometimes with more than a hundred cases in one meeting. After a pilot that began in 2018, a group agreement in March 2021 set the rules once. Now a department fills in a profile of its system, the company and the works council check it against the agreed rules, and if nothing goes beyond the rules no separate decision is needed. {{R11-12 R11-07 R11-08}} The same model would suit the agents.
 
 :::
 
@@ -217,7 +217,7 @@ The third weight is technology bought from America. Half of the larger German fi
 @where Germany · Deutsche Telekom
 Telekom is better placed than almost any German firm. It has run an AI factory in Munich since February 2026, with nearly 10,000 graphics processors, which it sells to industrial customers. For its own staff it still uses OpenAI models in its internal assistant and is rolling out 120,000 OpenAI licences. Which model runs Frag Magenta, I couldn't find out. {{R6-24 R6-17 R6-02 R6-05}} If even Telekom reaches for American materials for its own house, firms without a factory of their own will do so all the more.
 
-I think that's a problem. A house built from one foreign supplier's parts is at that supplier's mercy: it sets the price, the delivery dates and the rules for what may be stored where. Telekom describes its European platform as able to switch between models. {{R6-04}} I'd watch that switch more closely than the choice of any single model. Untested, a switch is only a promise.
+That is a dependency. A house built from one foreign supplier's parts is at that supplier's mercy: it sets the price, the delivery dates and the rules for what may be stored where. Telekom describes its European platform as able to switch between models. {{R6-04}} That switch matters more than the choice of any single model. Untested, that switch is only a claim.
 
 ## 9. The renovation, in order
 
@@ -231,7 +231,7 @@ The frames from the earlier sections each point to a step. The J-curve puts the 
 3. **Choose suppliers.** Keep the switch between model suppliers: in the contract, with exit terms, and in the design, with a layer between Telekom's systems and the model and a second model kept under test. Keep sensitive customer data on hosting Telekom controls in Germany. A switch means testing again, so its real length includes the tests and the works council's review. {{R6-04}} *Measure:* time to switch, tests included.
 4. **Train staff.** The service staff who stay learn the new tools before the tools reach customers, starting with the least experienced, for whom the measured gain is largest. {{R4-29}} *Measure:* cases per hour and repeat contacts.
 5. **One customer record.** Cut the 14 ways of proving who's calling to three and make the customer data usable before agents act on accounts: Telekom's own "simplify before automating", with a date. {{R6-05}} It's the biggest job here. One system becomes the master record; the agent reads and writes only through it, and a named team settles conflicts between old systems. Every later step depends on it, since an agent can't act on an account it can't identify. It takes years and can fail: T-Mobile wrote off 278 million dollars. Agent pilots in parallel are a risk: their systems are about to change. *Measure:* callers recognised without questions.
-6. **Permissions in stages.** First the agent only reads: show a bill, check an order. Then actions that can be undone, such as restarting a line. Changes that fraud could use come last, with a confirmation from the customer and a named person who answers for that kind of action. Before each stage the agent runs alongside the staff without acting, then passes a test set of real past cases, each labelled with the right outcome by experienced staff. Frag Magenta can already change the bank account on a mobile contract after login. {{R6-16}} That's the key I'd review first. *Measure:* errors per thousand actions, stage by stage.
+6. **Permissions in stages.** First the agent only reads: show a bill, check an order. Then actions that can be undone, such as restarting a line. Changes that fraud could use come last, with a confirmation from the customer and a named person who answers for that kind of action. Before each stage the agent runs alongside the staff without acting, then passes a test set of real past cases, each labelled with the right outcome by experienced staff. Frag Magenta can already change the bank account on a mobile contract after login. {{R6-16}} That key should be reviewed first. *Measure:* errors per thousand actions, stage by stage.
 7. **Acceptance.** Before the agent works on its own, the service staff who'll work beside it and the works council sign it off. The staff have already worked next to it in step 6. *Measure:* accepted by both.
 8. **Run it.** A named team answers for the agents, nights included. It owns monitoring of cost and errors, the fallback to staff when the agent or a connection is down, and every release and rollback. How many people that takes, I couldn't find; step 6's stages would show. Weekly, it reviews sample conversations and counts reversed actions and complaints. It can send the agent back a stage at once, and every change of model or instructions is a release, tested again. It watches the cost of each finished request like the electricity bill and feeds what it finds into step 1's measure. *Measure:* cost per finished request.
 :::
@@ -256,7 +256,7 @@ The frames from the earlier sections each point to a step. The J-curve puts the 
 **5 · One customer record.** Cut the 14 ways of proving who's calling to three and make the customer data usable before agents act on accounts: Telekom's own "simplify before automating", with a date. {{R6-05}} It's the biggest job here. One system becomes the master record; the agent reads and writes only through it, and a named team settles conflicts between old systems. Every later step depends on it, since an agent can't act on an account it can't identify. It takes years and can fail: T-Mobile wrote off 278 million dollars. Agent pilots in parallel are a risk: their systems are about to change. *Measure:* callers recognised without questions.
 
 @step 5
-**6 · Permissions in stages.** First the agent only reads: show a bill, check an order. Then actions that can be undone, such as restarting a line. Changes that fraud could use come last, with a confirmation from the customer and a named person who answers for that kind of action. Before each stage the agent runs alongside the staff without acting, then passes a test set of real past cases, each labelled with the right outcome by experienced staff. Frag Magenta can already change the bank account on a mobile contract after login. {{R6-16}} That's the key I'd review first. *Measure:* errors per thousand actions, stage by stage.
+**6 · Permissions in stages.** First the agent only reads: show a bill, check an order. Then actions that can be undone, such as restarting a line. Changes that fraud could use come last, with a confirmation from the customer and a named person who answers for that kind of action. Before each stage the agent runs alongside the staff without acting, then passes a test set of real past cases, each labelled with the right outcome by experienced staff. Frag Magenta can already change the bank account on a mobile contract after login. {{R6-16}} That key should be reviewed first. *Measure:* errors per thousand actions, stage by stage.
 
 @step 6
 **7 · Acceptance.** Before the agent works on its own, the service staff who'll work beside it and the works council sign it off. The staff have already worked next to it in step 6. *Measure:* accepted by both.
