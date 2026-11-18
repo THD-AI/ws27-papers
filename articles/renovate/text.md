@@ -62,7 +62,7 @@ Everything else the company builds itself. That's most of the work.
 ## 2. The American result
 
 @where United States · T-Mobile US
-T-Mobile's figures come from the company itself, shown at Deutsche Telekom's investor day and in its filings with the American securities regulator, and nobody has audited them. {{R6-02 R6-06 R6-09}} They're still the best public evidence of what agents do in a large customer service. Its two headline numbers are smaller than they sound.
+Everything public about T-Mobile's result comes from T-Mobile: its slides at Deutsche Telekom's investor day and its filings with the American securities regulator. Nobody has audited them. {{R6-02 R6-06 R6-09}} They're still the best public evidence of what agents do in a large customer service. Its two headline numbers are smaller than they sound.
 
 :::scene numbers
 
@@ -103,13 +103,13 @@ Can Germany be measured against it? Not from outside. I put every American figur
 @where Germany and Europe · Deutsche Telekom
 **Telekom's houses are many, and each is wired differently.** Across its European countries, Telekom's own slides say, customers prove who they are in 14 different ways, to be cut to three, and customer data sits in separate systems that still have to be made usable for agents. Above that list the slide states a principle: "Simplify before automating". {{R6-05}} Those three words are this article's argument.
 
-In Germany it already runs Frag Magenta, a chat and phone assistant for more than 380 kinds of request. After login it can show a bill or change the bank account on a mobile contract; otherwise it hands over to staff with a summary. {{R6-16 R6-02}}
+In Germany it already runs Frag Magenta, a chat and phone assistant for more than 380 kinds of request. After login it can show a bill or change the bank account on a mobile contract; otherwise it hands over to staff with a summary. {{R6-16 R6-02}} So Telekom has started at the front desk. The wiring behind it is still separate.
 
 :::
 
 German firms in general say the same about their wiring. Of those that considered AI but don't use it, 45% named systems that don't fit together and 44% problems with their data, close to one firm in two. {{R7-06}} So it isn't only Telekom.
 
-Brynjolfsson, Rock and Syverson call this pattern the productivity J-curve: like the letter J, the curve dips before it rises. A general-purpose technology pays off only after firms invest in things that don't show up as equipment: new processes, data, skills. While that investment runs, measured productivity lags, and only later does it rise. {{BRS-2021}} T-Mobile made that investment as part of building its agents, and its head of IT says it had to come first. The rebuilding costs money, and not all of it works out: in the third quarter of 2025, a year after the agents were announced, T-Mobile wrote off 278 million dollars, about a tenth of its net income that quarter, on parts of a billing-system replacement it abandoned. {{R6-09 R6-11}} Telekom's 14 ways of proving who's calling show that in Europe this work hasn't been done yet. In brick it will be slower.
+This pattern has a name, the productivity J-curve, from Brynjolfsson, Rock and Syverson: like the letter J, the curve dips before it rises. A general-purpose technology pays off only after firms invest in things that don't show up as equipment: new processes, data, skills. While that investment runs, measured productivity lags, and only later does it rise. {{BRS-2021}} T-Mobile made that investment as part of building its agents, and its head of IT says it had to come first. The rebuilding costs money, and not all of it works out: in the third quarter of 2025, a year after the agents were announced, T-Mobile wrote off 278 million dollars, about a tenth of its net income that quarter, on parts of a billing-system replacement it abandoned. {{R6-09 R6-11}} Telekom's 14 ways of proving who's calling show that in Europe this work hasn't been done yet. In brick it will be slower.
 
 ## 4. Repainting
 
@@ -118,7 +118,7 @@ Brynjolfsson, Rock and Syverson call this pattern the productivity J-curve: like
 @caption Two public cases: the saving was announced or taken from the staff first, and taken back later. Klarna froze hiring rather than cutting; at Commonwealth Bank the roles were declared redundant. Sources: Klarna; Information Age on Commonwealth Bank.
 
 @step 0
-Repainting is the duct on the surface in figure 1. The duct itself is sound work; the trouble is what it leaves alone. In a company it's an agent put in front of the customers while the wiring behind it stays as it was. It's cheaper and faster than renovating, and from the street it looks the same for a while. But the wiring isn't touched, so the saving has to come from somewhere. Usually it comes from the people.
+Repainting is the duct on the surface in figure 1. The duct itself is sound work; the trouble is what it leaves alone. In a company it's an agent put in front of the customers while the wiring behind it stays as it was. It's cheaper and faster than renovating, and from the street it looks the same for a while. But the wiring isn't touched, so the saving has to come from somewhere. In the two cases below, it came from the people.
 
 @step 1
 Klarna, a Swedish payment company, said in February 2024 that its assistant did work that, by its own estimate, equalled 700 service agents, and by then it had stopped hiring and wasn't replacing staff who left. In May 2025 its chief executive said: "Really, investing in the quality of human support is the way of the future for us". The company began hiring service staff again. {{R12-14 R12-15}} That's fifteen months from saving to reversal.
@@ -156,7 +156,7 @@ Severance is the route that grew: it almost doubled. So Telekom already lets abo
 @caption Three questions: two asked the same way in both countries, one across the EU. Sources: Ipsos for Google (fieldwork 2025); Ipsos AI Monitor 2025; Eurobarometer 2024 (EU only).
 
 @step 0
-So the staff stay while the walls are opened, and the German public is no more pessimistic about AI and jobs than the American. Asked in both countries whether AI will create or eliminate jobs, fewer Germans (61%) than Americans (67%) expected it to eliminate them. {{R12-25}} That's the public, not Telekom's service staff. Still, the one large study in section 5 points the same way: AI help lifts the least experienced most.
+The staff stay while the walls are opened. And the German public is no more pessimistic about AI and jobs than the American. Asked in both countries whether AI will create or eliminate jobs, fewer Germans (61%) than Americans (67%) expected it to eliminate them. {{R12-25}} That's the public, not Telekom's service staff. For the staff themselves, the closer evidence is the study above: AI help lifted the least experienced most.
 
 @step 1
 In another survey, of 30 countries, 49% of Germans trusted their government to regulate AI responsibly, against 31% of Americans, the lowest share of all thirty. {{R12-25}} Germans trust the rule-maker more.
@@ -182,7 +182,7 @@ The law comes next: unclear legal consequences, 62%, and data protection, 60%. S
 
 A survey by the European Investment Bank asked firms on both sides the same questions about generative AI. About as many European as American firms use it somewhere, 68% against 72%. The gap opens further in: 44% against 58% use it in two or more parts of the business, and 22% against 29% in customer service. {{R10-01}} European firms try it almost as often; American firms more often build it into their work.
 
-Cohen and Levinthal called the missing piece absorptive capacity, a firm's ability to take in what others know: it can only take in outside knowledge if it already has related knowledge inside. {{CL-1990}} A firm without its own people who understand the wiring can buy the handbook, but it can't install it. So the plan trains the staff first.
+Cohen and Levinthal called the missing piece absorptive capacity, a firm's ability to take in what others know: it can only take in outside knowledge if it already has related knowledge inside. {{CL-1990}} A firm without its own people who understand the wiring can buy the handbook, but it can't install it. So training comes before the agents go live.
 
 ## 7. The law: the environment
 
@@ -194,7 +194,7 @@ The difference in the law is simple to state: in America the checks on a system 
 
 @step 0
 @where United States · T-Mobile US
-At T-Mobile the checks came after. In T-Mobile's public material I found no check by staff before launch, though that doesn't prove there was none. T-Mobile announced its agent platform in September 2024, and about 21 months later a third of contract customers' contacts started with it. A works council in the German sense doesn't exist there: a staff body that T-Mobile had set up itself was ordered dissolved, and a federal appeals court upheld that in January 2024. Other checks come later, as lawsuits and state rules. {{R6-08 R6-06 R11-36 R11-37 R11-41 R11-43}} No check by staff, all of it after launch.
+At T-Mobile the checks came after. In T-Mobile's public material I found no check by staff before launch, though that doesn't prove there was none. T-Mobile announced its agent platform in September 2024, and about 21 months later a third of contract customers' contacts started with it. A works council in the German sense doesn't exist there: a staff body that T-Mobile had set up itself was ordered dissolved, and a federal appeals court upheld that in January 2024. Other checks come later, as lawsuits and state rules. {{R6-08 R6-06 R11-36 R11-37 R11-41 R11-43}} No staff check that I could find; every check I found comes after launch.
 
 @step 1
 @where Germany · Deutsche Telekom
@@ -212,7 +212,7 @@ Under the AI Act, customers must be told since 2 August 2026 when they deal with
 ## 8. Dependence: the technology
 
 @where Germany and Europe
-The third weight is technology bought from America. Half of the larger German firms say they depend on it: in a Bitkom survey of 605 German firms with 20 or more staff, published in November 2025, 51% called themselves strongly dependent on the United States for the digital technology they import. {{B-2025}}
+The third weight is technology bought from America. Half of the larger German firms say they depend on it: in a Bitkom survey of 605 German firms with 20 or more staff, published in November 2025, 51% called themselves strongly dependent on the United States for the digital technology they import. {{B-2025}} That is half, by their own account.
 
 @where Germany · Deutsche Telekom
 Telekom is better placed than almost any German firm. It has run an AI factory in Munich since February 2026, with nearly 10,000 graphics processors, which it sells to industrial customers. For its own staff it still uses OpenAI models in its internal assistant and is rolling out 120,000 OpenAI licences. Which model runs Frag Magenta, I couldn't find out. {{R6-24 R6-17 R6-02 R6-05}} If even Telekom reaches for American materials for its own house, firms without a factory of their own will do so all the more.
