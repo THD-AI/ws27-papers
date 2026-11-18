@@ -36,6 +36,12 @@ export function makeScene(gridFn, V = {}) {
       : { title: 13.5, note: 14.5, label: 13.5, big: 22, foot: 13, q: 17 };
     const it = (size, extra = {}) => (V.oneFace ? { family: 'sans', size: size - 0.5, ...extra } : { italic: true, size, ...extra });
     const grid = (parent, o) => gridFn(parent, { checks: d.checks, d: d.distance, C, filter, ...o });
+    const phaseOf = (q) => d.checks.filter((c) => c.asks_about !== 'flips' && c.qubits.includes(q)).map((c) => c.id).sort().join();
+    const ghosts = {};
+    Object.entries(rt.errors).forEach(([q, L]) => {
+      if (L !== 'Z') return;
+      for (let k = 0; k < d.storing_qubits; k++) if (k !== +q && !(k in rt.errors) && !(k in pm.errors) && phaseOf(k) === phaseOf(+q)) ghosts[k] = 'Z';
+    });
     const LET = (pitch) => pitch * 0.36;      // height of a written error letter
     // an error: the letter written over its qubit (knocked out), or, with
     // V.onQubit, written inside the open circle, which stays
@@ -56,14 +62,16 @@ export function makeScene(gridFn, V = {}) {
     // ---- geometry ----------------------------------------------------------
     const B = tall ? { cx: 180, cy: 152, pitch: 76 } : { cx: 250, cy: 228, pitch: 108 };
     const S = tall
-      ? { pitch: V.tallPitch || 52, cy: 192, xs: [90, 90, 270], noteY: 300, w: 176 }
+      ? { pitch: V.tallPitch || 52, cy: 168, xs: [90, 90, 270], noteY: 274, w: 176 }
       : { pitch: 70, cy: 196, xs: V.wideXs || [170, 170, 420], noteY: 340, w: 240 };
     const QR = tall ? 0.23 : 0.17;           // storing qubit radius / pitch, large grid and copies alike
     const ext = S.pitch * 1.5;
 
     // ---- the large grid ------------------------------------------------------
     const gridG = g(svg);
-    const M = grid(gridG, { ...B, seed: 3, die: true, qr: B.pitch * QR });
+    const M = grid(gridG, { ...B, seed: 3, die: true, qr: B.pitch * QR, altK: S.pitch / B.pitch });
+    // the hatching spaced for the shrunk grid takes over while it shrinks
+    if (M.hatchAlt) st.fade(M.hatchMain, -1, 0, [4.12, 4.4]).fade(M.hatchAlt, 4.12, 4.4);
     const p = B.pitch, pos = M.pos;
     const xs0 = M.parts.map((q) => q.x).concat(M.qubits.map((q) => q.x));
     const x0 = Math.min(...xs0), xw = Math.max(...xs0) - x0 || 1;
@@ -116,7 +124,7 @@ export function makeScene(gridFn, V = {}) {
     st.fade(joins, 3.62, 3.92, [4, 4.18]);
     if (V.hint) {
       const hg = g(M.gE, { 'data-audit': 'skip' });
-      const cand = [...new Set([...Object.keys(pm.errors), ...Object.keys(rt.errors)])].map(Number);
+      const cand = [...new Set([...Object.keys(pm.errors), ...Object.keys(rt.errors), ...Object.keys(ghosts)])].map(Number);
       cand.forEach((q) => { const [x, y] = pos(q); text(hg, x, y + M.qr * 0.42, '?', { family: 'sans', size: M.qr * (tall && V.qSize ? V.qSize : 1.2), weight: tall && V.qSize ? 600 : 500, anchor: 'middle', fill: C.muted }); });
       st.fade(hg, 3.72, 3.98, [4, 4.15]);
     }
@@ -209,37 +217,50 @@ export function makeScene(gridFn, V = {}) {
       st.fade(lab, 4.4, 4.6);
     }
 
-    function copy(cx, cy, answer, note, n, ring, label, seed) {
+    function copy(cx, cy, answer, note, n, ring, label, seed, inWords) {
       const grp = g(svg);
-      const lines = tall ? label.replace(/ (picks|explanation)/, '\n$1') : label;
-      text(grp, cx, cy - ext - (tall ? 32 : 30), lines, { family: 'sans', size: T.label, weight: 500, anchor: 'middle', lh: 15 });
+      // one line each on the phone, to leave room under the copies
+      const lines = tall ? ({ 'plain matching picks this one': "plain matching's pick", 'the more likely explanation': 'the more likely one' }[label] || label) : label;
+      text(grp, cx, cy - ext - (tall ? 24 : 30), lines, { family: 'sans', size: T.label, weight: 500, anchor: 'middle', lh: 15 });
       const G = grid(grp, { cx, cy, pitch: S.pitch, seed, qr: S.pitch * QR });
       ex.fired.forEach((id) => G.tiles[id].setFired(1));
       if (ring) G.root.remove();            // the large grid arrives here in step 4
       const marks = g(grp);
       Object.keys(answer.errors).forEach((q, i) => { const [x, y] = G.pos(+q); mark(marks, x, y, S.pitch, G.qr, answer.errors[q], seed + 10 + i, 1.2); });
+      if (answer === rt) {
+        Object.entries(ghosts).forEach(([q, L], i) => {
+          const [x, y] = G.pos(+q), gm = g(marks, { opacity: 0.5 });
+          letter(gm, x, y, L, G.qr * 1.3, seed + 30 + i, { stroke: C.muted, w: Math.max(2.1, G.qr * 0.19) });
+          // "or here", outside the grid to the right of the qubit, above the edge tile
+          const lx = x + G.qr + 3;
+          if (tall) text(marks, lx, y - G.qr - 1, 'or\nhere', it(12.6, { lh: 13, fill: C.ink }));
+          else text(marks, lx + 2, y - G.qr * 0.2, 'or here', it(14, { fill: C.ink }));
+        });
+      }
       const ng = g(svg);
       const nt = text(ng, cx, S.noteY, note, it(tall ? 13 : T.note, { anchor: 'middle', width: S.w, lh: tall ? 16.5 : 19 }));
-      const cnt = `${n} of ${STRIP}`;
-      const TO = tall ? (V.tallyTall || { step: 3.4, gap: 6, h: 13, w: 1.9, faint: 0.55 }) : { step: 3.8, gap: 7.5, h: 14, w: 1.9, faint: 0.55 };
-      const tw = tallyWidth(STRIP, TO), cw = tall ? 46 : 52;
-      const tx = cx - (tw + 8 + cw) / 2;
+      // the count says the same as the text: "10 of 30, about 1 in 3"
+      const cnt = `${n} of ${STRIP}, ${inWords}`;
+      // taller, heavier marks: they must read on a phone
+      const TO = tall ? { step: 4.4, gap: 6.5, h: 19, w: 2.4, faint: 0.6 } : { step: 4.4, gap: 8, h: 18, w: 2.2, faint: 0.6 };
+      const tw = tallyWidth(STRIP, TO);
+      const tx = cx - tw / 2;
       const tg = g(svg);
-      const ty = nt.bottom + (tall ? 16 : 18);
+      const ty = nt.bottom + (tall ? 18 : 20);
       const tl = tally(tg, tx, ty, n, STRIP, C, seed + 5, TO);
       const cg = g(svg);
-      text(cg, tx + tw + 8, ty + 4.5, cnt, it(tall ? 12.4 : 13, { fill: C.muted }));
+      const ct = text(cg, cx, ty + TO.h / 2 + (tall ? 16 : 18), cnt, it(tall ? 12.6 : 13.5, { anchor: 'middle', fill: C.ink, width: S.w }));
       let pr = null;
       if (ring) pr = penRing(svg, cx, cy, ext + (tall ? (V.ringPad ?? 10) : 17), ext + (tall ? (V.ringPad ?? 10) - 1 : 14), { seed: 11, stroke: C.accent, width: 1.7, start: -0.4, overlap: 0.03, drift: 0 });
       if (pr && V.single) { pr.paths[1].remove(); pr.paths.length = 1; }
-      return { grp, marks, ng, tg, tl, cg, pr, bottom: ty + 8 };
+      return { grp, marks, ng, tg, tl, cg, pr, bottom: ct.bottom };
     }
-    const notePm = `plain matching:\nright 1 time in ${inN}`;
-    const noteRt = `read together: right\nabout ${in10} times in 10`;
-    const c1 = copy(S.xs[1], S.cy, pm, notePm, nPm, true, 'plain matching picks this one', 101);
+    const notePm = 'plain matching is right';
+    const noteRt = 'read together is right';
+    const c1 = copy(S.xs[1], S.cy, pm, notePm, nPm, true, 'plain matching picks this one', 101, `about 1 in ${inN}`);
     st.fade(c1.grp, 4.38, 4.62).fade(c1.marks, 4.58, 4.76).fade(c1.ng, 4.66, 4.84).fade(c1.tl.faint, 4.7, 4.8).fill(c1.tl.ink, 4.72, 4.94).fade(c1.cg, 4.86, 4.98);
     c1.pr.paths.forEach((pp, k) => st.draw(pp, 4.8 + k * 0.03, 4.97 + k * 0.02));
-    const c2 = copy(S.xs[2], S.cy, rt, noteRt, nRt, false, 'the more likely explanation', 201);
+    const c2 = copy(S.xs[2], S.cy, rt, noteRt, nRt, false, 'the more likely explanation', 201, `about ${in10} in 10`);
     st.fade(c2.grp, 5.02, 5.3).fade(c2.marks, 5.26, 5.48).fade(c2.ng, 5.42, 5.62).fade(c2.tl.faint, 5.46, 5.56).fill(c2.tl.ink, 5.5, 5.8).fade(c2.cg, 5.72, 5.86);
 
     const tail = g(svg);
@@ -249,12 +270,12 @@ export function makeScene(gridFn, V = {}) {
     const why = g(svg);
     // what is left of the 30: from the data's rest, said as a count
     const restLine = V.restCount ? `about ${Math.max(1, Math.round(ex.rest * STRIP))} of ${STRIP}: rarer explanations` : 'the rest: rarer explanations';
-    const WX = tall ? { x: S.xs[2], y: c2.bottom + 18, anchor: 'middle', w: S.w } : { x: V.whyX || 556, y: 150, anchor: 'start', w: V.whyW || 156 };
-    const wy = text(why, WX.x, WX.y, 'A Y is one error that fires both kinds of check. Plain matching reads the two kinds apart, so to it a Y is two errors.', it(tall ? 12.6 : 14, { anchor: WX.anchor, width: WX.w, lh: tall ? 15 : 19 }));
+    const WX = tall ? { x: W / 2, y: Math.max(c1.bottom, c2.bottom) + 18, anchor: 'middle', w: 336 } : { x: V.whyX || 556, y: 128, anchor: 'start', w: V.whyW || 156 };
+    const wy = text(why, WX.x, WX.y, 'Y: a flip and a phase error at once. Plain matching counts a Y as two errors, so it picks the left answer. Counted fairly, both cost two errors, and the right one can happen two ways: its Z sits on either marked qubit.', it(tall ? 12.6 : 14, { anchor: WX.anchor, width: WX.w, lh: tall ? 15 : 19 }));
     st.fade(why, 5.78, 5.94);
-    if (tall) text(tail, S.xs[1], c1.bottom + 18, restLine, it(12.6, { anchor: 'middle', fill: C.muted, width: S.w - 24, lh: 15 }));
-    else text(tail, WX.x, wy.bottom + 30, restLine, it(14, { fill: C.muted, width: WX.w }));
-    text(tail, W / 2, tall ? Math.max(wy.bottom + 18, 424) : 440, foot, { family: 'sans', size: T.foot, anchor: 'middle', fill: C.muted, width: tall ? 336 : 700 });
+    if (tall) text(tail, W / 2, wy.bottom + 17, restLine, it(12.6, { anchor: 'middle', fill: C.muted, width: 336 }));
+    else text(tail, WX.x, wy.bottom + 26, restLine, it(14, { fill: C.muted, width: WX.w }));
+    text(tail, W / 2, tall ? wy.bottom + 35 : 440, foot, { family: 'sans', size: T.foot, anchor: 'middle', fill: C.muted, width: tall ? 336 : 700 });
     st.fade(tail, 5.84, 5.98);
 
     if (ctx.print) { st.set(5, 1); return { set() {} }; }

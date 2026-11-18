@@ -8,17 +8,21 @@
 import { makeScene } from './_lattice-scene.js';
 import { g, path } from '../../../lib/fig.js';
 import { grid } from './shared.js';
-import { tilePts, wash, hatch } from './_lattice-hand.js';
+import { tilePts, markerWash, smoothHatch, unitsPerPx } from './_lattice-hand.js';
 
 function gridF(parent, o) {
   const { pitch, C } = o;
   const M = grid(parent, { checks: o.checks, d: o.d, cx: o.cx, cy: o.cy, pitch, C, qr: o.qr });
-  // hatching and washes lie under the exact tile edges, as in A
+  // washes, then hatching over them, then the exact tile edges. Plain
+  // vectors: no filter anywhere (a displacement filter rasterises, and
+  // showed as broken lines and pixel noise when zoomed in).
   const gHatch = g(M.gT), gWash = g(M.gT);
-  M.gT.insertBefore(gHatch, M.gT.firstChild); M.gT.insertBefore(gWash, M.gT.firstChild);   // wash, then hatching over it, then the edges
-  // A's hatching is wavy because it sits under the same displacement filter
-  // as the washes: the same filter here, on the hatching and the washes
-  if (o.filter) { gWash.setAttribute('filter', o.filter); gHatch.setAttribute('filter', o.filter); }
+  M.gT.insertBefore(gHatch, M.gT.firstChild); M.gT.insertBefore(gWash, M.gT.firstChild);
+  // the large grid later shrinks by altK (steps 4 and 5); a second hatching,
+  // spaced for that size, takes over then, so the tone stays the same
+  const px = unitsPerPx();
+  const gAlt = o.altK ? g(M.gT) : null;
+  if (gAlt) M.gT.insertBefore(gAlt, gHatch.nextSibling);
   let seed = (o.seed || 3) * 17;
   const parts = [];
   Object.entries(M.tiles).forEach(([id, t]) => {
@@ -27,10 +31,14 @@ function gridF(parent, o) {
     // the tile keeps its exact edge; the flat grey fill gives way to hatching
     t.base.setAttribute('fill', 'none');
     parts.push({ el: t.base, x: t.c[0], how: 'fade' });
-    if (flips) parts.push({ el: hatch(gHatch, tp.pts, pitch, C, seed++), x: t.c[0], how: 'fade' });
+    if (flips) {
+      parts.push({ el: smoothHatch(gHatch, tp.pts, C, seed, { px }), x: t.c[0], how: 'fade' });
+      if (gAlt) smoothHatch(gAlt, tp.pts, C, seed, { px: px / o.altK, wUnits: 0.75 * px });
+      seed++;
+    }
     // fired: a loose wash set off the lines instead of the exact field
     t.field.remove();
-    const w = wash(gWash, tp.pts, seed++, C.field, { dx: pitch * 0.035, dy: pitch * 0.045, amp: pitch * 0.02 });
+    const w = markerWash(gWash, tp.pts, seed++, C.field, { dx: pitch * 0.035, dy: pitch * 0.045, amp: pitch * 0.022, rimColor: C.accent, rimOp: 0.16, rimW: Math.max(1, pitch * 0.025) });
     w.style.display = 'none';
     const dot = t.dot;
     t.setFired = (p) => {
@@ -39,12 +47,12 @@ function gridF(parent, o) {
     };
     if (t.helper) parts.push({ el: t.helper, x: t.c[0], how: 'fade', late: true });
   });
-  return { ...M, parts };
+  return { ...M, parts, hatchMain: gHatch, hatchAlt: gAlt };
 }
 
 // the key's swatches: an exact square, hatched for the flip-checks
-function keySwatch(parent, sq, flips, C, i, filter) {
-  if (flips) { const hg = hatch(parent, sq, 46, C, 400 + i); if (filter) hg.setAttribute('filter', filter); }
+function keySwatch(parent, sq, flips, C, i) {
+  if (flips) smoothHatch(parent, sq, C, 400 + i, { gap: 4.2, lambda: 8 });
   path(parent, sq.map((p, k) => `${k ? 'L' : 'M'}${p[0]} ${p[1]}`).join('') + 'Z', { stroke: C.muted, 'stroke-width': 1, 'stroke-opacity': 0.75 });
 }
 
@@ -54,7 +62,7 @@ const S = makeScene(gridF, {
   tallPitch: 48, ringPad: 14, qSize: 1.6, keySwatch,
   // phone: tallies larger; desktop: the two copies and the note closer together
   tallyTall: { step: 4, gap: 6.5, h: 15, w: 2.1, faint: 0.55 },
-  wideXs: [176, 176, 418], whyX: 546, whyW: 166, restCount: true,
+  wideXs: [176, 176, 418], whyX: 562, whyW: 152, restCount: true,
 });
 export const steps = S.steps;
 export const durations = S.durations;

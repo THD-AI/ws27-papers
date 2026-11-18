@@ -6,7 +6,7 @@
 //   gridB: the chip itself, in pen: cross-shaped qubits (the Xmon shape of
 //          real superconducting chips), the helpers between them, couplers
 //          drawn from each helper to the storing qubits it asks
-import { g, h, circle, path, pen, penRing, rng, lerp } from '../../../lib/fig.js';
+import { g, h, circle, path, pen, penRing, rng, lerp, spline, textFloor } from '../../../lib/fig.js';
 
 let uid = 0;
 const TAU = Math.PI * 2;
@@ -295,4 +295,91 @@ export function gridB(parent, o) {
     qubits.push({ q, x, y, el });
   }
   return { ...F, tiles, qubits, qr: qa * 0.75, parts, pitch };
+}
+
+// ---------------------------------------------------------------------------
+// Fills for the article (18 November 2026): plain vectors, no filters.
+// ---------------------------------------------------------------------------
+// drawing units per screen pixel of the frame being built (svgRoot has set
+// the lettering floor for it: MIN_PX = 11.5 screen px)
+export const unitsPerPx = () => (textFloor() > 0 ? textFloor() / 11.5 : 1);
+
+// a smooth closed curve through points (Catmull-Rom as cubic Béziers)
+function closedSpline(pts) {
+  const n = pts.length, f = (v) => v.toFixed(2);
+  let d = `M${f(pts[0][0])} ${f(pts[0][1])}`;
+  for (let i = 0; i < n; i++) {
+    const p0 = pts[(i - 1 + n) % n], p1 = pts[i], p2 = pts[(i + 1) % n], p3 = pts[(i + 2) % n];
+    d += `C${f(p1[0] + (p2[0] - p0[0]) / 6)} ${f(p1[1] + (p2[1] - p0[1]) / 6)} ${f(p2[0] - (p3[0] - p1[0]) / 6)} ${f(p2[1] - (p3[1] - p1[1]) / 6)} ${f(p2[0])} ${f(p2[1])}`;
+  }
+  return d + 'Z';
+}
+
+// points every `step` units along a closed outline
+function around(pts, step) {
+  const out = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [ax, ay] = pts[i], [bx, by] = pts[i + 1], L = Math.hypot(bx - ax, by - ay);
+    const n = Math.max(1, Math.round(L / step));
+    for (let k = 0; k < n; k++) out.push([lerp(ax, bx, k / n), lerp(ay, by, k / n)]);
+  }
+  return out;
+}
+
+// A marker wash: the shape as one smooth, slightly uneven closed curve, set a
+// little off the lines; flat colour, and a faintly darker rim where the ink
+// pools at the edge of a marker stroke. pts: closed outline (first = last).
+export function markerWash(parent, pts, seed, fill, o = {}) {
+  const r = rng(seed);
+  const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length, cy = pts.reduce((s, p) => s + p[1], 0) / pts.length;
+  const size = Math.max(...pts.map((p) => Math.hypot(p[0] - cx, p[1] - cy)));
+  const amp = o.amp ?? size * 0.035, dx = o.dx ?? 0, dy = o.dy ?? 0;
+  const ph = [r() * 6.28, r() * 6.28], k1 = 2 + Math.floor(r() * 2);
+  const bw = Math.max(...pts.map((p) => p[0])) - Math.min(...pts.map((p) => p[0])), bh = Math.max(...pts.map((p) => p[1])) - Math.min(...pts.map((p) => p[1]));
+  const ring = around(pts, Math.max(3, Math.min(bw, bh) / 4)).map(([x, y]) => {
+    const a = Math.atan2(y - cy, x - cx), d = Math.hypot(x - cx, y - cy) || 1;
+    const e = amp * (0.7 * Math.sin(k1 * a + ph[0]) + 0.3 * Math.sin((k1 + 3) * a + ph[1]));
+    return [x + dx + ((x - cx) / d) * e, y + dy + ((y - cy) / d) * e];
+  });
+  const d = closedSpline(ring);
+  const grp = g(parent, { 'data-audit': 'skip' });
+  path(grp, d, { fill, stroke: 'none', 'fill-opacity': o.op ?? null });
+  if (o.rim !== false) path(grp, d, { fill: 'none', stroke: o.rimColor || fill, 'stroke-width': o.rimW ?? Math.max(1, size * 0.03), 'stroke-opacity': o.rimOp ?? 1, 'stroke-linejoin': 'round', style: 'mix-blend-mode:multiply' });
+  return grp;
+}
+
+// Fine wavy hatching, clipped to a closed outline. Each line is one smooth
+// curve (a gentle sine sampled and joined as cubic Béziers), the same wave
+// on every line, so nothing breaks or jitters. Spacing, width and wave are
+// in screen pixels (px = drawing units per pixel), so the tone stays the
+// same at any size: a smaller drawing gets fewer lines, not denser ones.
+export function smoothHatch(parent, pts, C, seed, o = {}) {
+  const px = o.px || unitsPerPx();
+  const gap = (o.gap ?? 5.6) * px, w = o.wUnits ?? (o.w ?? 0.75) * px, amp = (o.amp ?? 1.0) * px, lam = (o.lambda ?? 19) * px;
+  const id = `lat-hatch-${++uid}`;
+  const clip = h('clipPath', { id }, parent);
+  path(clip, pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join('') + 'Z', { fill: '#000' });
+  const grp = g(parent, { 'clip-path': `url(#${id})`, 'data-audit': 'skip' });
+  const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const r = rng(seed);
+  // lines at 45 degrees, rising to the right: u runs along a line, v across
+  const ux = Math.SQRT1_2, uy = -Math.SQRT1_2, vx = Math.SQRT1_2, vy = Math.SQRT1_2;
+  const span = (x1 - x0) + (y1 - y0);
+  const v0 = (x0 * vx + y0 * vy), v1 = (x1 * vx + y1 * vy);
+  const off = r() * gap;
+  let d = '';
+  for (let v = v0 + off - gap; v <= v1 + gap; v += gap) {
+    const phase = r() * 0.6;                       // a little per line, still one smooth curve
+    const u0 = (x0 * ux + y1 * uy) - 4 * px, u1 = (x1 * ux + y0 * uy) + 4 * px;
+    const n = Math.max(4, Math.ceil((u1 - u0) / (lam / 8)));
+    const line = [];
+    for (let i = 0; i <= n; i++) {
+      const u = lerp(u0, u1, i / n), s = amp * (0.8 * Math.sin((u / lam) * Math.PI * 2 + phase * 6.28) + 0.35 * Math.sin((u / (lam * 2.7)) * Math.PI * 2 + phase * 11));
+      line.push([u * ux + (v + s) * vx, u * uy + (v + s) * vy]);
+    }
+    d += spline(line);
+  }
+  if (span) path(grp, d, { stroke: o.stroke || C.muted, 'stroke-width': w.toFixed(3), opacity: o.op ?? 0.6, 'stroke-linecap': 'round', fill: 'none' });
+  return grp;
 }

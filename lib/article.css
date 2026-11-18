@@ -716,7 +716,7 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 
 /* Tablets: captions and the place labels about 10% larger. */
 @media screen and (min-width: 700px) and (max-width: 1199.98px) {
-  figcaption, .scene-caption { font-size: 0.925rem; }
+  figcaption, .scene-caption, .scene .scene-stage figcaption { font-size: 0.925rem; }
   .fig-where { font-size: 0.75rem; }
 }
 
