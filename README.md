@@ -7,7 +7,11 @@ Two long-form articles by Alexander Rudaev, winter semester 2026/27, TH Deggendo
 | Renovate, don't repaint | Innovation Management for AI | `articles/renovate/` |
 | The other half of a quantum computer | Quantum Computing seminar (group work) | `articles/other-half/` |
 
-**State, 16 November 2026: drafts for review.** Every page carries "Draft for review" and is excluded from search engines.
+**State, 17 November 2026: drafts for review.** Every page carries "Draft for review" and stays out of search engines while its front matter is a draft. Everything else for search and sharing is in place: description, canonical link, Open Graph and Twitter cards with a preview image made from the article's own figure, structured data, a sitemap and icons. Set `draft: false` in an article's front matter, or drop "Draft" from its status line, to let search engines index it.
+
+## How it is made and reviewed
+
+The method is in [PLAYBOOK.md](PLAYBOOK.md). Each draft goes through the compound-engineering loop (brainstorm, plan, work, simplify, review, compound), and independent readers check it: twelve personas from the real audience plus fact, voice, web and performance auditors. Gates and a stop rule decide when a draft is ready.
 
 ## How it is put together
 
@@ -22,6 +26,9 @@ npm install
 node lib/build.mjs            # writes dist/
 node tools/serve.mjs          # http://localhost:8822/
 node tools/shots.mjs renovate # screenshots and print PDF into .shots/
+node tools/perf.mjs renovate  # scroll performance on phones, tablets and laptops
+node tools/devices.mjs renovate  # read-through sheets for every device and orientation
+node tools/cards.mjs          # social preview cards and site icons
 ```
 
 ## What was checked, and what was not

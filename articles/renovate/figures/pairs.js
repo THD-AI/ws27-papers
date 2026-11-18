@@ -7,6 +7,9 @@ import {
 } from '../../../lib/fig.js';
 
 export const steps = 1;
+// seconds the drawing plays once 40% of it is in view: ten rows, one after
+// another (opened from its fold it is set complete at once)
+export const durations = { medium: [2.0] };
 const SIZE = { wide: [880, 832], tall: [360, 1792] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 

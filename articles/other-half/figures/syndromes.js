@@ -10,6 +10,9 @@ import {
 import { pal, grid, text, floor } from './shared.js';
 
 export const steps = 1;
+// seconds the drawing plays once 40% of it is in view: 256 squares, then
+// the one pattern enlarged
+export const durations = { medium: [2.0] };
 const SIZE = { wide: [720, 504], tall: [360, 760] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
@@ -83,8 +86,9 @@ function build(el, ctx) {
     text(lab, fx, fy - 38, `down: flips, ${lo} … ${hi} checks fired`, sans);
   } else {
     text(lab, fx, fy - 38, `phase errors: ${lo} … ${hi} checks fired`, sans);
-    const rot = g(lab, { transform: `translate(${fx - 44} ${fy}) rotate(-90)`, 'data-audit': 'skip' });
-    text(rot, 0, 0, `flips: ${lo} … ${hi} checks fired`, { ...sans, anchor: 'end' });
+    // rotated, centred on the field, well clear of the drawing's left edge
+    const rot = g(lab, { transform: `translate(${fx - 44} ${fy + fw / 2}) rotate(-90)`, 'data-audit': 'skip' });
+    text(rot, 0, 0, `flips: ${lo} … ${hi} checks fired`, { ...sans, anchor: 'middle' });
   }
   st.fade(lab, 0, 0.12);
 

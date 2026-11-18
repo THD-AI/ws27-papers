@@ -1,6 +1,6 @@
 // The any-device matrix, used by tools/shots.mjs when called with --matrix.
 //
-// For 17 window sizes from 320×568 to 2560×1440, portrait and landscape, it
+// For 18 window sizes from 320×568 to 2560×1440, portrait and landscape, it
 // writes shots into .shots/<slug>/matrix/ (top, first and last passage of
 // every scene, one wide and one column figure, a table, a source popover)
 // and runs script checks: sideways overflow, elements wider than the window,
@@ -11,7 +11,7 @@ import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 export const SIZES = [
-  [320, 568], [360, 740], [390, 844], [430, 932],          // phones, portrait
+  [320, 568], [360, 740], [360, 800], [390, 844], [430, 932],   // phones, portrait
   [568, 320], [740, 360], [844, 390], [932, 430],          // phones, landscape
   [768, 1024], [1024, 768], [834, 1194], [1194, 834],      // tablets, both ways
   [1280, 720], [1366, 768], [1440, 900], [1920, 1080], [2560, 1440],
@@ -28,8 +28,12 @@ async function checkPage() {
   res.popover = pop ? (pop.left >= 0 && pop.right <= vw + 0.5 ? 'ok' : 'leaves the window') : 'none';
   document.body.click();
 
-  res.mode = matchMedia('(min-width: 1000px) and (min-height: 560px), (min-width: 640px) and (max-height: 559.98px)').matches ? 'side'
+  res.mode = matchMedia('(min-width: 1000px) and (min-height: 560px), (min-width: 640px) and (min-height: 450px) and (max-height: 559.98px)').matches ? 'side'
     : matchMedia('(max-width: 999.98px) and (min-height: 560px)').matches ? 'top' : 'sequence';
+  // on top, a scene whose figure cannot be pinned legibly in 45% of the
+  // window reads as a sequence (lib/article.js, topFit): named here
+  const asSeq = [...document.querySelectorAll('.scene.is-seq')].map((s) => s.dataset.scene);
+  if (res.mode === 'top' && asSeq.length) res.mode += ` (as stills: ${asSeq.join(', ')})`;
 
   // Hero: where it is, and whether the drawing itself (not the empty paper
   // of the image file) is inside the window and clear of the title and deck.
@@ -80,14 +84,15 @@ async function checkPage() {
   // Every figure is brought into view once, so that figures in the text are
   // complete and everything displayed is mounted.
   const figs = [...document.querySelectorAll('[data-fig]')].filter((el) => el.getClientRects().length);
-  for (const el of figs) { el.scrollIntoView({ block: 'center' }); await frame(); }
+  for (const el of figs) { el.scrollIntoView({ block: 'center' }); await frame(); window.__engine?.finish(); }
   await new Promise((ok) => setTimeout(ok, 200));
 
   // Elements that reach outside the window. The hero's empty paper and what
-  // is inside a frame that scrolls on its own do not count.
+  // is inside a frame that scrolls on its own do not count, nor what is only
+  // there for assistive technology (.vh, clipped to nothing).
   const wide = [];
   for (const el of document.querySelectorAll('body *')) {
-    if (el.closest('.hero, .table-frame, .skip') || (el.closest('svg') && el.tagName !== 'svg')) continue;
+    if (el.closest('.hero, .table-frame, .skip, .vh') || (el.closest('svg') && el.tagName !== 'svg')) continue;
     const r = el.getBoundingClientRect();
     if (!r.width || !r.height) continue;
     if (r.right > vw + 1 || r.left < -1) wide.push(`${el.tagName.toLowerCase()}.${[...el.classList].join('.')} ${Math.round(r.left)}..${Math.round(r.right)}`);
@@ -115,7 +120,9 @@ async function checkPage() {
     const role = el.dataset.role;
     const id = el.dataset.fig + (role === 'still' ? ' (still)' : role === 'margin' ? ' (margin)' : role === 'seq' ? ' (sequence)' : '');
     layouts[id] = `${el.dataset.mounted || '?'} ${Math.round(svg.getBoundingClientRect().width)}px ×${scale.toFixed(2)}`;
-    if (min < 10.95) small[id] = Math.min(small[id] ?? Infinity, Math.round(min * 10) / 10);
+    // a still of a scene read as a sequence may set its lettering at 10 px to fit the window's height
+    if (min < (role === 'seq' ? 9.95 : 10.95)) small[id] = Math.min(small[id] ?? Infinity, Math.round(min * 10) / 10);
+    if (role === 'seq' && svg.getBoundingClientRect().height > vh * 0.93) wide.push(`still of ${el.dataset.fig} taller than 92% of the window`);
     if (svg.getBoundingClientRect().height > vh && role === 'scene') wide.push(`pinned figure ${el.dataset.fig} taller than the window`);
   }
   res.wide = [...new Set(wide)];
@@ -124,8 +131,8 @@ async function checkPage() {
 
   // Room for text under a figure pinned on top, in lines of body text.
   res.lines = [];
-  if (res.mode === 'top') {
-    for (const stage of document.querySelectorAll('.scene-stage')) {
+  if (res.mode.startsWith('top')) {
+    for (const stage of document.querySelectorAll('.scene:not(.is-seq) .scene-stage')) {
       res.lines.push(Math.floor(((vh - stage.getBoundingClientRect().height) / lh) * 10) / 10);
     }
   }
@@ -155,10 +162,12 @@ export async function runMatrix({ slug, out, open, settle, scrollTo, log }) {
           const ps = scene.querySelectorAll('.passage');
           const p = wh === 'first' ? ps[0] : ps[ps.length - 1];
           const stage = scene.querySelector('.scene-stage');
-          const top = matchMedia('(max-width: 999.98px) and (min-height: 560px)').matches;
-          const seq = matchMedia('(max-height: 559.98px)').matches;
-          // sequence: the still that precedes the passage goes to the top of the window
-          const target = seq ? p.previousElementSibling : p;
+          const seq = matchMedia('(max-width: 639.98px) and (max-height: 559.98px), (max-height: 449.98px)').matches || scene.classList.contains('is-seq');
+          const top = !seq && matchMedia('(max-width: 999.98px) and (min-height: 560px)').matches;
+          // sequence: the still that precedes the passage goes to the top of
+          // the window (a figure with a "stills" list may have none there)
+          const prev = p.previousElementSibling;
+          const target = seq && prev?.matches('.seq-still') ? prev : p;
           const offset = seq ? 8 : top ? stage.getBoundingClientRect().height + 18 : innerHeight * 0.24;
           scrollTo(0, Math.max(0, target.getBoundingClientRect().top + scrollY - offset));
         }, i, which);

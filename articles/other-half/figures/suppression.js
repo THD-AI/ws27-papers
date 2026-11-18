@@ -8,6 +8,8 @@ import {
 import { pal, text, floor } from './shared.js';
 
 export const steps = 1;
+// seconds the drawing plays once 40% of it is in view: two ladders, rung by rung
+export const durations = { medium: [1.8] };
 const SIZE = { wide: [560, 536], tall: [360, 660] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
