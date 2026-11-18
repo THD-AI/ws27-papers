@@ -656,6 +656,15 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   /* a passage already read is hidden once it slides under the pinned
      figure (article.js), so no half-cut paragraph shows at the figure's edge */
   .scene.is-live .passage.is-under { opacity: 0; pointer-events: none; }
+  /* A figure that cannot be pinned here at a readable size in at most 45% of
+     the window (article.js, topFit): its scene reads as a sequence of stills,
+     as below, and its text full width. */
+  .scene.is-seq .scene-stage { display: none; }
+  .scene.is-seq .scene-text { padding-top: 0.4rem; }
+  .scene.is-seq .seq-still { display: block; max-width: var(--measure); margin: 1.6rem 0 1rem; }
+  .scene.is-seq .seq-still.seq-later [data-role='title'], .scene.is-seq .seq-still.seq-later .fig-head > text:first-of-type { display: none; }
+  .scene.is-seq .passage { min-height: 0; padding-bottom: 0; margin-bottom: 1.4rem; }
+  .scene.is-seq .passage + .seq-still { margin-top: 0.4rem; }
 }
 
 /* A sequence: windows lower than 450 px (a phone held sideways), and

@@ -1,6 +1,6 @@
 // Motion gate: is each step triggered by the scroll and played by time?
 //
-//   node tools/motion.mjs <slug> [WxH ...]            (default 1536x864 390x844)
+//   node tools/motion.mjs <slug> [WxH ...]            (default 1536x864 390x844 360x800)
 //   node tools/motion.mjs <slug> --frames <scene>[:<step>] [WxH] [--out <dir>] [--n 12]
 //
 // The scroll decides which step a figure shows, a clock decides how it gets
@@ -21,7 +21,8 @@
 // It reports per step the real duration, the frames and the longest still
 // stretch inside it (dead time over 40% is listed as a warning: the figure's
 // own timeline idles). Scenes read as a sequence of stills (tablets upright,
-// short windows) have no motion by design and are skipped.
+// short windows, and on top any scene whose figure cannot be pinned legibly
+// in 45% of the window) have no motion by design and are skipped.
 //
 // --frames writes a frame sequence over one step of one scene, on a clock
 // the tool drives (tools/clock.mjs), and a contact sheet: .shots/<slug>/motion/
@@ -44,7 +45,7 @@ const framesOf = opt('--frames');
 const outDir = opt('--out') || join(ROOT, '.shots', slug, 'motion');
 const nFrames = Number(opt('--n') || 12);
 const sizes = args.filter((a) => /^\d+x\d+$/.test(a)).map((a) => a.split('x').map(Number));
-if (!sizes.length) sizes.push(...(framesOf ? [[1536, 864]] : [[1536, 864], [390, 844]]));
+if (!sizes.length) sizes.push(...(framesOf ? [[1536, 864]] : [[1536, 864], [390, 844], [360, 800]]));
 const STEP = 8;            // px of scroll between samples
 const MIN_S = 0.5, MAX_S = 3.5, MIN_FRAMES = 8, MIN_BACK = 0.3, DEAD = 0.4;
 

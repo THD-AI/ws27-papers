@@ -2,7 +2,7 @@
 //
 //   node tools/read.mjs <slug>
 //
-// At 1440×900, 390×844 and 768×1024 it scrolls through every scene in small
+// At 1440×900, 390×844, 360×800 and 768×1024 it scrolls through every scene in small
 // steps and checks that
 //   - the figure is on screen whenever a passage of the scene is,
 //   - two or three passages are in view while the figure is pinned,
@@ -17,7 +17,7 @@
 //     tools/timing.mjs,
 //   - the figure rests about a third of a window after the last passage,
 //   - the place label does not stand twice (at the figure and in the text).
-// At 1440×900 and 390×844 it also scans the whole page for emptiness:
+// At 1440×900, 390×844 and 360×800 it also scans the whole page for emptiness:
 //   - any gap of more than 6rem between consecutive blocks of the text,
 //   - any screen that is almost empty (see emptyScreens below).
 // It writes shots into .shots/<slug>/read/: three consecutive passages of
@@ -237,7 +237,7 @@ async function emptyScreens(page, helper, w, h) {
 const helper = await browser.newPage();
 await helper.setContent('<!doctype html><body></body>');
 
-for (const [w, h] of (process.env.SIZES ? JSON.parse(process.env.SIZES) : [[1440, 900], [390, 844], [768, 1024], [844, 390], [793, 496], [1366, 500]])) {
+for (const [w, h] of (process.env.SIZES ? JSON.parse(process.env.SIZES) : [[1440, 900], [390, 844], [360, 800], [768, 1024], [844, 390], [793, 496], [1366, 500]])) {
   const page = await browser.newPage();
   await page.setViewport({ width: w, height: h, isMobile: w < 1000, hasTouch: w < 1000 });
   page.on('pageerror', (e) => problems.push(`${w}x${h}: ${e.message}`));
@@ -253,6 +253,20 @@ for (const [w, h] of (process.env.SIZES ? JSON.parse(process.env.SIZES) : [[1440
 
   const count = await page.evaluate(() => document.querySelectorAll('.scene').length);
   for (let i = 0; i < count && !seq; i++) {
+    // a scene whose figure cannot be pinned on top legibly reads as a
+    // sequence of stills (lib/article.js, topFit): its first still is shot
+    const asSeq = await page.evaluate((si) => {
+      const scene = document.querySelectorAll('.scene')[si];
+      if (!scene.classList.contains('is-seq')) return null;
+      scrollTo(0, scene.getBoundingClientRect().top + scrollY - 20);
+      return scene.dataset.scene;
+    }, i);
+    if (asSeq) {
+      console.log(`${tag} scene ${asSeq}: read as stills (its figure cannot be pinned legibly in 45% of the window)`);
+      await wait();
+      await page.screenshot({ path: join(out, `${tag}-${asSeq}-start.png`) });
+      continue;
+    }
     const res = await page.evaluate(walkScene, i);
     for (const p of res.problems) problems.push(`${tag} scene ${res.id}: ${p}`);
     console.log(`${tag} scene ${res.id}: ${res.length} windows long, ${res.inView} passages in view, figure rests ${res.rest} px at the end – ${res.problems.length ? res.problems.length + ' problems' : 'ok'}`);

@@ -5,7 +5,7 @@
   "cable": { "label": "the same new cable", "source": "analogy" },
   "groups": [
     { "label": "Most new US homes", "panels": [0], "source": "analogy" },
-    { "label": "Most German homes: one brick wall, two ways", "panels": [1, 2], "source": "analogy" }
+    { "label": "Most German homes: one brick wall, two ways", "short": "German homes: brick, two ways", "panels": [1, 2], "source": "analogy" }
   ],
   "panels": [
     { "kind": "timber", "heading": "Timber frame", "sub": "board on studs, hollow", "note": "pulled through", "effort": "quick", "source": "analogy" },

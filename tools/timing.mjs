@@ -1,7 +1,7 @@
 // Timing: how long each drawing takes, in real time, for real readers.
 //
 //   node tools/timing.mjs [slug ...] [WxH ...] [--wheel|--trackpad]
-//        (default: both articles; 1536x864 390x844; both readers)
+//        (default: both articles; 1536x864 390x844 360x800; both readers)
 //   node tools/timing.mjs --video [slug ...]   videos at reading pace into .shots/video/
 //
 // The engine (lib/article.js) triggers a step by scroll and plays it by
@@ -48,7 +48,7 @@ const VIDEO = args.includes('--video');
 const slugs = args.filter((a) => /^[a-z][a-z-]+$/.test(a));
 if (!slugs.length) slugs.push('renovate', 'other-half');
 const sizes = args.filter((a) => /^\d+x\d+$/.test(a)).map((a) => a.split('x').map(Number));
-if (!sizes.length) sizes.push([1536, 864], [390, 844]);
+if (!sizes.length) sizes.push([1536, 864], [390, 844], [360, 800]);
 const readers = args.includes('--wheel') ? ['wheel'] : args.includes('--trackpad') ? ['trackpad'] : ['wheel', 'trackpad'];
 const WPM = 230;           // steady reading pace
 const VMAX = 0.5;          // at most half a window of scroll per second at reading pace
@@ -127,7 +127,9 @@ function layoutInPage() {
   const sections = [...document.querySelectorAll('h2.sec')].map((h) => ({ id: h.id, top: top(h) }));
   const side = matchMedia('(min-width: 1000px) and (min-height: 560px), (min-width: 640px) and (min-height: 450px) and (max-height: 559.98px)').matches;
   const topm = matchMedia('(max-width: 999.98px) and (min-height: 560px)').matches;
-  return { slots, blocks, sections, mode: side ? 'side' : topm ? 'top' : 'seq', maxScroll: document.documentElement.scrollHeight - innerHeight, vh: innerHeight, rail: !!document.querySelector('.rail-pin')?.getClientRects().length };
+  // on top, scenes whose figure cannot be pinned legibly read as stills (lib/article.js, topFit)
+  const asSeq = topm ? document.querySelectorAll('.scene.is-seq').length : 0;
+  return { slots, blocks, sections, mode: side ? 'side' : topm ? (asSeq ? `top (${asSeq} as stills)` : 'top') : 'seq', maxScroll: document.documentElement.scrollHeight - innerHeight, vh: innerHeight, rail: !!document.querySelector('.rail-pin')?.getClientRects().length };
 }
 
 // ---------------------------------------------------------------------------

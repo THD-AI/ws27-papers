@@ -1,6 +1,6 @@
 // The any-device matrix, used by tools/shots.mjs when called with --matrix.
 //
-// For 17 window sizes from 320×568 to 2560×1440, portrait and landscape, it
+// For 18 window sizes from 320×568 to 2560×1440, portrait and landscape, it
 // writes shots into .shots/<slug>/matrix/ (top, first and last passage of
 // every scene, one wide and one column figure, a table, a source popover)
 // and runs script checks: sideways overflow, elements wider than the window,
@@ -11,7 +11,7 @@ import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 export const SIZES = [
-  [320, 568], [360, 740], [390, 844], [430, 932],          // phones, portrait
+  [320, 568], [360, 740], [360, 800], [390, 844], [430, 932],   // phones, portrait
   [568, 320], [740, 360], [844, 390], [932, 430],          // phones, landscape
   [768, 1024], [1024, 768], [834, 1194], [1194, 834],      // tablets, both ways
   [1280, 720], [1366, 768], [1440, 900], [1920, 1080], [2560, 1440],
@@ -30,6 +30,10 @@ async function checkPage() {
 
   res.mode = matchMedia('(min-width: 1000px) and (min-height: 560px), (min-width: 640px) and (min-height: 450px) and (max-height: 559.98px)').matches ? 'side'
     : matchMedia('(max-width: 999.98px) and (min-height: 560px)').matches ? 'top' : 'sequence';
+  // on top, a scene whose figure cannot be pinned legibly in 45% of the
+  // window reads as a sequence (lib/article.js, topFit): named here
+  const asSeq = [...document.querySelectorAll('.scene.is-seq')].map((s) => s.dataset.scene);
+  if (res.mode === 'top' && asSeq.length) res.mode += ` (as stills: ${asSeq.join(', ')})`;
 
   // Hero: where it is, and whether the drawing itself (not the empty paper
   // of the image file) is inside the window and clear of the title and deck.
@@ -127,8 +131,8 @@ async function checkPage() {
 
   // Room for text under a figure pinned on top, in lines of body text.
   res.lines = [];
-  if (res.mode === 'top') {
-    for (const stage of document.querySelectorAll('.scene-stage')) {
+  if (res.mode.startsWith('top')) {
+    for (const stage of document.querySelectorAll('.scene:not(.is-seq) .scene-stage')) {
       res.lines.push(Math.floor(((vh - stage.getBoundingClientRect().height) / lh) * 10) / 10);
     }
   }
@@ -158,8 +162,8 @@ export async function runMatrix({ slug, out, open, settle, scrollTo, log }) {
           const ps = scene.querySelectorAll('.passage');
           const p = wh === 'first' ? ps[0] : ps[ps.length - 1];
           const stage = scene.querySelector('.scene-stage');
-          const top = matchMedia('(max-width: 999.98px) and (min-height: 560px)').matches;
-          const seq = matchMedia('(max-width: 639.98px) and (max-height: 559.98px), (max-height: 449.98px)').matches;
+          const seq = matchMedia('(max-width: 639.98px) and (max-height: 559.98px), (max-height: 449.98px)').matches || scene.classList.contains('is-seq');
+          const top = !seq && matchMedia('(max-width: 999.98px) and (min-height: 560px)').matches;
           // sequence: the still that precedes the passage goes to the top of
           // the window (a figure with a "stills" list may have none there)
           const prev = p.previousElementSibling;

@@ -74,7 +74,7 @@ function build(el, ctx) {
   d.groups.forEach((gr, k) => {
     const first = boxes[gr.panels[0]], last = boxes[gr.panels[gr.panels.length - 1]];
     const G = g(svg);
-    const t = text(G, first.x0, first.gy, gr.label, { family: 'mono', size: S.where, fill: C.muted, caps: true, spacing: 0.3, width: tall ? first.x1 - first.x0 : last.x1 - first.x0 });
+    const t = text(G, first.x0, first.gy, tall && gr.short ? gr.short : gr.label, { family: 'mono', size: S.where, fill: C.muted, caps: true, spacing: 0.3, width: tall ? first.x1 - first.x0 : last.x1 - first.x0 });
     if (tall) path(G, poly([[first.x0 - 9, first.gy - 9], [first.x0 - 9, last.floor]]), { stroke: C.hairline, 'stroke-width': 1, 'data-audit': 'skip' });
     else path(G, poly([[first.x0, first.gy + 9], [last.x1, first.gy + 9]]), { stroke: C.hairline, 'stroke-width': 1, 'data-audit': 'skip' });
     st.fade(G, 0.02 + k * 0.1, 0.18 + k * 0.1);

@@ -5,7 +5,7 @@ author: Alexander Rudaev
 context: Innovation Management for AI · TH Deggendorf · winter semester 2026/27
 status: Draft for review, 17 November 2026
 accent: renovate
-hero: none
+hero: house
 summary: T-Mobile's AI agents now meet a third of its contract customers' contacts. Why Deutsche Telekom can't bolt that onto Germany, and what to rebuild first.
 date: 2026-11-17
 keywords: AI agents, customer service, Deutsche Telekom, T-Mobile, innovation management, works council, AI Act
