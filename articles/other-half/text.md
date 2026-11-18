@@ -97,7 +97,7 @@ All 256 patterns of the eight checks at distance 3, one mark each, ordered by ho
 
 :::scene lattice
 
-@caption The smallest grid: 9 storing qubits and 8 checks. Left to right: one flip fires the two checks beside it; in a row of errors only the ends fire; the three fired checks of our example, and its two explanations. Plain matching's explanation is right one time in three, the other about six times in ten (5% error per storing qubit, checks that never report wrongly; our own count).
+@caption The smallest grid: 9 storing qubits and 8 checks. Left to right: one flip fires the two checks beside it; in a line of errors only the ends fire; the three fired checks of our example, and its two explanations. Plain matching's explanation is right one time in three, the other about six times in ten (5% error per storing qubit, checks that never report wrongly; our own count).
 
 @step 0
 To see why, it helps to know how that decoder works. It's called **matching**, and the smallest grid shows it: 9 storing qubits, never read directly, and 8 checks between them, each asking its neighbours one question.
@@ -106,7 +106,7 @@ To see why, it helps to know how that decoder works. It's called **matching**, a
 In the middle of the grid, a single flip fires the two flip-checks on either side of it. The phase-checks stay quiet: a flip isn't their kind of error. The decoder never sees the flip, only two lit checks.
 
 @step 2
-Now put several errors in a row. Each check along the row sees two of them, an even number, and stays quiet. Only the checks at the two ends fire. At the edge of the grid a row can end without firing anything.
+Now put several errors in a line. Each check along the line sees two of them, an even number, and stays quiet. Only the checks at the two ends fire. At the edge of the grid a row can end without firing anything.
 
 @step 3
 Decoding then becomes a pairing puzzle: join every fired check to another fired check, or to the edge. Matching picks the pairing with the shortest rows in total, since a few errors are more likely than many. Fast, exact methods exist for it, and almost every experiment uses it. {{SB-2025}} It is a sound shortcut with one blind spot.
