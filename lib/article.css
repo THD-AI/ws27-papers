@@ -652,14 +652,25 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .scene-stage .fig-where { margin-bottom: 0.2rem; padding: 0 var(--gutter); }
   .scene-text, .scene-caption { max-width: var(--measure); margin-left: var(--left); margin-right: var(--gutter); }
   .scene-text { padding: 1.4rem 0 0.4rem; }
-  .scene-caption { margin-bottom: 2rem; padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
-  /* a passage already read is hidden once it slides under the pinned
-     figure (article.js), so no half-cut paragraph shows at the figure's edge */
-  .scene.is-live .passage.is-under { opacity: 0; pointer-events: none; }
+  /* the caption stands right under the figure, small, as on paper, and
+     scrolls under it with the first passage (18 November: under the
+     passages it was read as belonging to nothing) */
+  .scene-caption { margin-top: 0.9rem; margin-bottom: 0; }
+  .scene-text { padding-top: 1.2rem; }
+  /* A passage that slides under the pinned figure dissolves into the paper
+     at its edge, line by line, instead of vanishing whole (a long passage
+     went while it was still being read, 18 November). */
+  .scene-stage::after {
+    content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 1.1rem;
+    background: linear-gradient(var(--paper), color-mix(in srgb, var(--paper) 0%, transparent));
+    pointer-events: none;
+  }
+  .scene.is-live .passage.is-under { pointer-events: none; }
   /* A figure that cannot be pinned here at a readable size in at most 45% of
      the window (article.js, topFit): its scene reads as a sequence of stills,
      as below, and its text full width. */
-  .scene.is-seq .scene-stage { display: none; }
+  .scene.is-seq .scene-stage, .scene.is-seq .scene-caption { display: none; }
+  .scene.is-seq .seq-cap { display: block; }
   .scene.is-seq .scene-text { padding-top: 0.4rem; }
   .scene.is-seq .seq-still { display: block; max-width: var(--measure); margin: 1.6rem 0 1rem; }
   .scene.is-seq .seq-still.seq-later [data-role='title'], .scene.is-seq .seq-still.seq-later .fig-head > text:first-of-type { display: none; }
@@ -682,7 +693,9 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .seq-still.seq-later [data-role='title'], .seq-still.seq-later .fig-head > text:first-of-type { display: none; }
   .passage { margin-bottom: 1.4rem; }
   .passage + .seq-still { margin-top: 0.4rem; }
-  .scene-caption { margin: 0 0 2rem; padding-top: 0.7rem; border-top: 1px solid var(--hairline); }
+  /* the caption is under the first still (its figcaption), not after the scene */
+  .scene-caption { display: none; }
+  .seq-cap { display: block; }
   main.body > .scene { max-width: none; }
   .scene-text > .passage, .scene-caption { max-width: var(--measure); }
 }
