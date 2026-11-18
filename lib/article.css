@@ -648,14 +648,14 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
     background: var(--paper);
     border-bottom: 1px solid var(--hairline);
   }
-  .scene-stage figcaption { display: none; }
+  /* the caption stands in the pinned box, small, right under the drawing, for
+     as long as the figure is pinned (18 November: after the passages it was
+     read as belonging to nothing; under the box it scrolled away at once) */
+  .scene-stage figcaption { display: block; max-width: var(--measure); margin: 0.35rem auto 0; padding: 0 var(--gutter); font-size: 0.75rem; line-height: 1.4; }
+  .scene-caption { display: none; }
   .scene-stage .fig-where { margin-bottom: 0.2rem; padding: 0 var(--gutter); }
   .scene-text, .scene-caption { max-width: var(--measure); margin-left: var(--left); margin-right: var(--gutter); }
   .scene-text { padding: 1.4rem 0 0.4rem; }
-  /* the caption stands right under the figure, small, as on paper, and
-     scrolls under it with the first passage (18 November: under the
-     passages it was read as belonging to nothing) */
-  .scene-caption { margin-top: 0.9rem; margin-bottom: 0; }
   .scene-text { padding-top: 1.2rem; }
   /* A passage that slides under the pinned figure dissolves into the paper
      at its edge, line by line, instead of vanishing whole (a long passage
