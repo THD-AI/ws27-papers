@@ -15,16 +15,18 @@
 const FIGS = {
   numbers:   { role: 'scene',  steps: 5 },
   pairs:     { role: 'wide',   steps: 1 },
-  obstacles: { role: 'column', steps: 1 },
+  obstacles: { role: 'scene',  steps: 2 },
   path:      { role: 'scene',  steps: 9 },
-  exits:     { role: 'wide',   steps: 1 },
-  attitudes: { role: 'column', steps: 1 },
+  exits:     { role: 'scene',  steps: 3 },
+  attitudes: { role: 'scene',  steps: 3 },
   house:     { role: 'margin', steps: 6 },
-  'walls': { role: 'wide', steps: 3 },
-  'permits': { role: 'column', steps: 3 },
+  'walls': { role: 'scene', steps: 3 },
+  'permits': { role: 'scene', steps: 3 },
   'roadmap': { role: 'wide', steps: 3 },
-  'terms': { role: 'column', steps: 2 },
-  'repaint': { role: 'column', steps: 2 },
+  'terms': { role: 'scene', steps: 2 },
+  'repaint': { role: 'scene', steps: 3 },
+  'rewire': { role: 'column', steps: 2 },   // a scene that prints one column wide
+  'plan': { role: 'scene', steps: 9 },
 };
 const MM = 96 / 25.4;
 

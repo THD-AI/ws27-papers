@@ -14,7 +14,8 @@
     "release": {
       "value": 40,
       "note": "release: [[{v}]] handled by AI agents",
-      "source": "R6-01"
+      "source": "R6-01",
+      "short": "release: [[{v}]] by AI agents"
     },
     "slide": {
       "value": 32,
@@ -28,8 +29,12 @@
     },
     "overlap": {
       "note": "drawn on the same {t} to compare; whether the {a} include the {b} isn't published",
-      "source": ["R6-01", "R6-06"],
-      "why": "The 40 comes from a press release, the 32 from an investor slide. Drawing the 32 inside the 40 on the same 100 is the figure's choice, made to compare them; the note says that nobody published whether the 40 include the 32."
+      "source": [
+        "R6-01",
+        "R6-06"
+      ],
+      "why": "The 40 comes from a press release, the 32 from an investor slide. Drawing the 32 inside the 40 on the same 100 is the figure's choice, made to compare them; the note says that nobody published whether the 40 include the 32.",
+      "short": "whether the {a} include the {b} isn't published"
     },
     "start": {
       "note": "that is: they start with the software",
@@ -53,11 +58,6 @@
       },
       "source": "R6-06"
     },
-    "strip": {
-      "months": 12,
-      "letters": "JFMAMJJASOND",
-      "note": "A ruler is one year for one customer account; one dot is one contact. Positions are even spacing derived from the yearly value, not dates of real contacts."
-    },
     "points": [
       {
         "label": "2021",
@@ -67,7 +67,8 @@
         "decimals": 1,
         "count": "[[{v}]] contacts a year",
         "note": "about one every seven weeks",
-        "source": "R6-06"
+        "source": "R6-06",
+        "when": "Q4 2021"
       },
       {
         "label": "2026",
@@ -77,7 +78,8 @@
         "decimals": 1,
         "count": "[[{v}]] contacts a year",
         "note": "about one every four months; [[{v}]] is an average",
-        "source": "R6-06"
+        "source": "R6-06",
+        "when": "Q2 2026"
       }
     ],
     "between": {
@@ -95,7 +97,8 @@
       "value": 55,
       "show": "−{v}%",
       "source": "R6-06",
-      "derivation": "(7.0 − 3.1) / 7.0 = 55.7%; T-Mobile reports the fall as 55%"
+      "derivation": "(7.0 − 3.1) / 7.0 = 55.7%; T-Mobile reports the fall as 55%",
+      "against": "against Q4 2021"
     },
     "event": {
       "year": 2024,
@@ -108,7 +111,8 @@
       "block": "T-Mobile also names: problems removed before customers call; customers using the app",
       "source": "R6-14"
     },
-    "reminder": "{a} of {b} start with the software"
+    "unitWord": "contacts a year",
+    "drawing": "The two values are drawn as numbers over their dates on one axis; nothing joins them, because the values between are not published."
   },
   "headline": {
     "a": "United States · of 100 contacts at T-Mobile US: how many did the software handle?",

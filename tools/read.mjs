@@ -2,17 +2,22 @@
 //
 //   node tools/read.mjs <slug>
 //
-// At 1440×900, 390×844 and 768×1024 it scrolls through every scene in small
+// At 1440×900, 390×844, 360×800 and 768×1024 it scrolls through every scene in small
 // steps and checks that
 //   - the figure is on screen whenever a passage of the scene is,
 //   - two or three passages are in view while the figure is pinned,
-//   - the active passage is the one at the reading line, and on screen,
+//   - the active passage is the one whose top has last passed the trigger
+//     line (65% of the window beside the figure; under a figure pinned on
+//     top, 40% of a pitch below the reading line), and it is on screen,
 //   - every passage becomes the active one, in order,
-//   - the figure's state moves forward with the scroll, without jumps, and a
-//     step is complete before the next one begins,
+//   - the figure's goal is the active passage's step, and once the step has
+//     played (window.__engine.finish(), lib/article.js) it shows that step
+//     complete: a passage always points at a figure that shows what it says.
+//     How a step plays over time is checked by tools/motion.mjs and
+//     tools/timing.mjs,
 //   - the figure rests about a third of a window after the last passage,
 //   - the place label does not stand twice (at the figure and in the text).
-// At 1440×900 and 390×844 it also scans the whole page for emptiness:
+// At 1440×900, 390×844 and 360×800 it also scans the whole page for emptiness:
 //   - any gap of more than 6rem between consecutive blocks of the text,
 //   - any screen that is almost empty (see emptyScreens below).
 // It writes shots into .shots/<slug>/read/: three consecutive passages of
@@ -39,9 +44,9 @@ const problems = [];
 
 // Runs in the page: walks through one scene in steps of 16 px and reports
 // what a reader sees. The rule (lib/article.js, updateScene): the figure is
-// pinned, the passages scroll past it about 45% of a window apart; the one
-// whose top has last passed the reading line is active; t runs with the
-// scroll from 0 to 1 over 65% of the way to the next passage, then rests.
+// pinned, the passages scroll past it about a third of a window apart; the one
+// whose top has last passed the trigger line is active, and its step is the
+// figure's goal, played over time.
 async function walkScene(index) {
   const frame = () => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
   const scene = document.querySelectorAll('.scene')[index];
@@ -62,9 +67,13 @@ async function walkScene(index) {
   const order = [];
   const shots = {};
   const counts = [];
-  let prev = null;                 // the figure state at the last position
+  const player = window.__engine.players.find((q) => q.slot.el === figure);
+  const seqSteps = player.seq;
+  const groupOf = [];
+  passages.forEach((p, i) => groupOf.push(i === 0 ? 0 : groupOf[i - 1] + (p.dataset.step !== passages[i - 1].dataset.step ? 1 : 0)));
   let restFrom = null;             // where the last passage became active
   let pinnedUntil = null;          // the last position at which the figure was pinned
+  let alone = null;                // where a run of one passage in view began
   const stickyTop = parseFloat(getComputedStyle(stageEl).top) || 0;
 
   for (let y = Math.max(0, start); y <= end; y += 16) {
@@ -72,7 +81,10 @@ async function walkScene(index) {
     await frame();
     const stage = stageEl.getBoundingClientRect();
     const floor = side ? 0 : Math.max(0, stage.bottom);          // text under a figure pinned on top is not seen
-    const line = side ? vh * 0.4 : floor + (vh - floor) * 0.4;
+    // as triggerLine() in lib/article.js
+    const pitchPx = parseFloat(scene.style.getPropertyValue('--pitch')) || 0;
+    const fl = Math.max(0, Math.min(vh * 0.8, stage.bottom));
+    const line = side ? vh * 0.65 : Math.min(vh - 24, fl + Math.min(pitchPx || Infinity, (vh - fl) * 0.2) + 0.4 * (pitchPx || vh * 0.3));
     const seen = passages.filter((p) => { const w = words(p); return w.bottom > floor + 6 && w.top < vh - 6; });
     if (!seen.length) continue;
     const box = scene.getBoundingClientRect();
@@ -88,12 +100,13 @@ async function walkScene(index) {
     if (order[order.length - 1] !== k) { order.push(k); shots[k] = y; }
     if (k === passages.length - 1 && restFrom === null) restFrom = y;
 
-    // the active passage is the one at the reading line
+    // the active passage is the one at the trigger line
     let want = 0;
+    let begun = passages[0].getBoundingClientRect().top <= line + 0.5 || (Math.min(stage.bottom, vh) - Math.max(stage.top, 0)) / Math.max(1, Math.min(stage.height, vh)) >= 0.4;
     passages.forEach((p, i) => { if (p.getBoundingClientRect().top <= line + 0.5) want = i; });
     // a passage whose words have left the window hands over to the next one
-    while (want < passages.length - 1 && words(passages[want]).bottom < floor + 12) want++;
-    if (k !== want) found.push(`y ${y}: passage ${k} is active, passage ${want} is at the reading line`);
+    while (want < passages.length - 1 && words(passages[want]).bottom < floor + 12) { want++; begun = true; }
+    if (k !== want) found.push(`y ${y}: passage ${k} is active, passage ${want} is at the trigger line`);
     const wk = words(passages[k]);
     if (pinned && !(wk.bottom > floor + 6 && wk.top < vh - 6)) found.push(`y ${y}: the active passage ${k} is not on screen`);
 
@@ -102,18 +115,23 @@ async function walkScene(index) {
       counts.push(seen.length);
       const longOne = seen.some((p) => words(p).height > (vh - floor) * 0.45);
       // the last passage rests alone at the line before the figure is let go
-      if (seen.length < 2 && passages.length > 1 && !longOne && k !== passages.length - 1) found.push(`y ${y}: only ${seen.length} passage in view`);
+      // (under a tall figure pinned on top, a short passage may stand alone
+      // for a moment while the one before slides under the figure and the
+      // next comes in: each step needs a long pitch of scroll to be drawn
+      // over. Alone for more than 12% of a window of scroll is a problem.)
+      if (seen.length < 2 && passages.length > 1 && !longOne && k !== passages.length - 1) {
+        alone = alone === null ? y : alone;
+        if (y - alone > vh * 0.12) found.push(`y ${y}: only ${seen.length} passage in view for ${Math.round(y - alone)} px`);
+      } else alone = null;
       if (seen.length > 4) found.push(`y ${y}: ${seen.length} passages in view`);
     }
 
-    // the figure moves forward with the scroll, and a step is complete before the next begins
-    const [step, t] = (figure.dataset.shown || '0:0').split(':').map(Number);
-    if (prev) {
-      if (step < prev.step || (step === prev.step && t < prev.t - 0.001)) found.push(`y ${y}: the figure went back from ${prev.step}:${prev.t} to ${step}:${t}`);
-      if (step > prev.step && prev.t < 0.999) found.push(`y ${y}: step ${prev.step} ended at t ${prev.t}`);
-      if (step === prev.step && t - prev.t > 0.25) found.push(`y ${y}: t jumped from ${prev.t} to ${t} in 16 px`);
-    }
-    prev = { step, t };
+    // the goal is the active passage's step, and once played the figure shows it complete
+    const goal = begun ? groupOf[want] + 1 : 0;
+    if (player.goal !== goal) found.push(`y ${y}: the figure's goal is ${player.goal}, the passage at the line asks for ${goal}`);
+    window.__engine.finish();
+    const expect = goal ? `${seqSteps[goal - 1]}:1` : `${seqSteps[0]}:0`;
+    if (figure.dataset.shown !== expect) found.push(`y ${y}: once played the figure shows ${figure.dataset.shown}, the active passage needs ${expect}`);
 
     const label = scene.querySelector('.fig-where');
     if (label && label.textContent && getComputedStyle(label).visibility !== 'hidden') {
@@ -187,6 +205,8 @@ async function emptyScreens(page, helper, w, h) {
   for (let y = 0; y + h <= total; y += Math.round(h / 2)) {
     await page.evaluate((v) => scrollTo(0, v), y);
     await page.evaluate(() => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok))));
+    // the layout is judged with every triggered step played (lib/article.js)
+    await page.evaluate(() => window.__engine.finish());
     const b64 = await page.screenshot({ encoding: 'base64' });
     const res = await helper.evaluate(async (data) => {
       const img = new Image();
@@ -217,7 +237,7 @@ async function emptyScreens(page, helper, w, h) {
 const helper = await browser.newPage();
 await helper.setContent('<!doctype html><body></body>');
 
-for (const [w, h] of (process.env.SIZES ? JSON.parse(process.env.SIZES) : [[1440, 900], [390, 844], [768, 1024], [844, 390], [793, 496], [1366, 500]])) {
+for (const [w, h] of (process.env.SIZES ? JSON.parse(process.env.SIZES) : [[1440, 900], [390, 844], [360, 800], [768, 1024], [844, 390], [793, 496], [1366, 500]])) {
   const page = await browser.newPage();
   await page.setViewport({ width: w, height: h, isMobile: w < 1000, hasTouch: w < 1000 });
   page.on('pageerror', (e) => problems.push(`${w}x${h}: ${e.message}`));
@@ -227,10 +247,26 @@ for (const [w, h] of (process.env.SIZES ? JSON.parse(process.env.SIZES) : [[1440
   const wait = (ms = 380) => page.evaluate((d) => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(ok, d)))), ms);
   await wait(200);
   const tag = `${w}x${h}`;
-  const seq = h < 560;
+  // scenes as a sequence of stills: as MODES in lib/article.js (lower than
+  // 450 px, or under 640 px wide and under 560 px high)
+  const seq = h < 450 || (w < 640 && h < 560);
 
   const count = await page.evaluate(() => document.querySelectorAll('.scene').length);
   for (let i = 0; i < count && !seq; i++) {
+    // a scene whose figure cannot be pinned on top legibly reads as a
+    // sequence of stills (lib/article.js, topFit): its first still is shot
+    const asSeq = await page.evaluate((si) => {
+      const scene = document.querySelectorAll('.scene')[si];
+      if (!scene.classList.contains('is-seq')) return null;
+      scrollTo(0, scene.getBoundingClientRect().top + scrollY - 20);
+      return scene.dataset.scene;
+    }, i);
+    if (asSeq) {
+      console.log(`${tag} scene ${asSeq}: read as stills (its figure cannot be pinned legibly in 45% of the window)`);
+      await wait();
+      await page.screenshot({ path: join(out, `${tag}-${asSeq}-start.png`) });
+      continue;
+    }
     const res = await page.evaluate(walkScene, i);
     for (const p of res.problems) problems.push(`${tag} scene ${res.id}: ${p}`);
     console.log(`${tag} scene ${res.id}: ${res.length} windows long, ${res.inView} passages in view, figure rests ${res.rest} px at the end – ${res.problems.length ? res.problems.length + ' problems' : 'ok'}`);

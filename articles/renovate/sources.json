@@ -144,6 +144,13 @@
     "type": "peer-reviewed",
     "date": "2025-02-04"
   },
+  "R6-11": {
+    "title": "Quarterly Report on Form 10-Q, Q3 2026",
+    "publisher": "T-Mobile US",
+    "url": "https://www.sec.gov/Archives/edgar/data/1283699/000128369926000129/tmus-20260930.htm",
+    "type": "SEC filing",
+    "date": "2026-10-28"
+  },
   "R11-14": {
     "title": "Deutsche Telekom und ver.di erzielen Tarifeinigung",
     "publisher": "Deutsche Telekom",
@@ -310,13 +317,6 @@
     "url": "https://corporate-media.telekom.com/adobe/assets/urn:aaid:aem:77825a91-444e-48c4-a955-f0db3ac1e4b9/original/as/04_260105_1010_AI_Investor_Day_Customer_Interaction_02.10.2026%20%282%29.pdf",
     "type": "official investor material",
     "date": "2026-10-05"
-  },
-  "R6-11": {
-    "title": "Quarterly Report on Form 10-Q, Q3 2026",
-    "publisher": "T-Mobile US",
-    "url": "https://www.sec.gov/Archives/edgar/data/1283699/000128369926000129/tmus-20260930.htm",
-    "type": "SEC filing",
-    "date": "2026-10-28"
   },
   "R10-50": {
     "title": "Q2 2026 results",

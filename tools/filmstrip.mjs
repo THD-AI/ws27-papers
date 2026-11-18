@@ -44,6 +44,8 @@ for (let y = 0; y < total - height + step; y += step) {
     for (let i = 1; i <= n; i++) { window.scrollTo(0, from + (to - from) * i / n); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); }
   }, y);
   await new Promise(r => setTimeout(r, 450));
+  // steps play over time once triggered (lib/article.js): wait until they are drawn
+  await page.waitForFunction(() => !document.documentElement.dataset.moving, { timeout: 8000 }).catch(() => {});
   frames.push({ y, data: await page.screenshot({ encoding: 'base64', type: 'jpeg', quality: 80 }) });
 }
 

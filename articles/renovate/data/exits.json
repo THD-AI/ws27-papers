@@ -5,15 +5,11 @@
   "sourceName": "Deutsche Telekom, HR Factbook 2025",
   "tag": "company-reported",
   "unit": {
-    "positionsPerMark": 25,
-    "note": "one mark is [[25]] full-time positions, rounded; exact totals above",
+    "positionsPerMark": 50,
+    "note": "one mark is [[50]] full-time positions, rounded; exact totals above",
     "source": "R12-01",
-    "print": {
-      "positionsPerMark": 50,
-      "marks": { "cols": 7, "p": 14.6, "r": 5.3 },
-      "note": "one mark is [[50]] full-time positions, rounded; exact totals above",
-      "why": "In print the marks are larger and fewer, so that they stay legible at 100 dpi. The figure caption in text.md has to name both units."
-    }
+    "marks": { "cols": 7, "p": 14.6, "r": 5.3 },
+    "why": "One scale on every device, screen and print: one mark is 50 positions, in marks large enough to stay round at 100 dpi. The caption in text.md says \"One mark is 50 positions\"."
   },
   "years": [
     2021,
@@ -35,7 +31,7 @@
       "source": "R12-01"
     },
     {
-      "label": "Retirement of civil servants",
+      "label": "Early retirement, civil servants",
       "values": [
         630,
         1183,
@@ -58,7 +54,7 @@
       "source": "R12-01"
     },
     {
-      "label": "Early retirement",
+      "label": "Early retirement, other staff",
       "values": [
         66,
         79,
@@ -91,6 +87,11 @@
     "source": "R12-01",
     "note": "totals added by this article",
     "derivation": "Sum of the five routes of each year; not printed in the source."
+  },
+  "average": {
+    "text": "about 4,000 a year",
+    "source": "R12-01",
+    "derivation": "20,223 positions over the five years (the sum of the totals above), about 4,045 a year, rounded as in the text."
   },
   "headline": "Germany · Deutsche Telekom: positions leaving by agreed routes, 2021 to 2025"
 }

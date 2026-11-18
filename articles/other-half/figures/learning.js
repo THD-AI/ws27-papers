@@ -11,6 +11,10 @@ import {
 import { pal, pct, dotPlate, show, text, floor } from './shared.js';
 
 export const steps = 3;
+// seconds each step plays once triggered: the plate, eight seeds and the
+// level lines; then the plate changes and the distance 5 seeds are drawn
+// (twice): the longest steps of the article, each a whole chart
+export const durations = { large: [2.2, 2.0, 2.0] };
 const SIZE = { wide: [720, 474], tall: [360, 530] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
@@ -132,6 +136,14 @@ function build(el, ctx) {
       let yy = cl.bottom;
       if (lv.table) yy = text(grp, lx, Math.max(y(lv.table.rate) + 14, yy + 14), `best possible at this size (lookup table): [[${pct(lv.table.rate)}]]`, { ...noteO, width: lw }).bottom;
       text(grp, lx, yy + 26, needs, { ...noteO, size: 13, fill: C.muted, width: lw });
+    } else if (close && tall) {
+      // phone plate: the curves cross the level lines on the left half, so the
+      // labels stand higher on the right with a leader down to the lines, and
+      // the lookup-table note goes under the end circles in two lines
+      const xr = R.x + R.w - 4;
+      const lt = text(grp, xr, yp - 44, 'plain matching and,\njust under it, correlated matching', { ...noteO, anchor: 'end', lh: 15 });
+      leader(grp, xr - 8, lt.bottom + 3, xr - 8, yp - 2, { stroke: C.muted, dot: false });
+      if (lv.table) text(grp, xr, y(lv.table.rate) + 19, `best possible at this size\n(lookup table): [[${pct(lv.table.rate)}]]`, { ...noteO, anchor: 'end', lh: 15 });
     } else if (close) {
       text(grp, R.x + R.w - 4, yp - 21, 'plain matching and,\njust under it, correlated matching', { ...noteO, anchor: 'end', lh: 15 });
       if (lv.table) text(grp, R.x + R.w - 4, y(lv.table.rate) + 15, `best possible at this size (lookup table): [[${pct(lv.table.rate)}]]`, { ...noteO, anchor: 'end' });
@@ -155,7 +167,7 @@ function build(el, ctx) {
     if (!vals.length) return null;
     const grp = g(parent), yp = pl.y(pl.pn.levels.plain.rate);
     const xa = pl.x(vals[0]), xb = pl.x(vals[vals.length - 1]), xm = (xa + xb) / 2;
-    const ny = pl.y(0.0098);
+    const ny = pl.y(tall ? 0.0088 : 0.0098);
     const nt = text(grp, inside ? pl.R.x + 44 : xm - 60, ny, `the lines first dip below plain matching at [[${vals.map((v) => M(v)).join(']] or [[')}]] million examples`, { ...noteO, width: inside ? 170 : 250, lh: inside ? 15 : 18 });
     leader(grp, xm, nt.y - 4, xm, yp + (inside ? 50 : 32), { stroke: C.muted, dot: false });
     return grp;
@@ -193,13 +205,15 @@ function build(el, ctx) {
   const R = tall ? { x: 42, y: 76, w: 304, h: 250 } : { x: 62, y: 60, w: 496, h: 296 };
   const fr = frame(svg, R), fr5 = frame(svg, R, X5, XT5);
   const tg = g(svg);
-  text(tg, tall ? R.x : 16, 16, tall ? 'how often the decoder was wrong' : HEAD, { family: 'sans', size: 13, weight: 600 });
+  text(g(tg, { 'data-role': 'title' }), tall ? R.x : 16, 16, tall ? 'how often the decoder was wrong' : HEAD, { family: 'sans', size: 13, weight: 600 });
   if (tall) text(tg, 14, 33, tagStr, mono); else text(tg, W - 8, 16, tagStr, { ...mono, anchor: 'end' });
   if (!tall) {
-    const rot = g(tg, { transform: `translate(15 ${R.y + R.h}) rotate(-90)`, 'data-audit': 'skip' });
-    text(rot, 0, 0, 'share of runs in which the decoder was wrong', { family: 'sans', size: 12, fill: C.muted });
+    // rotated axis title, centred on the plate, its letters 10 units clear
+    // of the drawing's left edge so that no frame crops it
+    const rot = g(tg, { transform: `translate(21 ${R.y + R.h / 2}) rotate(-90)`, 'data-audit': 'skip' });
+    text(rot, 0, 0, 'share of runs in which the decoder was wrong', { family: 'sans', size: 12, fill: C.muted, anchor: 'middle' });
   }
-  st.fade(fr, 0, 0.12, [1, 1.15]).fade(fr5, 1.12, 1.3).fade(tg, 0, 0.12);
+  st.fade(fr, 0, 0.12, [1.14, 1.2]).fade(fr5, 1.18, 1.26).fade(tg, 0, 0.12);
 
   const p3 = panel(svg, d3, R), pa = panel(svg, a5, R, { x0: X5 }), pb = panel(svg, b5, R, { x0: X5 });
   const l3 = labels(svg, p3), la = labels(svg, pa, { fifth: false }), lb = labels(svg, pb, { fifth: true });
@@ -216,10 +230,15 @@ function build(el, ctx) {
   };
   // step 0: distance 3
   drawPanel(p3, 0.08, 0.86);
-  st.fade(t3, 0.05, 0.2, [1, 1.12]).fade(l3, 0.2, 0.4, [1, 1.12]);
+  st.fade(t3, 0.05, 0.2, [1, 1.12]).fade(l3, 0.25, 0.42, [1, 1.12]);
   if (dip) st.fade(dip, 0.86, 0.98, [1, 1.12]);
   // step 1: distance 3 becomes a faint inset; distance 5 after 66 million
-  p3.root.querySelectorAll('path, line, circle').forEach((n) => n.setAttribute('vector-effect', 'non-scaling-stroke'));
+  // Strokes keep their width while the drawing shrinks. The attribute is
+  // set only while it is shrunk: with it, Chrome ignores pathLength for
+  // dashes, and the lines drawn on would appear in the wrong order.
+  const p3rVE = [...p3.root.querySelectorAll('path, circle, line')];
+  let p3rVe = false;
+  const p3rKeep = (on) => { if (on === p3rVe) return; p3rVe = on; p3rVE.forEach((n) => (on ? n.setAttribute('vector-effect', 'non-scaling-stroke') : n.removeAttribute('vector-effect'))); };
   const I = tall ? { x: R.x + 12, y: R.y + R.h - 84, w: 104, h: 50 } : { x: R.x + 22, y: R.y + R.h - 98, w: 150, h: 62 };
   const ig = g(svg);
   rect(ig, I.x, I.y, I.w, I.h, { fill: 'none', stroke: C.hairline, 'stroke-width': 1 });
@@ -227,6 +246,7 @@ function build(el, ctx) {
   st.fade(ig, 1.3, 1.45);
   st.on((gg) => {
     const m = ease(span(gg, 1.02, 1.4));
+    p3rKeep(m > 0);
     if (m <= 0) { p3.root.removeAttribute('transform'); p3.root.style.opacity = ''; return; }
     const kx = lerp(1, I.w / R.w, m), ky = lerp(1, I.h / R.h, m);
     const tx = lerp(R.x, I.x, m), ty = lerp(R.y, I.y, m);
@@ -234,19 +254,19 @@ function build(el, ctx) {
     p3.root.style.opacity = lerp(1, 0.5, m).toFixed(3);
   });
   drawPanel(pa, 1.3, 1.9);
-  st.fade(ta, 1.12, 1.3, [2, 2.12]).fade(la, 1.4, 1.6, [2, 2.12]);
+  st.fade(ta, 1.2, 1.34, [2.04, 2.14]).fade(la, 1.42, 1.6, [2.04, 2.14]);
   const na = g(svg);
   text(na, R.x + R.w * 0.42, R.y + (tall ? 50 : 62), 'same network, same number of examples: still above both', { ...noteO, size: tall ? 13 : 15, width: tall ? 160 : 240 });
-  st.fade(na, 1.82, 1.98, [2, 2.12]);
+  st.fade(na, 1.82, 1.98, [2.04, 2.14]);
   // step 2: the longer schedule; the 66-million lines stay, faint
   st.on((gg) => {
-    const m = ease(span(gg, 2.02, 2.25));
+    const m = ease(span(gg, 2.06, 2.28));
     pa.body.style.opacity = gg < 1.3 ? '' : lerp(1, 0.38, m).toFixed(3);
     show(pa.levels, ease(span(gg, 1.3, 1.45)) * (1 - m));
     if (gg >= 1.9) pa.ends.style.opacity = lerp(1, 0.5, m).toFixed(3);
   });
-  drawPanel(pb, 2.1, 2.82);
-  st.fade(tb, 2.12, 2.3).fade(lb, 2.12, 2.3);
+  drawPanel(pb, 2.12, 2.82);
+  st.fade(tb, 2.12, 2.28).fade(lb, 2.26, 2.42);
   const ys = b5.final_network.per_seed.map((s) => pb.y(s.rate));
   const ry = (Math.min(...ys) + Math.max(...ys)) / 2;
   const pr = penRing(svg, pb.xe, ry, 8, (Math.max(...ys) - Math.min(...ys)) / 2 + 8, { seed: 4, stroke: C.accent, width: 1.5 });
@@ -270,7 +290,7 @@ function build(el, ctx) {
   const t1 = text(ra, tall ? 14 : R.x, by, res.a5, o);
   text(rb, tall ? 14 : R.x, by, res.b5, o);
   text(foot, tall ? 14 : 16, t1.bottom + 20, tall ? `${FOOT}\n${notCmp}` : FOOT, { ...mono, width: tall ? W - 28 : W - 20, lh: 15 });
-  st.fade(r3, 0.86, 0.98, [1, 1.12]).fade(ra, 1.84, 1.98, [2, 2.12]).fade(rb, 2.84, 2.98).fade(foot, 0.1, 0.25);
+  st.fade(r3, 0.86, 0.98, [1, 1.12]).fade(ra, 1.84, 1.98, [2.04, 2.14]).fade(rb, 2.8, 2.94).fade(foot, 0.1, 0.25);
 
   return { set: (s, t) => st.set(s, t) };
 }
