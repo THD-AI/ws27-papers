@@ -11,6 +11,7 @@ import {
   mountFigure, svgRoot, g, line, rect, circle, path, bracket, leader, penRing, stage, fmt, ease, span,
 } from '../../../lib/fig.js';
 import { pal, dotPlate, text, floor } from './shared.js';
+import { markerWash } from './_lattice-hand.js';
 
 export const steps = 5;
 // seconds each step plays once triggered: the rounds tick in; the first
@@ -101,7 +102,8 @@ function build(el, ctx) {
       if (a > right - 8) return null;
       const grp = g(root), open = b > right;
       const xe = open ? right - 18 : b;
-      rect(grp, a, by, xe - a, bh, { fill: C.field, 'data-audit': 'skip' });
+      // the busy time as a marker wash, as in the grid figure, a little off the lines
+      markerWash(grp, [[a, by], [xe, by], [xe, by + bh], [a, by + bh], [a, by]], 60 + k, C.field, { dx: 1.6, dy: 1.4, amp: 1.1, rimColor: C.accent, rimOp: 0.16, rimW: 1.2 });
       if (open) for (const yy of [by, by + bh]) line(grp, xe, yy, right - 2, yy, { stroke: C.ink, 'stroke-width': 1.25, 'stroke-dasharray': '2 3' });
       path(grp, open ? `M${xe} ${by}L${a} ${by}L${a} ${by + bh}L${xe} ${by + bh}` : `M${a} ${by}L${b} ${by}L${b} ${by + bh}L${a} ${by + bh}Z`, { stroke: C.ink, 'stroke-width': 1.25, 'stroke-linejoin': 'round', 'data-audit': 'skip' });
       if (xe - a > 108) text(grp, a + 9, by + 17.5, `answer to round ${k}`, { family: 'sans', size: 12 });
@@ -208,7 +210,7 @@ function build(el, ctx) {
     let y = L1 + (narrow ? 24 : 30);
     text(base, B.x, y, net.label, small);
     const bandY = y + 9, bh = 20;
-    rect(base, B.x, bandY, B.w, bh, { fill: C.field, 'data-audit': 'skip' });
+    markerWash(base, [[B.x, bandY], [B.x + B.w, bandY], [B.x + B.w, bandY + bh], [B.x, bandY + bh], [B.x, bandY]], 71, C.field, { dx: 1.6, dy: 1.4, amp: 1.1, rimColor: C.accent, rimOp: 0.16, rimW: 1.2 });
     line(base, B.x, bandY, right, bandY, { stroke: C.ink, 'stroke-width': 1.25, 'data-audit': 'skip' });
     line(base, B.x, bandY + bh, right, bandY + bh, { stroke: C.ink, 'stroke-width': 1.25, 'data-audit': 'skip' });
     text(base, B.x + 8, bandY + 14.5, 'still answering much earlier rounds', { family: 'sans', size: 12 });
