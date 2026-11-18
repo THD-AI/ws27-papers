@@ -383,3 +383,208 @@ export function smoothHatch(parent, pts, C, seed, o = {}) {
   if (span) path(grp, d, { stroke: o.stroke || C.muted, 'stroke-width': w.toFixed(3), opacity: o.op ?? 0.6, 'stroke-linecap': 'round', fill: 'none' });
   return grp;
 }
+
+// Pencil hatching, clipped to a closed outline: near-straight strokes at one
+// angle, each a little different (angle within 3 degrees, spacing within 20%,
+// some stopping short of the edge or starting a little in), each a thin
+// filled shape that swells and thins along its length like pencil pressure,
+// with a very slight bow. Seeded, so it is the same on every render. Spacing
+// and width are in screen pixels (px = drawing units per pixel), so the tone
+// is the same at every size. wPx: drawing units per pixel for the stroke
+// width when it differs from px (a grid that will be shrunk later).
+export function pencilHatch(parent, pts, C, seed, o = {}) {
+  const px = o.px || unitsPerPx(), wpx = o.wPx || px;
+  const gap = (o.gap ?? 4.6) * px, w0 = (o.w ?? 0.8) * wpx;
+  const id = `lat-pencil-${++uid}`;
+  const clip = h('clipPath', { id }, parent);
+  path(clip, pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join('') + 'Z', { fill: '#000' });
+  const grp = g(parent, { 'clip-path': `url(#${id})`, 'data-audit': 'skip' });
+  const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const r = rng(seed * 7919 + 13);
+  // each tile its own angle (within 4 degrees) and its own spacing
+  const base = -Math.PI / 4 + ((r() - 0.5) * 8 * Math.PI) / 180;
+  const gapT = gap * (0.88 + 0.24 * r());
+  // walk across the tile perpendicular to the strokes
+  const nx = Math.SQRT1_2, ny = Math.SQRT1_2;
+  const v0 = x0 * nx + y0 * ny, v1 = x1 * nx + y1 * ny;
+  const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, half = Math.hypot(x1 - x0, y1 - y0) / 2 + 2 * px;
+  let d = '';
+  for (let v = v0 - gapT * r(); v <= v1 + gapT; v += gapT * (0.72 + 0.56 * r())) {
+    const a = base + ((r() - 0.5) * 6 * Math.PI) / 180;
+    const ux = Math.cos(a), uy = Math.sin(a);
+    // the stroke's middle on the line v, nearest the tile's centre
+    const off = v - (cx * nx + cy * ny);
+    const mx = cx + nx * off, my = cy + ny * off;
+    let t0 = -half, t1 = half;
+    if (r() < 0.35) t0 += half * (0.15 + 0.35 * r());     // starts a little in
+    if (r() < 0.35) t1 -= half * (0.15 + 0.35 * r());     // stops short
+    const bow = (r() - 0.5) * 1.6 * px;                     // a slight bow, not a wave
+    const wA = w0 * (0.75 + 0.5 * r()), wB = w0 * (0.45 + 0.4 * r()), peak = 0.3 + 0.4 * r();
+    const N = 10, left = [], right = [];
+    for (let i = 0; i <= N; i++) {
+      const t = i / N, tt = t0 + (t1 - t0) * t;
+      const b = bow * 4 * t * (1 - t);
+      // pressure: heavier near 'peak', lighter at the ends
+      const wv = (t < peak ? wA * (0.55 + 0.45 * (t / peak)) : wA + (wB - wA) * ((t - peak) / (1 - peak))) / 2;
+      const px0 = mx + ux * tt - uy * b, py0 = my + uy * tt + ux * b;
+      left.push([px0 - uy * wv, py0 + ux * wv]);
+      right.push([px0 + uy * wv, py0 - ux * wv]);
+    }
+    const ring = [...left, ...right.reverse()];
+    d += ring.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join('') + 'Z';
+  }
+  path(grp, d, { fill: o.stroke || C.muted, stroke: 'none', opacity: o.op ?? 0.62 });
+  return grp;
+}
+
+// One marker pass over a cell: flat colour, no rim, no filter. Edges inside
+// the grid run straight along the tile's edge and a hair past it (under the
+// drawn edge line), so two fired neighbours meet without a seam; edges on the
+// rim of the grid sit a little in from it, with a gentle bow of their own;
+// the corners are rounded where the stroke turns (they lie under the qubit
+// circles). Each cell gets its own seed. inside(a, b): is the edge between
+// storing qubits a and b shared with another tile.
+export function cellWash(parent, check, pos, inside, seed, fill, o = {}) {
+  const px = o.px || unitsPerPx(), r = rng(seed * 104729 + 7);
+  const f = (v) => v.toFixed(2);
+  const over = 0.45 * px, inset = (1.4 + 0.8 * r()) * px;
+  let d;
+  if (check.shape === 'square') {
+    const q = [check.qubits[0], check.qubits[1], check.qubits[3], check.qubits[2]];
+    const P = q.map(pos), cx = P.reduce((s, p) => s + p[0], 0) / 4, cy = P.reduce((s, p) => s + p[1], 0) / 4;
+    // each edge moved along its outward normal: a hair out inside the grid, in on the rim
+    const E = q.map((a, i) => {
+      const b = q[(i + 1) % 4], A = P[i], B = P[(i + 1) % 4];
+      const dx = B[0] - A[0], dy = B[1] - A[1], L = Math.hypot(dx, dy);
+      let nx = dy / L, ny = -dx / L;
+      if ((A[0] + B[0]) / 2 * nx + (A[1] + B[1]) / 2 * ny < cx * nx + cy * ny) { nx = -nx; ny = -ny; }
+      const m = inside(a, b) ? over : -inset;
+      return { A: [A[0] + nx * m, A[1] + ny * m], B: [B[0] + nx * m, B[1] + ny * m], nx, ny, rim: !inside(a, b), L };
+    });
+    // corners: where neighbouring moved edges meet
+    const cross = (e1, e2) => {
+      const [x1, y1] = e1.A, [x2, y2] = e1.B, [x3, y3] = e2.A, [x4, y4] = e2.B;
+      const den = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+      const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / den;
+      return [x1 + t * (x2 - x1), y1 + t * (y2 - y1)];
+    };
+    const K = E.map((e, i) => cross(E[(i + 3) % 4], e));     // K[i]: start of edge i
+    const rc = E.map(() => (2 + 3 * r()) * px);              // rounding at each corner
+    const at = (p, q2, dist) => { const L = Math.hypot(q2[0] - p[0], q2[1] - p[1]); return [p[0] + ((q2[0] - p[0]) * dist) / L, p[1] + ((q2[1] - p[1]) * dist) / L]; };
+    d = '';
+    for (let i = 0; i < 4; i++) {
+      const s0 = K[i], s1 = K[(i + 1) % 4], e = E[i];
+      const a = at(s0, s1, rc[i]), b = at(s1, s0, rc[(i + 1) % 4]);
+      if (i === 0) d += `M${f(a[0])} ${f(a[1])}`;
+      if (e.rim) {
+        // a gentle bow inward, a little off centre: the long side of a marker stroke
+        const bw = (0.4 + 0.9 * r()) * px, tpos = 0.35 + 0.3 * r();
+        const c = [a[0] + (b[0] - a[0]) * tpos - e.nx * bw * 2, a[1] + (b[1] - a[1]) * tpos - e.ny * bw * 2];
+        d += `Q${f(c[0])} ${f(c[1])} ${f(b[0])} ${f(b[1])}`;
+      } else d += `L${f(b[0])} ${f(b[1])}`;
+      const n = K[(i + 1) % 4], nxt = at(n, K[(i + 2) % 4], rc[(i + 1) % 4]);
+      d += `Q${f(n[0])} ${f(n[1])} ${f(nxt[0])} ${f(nxt[1])}`;
+    }
+    d += 'Z';
+  } else {
+    // a half tile: the chord is inside the grid, the arc is on the rim
+    const [A, B] = check.qubits.map(pos);
+    const OUT = { top: [0, -1], bottom: [0, 1], left: [-1, 0], right: [1, 0] }[check.edge];
+    const R = Math.hypot(B[0] - A[0], B[1] - A[1]) / 2, mx = (A[0] + B[0]) / 2 - OUT[0] * over, my = (A[1] + B[1]) / 2 - OUT[1] * over;
+    const u = [(B[0] - A[0]) / (2 * R), (B[1] - A[1]) / (2 * R)];
+    const Ri = R - inset, ph = r() * 6.28, amp = (0.3 + 0.5 * r()) * px, N = 16, pts = [];
+    for (let i = 0; i <= N; i++) {
+      const th = 0.12 + (i / N) * (Math.PI - 0.24);
+      const rr = Ri + amp * Math.sin(th * 2 + ph) * Math.sin(th);
+      pts.push([mx - rr * Math.cos(th) * u[0] + rr * Math.sin(th) * OUT[0], my - rr * Math.cos(th) * u[1] + rr * Math.sin(th) * OUT[1]]);
+    }
+    // ends of the chord, a little in from the qubits (under their circles)
+    const e0 = [mx - u[0] * (R - 2 * px), my - u[1] * (R - 2 * px)], e1 = [mx + u[0] * (R - 2 * px), my + u[1] * (R - 2 * px)];
+    d = `M${f(e0[0])} ${f(e0[1])}Q${f(e0[0] + OUT[0] * Ri * 0.12)} ${f(e0[1] + OUT[1] * Ri * 0.12)} ${f(pts[0][0])} ${f(pts[0][1])}`;
+    d += spline(pts).replace(/^M[^C]*/, '');
+    d += `Q${f(e1[0] + OUT[0] * Ri * 0.12)} ${f(e1[1] + OUT[1] * Ri * 0.12)} ${f(e1[0])} ${f(e1[1])}Z`;
+  }
+  return path(parent, d, { fill, stroke: 'none', 'data-audit': 'skip' });
+}
+
+// Pencil hatching as a person does it: short strokes in small bundles of 4 to
+// 7 that drift, each bundle its own angle and length, starting and stopping
+// at different points, with small unhatched gaps between bundles. Clipped to
+// the tile, seeded. Sizes in screen pixels (px = drawing units per pixel),
+// so the tone stays the same at every size; o.cell: the spacing of bundles.
+export function bundleHatch(parent, pts, C, seed, o = {}) {
+  const px = o.px || unitsPerPx(), wpx = o.wPx || px;
+  const cell = (o.cell ?? 21) * px, step = 2.7 * px, w = (o.w ?? 0.75) * wpx;
+  const id = `lat-bundle-${++uid}`;
+  const clip = h('clipPath', { id }, parent);
+  path(clip, pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join('') + 'Z', { fill: '#000' });
+  const grp = g(parent, { 'clip-path': `url(#${id})`, 'data-audit': 'skip' });
+  const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const r = rng(seed * 6151 + 29);
+  const f = (v) => v.toFixed(2);
+  let d = '';
+  // bundles on a loose, staggered grid; a few places are left empty
+  for (let row = 0, y = y0 - cell * 0.3; y < y1 + cell * 0.5; row++, y += cell * 0.82) {
+    for (let x = x0 - cell * 0.4 + (row % 2) * cell * 0.5; x < x1 + cell * 0.5; x += cell) {
+      if (r() < 0.18) continue;
+      const bx = x + (r() - 0.5) * cell * 0.35, by = y + (r() - 0.5) * cell * 0.3;
+      const a = -Math.PI / 4 + ((r() - 0.5) * 22 * Math.PI) / 180;
+      const ux = Math.cos(a), uy = Math.sin(a), nx = -uy, ny = ux;
+      const n = 4 + Math.floor(r() * 3), L = cell * (0.45 + 0.3 * r());
+      const drift = (r() - 0.5) * 0.25;                       // the bundle leans as it goes
+      for (let i = 0; i < n; i++) {
+        const o2 = (i - (n - 1) / 2) * step * (0.85 + 0.3 * r());
+        const s0 = -L / 2 + (r() - 0.3) * L * 0.25 + i * drift * step, s1 = L / 2 - (r() - 0.3) * L * 0.25 + i * drift * step;
+        const cx = bx + nx * o2, cy = by + ny * o2;
+        const bow = (r() - 0.5) * 0.8 * px;
+        const A = [cx + ux * s0, cy + uy * s0], B = [cx + ux * s1, cy + uy * s1];
+        const M = [(A[0] + B[0]) / 2 + nx * bow, (A[1] + B[1]) / 2 + ny * bow];
+        d += `M${f(A[0])} ${f(A[1])}Q${f(M[0])} ${f(M[1])} ${f(B[0])} ${f(B[1])}`;
+      }
+    }
+  }
+  path(grp, d, { stroke: o.stroke || C.muted, 'stroke-width': f(w), 'stroke-linecap': 'round', fill: 'none', opacity: o.op ?? 0.55 });
+  return grp;
+}
+
+// A marker pass over a cell: two or three broad parallel strokes with a
+// visible direction, translucent so they are a little darker where they
+// overlap, round at the ends, which stop a hair inside the cell. The sides
+// along the strokes are clipped at the cell's edge (under its line), so no
+// white gap opens beside it. Seeded per cell: direction, widths and lengths.
+export function markerPass(parent, pts, seed, fill, o = {}) {
+  const px = o.px || unitsPerPx(), r = rng(seed * 3571 + 11);
+  const f = (v) => v.toFixed(2);
+  const id = `lat-marker-${++uid}`;
+  const clip = h('clipPath', { id }, parent);
+  path(clip, pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join('') + 'Z', { fill: '#000' });
+  const grp = g(parent, { 'clip-path': `url(#${id})`, 'data-audit': 'skip' });
+  const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+  // strokes run roughly across the cell's longer side, tilted a little
+  const horiz = (x1 - x0) >= (y1 - y0) ? r() < 0.75 : r() < 0.25;
+  const a = (horiz ? 0 : Math.PI / 2) + ((r() - 0.5) * 10 * Math.PI) / 180;
+  const ux = Math.cos(a), uy = Math.sin(a), nx = -uy, ny = ux;
+  // the cell's extent along and across the strokes
+  const along = pts.map((p) => (p[0] - cx) * ux + (p[1] - cy) * uy), across = pts.map((p) => (p[0] - cx) * nx + (p[1] - cy) * ny);
+  const aMin = Math.min(...along), aMax = Math.max(...along), cMin = Math.min(...across), cMax = Math.max(...across);
+  const n = 2 + (r() < 0.5 ? 1 : 0), span = cMax - cMin;
+  const W = (span / n) * (1.22 + 0.12 * r());
+  const end = 1.6 * px + W / 2;                              // round ends stop a hair inside
+  let prev = cMin + W / 2 - 0.6 * px;
+  for (let i = 0; i < n; i++) {
+    const c = i === 0 ? prev : i === n - 1 ? cMax - W / 2 + 0.6 * px : prev + (span - W) / (n - 1) * (0.9 + 0.2 * r());
+    prev = c;
+    const s0 = aMin + end + r() * 2.5 * px, s1 = aMax - end - r() * 2.5 * px;
+    const slant = (r() - 0.5) * 1.2 * px;                    // the hand drifts a little across
+    const A = [cx + ux * s0 + nx * (c - slant), cy + uy * s0 + ny * (c - slant)];
+    const B = [cx + ux * s1 + nx * (c + slant), cy + uy * s1 + ny * (c + slant)];
+    path(grp, `M${f(A[0])} ${f(A[1])}L${f(B[0])} ${f(B[1])}`, {
+      stroke: fill, 'stroke-width': f(W * (0.95 + 0.1 * r())), 'stroke-linecap': 'round', fill: 'none', opacity: 0.78,
+    });
+  }
+  return grp;
+}

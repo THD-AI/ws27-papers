@@ -1,7 +1,7 @@
 // Grid lab harness. lab.html?v=current,a,b&steps=0,3,5&layout=wide|tall&w=<px>
 // renders each variant at each step (t = 1) in a grid: rows are variants.
 const q = new URLSearchParams(location.search);
-const SRC = { clock: '../clock.js', current: '../lattice.js', f2: '../lattice.js', g: './lattice-g.js', orig: './lattice-orig.js', a: './lattice-a.js', b: './lattice-b.js', c: './lattice-c.js', d: './lattice-d.js', e: './lattice-e.js', f: './lattice-f.js' };
+const SRC = { clock: '../clock.js', current: '../lattice.js', final2: '../lattice.js', f2: '../lattice.js', g: './lattice-g.js', orig: './lattice-orig.js', a: './lattice-a.js', b: './lattice-b.js', c: './lattice-c.js', d: './lattice-d.js', e: './lattice-e.js', f: './lattice-f.js' };
 const vs = (q.get('v') || 'current,a,b').split(',');
 const steps = (q.get('steps') || '0,1,2,3,4,5').split(',').map(Number);
 const layout = q.get('layout') === 'tall' ? 'tall' : 'wide';
