@@ -60,7 +60,7 @@ const report = await page.evaluate(() => {
 const n = await page.evaluate(() => document.querySelectorAll('.page').length);
 const els = await page.$$('.page');
 for (let i = 0; i < n; i++) await els[i].screenshot({ path: join(OUT, `p${String(i + 1).padStart(2, '0')}.png`) });
-await page.pdf({ path: join(OUT, `${talk}-deck.pdf`), width: '1920px', height: '1080px', printBackground: true, preferCSSPageSize: true });
+await page.pdf({ path: join(OUT, `${talk}-deck.pdf`), width: '13.333in', height: '7.5in', scale: 2 / 3, printBackground: true, preferCSSPageSize: true });
 
 // contact sheets, six pages each, for review
 const imgs = Array.from({ length: n }, (_, i) => `http://localhost:${port}/.shots/deck/${talk}/p${String(i + 1).padStart(2, '0')}.png`);

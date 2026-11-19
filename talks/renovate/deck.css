@@ -14,7 +14,7 @@ html, body { margin: 0; background: #2A2C31; height: 100%; }
 #notes .where { color: #5C6370; font-size: 15px; }
 
 /* Print: every build its own page, nothing else. */
-@page { size: 1920px 1080px; margin: 0; }
+@page { size: 13.333in 7.5in; margin: 0; }
 html.is-print, html.is-print body { background: var(--paper); height: auto; }
 html.is-print #deck { position: static; display: block; }
 html.is-print .page { position: relative; left: 0; top: 0; break-after: page; transform: none !important; }
