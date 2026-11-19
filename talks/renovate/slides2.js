@@ -31,6 +31,11 @@ function svgOf(page) {
   h('stop', { offset: 0.14, 'stop-color': '#fff', 'stop-opacity': 1 }, lg);
   const mk = h('mask', { id: 'fadeLeft', maskContentUnits: 'objectBoundingBox' }, defs);
   h('rect', { x: 0, y: 0, width: 1, height: 1, fill: 'url(#fadeL)' }, mk);
+  [['fadeDown', 1, 0], ['fadeUp', 0, 1]].forEach(([id, a0, a1]) => { const gr = h('linearGradient', { id, x1: 0, x2: 0, y1: 0, y2: 1 }, defs); h('stop', { offset: 0, 'stop-color': C.paper, 'stop-opacity': a0 }, gr); h('stop', { offset: 1, 'stop-color': C.paper, 'stop-opacity': a1 }, gr); });
+  const tg = h('linearGradient', { id: 'fadeTBg', x1: 0, x2: 0, y1: 0, y2: 1 }, defs);
+  [[0, 0], [0.12, 1], [0.88, 1], [1, 0]].forEach(([o, a]) => h('stop', { offset: o, 'stop-color': '#fff', 'stop-opacity': a }, tg));
+  const mt = h('mask', { id: 'fadeTB', maskContentUnits: 'objectBoundingBox' }, defs);
+  h('rect', { x: 0, y: 0, width: 1, height: 1, fill: 'url(#fadeTBg)' }, mt);
   return svg;
 }
 
@@ -343,18 +348,24 @@ add({
   draw(page, b) {
     const svg = svgOf(page);
     frame(svg, this);
-    // the drawing: 1536 x 1024; its cable (a tube 27 px wide, centred on y 579.5)
-    // enters at the left edge; the plaster runs from x 775 to the right edge
-    const s = 0.74, x = 1920 + 40 - 1536 * s, y = 106, cy = y + 579.5 * s;
-    img(svg, 'deck-chase.png', x, y, 1536 * s, 1024 * s, { mask: 'url(#fadeLeft)' });
-    const tw = 27 * s;
-    cable(svg, [[-20, cy], [x + 40, cy]], { tw, line: 2.5, cap: 'butt' });
+    // A strip of the same wall as slide 1 (deck-wall.png, three courses: drawing
+    // rows 893-1193, the middle course centred on row 1040), with the channel cut
+    // in code: straight sides, the cable laid in, the right half plastered flush.
+    const k = 1.25, x = 1940 - 852 * k, y = 320, top = 885, rows = 307, cy = y + (1040 - top) * k, cut0 = x + 24, mid = 1450, hc = 22;
+    art(svg, 'deck-wall.png', x, y, k, [172, top, 852, rows], 1024, 1536);
+    // soften the crop at top and bottom with paper, so the strip doesn't end in a ruled edge
+    [[y, 'fadeDown'], [y + rows * k - 46, 'fadeUp']].forEach(([yy, id]) => h('rect', { x, y: yy, width: 852 * k, height: 46, fill: `url(#${id})` }, svg));
+    h('rect', { x: cut0, y: cy - hc, width: 1940 - cut0, height: 2 * hc, fill: C.paper }, svg);
+    h('rect', { x: mid + 4, y: cy - hc + 3, width: 1940 - mid, height: 2 * hc - 4, fill: C.field }, svg);
+    [cy - hc, cy + hc].forEach((yy) => ln(svg, cut0, yy, 1940, yy, { stroke: C.ink, 'stroke-width': 3 }));
+    pth(svg, `M${cut0} ${cy - hc} L${cut0 - 6} ${cy - 10} L${cut0 + 3} ${cy + 2} L${cut0 - 4} ${cy + 13} L${cut0} ${cy + hc}`, { stroke: C.ink, 'stroke-width': 3 });
+    ln(svg, mid, cy - hc, mid, cy + hc, { stroke: C.ink, 'stroke-width': 3 });
+    cable(svg, [[-20, cy], [mid, cy]], { tw: 22, line: 3, cap: 'butt' });
     // under the plaster: hidden, so dashed
-    [cy - tw / 2 + 1.25, cy + tw / 2 - 1.25].forEach((yy) => ln(svg, x + 790 * s, yy, 1940, yy, { stroke: C.ink, 'stroke-width': 2.5, 'stroke-dasharray': '14 9', 'stroke-linecap': 'butt' }));
-    const lead = (tx, ty, x1, y1, a, col) => { T(svg, tx, ty, a, { size: 34, weight: 600, fill: col || C.ink, width: 680 }); ln(svg, tx + 640, ty - 12, x1, y1, { stroke: C.ink, 'stroke-width': 2 }); dot(svg, x1, y1, 6, { fill: C.ink }); };
-    lead(L, 410, x + 400 * s, cy - 30, 'cut open: the old systems, 14 ways in');
-    T(svg, R, y + 860 * s, 'plastered: one record, 3 ways in', { size: 34, weight: 600, fill: C.accent, anchor: 'end' });
-    ln(svg, x + 1150 * s, y + 815 * s, x + 1150 * s, y + 600 * s, { stroke: C.ink, 'stroke-width': 2 }); dot(svg, x + 1150 * s, y + 600 * s, 6, { fill: C.ink });
+    [cy - 9.5, cy + 9.5].forEach((yy) => ln(svg, mid, yy, 1940, yy, { stroke: C.ink, 'stroke-width': 3, 'stroke-dasharray': '14 9', 'stroke-linecap': 'butt' }));
+    const lead = (tx, ty, x1, y1, a, o = {}) => { const t = T(svg, tx, ty, a, { size: 34, weight: 600, fill: o.col || C.ink, anchor: o.anchor || 'start' }); const w = textSize(a, { family: 'sans', size: 34, weight: 600, free: true }).w; const [x0, y0] = o.anchor === 'end' ? [tx - w / 2, ty + 14] : [tx + w + 16, ty - 12]; ln(svg, x0, y0, x1, y1, { stroke: C.ink, 'stroke-width': 2 }); dot(svg, x1, y1, 6, { fill: C.ink }); };
+    lead(L, 420, 1250, cy - 4, 'cut open: the old systems, 14 ways in');
+    lead(R, 262, 1700, cy - 4, 'plastered: one record, 3 ways in', { col: C.accent, anchor: 'end' });
     if (b >= 1) T(svg, L, 850, 'Keys that change an account need step 5: an agent can’t act on an account it can’t identify.', { size: 36, weight: 600, width: 1680 });
     if (b >= 2) T(svg, L, 912, 'It can fail: in Q3 2025 T-Mobile wrote off $278 million on parts of a billing-system replacement it abandoned.', { size: 32, fill: C.muted, width: 1680 });
   },

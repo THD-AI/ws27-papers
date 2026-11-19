@@ -2,6 +2,19 @@
 
 Kind: log, newest first. Read this before every loop on the deck; add to it at the end of every loop (the compound step). Each entry: what happened, what it means, the rule that follows. His words are in dotUni `.docs/transcripts/` (numbers given).
 
+## Loop 4 (19 November): one wall, reused instead of regenerated
+
+What happened:
+- He said "do whatever is best" to drawing the socket and bricks himself. A round-3 redraw of the channel, with the approved wall as its brick reference, could not run: the OpenAI account has no credits left.
+- Slide 14 now cuts its channel in code into a strip of the approved slide-1 wall (three courses, at nearly the title's scale, top and bottom softened with paper). All three wall pictures share one brick; the stones and the blob of green are gone. The generated deck-chase.png is no longer used.
+- The sockets stay in code: the count of 14 distinct faces must be exact, and no real socket photograph is on file to draw one from.
+- Two things failed on the way: an SVG mask on a group holding a nested svg did not apply in Chrome's print, and a crop scaled to 1.95× turned his hairline into a crude marker line.
+
+Rules that follow:
+29. **Reuse an approved drawing before generating a new one.** A crop of the wall he already accepted matches the deck by construction; a new generation has to earn the match.
+30. **A drawing's scale is part of its line.** Keep a crop within about 1.3× of the scale it was approved at; beyond that the hairline becomes a marker.
+31. **Fade a crop with paper-gradient rectangles, not masks** (masks on nested svg did not render in print).
+
 ## Loop 3 (19 November): the whole deck in the v2 direction; two critic pairs on all 47 pages
 
 What happened:
