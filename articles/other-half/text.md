@@ -261,6 +261,7 @@ Our numbers come from small grids and from a network far smaller than Google's. 
 
 ## How this was made
 
+:::details Show how this was made
 Every figure from outside our group comes from a source one of us opened: published papers, preprints and data records. Each passage carries its sources; they open when you select a mark. Where only an abstract was read, and where a paper has not been peer-reviewed, the source entry says so. Our own results come from code and data in our repository, which is private for now. The figures are drawn from the result files; the numbers in the text were checked against them. A blink is taken as a tenth of a second, a rule of thumb.
 
 - Question, choices, what to keep and drop, and conclusions: the group.
@@ -270,3 +271,4 @@ Every figure from outside our group comes from a source one of us opened: publis
 - Opening drawing: an image model, from our own line reference and photographs of real hardware.
 
 We are responsible for the question and every claim.
+:::
