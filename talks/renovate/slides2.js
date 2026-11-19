@@ -150,7 +150,7 @@ function frame(svg, s, o = {}) {
     const t = T(svg, L, 148, s.title, { size, weight: 600, width, lh: size * 1.14 });
     if (s.sub) T(svg, L, t.bottom + 50, s.sub, { size: 32, fill: C.muted, width });
   }
-  if (s.source) T(svg, L, 1016, s.source, { size: 22, fill: C.muted, width: 1380, lh: 27 });
+  if (s.source) { const n = textSize(s.source, { family: 'sans', size: 22, free: true, width: 1300, lh: 27 }).lines || 1; T(svg, L, 1016 - Math.max(0, n - 2) * 27, s.source, { size: 22, fill: C.muted, width: 1300, lh: 27 }); }
   if (s.n) {
     T(svg, R, 1022, `${s.n}`, { size: 28, weight: 600, fill: C.ink, anchor: 'end' });
     if (s.beat) T(svg, R - 48, 1022, s.beat, { size: 22, fill: C.muted, anchor: 'end' });
@@ -283,7 +283,6 @@ add({
     if (b >= 3) {
       T(svg, L, 900, 'The cable is the agent. The wall is what’s already there: old systems, rules, people.', { family: 'serif', italic: true, size: 40 });
     }
-    cable(svg, [[-20, CABLE_Y], [1940, CABLE_Y]]);
   },
 });
 
@@ -335,7 +334,7 @@ add({
     const MEASURE = {
       1: [['cost per contact, repeat contacts: before and with the agent'], ['No gain: stop here.', { weight: 600, fill: C.ink }]],
       2: [['signed before the first agent acts']],
-      3: [['time to switch supplier.'], ['Bitkom: 51% of firms depend strongly on US technology']],
+      3: [['time to switch supplier'], ['Bitkom: 51% of firms depend strongly on US technology']],
       4: [['cases per hour and repeat contacts, per team, never per person']],
     };
     const on = b >= 2 ? [1, 2, 3, 4] : b === 1 ? [1, 2] : [1];
@@ -453,7 +452,7 @@ add({
       const w = key(svg, 540, 832, 330, 1);
       T(svg, 540 + w + 30, 818, 'a key to see the account', { size: 38 });
       key(svg, 540, 930, 330, 2);
-      T(svg, 540 + w + 30, 916, 'a key to change it', { size: 38, weight: 600, fill: C.accent });
+      T(svg, 540 + w + 30, 916, 'a key to change it', { size: 38, weight: 600 });
     }
     band(svg);
   },
@@ -479,7 +478,6 @@ add({
     const col = (p, fill, stroke) => {
       const x = X(p.year, p.quarter), top = ay - p.value * u;
       h('rect', { x: x - 40, y: top, width: 80, height: ay - top, fill, stroke, 'stroke-width': 3 }, svg);
-      for (let i = 1; i < p.value; i++) ln(svg, x - 40, ay - i * u, x - 28, ay - i * u, { stroke, 'stroke-width': 2 });
       return { x, top };
     };
     const a = col(p0, C.faint, C.ink), z = col(p1, C.field, C.accent);
@@ -529,7 +527,7 @@ add({
       cable(svg, [[-20, CABLE_Y], [bx, CABLE_Y], [bx, upEnd(tip) - 30]], { r: 90, tw: 20, cap: 'butt' });
       plugUp(svg, bx, tip);
       box();   // over the pin tips: they are in it
-      T(svg, bx + 100, 660, 'the agents read from it', { size: 34 });
+      T(svg, bx - 110, 640, 'the agents read from it', { size: 34, anchor: 'end' });
     } else band(svg);
     if (b >= 2) {
       const v = R6.points[1].value, was = R6.points[0].value, x0 = 380, x1 = 1220, y = 760;
@@ -569,13 +567,14 @@ add({
       return { x0, x1 };
     };
     const [kl, cba] = data.repaint.cases;
+    const lab = (x, y, t, anchor) => { const w = textSize(t, { family: 'sans', size: 36, free: true }).w; h('rect', { x: (anchor === 'end' ? x - w : x) - 8, y: y - 32, width: w + 16, height: 44, fill: C.paper }, svg); T(svg, x, y, t, { size: 36, anchor: anchor || 'start' }); };
     const a = lane(kl, 430, 'Klarna', 'after 15 months');
-    T(svg, a.x0 - 16, 386, 'Feb 2024: the work of 700 agents, by Klarna’s estimate', { size: 36 });
-    T(svg, a.x1 + 16, 494, 'May 2025: hiring again', { size: 36, anchor: 'end' });
+    lab(a.x0 - 16, 386, 'Feb 2024: the work of 700 agents, by Klarna’s estimate');
+    lab(a.x1 + 16, 494, 'May 2025: hiring again', 'end');
     if (b >= 1) {
       const c = lane(cba, 660, 'Commonwealth Bank', 'after about a month');
-      T(svg, c.x1 + 16, 616, 'Jul 2025: 45 roles redundant for a voice bot', { size: 36, anchor: 'end' });
-      T(svg, c.x0 - 30, 724, 'Aug 2025: withdrawn, “did not adequately consider…”', { size: 36, anchor: 'end' });
+      lab(c.x1 + 16, 616, 'Jul 2025: 45 roles redundant for a voice bot', 'end');
+      lab(c.x0 - 30, 724, 'Aug 2025: withdrawn, “did not adequately consider…”', 'end');
     }
     band(svg);
   },
@@ -601,7 +600,7 @@ add({
       E.years.forEach((yr, i) => {
         const v = E.totals.values[i], x = x0 + i * pitch;
         h('rect', { x, y: Y(v), width: bw, height: v * k, fill: C.paper, stroke: C.ink, 'stroke-width': 3 }, svg);
-        T(svg, x + bw / 2, Y(v) + 52, v.toLocaleString('en-US'), { size: 32, fill: C.muted, anchor: 'middle' });
+        T(svg, x + bw / 2, base - 24, v.toLocaleString('en-US'), { size: 32, fill: C.muted, anchor: 'middle' });
         T(svg, x + bw / 2, base + 44, String(yr), { size: 32, fill: C.muted, anchor: 'middle' });
       });
       ln(svg, x0 - 40, base, x0 + 4 * pitch + bw + 40, base, { stroke: C.ink, 'stroke-width': 3 });
@@ -625,7 +624,7 @@ add({
   notes: `<p>The second brick starts with a worry. The EU asked people about digital monitoring at work. In Germany nearly four in five see it as a bad thing. On AI and jobs, Germans are no more pessimistic than Americans; on monitoring at work they are. Any new system here has to answer that first. <b>Nearly four in five Germans see monitoring at work as bad.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
-    frame(svg, this);
+    frame(svg, this, { titleWidth: 1700 });
     const v = data.attitudes.panels.find((p) => p.standsOut).rows[0].value;
     T(svg, L, 330, 'Digital monitoring of workers, Germany: seen as negative', { size: 36, weight: 600 });
     const x0 = L, x1 = R, y = 470, X = bar100(svg, x0, x1, y, 90, v);
@@ -644,7 +643,7 @@ add({
   id: 'checks', n: 11, beat: 'Second brick: the checks', builds: 3, start: '8:10',
   clicks: ['United States', 'Germany: the two rules', 'since 2021'],
   title: 'Second brick: here the checks come first.',
-  source: 'BetrVG § 87(1) no. 6; AI Act Art. 50 (Regulation (EU) 2024/1689, as amended by 2026/1744); Telekom group framework agreement on IT systems, March 2021 (Bargmann 2022); T-Mobile US, press release, Sep 2024. Lengths schematic, not measured.',
+  source: 'BetrVG § 87(1) no. 6; AI Act Art. 50 (Reg. (EU) 2024/1689, amended by 2026/1744); Telekom framework agreement on IT systems, March 2021 (Bargmann 2022); T-Mobile US, Sep 2024. Lengths schematic.',
   notes: `<p>German law makes it answer before launch. At T-Mobile I found no say for the staff before launch. Here, two rules matter most. One: a system that can watch the staff needs the works council to agree before it runs. Two: since August, the AI Act says customers must be told when they talk to an AI system. And here Telekom is ahead. In 2021 it agreed the rules with its works council once: nobody gets watched as a person, and results are only looked at in groups of more than five, without names. A system inside those rules needs no new decision. <b>Second brick: here the checks come first.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
@@ -662,7 +661,7 @@ add({
     };
     lane(330, 'United States', 'T-Mobile', [[0, S.us.build[1], 'build', 'build'], [S.us.launch[0], S.us.launch[1], 'launch', 'running']]);
     S.us.checks.forEach((u) => dot(svg, X(u), 394, 9, { fill: C.ink }));
-    T(svg, R, 440, 'no staff say before launch found; checks come later', { size: 32, fill: C.muted, anchor: 'end' });
+    T(svg, R, 440, 'no staff say found before launch; checks come later', { size: 32, fill: C.muted, anchor: 'end' });
     if (b >= 1) {
       lane(550, 'Germany', 'Telekom', [[S.de.review[0], S.de.review[1], 'review', 'checks first'], [S.de.build[0], S.de.build[1], 'build', 'build'], [S.de.launch[0], S.de.launch[1], 'launch', 'running']]);
       T(svg, X(0), 636, '1  works council agrees before it runs (§ 87(1) no. 6)', { size: 34 });

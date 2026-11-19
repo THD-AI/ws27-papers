@@ -2,6 +2,20 @@
 
 Kind: log, newest first. Read this before every loop on the deck; add to it at the end of every loop (the compound step). Each entry: what happened, what it means, the rule that follows. His words are in dotUni `.docs/transcripts/` (numbers given).
 
+## Loop 9 (19 November): drawn plugs with their cords, and a full audit
+
+What happened:
+- With credits back, the plug was redrawn WITH its cord in one drawing (side view) and three different keys were drawn. He liked the side plug and found the first upright plug (a detailed Schuko face) "way too detailed" (`-017`). It was redrawn from the side plug as reference: the same simple plug, standing up.
+- Readers measured the seam: the drawn cord's lines render at about 1.5 px of mid-grey (#535353). The cable now uses that ink and weight (#505055, 1.6 px), and it ends 30 px under the drawing, whose first stretch of cord is filled with paper, so no cap or edge shows.
+- Slide 6: the pins now go into the box (the box is drawn over their tips). Slide 7: a dashed line runs from the pins to the socket they fit. Closing slide: the plug is cropped before its pin collars and seated on a plate in the drawing's ink and weight.
+- A final audit of all 46 pages (designer and QA) scored 8 and 7.5. Fixed: a dashed line through "4,448"; dashed guides cutting through timeline labels (the labels now sit on paper); a label past the margin; a second cable in the footer of the walls slide; unexplained ticks on columns; an orphaned title word (the line was widened, the words kept: "Nearly four in five" is the fact); a stray full stop; awkward wording; a three-line source.
+- Not taken: the walls slide's duct shadow (held since loop 1) and green on headline numbers (the deck's way of marking the figure that matters).
+
+Rules that follow:
+45. **Simple beats detailed.** When he likes a drawing, it becomes the reference for its siblings: "the same object, only turned".
+46. **A drawn cord and a code cable meet under the drawing,** never edge to edge: fill the drawing's cord with paper and run the cable 30 px beneath it.
+47. **An audit may suggest changing a fact's wording to fix layout; fix the layout instead.**
+
 ## Loop 8 (19 November): the plug, the socket and the cable as one object
 
 What happened:
