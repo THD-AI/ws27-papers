@@ -1,8 +1,8 @@
 // Builds the talk as ONE offline HTML file for presenting: every build
 // pre-drawn as SVG, the three typefaces and the house drawing embedded, no
 // network and no server. Double-click it, press F11, then Right / Left.
-//   node tools/deck-offline.mjs [renovate]
-// Writes .shots/deck/<talk>/<talk>-talk.html
+//   node tools/deck-offline.mjs [renovate] [--v2]
+// Writes .shots/deck/<talk>[-v2]/<talk>-talk.html
 import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -13,8 +13,9 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(join(ROOT, 'package.json'));
 const puppeteer = require('puppeteer-core');
 const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
-const talk = process.argv[2] || 'renovate';
-const OUT = join(ROOT, '.shots', 'deck', talk);
+const talk = process.argv[2] && !process.argv[2].startsWith('--') ? process.argv[2] : 'renovate';
+const V2 = process.argv.includes('--v2');
+const OUT = join(ROOT, '.shots', 'deck', talk + (V2 ? '-v2' : ''));
 mkdirSync(OUT, { recursive: true });
 
 // 1. The fonts: the same request the deck makes, only the latin subsets, inlined.
@@ -36,11 +37,11 @@ const { server, port } = await startServer(ROOT, 0);
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: 'new' });
 const page = await browser.newPage();
 await page.setViewport({ width: 1920, height: 1080 });
-await page.goto(`http://localhost:${port}/talks/${talk}/index.html?print=1`, { waitUntil: 'networkidle0' });
+await page.goto(`http://localhost:${port}/talks/${talk}/index.html?print=1${V2 ? '&v=2' : ''}`, { waitUntil: 'networkidle0' });
 await page.waitForFunction('window.__deck && window.__deck.ready', { timeout: 30000 });
 await page.evaluate(() => document.fonts.ready);
-const pages = await page.evaluate(async () => {
-  const { SLIDES } = await import('./slides.js');
+const pages = await page.evaluate(async (v2) => {
+  const { SLIDES } = await import(v2 ? './slides2.js' : './slides.js');
   const els = [...document.querySelectorAll('.page')];
   return window.__deck.pages.map((p, i) => {
     const s = SLIDES[p.slide];
@@ -53,14 +54,21 @@ const pages = await page.evaluate(async () => {
       notes: p.build === 0 || p.build === s.builds - 1 ? (s.notes || '') : '',
     };
   });
-});
+}, V2);
 await browser.close();
 server.close();
 
-// 3. The drawing once, as a data URI the pages point to at show time.
-const HOUSE = '../../articles/renovate/art/house.png';
-const house = `data:image/png;base64,${readFileSync(join(ROOT, 'articles', talk, 'art', 'house.png')).toString('base64')}`;
-for (const p of pages) p.svg = p.svg.split(HOUSE).join('%HOUSE%');
+// 3. Each drawing once, as a data URI the pages point to at show time.
+const ART_PREFIX = `../../articles/${talk}/art/`;
+const ART = {};
+for (const p of pages) {
+  p.svg = p.svg.split(ART_PREFIX).map((part, i) => {
+    if (i === 0) return part;
+    const f = part.match(/^[\w.-]+\.png/)[0];
+    if (!ART[f]) ART[f] = `data:image/png;base64,${readFileSync(join(ROOT, 'articles', talk, 'art', f)).toString('base64')}`;
+    return `%ART:${f}%` + part.slice(f.length);
+  }).join('');
+}
 
 const doc = `<!doctype html>
 <html lang="en">
@@ -87,14 +95,14 @@ body.clean #help { display: none; }
 <div id="help">F11 full screen, Right or Space next, Left back, N notes, G go to page (this hint hides after the first key)</div>
 <script>
 var PAGES = ${JSON.stringify(pages)};
-var HOUSE = ${JSON.stringify(house)};
+var ART = ${JSON.stringify(ART)};
 var slide = document.getElementById('slide'), notes = document.getElementById('notes');
 var n = Math.max(0, Math.min(PAGES.length - 1, (parseInt((location.hash || '').slice(1), 10) || 1) - 1));
 function fit() { var k = Math.min(innerWidth / 1920, innerHeight / 1080); slide.style.transform = 'translate(-50%, -50%) scale(' + k + ')'; }
 function show(k) {
   n = Math.max(0, Math.min(PAGES.length - 1, k));
   var p = PAGES[n];
-  slide.innerHTML = p.svg.split('%HOUSE%').join(HOUSE);
+  slide.innerHTML = p.svg.replace(/%ART:([^%]+)%/g, function (m, f) { return ART[f]; });
   notes.innerHTML = '<div class="where">Page ' + (n + 1) + ' of ' + PAGES.length + ', slide ' + p.n + ', build ' + p.build + ' of ' + p.builds
     + (p.start ? ', starts at ' + p.start : '') + (p.click ? ': ' + p.click : '') + '</div>' + p.notes;
   history.replaceState(null, '', '#' + (n + 1));
@@ -117,4 +125,4 @@ fit(); show(n);
 `;
 const file = join(OUT, `${talk}-talk.html`);
 writeFileSync(file, doc);
-console.log(`${pages.length} pages, ${(doc.length / 1e6).toFixed(1)} MB, fonts ${cache.size} files -> ${file}`);
+console.log(`${pages.length} pages, ${(doc.length / 1e6).toFixed(1)} MB, fonts ${cache.size} files, drawings ${Object.keys(ART).join(', ')} -> ${file}`);
