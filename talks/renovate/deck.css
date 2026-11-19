@@ -1,0 +1,21 @@
+/* The talk deck: one 1920 x 1080 page per build, scaled to the window on
+   screen, one PDF page per build in print. */
+:root {
+  --paper: #FBFBFC; --ink: #15171C; --muted: #5C6370; --hairline: #DADDE3;
+  --accent: #1F7A54; --field: #CDE9D9;
+}
+html, body { margin: 0; background: #2A2C31; height: 100%; }
+#deck { position: fixed; inset: 0; display: grid; place-items: center; overflow: hidden; }
+.page { width: 1920px; height: 1080px; background: var(--paper); color: var(--ink); position: relative; flex: none; transform-origin: center center; }
+.page svg { display: block; width: 1920px; height: 1080px; }
+#notes { position: fixed; left: 0; right: 0; bottom: 0; max-height: 34vh; overflow: auto; background: #FBFBFC; color: #15171C;
+  font: 18px/1.5 'Libre Franklin', Arial, sans-serif; padding: 16px 28px; box-shadow: 0 -1px 0 #DADDE3; }
+#notes b { font-weight: 600; }
+#notes .where { color: #5C6370; font-size: 15px; }
+
+/* Print: every build its own page, nothing else. */
+@page { size: 1920px 1080px; margin: 0; }
+html.is-print, html.is-print body { background: var(--paper); height: auto; }
+html.is-print #deck { position: static; display: block; }
+html.is-print .page { break-after: page; transform: none !important; }
+html.is-print #notes { display: none; }
