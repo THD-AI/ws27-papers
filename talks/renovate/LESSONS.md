@@ -2,6 +2,36 @@
 
 Kind: log, newest first. Read this before every loop on the deck; add to it at the end of every loop (the compound step). Each entry: what happened, what it means, the rule that follows. His words are in dotUni `.docs/transcripts/` (numbers given).
 
+## Loop 2, the build (19 November): what fixing the critics' points taught
+
+What happened:
+- Round 2 of the wall, plug and channel came back in a thin, open line; the channel drawing now has its cable as a tube, the plug only a thin stub.
+- Slide 3 became two bars on two bases; slide 7 became fourteen socket faces, no two alike, then three dashed (planned) with the plug pointing up at them; slide 13 carries the step names inside the floors and the measures beside them; slide 14 lets the page's cable run into the drawn channel and on, dashed, under the plaster.
+
+Rules that follow:
+20. **One cable, one look.** Where a drawing has its own cable, crop it away at the grip (or join it square, `cap: 'butt'`) so the deck's tube runs straight into the drawing.
+21. **Place drawings by measured pixels, not by eye.** Read the alpha channel for the row where the brick juts, the grip's centre, the tube's rows; then compute the page position. Every guess in loop 1 was off by 20 to 80 px.
+22. **The drafting conventions carry over to symbols:** planned sockets are dashed like planned floors, so the deck keeps one grammar.
+23. **Text that leads to a drawing measures itself first** (`textSize`), so a leader starts after the words instead of through them.
+
+## Loop 2 (19 November): drawings joined the frames; what two critic pairs found (dotUni `readers/frames-2-*.md`)
+
+What happened:
+- He said yes to drawings (`-012`). Five forge boards (key, plug, wall, cut channel, duct), each from his hand plus a real Commons photograph, three candidates each; one approved per board.
+- Scores: examiner and coach 7 (clarity 7, honesty 7, legibility 6); designer and sceptic 6 (human feel 4).
+- The drawings read as generated: every shape closed and outlined in an even, jittery line, the opposite of his thin, single, open contour that runs from one shape into the next with a flat green that ignores the outline. Thickening the line for the projector made the jitter worse.
+- One picture, two meanings: keys meant permissions on slides 2 and 15 and ways to prove identity on slide 7.
+- The bar on slide 3 drew the 32 inside the 40 while its own footer said whether the 40 include the 32 isn't published.
+- The cable was recognised only on slide 1; elsewhere it read as a double footer rule.
+
+Rules that follow:
+14. **His line, stated as what to avoid:** closed outlines around every shape, a trembling or jittery stroke, doubled strokes, even weight; ask for one thin continuous line that leaves shapes open and runs on into the next, and a green field set off the outline. Never thicken a drawing with a filter; scale it so its own line reads.
+15. **One symbol, one meaning across the whole deck.** Keys are permissions; the ways to prove identity become sockets the agent's plug must fit (14 standards, then 3).
+16. **The picture may not claim what the footer denies.** Two counts with different bases get two bars.
+17. **The cable must act, not decorate:** it stops (slide 1), runs through the walls (5), meets the sockets (7), is cut into the wall (14) and finally plugs in (16). On evidence slides it may rest in the bottom band; on device slides it leaves the band and enters the drawing.
+18. **Anything he says aloud is on the slide in readable size,** never only in the source line.
+19. **The strongest human feel would be his own pen:** a plug, a key ring and a row of bricks drawn and scanned by him beat any generation. Offer it.
+
 ## Loop 1 (19 November): one cable, drafting marks, four key frames
 
 What happened:

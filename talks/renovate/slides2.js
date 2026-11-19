@@ -41,12 +41,60 @@ function smooth(pts, r = 60) {
 }
 const ART = '../../articles/renovate/art/';
 const img = (svg, file, x, y, w, hh, o = {}) => h('image', { href: ART + file, x, y, width: w, height: hh, preserveAspectRatio: 'xMidYMid meet', ...o }, svg);
+// A drawing cropped to part of its own canvas (crop = [sx, sy, sw, sh] in the
+// drawing's pixels), placed with its crop's top left at x, y and scaled by k.
+function art(p, file, x, y, k, crop, W = 1536, H = 1024) {
+  const [sx, sy, sw, sh] = crop;
+  const v = h('svg', { x, y, width: sw * k, height: sh * k, viewBox: `${sx} ${sy} ${sw} ${sh}`, overflow: 'hidden' }, p);
+  h('image', { href: ART + file, x: 0, y: 0, width: W, height: H }, v);
+  return v;
+}
+// The drawn plug without its own thin cable stub: the grip starts at drawing
+// x 520, centred on y 512; the pins end at x 1308. Placed by the grip centre.
+const PLUG = [520, 280, 800, 470];
+function plug(p, gx, gy, k, rot = 0) {
+  const g = h('g', { transform: `translate(${gx} ${gy}) rotate(${rot})` }, p);
+  art(g, 'deck-plug.png', 0, -232 * k, k, PLUG);
+  return g;
+}
+// A socket face: a plate, a round recess and its own pattern of holes. Each
+// pattern is one way to prove who you are; no two alike, as no two standards are.
+const HOLES = [
+  [['c', -0.22, 0], ['c', 0.22, 0]],
+  [['v', -0.2, 0], ['v', 0.2, 0]],
+  [['v', -0.2, 0.1], ['v', 0.2, 0.1], ['c', 0, -0.22]],
+  [['h', 0, -0.2], ['v', -0.22, 0.14], ['v', 0.22, 0.14]],
+  [['s', -0.18, -0.04, 30], ['s', 0.18, -0.04, -30], ['v', 0, 0.22]],
+  [['c', -0.2, 0.12], ['c', 0.2, 0.12], ['c', 0, -0.2]],
+  [['c', 0, 0]],
+  [['c', -0.24, 0], ['c', 0, 0], ['c', 0.24, 0]],
+  [['h', 0, -0.13], ['h', 0, 0.13]],
+  [['q', -0.2, 0], ['q', 0.2, 0]],
+  [['v', -0.2, 0], ['h', 0.16, 0]],
+  [['c', -0.2, 0], ['v', 0.2, 0]],
+  [['q', 0, -0.2], ['c', -0.2, 0.16], ['c', 0.2, 0.16]],
+  [['v', -0.26, 0], ['v', 0, 0], ['v', 0.26, 0]],
+];
+function socket(p, cx, cy, size, kind, o = {}) {
+  const st = { fill: o.fill || C.paper, stroke: o.stroke || C.ink, 'stroke-width': o.w || 3, ...(o.dash ? { 'stroke-dasharray': o.dash } : {}) };
+  h('rect', { x: cx - size / 2, y: cy - size / 2, width: size, height: size, rx: size * 0.16, ...st }, p);
+  dot(p, cx, cy, size * 0.38, { ...st, fill: 'none' });
+  const ink = { fill: o.stroke || C.ink };
+  HOLES[kind].forEach(([t, dx, dy, a]) => {
+    const x = cx + dx * size, y = cy + dy * size;
+    if (t === 'c') dot(p, x, y, size * 0.055, ink);
+    if (t === 'q') h('rect', { x: x - size * 0.045, y: y - size * 0.045, width: size * 0.09, height: size * 0.09, ...ink }, p);
+    if (t === 'v' || t === 's') h('rect', { x: x - size * 0.025, y: y - size * 0.08, width: size * 0.05, height: size * 0.16, rx: size * 0.012, transform: a ? `rotate(${a} ${x} ${y})` : '', ...ink }, p);
+    if (t === 'h') h('rect', { x: x - size * 0.08, y: y - size * 0.025, width: size * 0.16, height: size * 0.05, rx: size * 0.012, ...ink }, p);
+  });
+}
 // The cable is a tube: an ink stroke with a paper stroke inside it, so it
 // matches the drawn plug's cable. tw = outer width.
 function cable(svg, pts, o = {}) {
   const d = smooth(pts, o.r || 60), tw = o.tw || 22, line = o.line || 3.5;
-  pth(svg, d, { stroke: C.ink, 'stroke-width': tw });
-  pth(svg, d, { stroke: o.fill || C.paper, 'stroke-width': tw - 2 * line });
+  const cap = o.cap ? { 'stroke-linecap': o.cap } : {};
+  pth(svg, d, { stroke: C.ink, 'stroke-width': tw, ...cap });
+  pth(svg, d, { stroke: o.fill || C.paper, 'stroke-width': tw - 2 * line, ...cap });
 }
 
 // Drafting marks: a dimension line with 45° ticks and extension lines.
@@ -88,71 +136,55 @@ add({
   notes: `<p>Deutsche Telekom openly takes an American result as its benchmark. On 5 October it told its investors about T-Mobile: software agents there now do a big part of customer service, and Telekom wants the same in Europe by 2030. My position: born in the United States, studying in Germany, so I may see Germany as the harder case. That's why every claim has a source. <b>Can Telekom copy what T-Mobile's agents did?</b></p>`,
   draw(page, b) {
     const svg = svgOf(page);
-    // the wall, drawn: 1024 x 1536, its ink from x 219; placed so it runs off the right edge
-    const wh = 1180, ws = wh / 1536, ww = 1024 * ws;
-    const wallInk = 1500, wx = wallInk - 219 * ws;          // the drawing's ink starts at x 219
-    img(svg, 'deck-wall.png', wx, -50, ww, wh);
-    // the plug, drawn: 1536 x 1024, cable stub centred at y 560.5, tube 107 px wide at the left edge,
-    // pins ending at x 1311: placed so the pins stop 60 px short of the wall
-    const s = 0.40, pw = 1536 * s, ph = 1024 * s, tw = 107 * s;
-    const cy = 800, plugX = wallInk - 60 - 1311 * s, plugY = cy - 560.5 * s;
-    cable(svg, [[-30, CABLE_Y], [700, CABLE_Y], [plugX - 120, cy + 6], [plugX + 2, cy]], { r: 200, tw, line: 3.5 });
-    img(svg, 'deck-plug-proj.png', plugX, plugY, pw, ph);
+    // the wall, drawn: 1024 x 1536. At drawing row 1028 a brick juts out to x 173;
+    // that row sits at the plug's height and starts at page x 1500.
+    const wk = 1180 / 1536, cy = 740, wy = cy - 1028 * wk - 0, wx = 1500 - 173 * wk;
+    img(svg, 'deck-wall.png', wx, wy, 1024 * wk, 1536 * wk);
+    // the plug: pins end 50 px short of the wall
+    const k = 0.5, gx = 1500 - 50 - (1308 - 520) * k;
+    cable(svg, [[-30, CABLE_Y], [700, CABLE_Y], [gx - 140, cy], [gx + 3, cy]], { r: 220 });
+    plug(svg, gx, cy, k);
     T(svg, L, 220, 'Innovation Management for AI', { size: 34, weight: 500, fill: C.muted });
     T(svg, L, 360, 'Renovate,', { family: 'serif', size: 132, weight: 500 });
     T(svg, L, 500, 'don’t repaint', { family: 'serif', size: 132, weight: 500 });
-    if (b >= 1) T(svg, L, 640, 'Can Telekom copy what T-Mobile’s agents did?', { size: 52, weight: 600, width: 860, lh: 62 });
-    T(svg, L, 880, 'Alexander Rudaev', { size: 34, weight: 600 });
-    T(svg, L, 926, 'TH Deggendorf, 12 December 2026', { size: 32, fill: C.muted });
+    if (b >= 1) T(svg, L, 630, 'Can Telekom copy what T-Mobile’s agents did?', { size: 52, weight: 600, width: 860, lh: 62 });
+    T(svg, L, 826, 'Alexander Rudaev', { size: 34, weight: 600 });
+    T(svg, L, 872, 'TH Deggendorf, 12 December 2026', { size: 32, fill: C.muted });
     T(svg, L, 1050, 'Drawings: generated from my own line drawing', { size: 22, fill: C.muted });
   },
 });
 
 // 3 ---------------------------------------------------------------------------
-// One bar of 100 contacts, measured twice: the release's 40 above, the
-// slide's 32 below, the difference between them hatched.
+// Two counts, two bars: each on its own hundred, because nobody published
+// whether one contains the other. Then: how many were finished isn't known.
 add({
   id: 'number', n: 3, beat: 'The American result', builds: 3, start: '1:35',
-  clicks: ['the release: 40', 'T-Mobile’s slide: 32, the gap', 'finished: not published'],
+  clicks: ['the release: 40', 'T-Mobile’s slide: 32, another count', 'finished: not published'],
   title: 'Telekom says 40 percent. T-Mobile’s own slide counts 32 percent.',
-  source: 'Deutsche Telekom, press release, 5 Oct 2026; T-Mobile US, AI Investor Day deck, Q2 2026. Company figures, not audited. Two separate counts; whether the 40 include the 32 isn’t published.',
+  source: 'Deutsche Telekom, press release, 5 Oct 2026; T-Mobile US, AI Investor Day deck, Q2 2026. Company figures, not audited. Two separate counts on different bases; whether the 40 include the 32 isn’t published.',
   notes: `<p>A correction to my own proposal. Telekom's release says AI agents now handle forty percent of customer contacts in the US; I used that number. In T-Mobile's own material I couldn't find it. Its slide counts something narrower: only contract customers, only contacts "served by an AI agent". Served means the customer meets the software first. Whether the software also finished the job, T-Mobile doesn't say. Company numbers, not audited. Still, one in three is a lot. <b>Telekom says forty percent. T-Mobile's own slide counts thirty-two percent.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
-    const P = data.numbers.plateA;
-    const x0 = 360, x1 = 1760, X = (v) => x0 + (v / 100) * (x1 - x0), y = 520, hh = 70;
-    // the bar: 100 contacts, with a scale of tens
-    rc(svg, x0, y, x1 - x0, hh, { 'stroke-width': 3 });
-    for (let v = 10; v < 100; v += 10) ln(svg, X(v), y + hh - 14, X(v), y + hh, { stroke: C.mid, 'stroke-width': 2 });
-    T(svg, X(0), y + hh + 46, '0', { size: 32, fill: C.muted, anchor: 'middle' });
-    T(svg, X(100), y + hh + 46, '100 contacts', { size: 32, fill: C.muted, anchor: 'end' });
-    T(svg, L, y + 48, 'of 100', { size: 34, fill: C.muted });
-    // above: the release
-    const r = P.release.value, s = P.slide.value;
-    h('rect', { x: X(0), y, width: X(r) - X(0), height: hh, fill: C.faint }, svg);
-    dim(svg, X(0), X(r), y - 60, { ext: [y - 80, y], col: C.ink });
-    T(svg, X(r) + 26, y - 46, `${r}`, { size: 64, weight: 600 });
-    T(svg, X(r) + 120, y - 66, 'Telekom’s press release', { size: 34, weight: 600 });
-    T(svg, X(r) + 120, y - 26, 'all contacts in the US, “handled by AI agents”', { size: 32, fill: C.muted });
-    if (b >= 1) {
-      h('rect', { x: X(0), y, width: X(s) - X(0), height: hh, fill: C.field }, svg);
-      h('rect', { x: X(s), y, width: X(r) - X(s), height: hh, fill: 'url(#gap)' }, svg);
-      rc(svg, x0, y, x1 - x0, hh, { 'stroke-width': 3 });
-      ln(svg, X(s), y, X(s), y + hh, { stroke: C.accent, 'stroke-width': 4 });
-      dim(svg, X(0), X(s), y + hh + 110, { ext: [y + hh, y + hh + 130], col: C.accent, w: 4 });
-      T(svg, X(s) - 26, y + hh + 210, `${s}`, { size: 96, weight: 600, fill: C.accent, anchor: 'end' });
-      T(svg, X(s) + 30, y + hh + 160, 'T-Mobile’s own slide', { size: 36, weight: 600, fill: C.accent });
-      T(svg, X(s) + 30, y + hh + 202, 'contract customers’ contacts, “served by an AI agent”', { size: 32, fill: C.muted });
-      // the gap between the two ends
-      ln(svg, (X(s) + X(r)) / 2, y + 8, (X(s) + X(r)) / 2 + 60, y - 150, { stroke: C.mid, 'stroke-width': 1.5 });
-      T(svg, (X(s) + X(r)) / 2 + 70, y - 156, 'the 8 between them: not in T-Mobile’s material', { size: 32, fill: C.muted });
-    }
+    const P = data.numbers.plateA, r = P.release.value, s = P.slide.value;
+    const x0 = 420, x1 = 1760, X = (v) => x0 + (v / 100) * (x1 - x0), hh = 64;
+    const bar = (y, v, col, fill, head, desc, base) => {
+      T(svg, x0, y - 62, head, { size: 36, weight: 600, fill: col });
+      T(svg, x0, y - 20, desc, { size: 32, fill: C.muted });
+      h('rect', { x: X(0), y, width: X(v) - X(0), height: hh, fill }, svg);
+      rc(svg, x0, y, x1 - x0, hh);
+      for (let t = 10; t < 100; t += 10) ln(svg, X(t), y + hh - 14, X(t), y + hh, { stroke: C.mid, 'stroke-width': 2 });
+      ln(svg, X(v), y, X(v), y + hh, { stroke: col, 'stroke-width': 4 });
+      T(svg, x0 - 40, y + hh - 2, `${v}`, { size: 96, weight: 600, fill: col, anchor: 'end' });
+      T(svg, x1, y + hh + 42, base, { size: 32, fill: C.muted, anchor: 'end' });
+    };
+    bar(400, r, C.ink, C.faint, 'Telekom’s press release', 'of all contacts in the US, “handled by AI agents”', 'of 100 contacts in the US');
+    if (b >= 1) bar(680, s, C.accent, C.field, 'T-Mobile’s own slide', 'of contract customers’ contacts, “served by an AI agent”', 'of 100 contract customers’ contacts');
     if (b >= 2) {
-      pth(svg, `M${X(0)} ${y + hh + 250} L${X(0)} ${y + hh + 270} L${X(s)} ${y + hh + 270} L${X(s)} ${y + hh + 250}`, { stroke: C.ink, 'stroke-width': 2.5, 'stroke-dasharray': '10 8' });
-      T(svg, X(0), y + hh + 324, 'how many of these the software finished: not published', { size: 38, weight: 600 });
+      const y = 680 + hh + 22;
+      pth(svg, `M${X(0)} ${y} L${X(0)} ${y + 18} L${X(s)} ${y + 18} L${X(s)} ${y}`, { stroke: C.ink, 'stroke-width': 2.5, 'stroke-dasharray': '10 8' });
+      T(svg, X(0), y + 76, 'how many of these the software finished: not published', { size: 38, weight: 600 });
     }
-    // the cable keeps going along the bottom
     cable(svg, [[-20, CABLE_Y], [1940, CABLE_Y]]);
   },
 });
@@ -171,7 +203,7 @@ add({
   draw(page, b) {
     const svg = svgOf(page);
     frame(svg, this);
-    const top = 360, bot = 760, ww = 470, gap = 95, cy = 520;
+    const top = 330, bot = 700, ww = 470, gap = 95, cy = 515;
     const xs = [L, L + ww + gap, L + 2 * (ww + gap)];
     const brick = (x) => {
       const rh = 40, bw = 94;
@@ -206,66 +238,59 @@ add({
     }
     if (b >= 2) { h('rect', { x: xs[2], y: cy - 12, width: ww, height: 24, fill: C.field }, svg); [cy - 9, cy + 9].forEach((yy) => ln(svg, xs[2], yy, xs[2] + ww, yy, { stroke: C.ink, 'stroke-width': 3.5, 'stroke-dasharray': '16 10', 'stroke-linecap': 'butt' })); }
     // names
-    const head = (x, a, z) => { T(svg, x, 300, a, { size: 36, weight: 600 }); T(svg, x, 340, z, { size: 32, fill: C.muted }); };
+    const head = (x, a, z, col) => { T(svg, x, 262, a, { size: 36, weight: 600, fill: col || C.ink }); T(svg, x, 302, z, { size: 32, fill: C.muted }); };
     head(xs[0], 'US: timber frame, hollow', '94% of new single-family homes');
     if (b >= 1) head(xs[1], 'Germany: brick', 'two in three new residential buildings');
-    const under = (x, a, z, col) => { T(svg, x, bot + 78, a, { size: 56, weight: 700, fill: col || C.ink }); T(svg, x, bot + 124, z, { size: 34, fill: C.muted }); };
-    under(xs[0], 'pulled through', 'quick; nothing to see');
+    if (b >= 2) head(xs[2], 'Germany: the same brick', 'opened, then closed again', C.accent);
+    const under = (x, a, z, col) => { T(svg, x, bot + 72, a, { size: 56, weight: 700, fill: col || C.ink }); T(svg, x, bot + 118, z, { size: 34, fill: C.muted }); };
+    under(xs[0], 'pulled through', 'quick; the wall stays closed');
     if (b >= 1) under(xs[1], 'repaint', 'a duct on the face; quick');
     if (b >= 2) under(xs[2], 'renovate', 'cut in, plastered; slow', C.accent);
     if (b >= 3) {
-      T(svg, L, 940, 'The cable is the agent. The wall is what’s already there: old systems, rules, people.', { family: 'serif', italic: true, size: 40 });
+      T(svg, L, 900, 'The cable is the agent. The wall is what’s already there: old systems, rules, people.', { family: 'serif', italic: true, size: 40 });
     }
     cable(svg, [[-20, CABLE_Y], [1940, CABLE_Y]]);
   },
 });
 
 // 7 ---------------------------------------------------------------------------
-// Fourteen keys on one ring, then three: the ways a customer proves who they
-// are. One drawn key, placed fourteen times by code, so the count is exact.
+// Fourteen socket faces, no two alike: the ways a customer proves who they are.
+// Then three, dashed because they are planned, and the agent's plug below them.
 add({
-  id: 'simplify', n: 7, beat: 'What T-Mobile actually did', builds: 3, start: '5:25',
-  clicks: ['14 today', '3 planned', 'Telekom’s own words'],
+  id: 'simplify', n: 7, beat: 'What T-Mobile actually did', builds: 2, start: '5:25',
+  clicks: ['14 today', '3 planned, and the plug'],
   title: 'Simplify before automating.',
-  sub: 'Telekom’s own words, on its own slide.',
+  sub: 'Telekom’s own words, from its own slide.',
   source: 'Deutsche Telekom, AI Investor Day, “From AI Adoption to AI Impact”, 5 Oct 2026. Company figures; three is a target.',
-  notes: `<p>Telekom isn't there yet. Across its European countries, a customer can prove who they are in fourteen different ways. Telekom wants three, and its own slide says why. <b>Simplify before automating.</b></p>`,
+  notes: `<p>Telekom isn't there yet. Across its European countries, a customer can prove who they are in fourteen different ways: fourteen sockets, and an agent would need a plug for each. Telekom wants three, and its own slide says why. <b>Simplify before automating.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this, { titleSize: 72 });
     const D = data.rewire.de;
-    const ring = (cx, cy, n, R, scale) => {
-      dot(svg, cx, cy, 42, { fill: 'none', stroke: C.ink, 'stroke-width': 4 });
-      const kw = 1536 * scale, kh = 1024 * scale;
-      for (let i = 0; i < n; i++) {
-        const a = -90 + (i - (n - 1) / 2) * (n > 3 ? 196 / (n - 1) : 24);
-        // the key's bow hole sits at about x 150, y 512 of the drawing; hang it on the ring
-        const g = h('g', { transform: `translate(${cx} ${cy}) rotate(${a + 90}) translate(${-150 * scale + 0} ${-512 * scale + 42})` }, svg);
-        h('image', { href: ART + 'deck-key-proj.png', x: 0, y: 0, width: kw, height: kh, transform: `rotate(90 ${150 * scale} ${512 * scale})` }, g);
-      }
-    };
-    ring(520, 380, D.now.value, 42, 0.19);
-    T(svg, 520, 790, `${D.now.value} ways to prove who you are, today`, { size: 38, weight: 600, anchor: 'middle' });
+    T(svg, L, 340, `${D.now.value} ways to prove who you are, today`, { size: 38, weight: 600 });
+    for (let i = 0; i < D.now.value; i++) socket(svg, L + 46 + (i % 7) * 116, 430 + Math.floor(i / 7) * 116, 92, i % HOLES.length);
     if (b >= 1) {
-      pth(svg, 'M900 520 L1080 520 M1056 502 L1080 520 L1056 538', { stroke: C.mid, 'stroke-width': 4 });
-      ring(1440, 380, D.plan.value, 42, 0.19);
-      T(svg, 1440, 790, `${D.plan.value}, planned: a target`, { size: 38, weight: 600, fill: C.accent, anchor: 'middle' });
-    }
-    if (b < 2) {   // the title waits for its build here only because it is Telekom's line, not his
-      // (frame drew it already; nothing to hide)
-    }
+      pth(svg, 'M930 488 L1060 488 M1036 470 L1060 488 L1036 506', { stroke: C.mid, 'stroke-width': 4 });
+      T(svg, 1130, 340, `${D.plan.value}, planned: a target`, { size: 38, weight: 600, fill: C.accent });
+      const xs = [1215, 1405, 1595];
+      xs.forEach((x, i) => socket(svg, x, 470, 150, [2, 0, 5][i], { fill: C.field, stroke: C.accent, w: 3.5, dash: '14 9' }));
+      // the agent's plug, pointing up at the middle one
+      const k = 0.3, gy = 470 + 75 + 40 + (1308 - 520) * k;
+      cable(svg, [[-20, CABLE_Y], [xs[1], CABLE_Y], [xs[1], gy - 2]], { r: 90, tw: 20 });
+      plug(svg, xs[1], gy, k, -90);
+    } else cable(svg, [[-20, CABLE_Y], [1940, CABLE_Y]]);
   },
 });
 
 // 13 --------------------------------------------------------------------------
 // The plan as a building drawn floor by floor, the way a drawing marks work:
-// what is built in solid line, what is planned in dashed line. Each floor is
-// a step; its measure stands beside it.
+// built in solid line, planned in dashed line. Each floor is a step and carries
+// its name; what it is measured by stands beside it.
 add({
   id: 'steps1', n: 13, beat: 'How to address it', builds: 3, start: '10:25',
   clicks: ['step 1', 'step 2', 'steps 3 and 4'],
   title: 'Measure first. Start beside the staff.',
-  sub: 'Eight steps, each standing on the one below. The order is my hypothesis.',
+  sub: 'Eight steps. The order is my hypothesis.',
   source: 'Step 1: the business measure from this course. Step 4: teams, never single people (2021 framework agreement). Bitkom 2025: 51% of firms with 20 or more staff strongly dependent on US digital technology.',
   notes: `<p>So how would I do it? Step one: before any agent, measure what one contact costs today and how often customers come back; then, with the agent, how many requests it finishes for good and what it costs. That's the business measure from this course, not accuracy. If it doesn't get better, the agent is the wrong tool and Telekom stops there. Step two: sign the works agreement while the system is still on paper. Steps three and four: keep the option to switch suppliers, since about half of German firms with twenty or more staff depend strongly on American technology, and train the staff before each new key, measuring teams, never single people. <b>Measure first. Start beside the staff.</b></p>`,
   draw(page, b, data) {
@@ -273,59 +298,56 @@ add({
     frame(svg, this);
     const st = data.plan.steps;
     const MEASURE = {
-      1: 'cost per contact, repeat contacts, before and with the agent. No gain: stop',
-      2: 'signed before the first agent acts',
-      3: 'time to switch supplier, tests included',
-      4: 'cases per hour and repeat contacts, per team',
+      1: [['cost per contact, repeat contacts: before and with the agent'], ['No gain: stop here.', { weight: 600, fill: C.ink }]],
+      2: [['signed before the first agent acts']],
+      3: [['time to switch supplier.'], ['Bitkom: 51% of firms depend strongly on US technology']],
+      4: [['cases per hour and repeat contacts, per team, never per person']],
     };
     const on = b >= 2 ? [1, 2, 3, 4] : b === 1 ? [1, 2] : [1];
-    const bx = 1400, bw = 380, g = CABLE_Y - 24, fh = 70;
+    const bx = 1130, bw = 670, g = CABLE_Y - 24, fh = 72;
     for (let i = 1; i <= 8; i++) {
-      const y = g - i * fh, built = on.includes(i);
-      if (built) {
-        h('rect', { x: bx, y, width: bw, height: fh, fill: i === Math.max(...on) ? C.field : C.paper, stroke: C.ink, 'stroke-width': 4 }, svg);
-      } else {
-        h('rect', { x: bx, y, width: bw, height: fh, fill: 'none', stroke: C.mid, 'stroke-width': 2.5, 'stroke-dasharray': '12 10' }, svg);
-      }
-      T(svg, bx + bw / 2, y + fh / 2 + 13, String(i), { size: 36, weight: 600, fill: built ? C.ink : C.mid, anchor: 'middle' });
+      const y = g - i * fh, built = on.includes(i), yc = y + fh / 2;
+      if (built) h('rect', { x: bx, y, width: bw, height: fh, fill: i === Math.max(...on) ? C.field : C.paper, stroke: C.ink, 'stroke-width': 4 }, svg);
+      else h('rect', { x: bx, y, width: bw, height: fh, fill: 'none', stroke: C.muted, 'stroke-width': 3, 'stroke-dasharray': '12 9' }, svg);
+      T(svg, bx + 30, yc + 12, `${i}  ${st[i - 1].name}`, { size: 36, weight: built ? 600 : 400, fill: built ? C.ink : C.muted });
+      if (!built) continue;
+      const lines = MEASURE[i], lh = 38, y0 = yc + 11 - (lines.length - 1) * lh / 2;
+      let end = L;
+      lines.forEach(([t, o], j) => { const r = T(svg, L, y0 + j * lh, t, { size: 32, fill: C.muted, ...o }); end = Math.max(end, L + textSize(t, { family: 'sans', size: 32, free: true, ...o }).w); });
+      ln(svg, end + 18, yc, bx - 12, yc, { stroke: C.mid, 'stroke-width': 2, 'stroke-dasharray': '3 7' });
     }
-    // roof outline, planned
-    pth(svg, `M${bx - 20} ${g - 8 * fh} L${bx + bw / 2} ${g - 8 * fh - 90} L${bx + bw + 20} ${g - 8 * fh}`, { stroke: C.mid, 'stroke-width': 2.5, 'stroke-dasharray': '12 10' });
-    // the steps on the left, each beside its floor
-    for (let i = 1; i <= 8; i++) {
-      const y = g - i * fh + fh / 2 + 12, built = on.includes(i);
-      if (!built) { T(svg, L, y, `${i}  ${st[i - 1].name}`, { size: 32, fill: C.mid }); continue; }
-      T(svg, L, y - 4, `${i}  ${st[i - 1].name}`, { size: 38, weight: 600 });
-      T(svg, L + 430, y - 4, MEASURE[i], { size: 32, fill: C.muted, width: 840, lh: 36 });
-    }
+    pth(svg, `M${bx - 20} ${g - 8 * fh} L${bx + bw / 2} ${g - 8 * fh - 80} L${bx + bw + 20} ${g - 8 * fh}`, { stroke: C.muted, 'stroke-width': 3, 'stroke-dasharray': '12 9' });
     cable(svg, [[-20, CABLE_Y], [1940, CABLE_Y]]);
   },
 });
 
 // 14 --------------------------------------------------------------------------
-// The biggest job, drawn: a brick wall cut open with a channel, the cable laid
-// in, the right half plastered over. That is what step 5 is.
+// The biggest job, drawn: a brick wall cut open with a channel. The deck's cable
+// comes in from the left, lies in the open channel and runs on, hidden, under
+// the plaster. That is what step 5 is.
 add({
   id: 'step5', n: 14, beat: 'How to address it', builds: 3, start: '11:40',
   clicks: ['the cut channel', 'keys need step 5', 'the cost of getting it wrong'],
   title: 'The biggest job is one customer record.',
   sub: 'Step 5: 14 ways to prove who you are become 3. Measure: callers recognised without questions.',
   source: 'Deutsche Telekom, AI Investor Day, 5 Oct 2026 (14 ways, 3 planned: company figures, 3 a target); T-Mobile US, Form 10-K 2025 and 10-Q Q3 2026 (write-off in Q3 2025).',
-  notes: `<p>Step five. Fourteen ways of proving who you are become three, and the customer data becomes usable. An agent can't act on an account it can't identify. This is the channel cut into the brick. It takes years, and it can fail: in the third quarter of 2025 T-Mobile wrote off two hundred seventy-eight million dollars on a billing system it abandoned, about a tenth of its net income that quarter. <b>The biggest job is one customer record.</b></p>`,
+  notes: `<p>Step five. Fourteen ways of proving who you are become three, and the customer data becomes usable. An agent can't act on an account it can't identify. This is the channel cut into the brick. It takes years, and it can fail: in the third quarter of 2025 T-Mobile wrote off two hundred seventy-eight million dollars on parts of a billing-system replacement it abandoned, about a tenth of its net income that quarter. <b>The biggest job is one customer record.</b></p>`,
   draw(page, b) {
     const svg = svgOf(page);
     frame(svg, this);
-    // the drawing: 1536 x 1024, ink from y 262 to 850; the channel at about y 520-560
-    const s = 0.74, w = 1536 * s, hh = 1024 * s, x = 1920 - w - 90, y = 300 - 262 * s;
-    img(svg, 'deck-chase.png', x, y, w, hh);
-    const chY = y + 540 * s;
-    // leaders from the left column onto the drawing
-    const lead = (tx, ty, x1, y1, a, col) => { T(svg, tx, ty, a, { size: 34, weight: 600, fill: col || C.ink, width: 470 }); ln(svg, tx + 480, ty - 12, x1, y1, { stroke: C.ink, 'stroke-width': 2 }); dot(svg, x1, y1, 6, { fill: C.ink }); };
-    lead(L, 430, x + 330 * s, chY, 'cut open: the old systems, 14 ways in');
-    T(svg, x + 1150 * s, y + 900 * s, 'plastered: one record, 3 ways in', { size: 34, weight: 600, fill: C.accent, anchor: 'middle' });
-    ln(svg, x + 1150 * s, y + 850 * s, x + 1150 * s, chY + 30, { stroke: C.ink, 'stroke-width': 2 }); dot(svg, x + 1150 * s, chY + 30, 6, { fill: C.ink });
-    if (b >= 1) T(svg, L, 860, 'Keys that change an account need step 5: an agent can’t act on an account it can’t identify.', { size: 36, weight: 600, width: 1680 });
-    if (b >= 2) T(svg, L, 920, 'It can fail: in Q3 2025 T-Mobile wrote off $278 million on a billing system it abandoned.', { size: 32, fill: C.muted, width: 1680 });
-    cable(svg, [[-20, CABLE_Y], [1940, CABLE_Y]]);
+    // the drawing: 1536 x 1024; its cable (a tube 27 px wide, centred on y 579.5)
+    // enters at the left edge; the plaster runs from x 775 to the right edge
+    const s = 0.74, x = 1920 + 40 - 1536 * s, y = 106, cy = y + 579.5 * s;
+    img(svg, 'deck-chase.png', x, y, 1536 * s, 1024 * s);
+    const tw = 27 * s;
+    cable(svg, [[-20, cy], [x + 40, cy]], { tw, line: 2.5, cap: 'butt' });
+    // under the plaster: hidden, so dashed
+    [cy - tw / 2 + 1.25, cy + tw / 2 - 1.25].forEach((yy) => ln(svg, x + 790 * s, yy, 1940, yy, { stroke: C.ink, 'stroke-width': 2.5, 'stroke-dasharray': '14 9', 'stroke-linecap': 'butt' }));
+    const lead = (tx, ty, x1, y1, a, col) => { T(svg, tx, ty, a, { size: 34, weight: 600, fill: col || C.ink, width: 680 }); ln(svg, tx + 640, ty - 12, x1, y1, { stroke: C.ink, 'stroke-width': 2 }); dot(svg, x1, y1, 6, { fill: C.ink }); };
+    lead(L, 410, x + 400 * s, cy - 30, 'cut open: the old systems, 14 ways in');
+    T(svg, R, y + 860 * s, 'plastered: one record, 3 ways in', { size: 34, weight: 600, fill: C.accent, anchor: 'end' });
+    ln(svg, x + 1150 * s, y + 815 * s, x + 1150 * s, y + 600 * s, { stroke: C.ink, 'stroke-width': 2 }); dot(svg, x + 1150 * s, y + 600 * s, 6, { fill: C.ink });
+    if (b >= 1) T(svg, L, 850, 'Keys that change an account need step 5: an agent can’t act on an account it can’t identify.', { size: 36, weight: 600, width: 1680 });
+    if (b >= 2) T(svg, L, 912, 'It can fail: in Q3 2025 T-Mobile wrote off $278 million on parts of a billing-system replacement it abandoned.', { size: 32, fill: C.muted, width: 1680 });
   },
 });
