@@ -27,7 +27,7 @@ function build(el, ctx) {
   const inN = Math.round(1 / pm.chance_right), in10 = Math.round(rt.chance_right * 10);
   const pctErr = `${Math.round(ex.conditions.error_per_storing_qubit * 100)}%`;
   const svg0 = svgRoot(el, W, H,
-    `The smallest grid: ${d.storing_qubits} storing qubits and ${d.helpers} checks. Errors are never seen; only the checks next to them fire, and in a row of errors only the ends. `
+    `The smallest grid: ${d.storing_qubits} storing qubits and ${d.helpers} checks. Errors are never seen; only the checks next to them fire, and in a line of errors only the ends. `
     + `The same ${ex.fired.length} fired checks can be explained in two ways: plain matching picks the one that is right ${1} time in ${inN}; the other, read together, is right about ${in10} times in 10. `
     + `Counted by us with ${pctErr} error per storing qubit and checks that are never wrong.`);
   svg0.style.color = C.ink;
@@ -90,7 +90,7 @@ about [[${in10}]] times in [[10]]`;
     const qs = Object.keys(w.errors).map(Number), last = A.pos(qs[qs.length - 1]), first = A.pos(qs[0]);
     line(A.gE, first[0], first[1], last[0], last[1] + S.pitch * 0.62, { stroke: C.ink, 'stroke-width': 1.5 });
     qs.forEach((q) => { const [x, y] = A.pos(q); errMark(A.gE, x, y, A.qr * 1.22, w.errors[q], C).setAttribute('data-audit', 'skip'); });
-    text(svg, 96, S.noteY, 'a row of flips: only its ends fire, and an end at the edge fires nothing', { italic: true, size: S.noteSize, anchor: 'middle', width: 168 });
+    text(svg, 96, S.noteY, 'a line of flips: only its ends fire, and an end at the edge fires nothing', { italic: true, size: S.noteSize, anchor: 'middle', width: 168 });
     text(svg, 96, S.noteY + 74, KEY, { italic: true, size: S.noteSize, anchor: 'middle' });
     line(svg, 196, 78, 196, 390, { stroke: C.hairline, 'stroke-width': 1 });
     const M = grid(svg, { checks: d.checks, d: d.distance, cx: S.xs[0], cy: S.cy, pitch: S.pitch, C });
@@ -220,9 +220,9 @@ Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
 
   const s2 = g(svg);
   if (tall) {
-    text(s2, N.x, N.y, 'a row of errors: only its ends fire, and an end at the edge fires nothing', { ...noteO, width: 190 });
+    text(s2, N.x, N.y, 'a line of errors: only its ends fire, and an end at the edge fires nothing', { ...noteO, width: 190 });
   } else {
-    const a = text(s2, N.x, N.y, 'a row of errors: only its ends fire,', { ...noteO, width: N.w });
+    const a = text(s2, N.x, N.y, 'a line of errors: only its ends fire,', { ...noteO, width: N.w });
     const t = M.tiles[w2.fired[0]];
     leader(s2, a.x - 6, a.y + 9, t.c[0] + p * 0.14, t.c[1] - 2, { stroke: C.muted, dot: false });
     const b = text(s2, N.x, pB[1] + p * 0.6 + 5, 'and an end at the edge fires nothing', { ...noteO, width: N.w });

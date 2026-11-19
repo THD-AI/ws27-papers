@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grid lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Libre+Franklin:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&display=swap">
+<style>
+  :root { --paper: #FBFBFC; --ink: #15171C; --muted: #5C6370; --hairline: #DADDE3; --accent: #4254C5; --field: #C9D3F7; }
+  html, body { margin: 0; background: var(--paper); color: var(--ink); }
+  body { font: 400 12px/1.4 'Libre Franklin', Arial, sans-serif; }
+  #lab { padding: 14px; display: inline-grid; gap: 18px 22px; align-items: start; }
+  .cell h2 { margin: 0 0 6px; font: 500 11px/1.2 'Libre Franklin', Arial, sans-serif; color: var(--muted); }
+  .frame { outline: 1px dotted var(--hairline); }
+  #audit { margin: 0; padding: 0 14px 14px; font: 11px/1.5 Consolas, monospace; color: var(--muted); white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<div id="lab"></div>
+<pre id="audit"></pre>
+<script type="module" src="./lab.js"></script>
+</body>
+</html>
