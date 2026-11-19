@@ -1,7 +1,9 @@
 // The slides of "Renovate, don't repaint". Each slide is a pure drawing of
-// its build: draw(page, build, data, ctx). Every number drawn comes from the
-// article's data files (articles/renovate/data) or is quoted from them; the
-// spoken lines in the notes are the talk plan's (dotUni talks/innovation).
+// its build: draw(page, build, data, ctx). The figures' numbers come from the
+// article's data files (articles/renovate/data); the few typed here (94%, two
+// in three, the law's dates) are the article's text.md, with their sources on
+// the slide and in B5. The notes are the talk plan's spoken lines, checked
+// against the article (dotUni talks/innovation/storyline.md).
 import { h, text, textSize } from '../../lib/fig.js';
 
 const C = { paper: '#FBFBFC', ink: '#15171C', muted: '#5C6370', hair: '#DADDE3', accent: '#1F7A54', field: '#CDE9D9', mid: '#9AA0AA' };
@@ -29,7 +31,7 @@ function dotRow(p, x, y, total, filled, o = {}) {
     const cx = x + col * pitch + (o.group ? Math.floor(col / o.group) * gap : 0) + r;
     const cy = y + row * (o.rowPitch || pitch) + r;
     if (i < filled) dot(p, cx, cy, r, { fill: o.fill || C.ink });
-    else dot(p, cx, cy, r - 1.25, { fill: 'none', stroke: o.empty || C.hair, 'stroke-width': 2.5 });
+    else dot(p, cx, cy, r - 1.25, { fill: 'none', stroke: o.empty || C.mid, 'stroke-width': 2.5 });
   }
   const rows = Math.ceil(total / cols);
   return { w: cols * pitch + (o.group ? Math.floor((cols - 1) / o.group) * gap : 0), h: rows * (o.rowPitch || pitch) };
@@ -74,6 +76,7 @@ const add = (s) => { s.n = SLIDES.filter((x) => !x.backup && !x.end).length + (s
 // 1 ---------------------------------------------------------------------------
 add({
   id: 'title', builds: 2,
+  landings: { 1: "Can Telekom copy what T-Mobile's agents did?" },
   notes: `<p>Deutsche Telekom openly takes an American result as its benchmark. On 5 October it told its investors about T-Mobile: software agents there now do a big part of customer service, and Telekom wants the same in Europe by 2030. My position: born in the United States, studying in Germany, so I may see Germany as the harder case. That's why every claim has a source. <b>Can Telekom copy what T-Mobile's agents did?</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
@@ -137,14 +140,14 @@ add({
     T(svg, L + 170, ya + 26, "Telekom's press release", { size: 32, weight: 600 });
     T(svg, L + 170, ya + 66, 'of 100 contacts in the US', { size: 32, fill: C.muted });
     dotRow(svg, dx, ya + 90, 100, P.release.value, { ...opt, fill: C.mid });
-    T(svg, dx, ya + 186, '“handled by AI agents”', { family: 'serif', italic: true, size: 32, fill: C.muted });
+    T(svg, dx, ya + 186, 'handled by AI agents, in the release’s words', { size: 34, fill: C.muted });
     if (b >= 1) {
       const yb = 610;
       T(svg, L, yb + 66, String(P.slide.value), { size: 120, weight: 600, fill: C.accent });
       T(svg, L + 170, yb + 26, "T-Mobile's own slide", { size: 32, weight: 600 });
       T(svg, L + 170, yb + 66, "of 100 contract customers' contacts", { size: 32, fill: C.muted });
       dotRow(svg, dx, yb + 90, 100, P.slide.value, { ...opt, fill: C.accent });
-      T(svg, dx, yb + 186, '“served by an AI agent”: the customer meets the software first', { family: 'serif', italic: true, size: 32, fill: C.muted });
+      T(svg, dx, yb + 186, '“served by an AI agent”: the customer meets the software first', { size: 36 });
     }
     if (b >= 2) {
       T(svg, dx, 880, 'How many of these the software finished: not published.', { size: 38, weight: 600 });
@@ -157,7 +160,7 @@ add({
 add({
   id: 'contacts', builds: 3, label: 'The American result, corrected',
   title: 'Nobody outside can tell how much was the agents.',
-  source: 'T-Mobile US, AI Investor Day deck (contacts per account, Q4 2021 and Q2 2026; T-Mobile reports the fall as 55%); agents announced September 2024.',
+  source: 'T-Mobile US, AI Investor Day deck (contacts per account, Q4 2021 and Q2 2026; T-Mobile reports the fall as 55%); T-Mobile US, press release, 18 Sep 2024. Company figures.',
   notes: `<p>The second number: at the end of 2021 a customer account got in touch about seven times a year. By the middle of this year, about three. Less than half. But the agents were only announced in September 2024, and nothing in between is published. <b>Nobody outside can tell how much was the agents.</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
@@ -203,23 +206,24 @@ add({
 add({
   id: 'walls', builds: 4, label: 'The picture',
   title: 'The cable is the same. The wall decides the work.',
-  source: 'NAHB 2026 (94% of new single-family homes completed in 2025 timber-framed); Destatis 2021 (about two in three residential buildings approved in 2020 masonry); DIN 18015-3. The walls picture conditions; they are not evidence.',
+  source: 'NAHB 2026 (94% of new single-family homes completed in 2025 timber-framed); Destatis 2021 (about two in three residential buildings approved in 2020 brick or other masonry); DIN 18015-3. The walls picture conditions; they are not evidence.',
   notes: `<p>My father is a civil engineer, and this picture is his. In America almost every new family home has a timber frame: the wall is hollow, so a new cable drops down inside it. In Germany it's mostly brick, built to stand, so a new cable means opening the wall. You can screw a duct onto the wall: quick, and the wall stays as it was. Or you cut a channel, lay the cable and plaster it over: slow, and the cable becomes part of the wall. The cable is the agent. The wall is what's already there: old systems, rules, people. The duct is repainting. Cutting into the wall is renovating. <b>The cable is the same. The wall decides the work.</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
     chrome(svg, this, b, ctx);
-    const top = 440, hgt = 360, ww = 500, gap = 114;
+    const top = 450, hgt = 350, ww = 500, gap = 114;
     const xs = [L, L + ww + gap, L + 2 * (ww + gap)];
-    // group headings
-    T(svg, xs[0], 320, 'Most new US homes', { size: 34, weight: 600 });
-    T(svg, xs[0], 362, '94% of new single-family homes', { size: 32, fill: C.muted });
+    T(svg, xs[0], 330, 'US: timber frame', { size: 36, weight: 600 });
+    T(svg, xs[0], 374, '94% of new single-family homes', { size: 32, fill: C.muted });
     if (b >= 1) {
-      T(svg, xs[1], 320, 'Most German homes: brick', { size: 34, weight: 600 });
-      T(svg, xs[1], 362, 'about two in three residential buildings approved in 2020', { size: 32, fill: C.muted });
+      T(svg, xs[1], 330, 'Germany: mostly brick', { size: 36, weight: 600 });
+      T(svg, xs[1], 374, 'two in three residential buildings approved in 2020', { size: 32, fill: C.muted });
+      ln(svg, xs[1], 398, xs[2] + ww, 398, { stroke: C.ink, 'stroke-width': 2 });
     }
-    const brick = (x) => {
+    const CUT = { x: 0, y: 0 };
+    const brick = (x, skip) => {
       const g = h('g', {}, svg);
-      const rh = 40, bw = 100;
+      const rh = 35, bw = 100;
       for (let r = 0; top + r * rh < top + hgt; r++) {
         const y = top + r * rh;
         ln(g, x, y, x + ww, y, { stroke: C.mid, 'stroke-width': 2 });
@@ -227,41 +231,42 @@ add({
         for (let bx = x + off; bx < x + ww; bx += bw) if (bx > x) ln(g, bx, y, bx, Math.min(y + rh, top + hgt), { stroke: C.mid, 'stroke-width': 2 });
       }
       rc(svg, x, top, ww, hgt, { 'stroke-width': 4 });
+      return g;
     };
     const socket = (x, y) => { rc(svg, x - 22, y - 22, 44, 44, { fill: C.paper, 'stroke-width': 3 }); dot(svg, x - 8, y, 4, { fill: C.ink }); dot(svg, x + 8, y, 4, { fill: C.ink }); };
+    const route = (x) => { const yz = top + 70, xz = x + 70; return { yz, xz, d: `M${x + ww - 40} ${top - 34} L${x + ww - 40} ${yz} L${xz} ${yz} L${xz} ${top + hgt - 70}` }; };
     // timber: studs, the cable dropped down one bay
     {
       const x = xs[0];
       rc(svg, x, top, ww, hgt, { 'stroke-width': 4 });
       for (let i = 1; i < 6; i++) ln(svg, x + i * ww / 6, top, x + i * ww / 6, top + hgt, { stroke: C.mid, 'stroke-width': 3 });
       const cx = x + ww / 12 * 3;
-      pth(svg, `M${cx} ${top - 44} L${cx} ${top + hgt - 70}`, { stroke: C.accent, 'stroke-width': 7 });
+      pth(svg, `M${cx} ${top - 34} L${cx} ${top + hgt - 70}`, { stroke: C.ink, 'stroke-width': 7 });
       socket(cx, top + hgt - 48);
-      T(svg, x, top + hgt + 64, 'pulled through', { size: 40, weight: 600 });
-      T(svg, x, top + hgt + 110, 'quick', { size: 34, fill: C.muted });
+      T(svg, x, top + hgt + 66, 'pulled through', { size: 44, weight: 600 });
+      T(svg, x, top + hgt + 112, 'quick', { size: 34, fill: C.muted });
     }
-    if (b >= 1) { // brick with a duct screwed on the surface
-      const x = xs[1];
+    if (b >= 1) { // a duct screwed onto the plastered brick: a box on the surface
+      const x = xs[1], r0 = route(x);
       brick(x);
-      const yz = top + 70, xz = x + 70;
-      pth(svg, `M${x + ww - 40} ${top - 44} L${x + ww - 40} ${yz} L${xz} ${yz} L${xz} ${top + hgt - 70}`, { stroke: C.ink, 'stroke-width': 30, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter' });
-      pth(svg, `M${x + ww - 40} ${top - 44} L${x + ww - 40} ${yz} L${xz} ${yz} L${xz} ${top + hgt - 70}`, { stroke: C.paper, 'stroke-width': 22, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter' });
-      pth(svg, `M${x + ww - 40} ${top - 44} L${x + ww - 40} ${yz} L${xz} ${yz} L${xz} ${top + hgt - 70}`, { stroke: C.accent, 'stroke-width': 7 });
-      socket(xz, top + hgt - 48);
-      T(svg, x, top + hgt + 64, 'repaint', { size: 52, weight: 700 });
-      T(svg, x, top + hgt + 110, 'quick; the wall unchanged', { size: 34, fill: C.muted });
+      pth(svg, r0.d.replace(`M${x + ww - 40} ${top - 34}`, `M${x + ww - 40} ${top}`), { stroke: C.ink, 'stroke-width': 34, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter' });
+      pth(svg, r0.d.replace(`M${x + ww - 40} ${top - 34}`, `M${x + ww - 40} ${top}`), { stroke: C.paper, 'stroke-width': 26, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter' });
+      pth(svg, r0.d, { stroke: C.ink, 'stroke-width': 7 });
+      [[x + 240, r0.yz], [x + 400, r0.yz], [r0.xz, top + 180]].forEach(([sx, sy]) => { dot(svg, sx, sy, 6, { fill: C.paper, stroke: C.ink, 'stroke-width': 2.5 }); ln(svg, sx - 4, sy, sx + 4, sy, { stroke: C.ink, 'stroke-width': 2 }); });
+      socket(r0.xz, top + hgt - 48);
+      T(svg, x, top + hgt + 66, 'repaint', { size: 56, weight: 700 });
+      T(svg, x, top + hgt + 112, 'quick; the wall unchanged', { size: 34, fill: C.muted });
     }
-    if (b >= 2) { // brick cut, cable laid, plastered over
-      const x = xs[2];
+    if (b >= 2) { // the brick cut open, the cable laid in, plastered over: the wall changes
+      const x = xs[2], r0 = route(x);
       brick(x);
-      const yz = top + 70, xz = x + 70;
-      const d = `M${x + ww - 40} ${top} L${x + ww - 40} ${yz} L${xz} ${yz} L${xz} ${top + hgt - 70}`;
-      pth(svg, d, { stroke: C.field, 'stroke-width': 46, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter' });
-      pth(svg, `M${x + ww - 40} ${top - 44} L${x + ww - 40} ${top}`, { stroke: C.accent, 'stroke-width': 7 });
-      pth(svg, d, { stroke: C.accent, 'stroke-width': 7 });
-      socket(xz, top + hgt - 48);
-      T(svg, x, top + hgt + 64, 'renovate', { size: 52, weight: 700, fill: C.accent });
-      T(svg, x, top + hgt + 110, 'slow; the wall changes', { size: 34, fill: C.muted });
+      const chase = r0.d.replace(`M${x + ww - 40} ${top - 34}`, `M${x + ww - 40} ${top}`);
+      pth(svg, chase, { stroke: C.accent, 'stroke-width': 52, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter' });
+      pth(svg, chase, { stroke: C.field, 'stroke-width': 44, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter' });
+      pth(svg, r0.d, { stroke: C.ink, 'stroke-width': 7 });
+      socket(r0.xz, top + hgt - 48);
+      T(svg, x, top + hgt + 66, 'renovate', { size: 56, weight: 700, fill: C.accent });
+      T(svg, x, top + hgt + 112, 'slow; the wall changes', { size: 34, fill: C.muted });
     }
   },
 });
@@ -270,7 +275,7 @@ add({
 add({
   id: 'rebuilt', builds: 4, label: 'What T-Mobile actually did',
   title: 'T-Mobile rebuilt alongside its agents.',
-  source: "T-Mobile US: AI Investor Day (head of IT), AI Investor Day deck, Form 10-K 2025. Share of chats: company figure.",
+  source: "Deutsche Telekom, AI Investor Day transcript, 5 Oct 2026 (T-Mobile's head of IT); T-Mobile US, AI Investor Day deck; Form 10-K 2025. Share of chats: company figure.",
   notes: `<p>T-Mobile didn't just repaint. Their head of IT described it to investors. Before, outside contractors worked on other companies' systems. Now T-Mobile's own engineers work on T-Mobile's own systems. They built one system that knows each customer, and the agents read from it. On that base, almost eight in ten chats never reached a person. A real result. <b>T-Mobile rebuilt alongside its agents.</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
@@ -278,27 +283,26 @@ add({
     const R6 = data.rewire.us;
     const y0 = 330;
     T(svg, L, y0, 'Before', { size: 40, weight: 600, fill: C.muted });
-    T(svg, L, y0 + 50, "outside contractors on suppliers' systems", { size: 32, fill: C.muted });
-    // several separate systems, not joined
-    [[0, 0], [190, 30], [380, -10], [570, 20]].forEach(([dx, dy]) => rc(svg, L + dx, y0 + 110 + dy, 150, 90, { stroke: C.mid, 'stroke-width': 3 }));
-    T(svg, L, y0 + 290, 'separate systems, worked on by others', { size: 32, fill: C.muted });
+    T(svg, L, y0 + 48, "outside contractors on suppliers' systems", { size: 34, fill: C.muted });
+    [[0, 0], [200, 34], [400, -8], [600, 26]].forEach(([dx, dy]) => rc(svg, L + dx, y0 + 96 + dy, 170, 110, { stroke: C.mid, 'stroke-width': 4 }));
+    T(svg, L, y0 + 300, 'separate systems, worked on by others', { size: 34, fill: C.muted });
     if (b >= 1) {
       const x = 1000;
       T(svg, x, y0, 'Now', { size: 40, weight: 600 });
-      T(svg, x, y0 + 50, 'its own engineers on its own systems', { size: 32 });
-      rc(svg, x, y0 + 110, 824, 110, { 'stroke-width': 4 });
-      T(svg, x + 412, y0 + 178, 'one system that knows each customer', { size: 32, weight: 600, anchor: 'middle' });
-      // the agents read from it
-      pth(svg, `M${x + 412} ${y0 + 290} L${x + 412} ${y0 + 232}`, { stroke: C.accent, 'stroke-width': 5 });
-      pth(svg, `M${x + 398} ${y0 + 248} L${x + 412} ${y0 + 230} L${x + 426} ${y0 + 248}`, { stroke: C.accent, 'stroke-width': 5 });
-      T(svg, x + 412, y0 + 330, 'the agents read from it', { size: 32, fill: C.accent, anchor: 'middle', weight: 600 });
+      T(svg, x, y0 + 48, 'its own engineers on its own systems', { size: 34 });
+      rc(svg, x, y0 + 96, 824, 140, { 'stroke-width': 6 });
+      T(svg, x + 412, y0 + 180, 'one system that knows each customer', { size: 38, weight: 600, anchor: 'middle' });
+      pth(svg, `M${x + 412} ${y0 + 300} L${x + 412} ${y0 + 248}`, { stroke: C.ink, 'stroke-width': 5 });
+      pth(svg, `M${x + 398} ${y0 + 262} L${x + 412} ${y0 + 246} L${x + 426} ${y0 + 262}`, { stroke: C.ink, 'stroke-width': 5 });
+      T(svg, x + 412, y0 + 340, 'the agents read from it', { size: 34, anchor: 'middle' });
     }
     if (b >= 2) {
-      const yr = 760, v = R6.points[1].value;
-      T(svg, L, yr + 40, `${v}%`, { size: 120, weight: 600, fill: C.accent });
-      T(svg, L + 270, yr - 10, 'of chats never reached a person, mid-2026', { size: 36, weight: 600 });
-      dotRow(svg, L + 270, yr + 20, 100, v, { cols: 50, pitch: 26, r: 9.5, group: 10, groupGap: 14, fill: C.accent });
-      T(svg, L + 270, yr + 124, `about a quarter in mid-2024; nothing published in between`, { size: 32, fill: C.muted });
+      const yr = 790, v = R6.points[1].value;
+      ln(svg, L, 720, R, 720, { stroke: C.hair, 'stroke-width': 2 });
+      T(svg, L, yr + 64, `${v}%`, { size: 120, weight: 600, fill: C.accent });
+      T(svg, L + 310, yr, 'of chats never reached a person, mid-2026', { size: 38, weight: 600 });
+      dotRow(svg, L + 310, yr + 22, 100, v, { cols: 50, pitch: 27, r: 10, group: 10, groupGap: 14, fill: C.accent });
+      T(svg, L + 310, yr + 128, 'company figure; not reaching a person isn’t the same as resolved; about a quarter in mid-2024', { size: 32, fill: C.muted });
     }
   },
 });
@@ -334,33 +338,34 @@ add({
   id: 'walkback', builds: 3, label: 'Repainting, twice',
   title: 'Both had to walk it back.',
   source: 'Klarna, press release, 27 Feb 2024 (700: company estimate); Entrepreneur, 9 May 2025; Information Age, Aug 2025 (Commonwealth Bank).',
-  notes: `<p>From the street, repainting looks the same for a while, and it's cheaper. But if nothing changes behind the agent, the saving usually comes from the staff. In February 2024 Klarna had stopped hiring and said its assistant handled two in three service chats: by its own estimate, the work of seven hundred full-time staff. In 2025 it was hiring people again. Commonwealth Bank went the same way faster: forty-five roles declared redundant for a voice bot, the decision withdrawn within weeks. <b>Both had to walk it back.</b></p>`,
+  notes: `<p>From the street, repainting looks the same for a while, and it's cheaper. But if nothing changes behind the agent, the saving usually comes from the staff. In February 2024 Klarna had stopped hiring and said its assistant did the work of seven hundred service agents, by its own estimate. In 2025 it was hiring people again. Commonwealth Bank went the same way faster: forty-five roles declared redundant for a voice bot, the decision withdrawn within weeks. <b>Both had to walk it back.</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
     chrome(svg, this, b, ctx);
-    const ax0 = 560, ax1 = 1760;
+    const ax0 = 620, ax1 = 1800, ay = 800;
     const M = (s) => { const [y, m] = s.split('-').map(Number); return ax0 + ((y - 2024) * 12 + (m - 1) + 0.5) / 24 * (ax1 - ax0); };
-    const ay = 900;
-    ln(svg, ax0, ay, ax1, ay, { stroke: C.mid, 'stroke-width': 2 });
-    [2024, 2025].forEach((yy) => { const x = ax0 + (yy - 2024) * (ax1 - ax0) / 2; ln(svg, x, ay - 10, x, ay + 10, { stroke: C.mid, 'stroke-width': 2 }); T(svg, x, ay + 48, String(yy), { size: 32, fill: C.muted }); });
+    ln(svg, ax0, ay, ax1, ay, { stroke: C.mid, 'stroke-width': 3 });
+    for (let k = 0; k <= 24; k += 3) { const x = ax0 + k / 24 * (ax1 - ax0); ln(svg, x, ay - (k % 12 ? 6 : 14), x, ay + (k % 12 ? 6 : 14), { stroke: C.mid, 'stroke-width': 2 }); }
+    [2024, 2025].forEach((yy) => T(svg, ax0 + (yy - 2024) * (ax1 - ax0) / 2 + 8, ay + 50, String(yy), { size: 34, fill: C.muted }));
     const lane = (c, y, name, gap) => {
       const x0 = M(c.cut.month), x1 = M(c.back.month);
-      T(svg, L, y + 12, name, { size: 40, weight: 600 });
-      T(svg, L, y + 58, gap, { size: 32, fill: C.muted });
-      ln(svg, x0, y, x1, y, { stroke: C.ink, 'stroke-width': 4 });
-      dot(svg, x0, y, 14, { fill: C.ink });
-      dot(svg, x1, y, 14, { fill: C.paper, stroke: C.ink, 'stroke-width': 4 });
+      T(svg, L, y + 14, name, { size: 42, weight: 600 });
+      T(svg, L, y + 62, gap, { size: 34, fill: C.muted });
+      ln(svg, x0, y, x1, y, { stroke: C.ink, 'stroke-width': 6 });
+      dot(svg, x0, y, 16, { fill: C.ink });
+      dot(svg, x1, y, 16, { fill: C.paper, stroke: C.ink, 'stroke-width': 5 });
+      ln(svg, x0, y + 18, x0, ay, { stroke: C.hair, 'stroke-width': 2 });
+      ln(svg, x1, y + 18, x1, ay, { stroke: C.hair, 'stroke-width': 2 });
       return { x0, x1 };
     };
     const [kl, cba] = data.repaint.cases;
-    const a = lane(kl, 430, 'Klarna', 'after 15 months');
-    T(svg, a.x0 - 14, 384, 'Feb 2024: the assistant does the work of 700 staff', { size: 34 });
-    T(svg, a.x0 - 14, 496, "by Klarna's own estimate", { size: 32, fill: C.muted });
-    T(svg, a.x1 + 14, 496, 'May 2025: hiring again', { size: 34, anchor: 'end' });
+    const a = lane(kl, 420, 'Klarna', 'after 15 months');
+    T(svg, a.x0 - 16, 376, 'Feb 2024: the work of 700 agents, by Klarna’s estimate', { size: 36 });
+    T(svg, a.x1 + 16, 484, 'May 2025: hiring again', { size: 36, anchor: 'end' });
     if (b >= 1) {
-      const c = lane(cba, 700, 'Commonwealth Bank', 'after weeks');
-      T(svg, c.x1 + 14, 654, 'Jul 2025: 45 roles redundant for a voice bot', { size: 34, anchor: 'end' });
-      T(svg, c.x1 + 14, 766, 'Aug 2025: withdrawn, “error”', { size: 34, anchor: 'end' });
+      const c = lane(cba, 640, 'Commonwealth Bank', 'after weeks');
+      T(svg, c.x1 + 16, 596, 'Jul 2025: 45 roles redundant for a voice bot', { size: 36, anchor: 'end' });
+      T(svg, c.x0 - 30, 704, 'Aug 2025: withdrawn, “error”', { size: 36, anchor: 'end' });
     }
   },
 });
@@ -369,29 +374,30 @@ add({
 add({
   id: 'staff', builds: 3, label: 'First brick', brick: 1,
   title: 'First brick: the staff stay.',
-  source: 'Deutsche Telekom, HR Factbook 2025 (positions leaving by agreed routes, Germany; totals added by me); Telekom and ver.di, agreement of May 2026.',
+  source: 'Deutsche Telekom and ver.di, agreement of May 2026 (about 60,000 employees under its collective agreements); Deutsche Telekom, HR Factbook 2025, company figures (totals added by me).',
   notes: `<p>The harder question is what the wall looks like in Germany. Three bricks matter. The first is the staff. This May, Telekom and ver.di agreed: no dismissals for business reasons until the end of 2028. People still go by agreed routes: partial retirement, early retirement, severance. From 2021 to 2025 that was about four thousand full-time positions a year, across Telekom in Germany. Sixteen every working day. Any saving has to fit into that. I think that helps more than it hurts: the people who stay are the first ones to train. <b>First brick: the staff stay.</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
     chrome(svg, this, b, ctx);
     const E = data.exits;
-    T(svg, L, 330, 'Positions leaving Telekom in Germany by agreed routes', { size: 34, weight: 600 });
-    T(svg, L, 372, 'one dot is 50 full-time positions', { family: 'serif', italic: true, size: 32, fill: C.muted });
-    const per = E.unit.positionsPerMark, gx = 250, x0 = 640, ybase = 820;
-    E.years.forEach((yr, i) => {
-      const tot = E.totals.values[i], n = Math.round(tot / per), cols = 9, pitch = 22;
-      const x = x0 + i * gx;
-      for (let k = 0; k < n; k++) dot(svg, x + (k % cols) * pitch + 9, ybase - Math.floor(k / cols) * pitch - 9, 8, { fill: C.ink });
-      T(svg, x + cols * pitch / 2, ybase + 46, String(yr), { size: 32, fill: C.muted, anchor: 'middle' });
-      T(svg, x + cols * pitch / 2, ybase - Math.ceil(n / cols) * pitch - 18, tot.toLocaleString('en-US'), { size: 32, fill: C.muted, anchor: 'middle' });
-    });
-    T(svg, L, 566, 'about', { size: 40, fill: C.accent, weight: 600 });
-    T(svg, L, 718, '4,000', { size: 130, weight: 600, fill: C.accent });
-    T(svg, L, 784, 'a year, 2021 to 2025', { size: 36, fill: C.accent, weight: 600 });
-    T(svg, L, 842, '20,223 in five years', { size: 32, fill: C.muted });
+    T(svg, L, 340, 'No dismissals for business reasons until 31 December 2028', { size: 44, weight: 600 });
+    T(svg, L, 392, 'Telekom and ver.di, May 2026; about 60,000 employees under its collective agreements', { size: 32, fill: C.muted });
     if (b >= 1) {
-      ln(svg, L, 920, R, 920, { stroke: C.hair, 'stroke-width': 2 });
-      T(svg, L, 970, 'No dismissals for business reasons until 31 December 2028', { size: 36, weight: 600 });
+      ln(svg, L, 440, R, 440, { stroke: C.hair, 'stroke-width': 2 });
+      T(svg, L, 506, 'Still, positions leave Telekom in Germany by agreed routes', { size: 36, weight: 600 });
+      T(svg, L, 550, 'one dot is 50 full-time positions', { family: 'serif', italic: true, size: 32, fill: C.muted });
+      const per = E.unit.positionsPerMark, gx = 250, x0 = 640, ybase = 900;
+      E.years.forEach((yr, i) => {
+        const tot = E.totals.values[i], n = Math.round(tot / per), cols = 9, pitch = 22;
+        const x = x0 + i * gx;
+        for (let k = 0; k < n; k++) dot(svg, x + (k % cols) * pitch + 9, ybase - Math.floor(k / cols) * pitch - 9, 8, { fill: C.ink });
+        T(svg, x + cols * pitch / 2, ybase + 46, String(yr), { size: 32, fill: C.muted, anchor: 'middle' });
+        T(svg, x + cols * pitch / 2, ybase - Math.ceil(n / cols) * pitch - 18, tot.toLocaleString('en-US'), { size: 32, fill: C.muted, anchor: 'middle' });
+      });
+      T(svg, L, 650, 'about', { size: 40, fill: C.accent, weight: 600 });
+      T(svg, L, 800, '4,000', { size: 130, weight: 600, fill: C.accent });
+      T(svg, L, 872, 'a year, 2021 to 2025', { size: 36, fill: C.accent, weight: 600 });
+      T(svg, L, 920, '20,223 in five years', { size: 32, fill: C.muted });
     }
   },
 });
@@ -401,7 +407,7 @@ add({
   id: 'monitoring', builds: 2, label: 'Second brick', brick: 2,
   title: 'Nearly four in five Germans see monitoring at work as bad.',
   source: 'European Commission, Special Eurobarometer 554, Artificial Intelligence and the future of work (asked in the EU only).',
-  notes: `<p>The second brick starts with a worry. The EU asked people about digital monitoring at work. In Germany nearly four in five see it as a bad thing. On AI in general Germans aren't more sceptical than Americans; on monitoring at work they are. Any new system here has to answer that first. <b>Nearly four in five Germans see monitoring at work as bad.</b></p>`,
+  notes: `<p>The second brick starts with a worry. The EU asked people about digital monitoring at work. In Germany nearly four in five see it as a bad thing. On AI and jobs, Germans are no more pessimistic than Americans; on monitoring at work they are. Any new system here has to answer that first. <b>Nearly four in five Germans see monitoring at work as bad.</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
     chrome(svg, this, b, ctx);
@@ -419,36 +425,34 @@ add({
 add({
   id: 'checks', builds: 4, label: 'Second brick', brick: 2,
   title: 'Second brick: here the checks come first.',
-  source: 'Works Constitution Act (BetrVG) §§ 87, 90; Telekom group framework agreement on IT systems, March 2021 (Bargmann 2022); T-Mobile US, September 2024. Lengths schematic, not measured.',
+  source: 'BetrVG § 87(1) no. 6; AI Act Art. 50 (Regulation (EU) 2024/1689, as amended by 2026/1744); Telekom group framework agreement on IT systems, March 2021 (Bargmann 2022); T-Mobile US, press release, Sep 2024. Lengths schematic, not measured.',
   notes: `<p>German law makes it answer before launch. At T-Mobile I found no say for the staff before launch. Here, two rules matter most. One: a system that can watch the staff needs the works council to agree before it runs. Two: since August, the AI Act says customers must be told when they talk to an AI system. And here Telekom is ahead. In 2021 it agreed the rules with its works council once: nobody gets watched as a person, and results are only looked at in groups of more than five, without names. A system inside those rules needs no new decision. <b>Second brick: here the checks come first.</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
     chrome(svg, this, b, ctx);
     const S = data.permits.schedule;
-    const x0 = 560, x1 = 1780, X = (u) => x0 + u / S.span * (x1 - x0);
+    const x0 = 560, x1 = 1800, X = (u) => x0 + u / S.span * (x1 - x0);
     const lane = (y, label, sub, segs) => {
-      T(svg, L, y + 14, label, { size: 38, weight: 600 });
-      if (sub) T(svg, L, y + 56, sub, { size: 32, fill: C.muted });
+      T(svg, L, y + 14, label, { size: 40, weight: 600 });
+      if (sub) T(svg, L, y + 58, sub, { size: 32, fill: C.muted });
       segs.forEach(([a, z, kind, word]) => {
         const st = kind === 'review' ? { fill: C.field, stroke: C.accent } : kind === 'build' ? { fill: 'none', stroke: C.ink } : { fill: 'none', stroke: C.mid, 'stroke-dasharray': '12 10' };
-        rc(svg, X(a), y - 30, X(z) - X(a) - 8, 60, { ...st, 'stroke-width': 3 });
-        T(svg, X(a) + 16, y + 12, word, { size: 32, fill: kind === 'launch' ? C.muted : C.ink, weight: kind === 'review' ? 600 : 400 });
+        rc(svg, X(a), y - 32, X(z) - X(a) - 8, 64, { ...st, 'stroke-width': 3 });
+        T(svg, X(a) + 16, y + 13, word, { size: 34, fill: kind === 'launch' ? C.muted : C.ink, weight: kind === 'review' ? 600 : 400 });
       });
     };
-    const checks = (y, list, label) => {
-      list.forEach((u) => { dot(svg, X(u), y + 64, 9, { fill: C.ink }); });
-      T(svg, X(list[0]) - 12, y + 116, label, { size: 32, fill: C.muted });
-    };
-    lane(380, 'United States', 'T-Mobile', [[0, S.us.build[1], 'build', 'build'], [S.us.launch[0], S.us.launch[1], 'launch', 'running']]);
-    checks(380, S.us.checks, 'checks afterwards: court cases, state rules');
+    lane(360, 'United States', 'T-Mobile', [[0, S.us.build[1], 'build', 'build'], [S.us.launch[0], S.us.launch[1], 'launch', 'running']]);
+    S.us.checks.forEach((u) => dot(svg, X(u), 424, 9, { fill: C.ink }));
+    T(svg, X(S.us.checks[0]) - 12, 470, 'checks afterwards: court cases, state rules', { size: 32, fill: C.muted });
     if (b >= 1) {
-      lane(600, 'Germany', 'Telekom', [[S.de.review[0], S.de.review[1], 'review', 'works council, privacy'], [S.de.build[0], S.de.build[1], 'build', 'build'], [S.de.launch[0], S.de.launch[1], 'launch', 'running']]);
-      T(svg, X(0), 700, 'agreement before it runs (§ 87(1) no. 6); told while planned (§ 90)', { size: 32, fill: C.muted });
+      lane(570, 'Germany', 'Telekom', [[S.de.review[0], S.de.review[1], 'review', 'checks first'], [S.de.build[0], S.de.build[1], 'build', 'build'], [S.de.launch[0], S.de.launch[1], 'launch', 'running']]);
+      T(svg, X(0), 660, '1  works council agrees before it runs (§ 87(1) no. 6)', { size: 34 });
+      T(svg, X(0), 706, '2  customers told they talk to an AI system (AI Act Art. 50, since Aug 2026)', { size: 34 });
     }
     if (b >= 2) {
       const F = S.de.framework;
-      lane(820, 'Since 2021', 'framework agreement', [[F.review[0], F.review[1], 'review', 'short check'], [F.build[0], F.build[1], 'build', 'build'], [F.launch[0], F.launch[1], 'launch', 'running']]);
-      T(svg, X(0), 920, 'nobody watched as a person; results only for groups of more than five', { size: 32, fill: C.muted });
+      lane(830, 'Since 2021', 'framework agreement', [[F.review[0], F.review[1], 'review', 'short check'], [F.build[0], F.build[1], 'build', 'build'], [F.launch[0], F.launch[1], 'launch', 'running']]);
+      T(svg, X(0), 916, 'nobody watched as a person; results only for groups of more than five', { size: 32, fill: C.muted });
     }
   },
 });
@@ -457,13 +461,13 @@ add({
 add({
   id: 'knowhow', builds: 3, label: 'Third brick', brick: 3,
   title: 'Third brick: missing knowledge first. The law after.',
-  source: 'Federal Statistical Office (Destatis), 2025: firms that considered AI and do not use it; several answers possible.',
+  source: 'Federal Statistical Office (Destatis), 2025: firms with ten or more employees that considered AI and do not use it; several answers possible.',
   notes: `<p>The third brick is know-how. Destatis went to the firms that had looked at these tools and didn't use them, and asked: why not? More than seven in ten said they were missing the knowledge. Legal uncertainty and data protection came after, each about six in ten. Without your own people who understand your systems, you can buy a language model. You can screw it onto the wall. You can't cut it in. <b>Third brick: missing knowledge first. The law after.</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
     chrome(svg, this, b, ctx);
     const rows = data.obstacles.rows.slice(0, 3);
-    T(svg, L, 360, 'Why firms in Germany that considered AI do not use it', { size: 34, weight: 600 });
+    T(svg, L, 360, 'Why firms in Germany (ten or more employees) that considered AI do not use it', { size: 34, weight: 600 });
     T(svg, L, 400, 'one dot is 2% of firms', { family: 'serif', italic: true, size: 32, fill: C.muted });
     rows.forEach((r, i) => {
       if (i > 0 && b < 1) return;
@@ -481,29 +485,32 @@ function stepRow(svg, data, active, done) {
   ln(svg, x0, y, x0 + 7 * gap, y, { stroke: C.hair, 'stroke-width': 3 });
   steps.forEach((s, i) => {
     const x = x0 + i * gap, on = active.includes(i + 1), was = done.includes(i + 1);
-    dot(svg, x, y, 26, on ? { fill: C.accent } : was ? { fill: C.ink } : { fill: C.paper, stroke: C.mid, 'stroke-width': 3 });
+    dot(svg, x, y, 26, on ? { fill: C.accent } : was ? { fill: C.mid } : { fill: C.paper, stroke: C.mid, 'stroke-width': 3 });
     T(svg, x, y + 11, String(i + 1), { size: 32, weight: 600, fill: on || was ? C.paper : C.muted, anchor: 'middle' });
-    T(svg, x, y + 72, s.name, { size: 32, fill: on ? C.accent : C.muted, weight: on ? 600 : 400, anchor: 'middle', width: gap - 14, lh: 36 });
+    T(svg, x, y + 72, s.name, { size: 32, fill: on ? C.ink : C.muted, weight: on ? 600 : 400, anchor: 'middle', width: gap - 14, lh: 36 });
   });
 }
-const STEP_MEASURE = { 4: 'cases per hour and repeat contacts, per team of more than five' };
+const STEP_MEASURE = {
+  1: 'cost per contact and repeat contacts today; with the agent, requests finished for good and their cost. No gain: stop here',
+  4: 'cases per hour and repeat contacts, per team of more than five',
+};
 
 add({
   id: 'steps1', builds: 3, label: 'How to address it',
   title: 'Measure first. Start beside the staff.',
-  source: 'The order is my hypothesis. Step 4: no control of individuals under the 2021 framework agreement.',
-  notes: `<p>So how would I do it? Step one: before any agent, measure what one contact costs today and how often customers come back; then, with the agent, how many requests it finishes for good and what it costs. That's the business measure from this course, not accuracy. If it doesn't get better, the agent is the wrong tool and Telekom stops there. Step two: sign the works agreement while the system is still on paper. Steps three and four: keep the option to switch suppliers, since half of larger German firms already depend strongly on American technology, and train the staff before each new key, measuring teams, never single people. <b>Measure first. Start beside the staff.</b></p>`,
+  source: 'The order is my hypothesis. Step 4: no control of individuals under the 2021 framework agreement. Bitkom 2025: 51% of firms with 20 or more staff strongly dependent on US digital technology.',
+  notes: `<p>So how would I do it? Step one: before any agent, measure what one contact costs today and how often customers come back; then, with the agent, how many requests it finishes for good and what it costs. That's the business measure from this course, not accuracy. If it doesn't get better, the agent is the wrong tool and Telekom stops there. Step two: sign the works agreement while the system is still on paper. Steps three and four: keep the option to switch suppliers, since about half of German firms with twenty or more staff depend strongly on American technology, and train the staff before each new key, measuring teams, never single people. <b>Measure first. Start beside the staff.</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
-    chrome(svg, this, b, ctx, { titleAlways: false });
+    chrome(svg, this, b, ctx);
     const show = b >= 1 ? [1, 2, 3, 4] : [1, 2];
     stepRow(svg, data, show, []);
     const st = data.plan.steps;
     show.forEach((n, k) => {
-      const col = k % 2, row = Math.floor(k / 2), x = L + col * 880, y = 560 + row * 220;
-      T(svg, x, y, `${n}`, { size: 72, weight: 600, fill: C.accent });
+      const col = k % 2, row = Math.floor(k / 2), x = L + col * 880, y = 560 + row * 230;
+      T(svg, x, y, `${n}`, { size: 72, weight: 600 });
       T(svg, x + 80, y - 20, st[n - 1].name, { size: 44, weight: 600 });
-      T(svg, x + 80, y + 28, `measure: ${STEP_MEASURE[n] || st[n - 1].measure}`, { size: 32, fill: C.muted, width: 740, lh: 40 });
+      T(svg, x + 80, y + 30, `measure: ${STEP_MEASURE[n] || st[n - 1].measure}`, { size: 34, fill: C.muted, width: 760, lh: 42 });
     });
   },
 });
@@ -511,23 +518,23 @@ add({
 add({
   id: 'step5', builds: 3, label: 'How to address it',
   title: 'The biggest job is one customer record.',
-  source: 'Deutsche Telekom, AI Investor Day (14 ways today, 3 planned); T-Mobile US, Form 10-K 2025 (write-off of billing software).',
+  source: 'Deutsche Telekom, AI Investor Day, 5 Oct 2026 (14 ways today, 3 planned); T-Mobile US, Form 10-Q, Q3 2026 (write-off of billing software).',
   notes: `<p>Step five. Fourteen ways of proving who you are become three, and the customer data becomes usable. An agent can't act on an account it can't identify. This is the channel cut into the brick. It takes years, and it can fail: even T-Mobile wrote off two hundred seventy-eight million dollars of billing software, about a tenth of that quarter's profit. <b>The biggest job is one customer record.</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
     chrome(svg, this, b, ctx);
     stepRow(svg, data, [5], [1, 2, 3, 4]);
     const D = data.rewire.de;
-    T(svg, L, 540, '5', { size: 96, weight: 600, fill: C.accent });
+    T(svg, L, 540, '5', { size: 96, weight: 600 });
     T(svg, L + 100, 500, 'One customer record', { size: 56, weight: 600 });
     T(svg, L + 100, 552, 'measure: callers recognised without questions', { size: 34, fill: C.muted });
-    T(svg, L + 100, 690, `${D.now.value} → ${D.plan.value}`, { size: 120, weight: 600, fill: C.accent });
-    T(svg, L + 520, 660, 'ways to prove who you are', { size: 36 });
-    T(svg, L + 520, 708, '3 is a target', { size: 32, fill: C.muted });
+    T(svg, L + 100, 700, `${D.now.value} → ${D.plan.value}`, { size: 120, weight: 600, fill: C.accent });
+    T(svg, L + 520, 664, 'ways to prove who you are', { size: 38 });
+    T(svg, L + 520, 710, '3 is a target', { size: 34, fill: C.muted });
     if (b >= 1) {
-      ln(svg, L, 800, R, 800, { stroke: C.hair, 'stroke-width': 2 });
-      T(svg, L, 860, 'Keys that change an account need step 5.', { size: 40, weight: 600 });
-      T(svg, L, 910, 'An agent can’t act on an account it can’t identify.', { size: 32, fill: C.muted });
+      ln(svg, L, 790, R, 790, { stroke: C.hair, 'stroke-width': 2 });
+      T(svg, L, 858, 'Keys that change an account need step 5.', { size: 44, weight: 600 });
+      T(svg, L, 910, 'An agent can’t act on an account it can’t identify.', { size: 34, fill: C.muted });
     }
   },
 });
@@ -535,54 +542,56 @@ add({
 add({
   id: 'steps68', builds: 3, label: 'How to address it',
   title: 'Then the keys: read first, risky changes last.',
-  source: 'The order is my hypothesis; as a process model, a project life cycle with a works-council gate and a stop point.',
-  notes: `<p>But reading doesn't have to wait. Step six: first the agent only reads, for customers already logged in to the app: show a bill, check an order. Then actions you can undo. Last, the changes a fraudster could use, like a new bank account; the customer confirms those in the app. Each key is enforced by the systems, not by the model: the model can ask, the system decides. Steps seven and eight: each new key is an annex to the works agreement, staff and works council sign off before the agent works alone, and a named team runs it from the first pilot on. The order is my hypothesis. <b>Then the keys: read first, risky changes last.</b></p>`,
+  source: 'The order is my hypothesis.',
+  notes: `<p>But reading doesn't have to wait. Step six: first the agent only reads, for customers already logged in: show a bill, check an order. Then actions you can undo. Last, the changes a fraudster could use, like a new bank account; the customer confirms those in the app. Each key is enforced by the systems, not by the model: the model can ask, the system decides. Steps seven and eight: each new key is an annex to the works agreement, staff and works council sign off before the agent works alone, and a named team runs it. As a process model, it's a project life cycle with a works-council gate and a stop point added. The order is my hypothesis. <b>Then the keys: read first, risky changes last.</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
     chrome(svg, this, b, ctx);
     const act = b >= 1 ? [6, 7, 8] : [6];
     stepRow(svg, data, act, [1, 2, 3, 4, 5]);
-    T(svg, L, 540, '6', { size: 96, weight: 600, fill: C.accent });
+    T(svg, L, 540, '6', { size: 96, weight: 600 });
     T(svg, L + 100, 500, 'Keys in stages', { size: 52, weight: 600 });
     const stages = [['read', 'logged-in customers: a bill, an order'], ['undoable', 'actions that can be undone'], ['fraud-prone', 'confirmed by the customer in the app']];
     stages.forEach(([w, d], i) => {
       const x = L + 100 + i * 560;
-      T(svg, x, 600, w, { size: 44, weight: 600, fill: i === 0 ? C.accent : C.ink });
-      T(svg, x, 646, d, { size: 32, fill: C.muted, width: 470, lh: 38 });
-      if (i < 2) pth(svg, `M${x + 470} 588 L${x + 520} 588 M${x + 506} 576 L${x + 520} 588 L${x + 506} 600`, { stroke: C.mid, 'stroke-width': 3 });
+      T(svg, x, 604, w, { size: 46, weight: 600, fill: i === 0 ? C.accent : C.ink });
+      T(svg, x, 650, d, { size: 34, fill: C.muted, width: 460, lh: 40 });
+      if (i < 2) pth(svg, `M${x + 470} 590 L${x + 520} 590 M${x + 506} 578 L${x + 520} 590 L${x + 506} 602`, { stroke: C.mid, 'stroke-width': 3 });
     });
     if (b >= 1) {
       ln(svg, L, 740, R, 740, { stroke: C.hair, 'stroke-width': 2 });
-      T(svg, L, 810, '7', { size: 72, weight: 600, fill: C.accent });
-      T(svg, L + 80, 790, 'Acceptance', { size: 40, weight: 600 });
-      T(svg, L + 80, 836, 'staff and works council sign off', { size: 32, fill: C.muted });
-      T(svg, L + 880, 810, '8', { size: 72, weight: 600, fill: C.accent });
-      T(svg, L + 960, 790, 'Run it', { size: 40, weight: 600 });
-      T(svg, L + 960, 836, 'a named team; cost per finished request', { size: 32, fill: C.muted });
-      T(svg, L, 930, 'Every new key: an annex to the works agreement, then back through steps 4 and 6.', { size: 34 });
+      T(svg, L, 810, '7', { size: 72, weight: 600 });
+      T(svg, L + 80, 790, 'Acceptance', { size: 42, weight: 600 });
+      T(svg, L + 80, 836, 'staff and works council sign off', { size: 34, fill: C.muted });
+      T(svg, L + 880, 810, '8', { size: 72, weight: 600 });
+      T(svg, L + 960, 790, 'Run it', { size: 42, weight: 600 });
+      T(svg, L + 960, 836, 'a named team; cost per finished request', { size: 34, fill: C.muted });
+      T(svg, L, 920, 'Process model: a project life cycle with a works-council gate and a stop point. Every new key: an annex to the works agreement.', { size: 32, width: W, lh: 40 });
     }
   },
 });
 
 // 16 --------------------------------------------------------------------------
 add({
-  id: 'close', builds: 3, label: 'Where this could be wrong',
+  id: 'close', builds: 5, label: 'Where this could be wrong',
+  landings: { 3: 'Three things would prove me wrong.', 4: "Telekom can't import the 32%. It can copy the slow work behind it." },
   title: 'Three things would prove me wrong.',
   notes: `<p>If Telekom reports a German number like the thirty-two percent before its customer data is fixed, the record matters less than I think. If the service teams shrink faster than the agreed routes allow, the staff are leaving after all. If a works agreement comes months late, the law weighs more than I said. <b>Three things would prove me wrong.</b></p><p>(last build) People often say Germany is slow, and mean it as a weakness. Hall and Soskice argue the other way: economies like Germany's are better at step-by-step innovation than at radical innovation. Renovating is step-by-step work. <b>Telekom can't import the 32%. It can copy the slow work behind it.</b> Thank you.</p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
-    if (b < 2) {
-      chrome(svg, this, b, { ...ctx, last: b === 1 });
+    if (b < 4) {
+      chrome(svg, this, b, { ...ctx, last: b === 3 });
       const items = [
         ['Telekom reports a German number like the 32%', 'before its customer data is fixed'],
         ['The service teams shrink faster', 'than the agreed routes allow'],
         ['A works agreement comes', 'months late'],
       ];
       items.forEach(([a, z], i) => {
+        if (i > b) return;
         const y = 420 + i * 170;
-        T(svg, L, y, String(i + 1), { size: 64, weight: 600, fill: C.accent });
-        T(svg, L + 80, y - 14, a, { size: 44, weight: 600 });
-        T(svg, L + 80, y + 38, z, { size: 36, fill: C.muted });
+        T(svg, L, y, String(i + 1), { size: 64, weight: 600 });
+        T(svg, L + 80, y - 14, a, { size: 46, weight: 600 });
+        T(svg, L + 80, y + 40, z, { size: 38, fill: C.muted });
       });
       return;
     }
@@ -596,16 +605,16 @@ add({
 // End slide, up during questions ---------------------------------------------------
 add({
   id: 'end', end: true, builds: 1,
-  notes: '<p>Questions. Backups follow: B1 pairs, B2 law, B3 keys, B4 public opinion, B5 sources, B6 how this was made.</p>',
+  notes: '<p>Questions. The backups follow; their page numbers are on the cue sheet (type the number in the PDF viewer).</p>',
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
-    h('image', { href: '../../articles/renovate/art/house.png', x: 0, y: 0, width: 1920, height: 1080, preserveAspectRatio: 'xMidYMid slice' }, svg);
-    T(svg, L, 420, 'Renovate,', { family: 'serif', size: 96, weight: 500 });
-    T(svg, L, 524, "don't repaint", { family: 'serif', size: 96, weight: 500 });
-    T(svg, L, 650, 'Thank you. Questions?', { size: 48, weight: 600 });
-    T(svg, L, 770, 'The article:', { size: 32, fill: C.muted });
-    T(svg, L, 812, 'thd-ai.github.io/ws27-papers/renovate', { size: 32, fill: C.muted });
-    T(svg, L, 880, 'Alexander Rudaev, TH Deggendorf', { size: 32, fill: C.muted });
+    T(svg, L, 300, 'Innovation Management for AI', { size: 32, weight: 500, fill: C.muted });
+    T(svg, L, 420, 'Renovate, don’t repaint', { family: 'serif', size: 96, weight: 500 });
+    T(svg, L, 540, 'Thank you. Questions?', { size: 52, weight: 600 });
+    T(svg, L, 700, 'The article, with every source:', { size: 32, fill: C.muted });
+    T(svg, L, 746, 'thd-ai.github.io/ws27-papers/renovate', { size: 36 });
+    T(svg, L, 930, 'Alexander Rudaev', { size: 34, weight: 600 });
+    T(svg, L, 976, 'TH Deggendorf, 12 December 2026', { size: 32, fill: C.muted });
   },
 });
 
@@ -618,15 +627,16 @@ add({
     const svg = svgOf(page);
     chrome(svg, this, b, { ...ctx, last: true });
     const rows = data.pairs.rows;
-    const cx = [L, L + 330, L + 640, L + 950], y0 = 300;
+    const cx = [L, L + 420, L + 680, L + 960], y0 = 300;
     ['What is counted', 'T-Mobile US', 'Telekom, Germany', 'Why they do not compare'].forEach((t, i) => T(svg, cx[i], y0, t, { size: 26, weight: 600, fill: C.muted }));
     ln(svg, L, y0 + 18, R, y0 + 18, { stroke: C.ink, 'stroke-width': 2 });
+    const what = { 'Share handled by AI': 'Share started by an AI agent' };
     rows.forEach((r, i) => {
       const y = y0 + 66 + i * 64;
-      T(svg, cx[0], y, `${r.n}. ${r.what}`, { size: 26, weight: 600 });
+      T(svg, cx[0], y, `${r.n}. ${what[r.what] || r.what}`, { size: 26, weight: 600 });
       T(svg, cx[1], y, (r.us.show || r.us.absent || '').replace(/\[\[|\]\]/g, ''), { size: 26 });
       T(svg, cx[2], y, (r.de.show || r.de.absent || '').replace(/\[\[|\]\]/g, ''), { size: 26 });
-      T(svg, cx[3], y, r.why, { size: 24, fill: C.muted, width: 870 });
+      T(svg, cx[3], y, r.why, { size: 24, fill: C.muted, width: 900 });
       ln(svg, L, y + 24, R, y + 24, { stroke: C.hair, 'stroke-width': 1.5 });
     });
   },
@@ -634,20 +644,20 @@ add({
 
 add({
   id: 'b2', backup: 'B2', builds: 1, label: 'Backup', title: 'Which rule bites, and when.',
-  source: 'BetrVG §§ 87, 90; GDPR Art. 35; AI Act (Regulation (EU) 2024/1689) as amended by Regulation (EU) 2026/1744.',
+  source: 'BetrVG §§ 76, 87, 90; GDPR Art. 35; AI Act (Regulation (EU) 2024/1689) as amended by Regulation (EU) 2026/1744.',
   notes: '<p>Q8–Q11: the law in detail.</p>',
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
     chrome(svg, this, b, { ...ctx, last: true });
     const rows = [
       ['BetrVG § 90', 'the works council is told while the system is planned'],
-      ['BetrVG § 87(1) no. 6', 'its agreement for any system suited to monitoring staff; if none, the conciliation board decides'],
-      ['GDPR Art. 35', 'a data protection impact assessment before processing'],
+      ['BetrVG § 87(1) no. 6', 'its agreement for any system suited to monitoring staff; if none, the conciliation board decides (§ 87(2), § 76)'],
+      ['GDPR Art. 35', 'a data protection impact assessment before risky processing'],
       ['AI Act Art. 50', 'customers told they talk to an AI system, since 2 August 2026'],
-      ['AI Act, high risk', 'duties for tools that monitor or evaluate employees, from 2 December 2027'],
+      ['AI Act, high risk', 'a tool that monitors or evaluates employees can count as high risk; those duties from 2 December 2027'],
     ];
     rows.forEach(([a, z], i) => {
-      const y = 360 + i * 120;
+      const y = 360 + i * 124;
       T(svg, L, y, a, { size: 38, weight: 600 });
       T(svg, L + 520, y, z, { size: 32, width: 1200, lh: 40 });
     });
@@ -675,7 +685,7 @@ add({
 });
 
 add({
-  id: 'b4', backup: 'B4', builds: 1, label: 'Backup', title: "The public isn't more hostile.",
+  id: 'b4', backup: 'B4', builds: 1, label: 'Backup', title: 'On AI and jobs, not more hostile. On monitoring, yes.',
   source: 'Ipsos for Google 2025 and Ipsos AI Monitor 2025, in Stanford HAI AI Index 2026; Special Eurobarometer 554 (EU only).',
   notes: '<p>Q16: are Germans just against AI?</p>',
   draw(page, b, data, ctx) {
@@ -696,20 +706,39 @@ add({
   },
 });
 
+const SOURCES = [
+  ['Deutsche Telekom, 2026', 'press release, 5 Oct; AI Investor Day slides and transcript'],
+  ['T-Mobile US, 2026', 'AI Investor Day deck; Form 10-Q, Q3'],
+  ['T-Mobile US, 2024–25', 'release with OpenAI, 18 Sep 2024; Form 10-K 2025'],
+  ['NAHB, 2026', 'wood framing in new single-family homes'],
+  ['Destatis, 2021', 'building approvals 2020 by main material'],
+  ['DIN 18015-3', 'installation zones for cables (Baunetz Wissen)'],
+  ['Klarna, 2024', 'press release on the assistant, 27 Feb'],
+  ['Entrepreneur, 2025', 'Klarna hires service agents again, 9 May'],
+  ['Information Age, 2025', 'Commonwealth Bank reverses job cuts'],
+  ['Deutsche Telekom, 2025', 'HR Factbook: staff reduction by agreed routes'],
+  ['Telekom and ver.di, 2026', 'collective agreement; DGB summary'],
+  ['European Commission, 2025', 'Special Eurobarometer 554, AI and work'],
+  ['Stanford HAI, 2026', 'AI Index, public opinion (Ipsos surveys)'],
+  ['BetrVG §§ 76, 87, 90', 'Works Constitution Act'],
+  ['Bargmann, 2022', 'Telekom group framework agreement, 2021'],
+  ['AI Act, 2024 and 2026', 'Regulation (EU) 2024/1689; 2026/1744'],
+  ['GDPR', 'Regulation (EU) 2016/679, Art. 35'],
+  ['Destatis, 2025', 'reasons firms do not use AI'],
+  ['Bitkom, 2025', 'Europe’s path to digital sovereignty'],
+  ['Hall and Soskice, 2001', 'Varieties of Capitalism, Oxford UP'],
+];
 add({
   id: 'b5', backup: 'B5', builds: 1, label: 'Backup', title: 'Sources.',
+  source: 'Full list with links: the article, thd-ai.github.io/ws27-papers/renovate (sources).',
   notes: '<p>Any "where is that from?"</p>',
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
     chrome(svg, this, b, { ...ctx, last: true });
-    const S = data.sources;
-    const list = Object.entries(S).map(([id, v]) => ({ id, ...v }));
-    const want = ['R6-01', 'R6-06', 'R6-02', 'R6-05', 'R6-08', 'R6-09', 'NAHB-2026', 'DESTATIS-2021', 'R12-14', 'R12-15', 'CBA-2025', 'R12-01', 'R11-14', 'R12-28', 'R11-05', 'R11-07', 'R11-12', 'R7-06', 'R9-05', 'HS-2001'];
-    const pick = want.map((id) => list.find((s) => s.id === id)).filter(Boolean);
-    pick.forEach((s, i) => {
-      const col = i < 10 ? 0 : 1, row = i % 10, x = L + col * 880, y = 300 + row * 68;
-      T(svg, x, y, `${s.publisher || ''}${s.date ? `, ${String(s.date).slice(0, 4)}` : ''}`.slice(0, 64), { size: 26, weight: 600 });
-      T(svg, x, y + 30, `${s.title || s.short || ''}`.slice(0, 74), { size: 24, fill: C.muted });
+    SOURCES.forEach(([a, z], i) => {
+      const col = i < 10 ? 0 : 1, row = i % 10, x = L + col * 880, y = 300 + row * 66;
+      T(svg, x, y, a, { size: 28, weight: 600 });
+      T(svg, x, y + 30, z, { size: 24, fill: C.muted });
     });
   },
 });
@@ -721,11 +750,10 @@ add({
     const svg = svgOf(page);
     chrome(svg, this, b, { ...ctx, last: true });
     const rows = [
-      'Generative AI helped find and open sources, draft from my notes, and check every claim against its source.',
-      'I decided what stays.',
+      'Generative AI helped find and open sources, draft from my notes, and check every claim against its source. I decided what stays.',
       'The house drawing was generated with an image model from my own line drawing.',
-      'Every number on these slides comes from a data file that names its source.',
+      'The figures are drawn in code from the article’s data files; every number on these slides has its source on the slide and in B5.',
     ];
-    rows.forEach((s, i) => T(svg, L, 380 + i * 120, s, { size: 40, width: 1600, lh: 50 }));
+    rows.forEach((r, i) => T(svg, L, 380 + i * 170, r, { size: 40, width: 1600, lh: 52 }));
   },
 });
