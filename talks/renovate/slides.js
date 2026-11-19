@@ -75,7 +75,7 @@ const add = (s) => { s.n = SLIDES.filter((x) => !x.backup && !x.end).length + (s
 
 // 1 ---------------------------------------------------------------------------
 add({
-  id: 'title', builds: 2,
+  id: 'title', start: '0:00', clicks: ['title and drawing', 'the question'], builds: 2,
   landings: { 1: "Can Telekom copy what T-Mobile's agents did?" },
   notes: `<p>Deutsche Telekom openly takes an American result as its benchmark. On 5 October it told its investors about T-Mobile: software agents there now do a big part of customer service, and Telekom wants the same in Europe by 2030. My position: born in the United States, studying in Germany, so I may see Germany as the harder case. That's why every claim has a source. <b>Can Telekom copy what T-Mobile's agents did?</b></p>`,
   draw(page, b, data, ctx) {
@@ -83,7 +83,7 @@ add({
     h('image', { href: '../../articles/renovate/art/house.png', x: 0, y: 0, width: 1920, height: 1080, preserveAspectRatio: 'xMidYMid slice' }, svg);
     T(svg, L, 300, 'Innovation Management for AI', { size: 32, weight: 500, fill: C.muted });
     T(svg, L, 420, 'Renovate,', { family: 'serif', size: 112, weight: 500 });
-    T(svg, L, 540, "don't repaint", { family: 'serif', size: 112, weight: 500 });
+    T(svg, L, 540, 'don’t repaint', { family: 'serif', size: 112, weight: 500 });
     if (b >= 1) T(svg, L, 680, "Can Telekom copy what T-Mobile's agents did?", { size: 50, weight: 600, width: 740, lh: 62 });
     T(svg, L, 930, 'Alexander Rudaev', { size: 34, weight: 600 });
     T(svg, L, 976, 'TH Deggendorf, 12 December 2026', { size: 32, fill: C.muted });
@@ -93,7 +93,7 @@ add({
 
 // 2 ---------------------------------------------------------------------------
 add({
-  id: 'agent', builds: 3, label: 'Why this case',
+  id: 'agent', start: '0:55', clicks: ['request and chatbot', 'the agent and its keys', 'title'], builds: 3, label: 'Why this case',
   title: "An agent doesn't just answer. It acts.",
   notes: `<p>Two reasons for this case: both sides publish numbers, and this software does something a chatbot doesn't. A customer writes, "Please move me to a cheaper tariff." A chatbot answers, "Here's how." An agent just does it. For that it needs keys: permission to see and change your account. In this course's terms, a transformation, not a change. <b>An agent doesn't just answer. It acts.</b></p>`,
   draw(page, b, data, ctx) {
@@ -125,7 +125,7 @@ add({
 
 // 3 ---------------------------------------------------------------------------
 add({
-  id: 'number', builds: 4, label: 'The American result, corrected',
+  id: 'number', start: '1:35', clicks: ['the release: 40', 'T-Mobile’s slide: 32', 'finished: not published', 'title'], builds: 4, label: 'The American result, corrected',
   title: "Telekom says 40 percent. T-Mobile's own slide counts 32 percent.",
   source: 'Deutsche Telekom, press release, 5 Oct 2026; T-Mobile US, AI Investor Day deck, Q2 2026. Company figures, not audited.',
   notes: `<p>A correction to my own proposal. Telekom's release says AI agents now handle forty percent of customer contacts in the US; I used that number. In T-Mobile's own material I couldn't find it. Its slide counts something narrower: only contract customers, only contacts "served by an AI agent". Served means the customer meets the software first. Whether the software also finished the job, T-Mobile doesn't say. Company numbers, not audited. Still, one in three is a lot. <b>Telekom says forty percent. T-Mobile's own slide counts thirty-two percent.</b></p>`,
@@ -158,7 +158,7 @@ add({
 
 // 4 ---------------------------------------------------------------------------
 add({
-  id: 'contacts', builds: 3, label: 'The American result, corrected',
+  id: 'contacts', start: '2:45', clicks: ['7.0 and 3.1', 'September 2024, the empty stretch', 'title'], builds: 3, label: 'The American result, corrected',
   title: 'Nobody outside can tell how much was the agents.',
   source: 'T-Mobile US, AI Investor Day deck (contacts per account, Q4 2021 and Q2 2026; T-Mobile reports the fall as 55%); T-Mobile US, press release, 18 Sep 2024. Company figures.',
   notes: `<p>The second number: at the end of 2021 a customer account got in touch about seven times a year. By the middle of this year, about three. Less than half. But the agents were only announced in September 2024, and nothing in between is published. <b>Nobody outside can tell how much was the agents.</b></p>`,
@@ -204,7 +204,7 @@ add({
 
 // 5 ---------------------------------------------------------------------------
 add({
-  id: 'walls', builds: 4, label: 'The picture',
+  id: 'walls', start: '3:20', clicks: ['timber', 'repaint: the duct', 'renovate, on “cutting into the wall”', 'title'], builds: 4, label: 'The picture',
   title: 'The cable is the same. The wall decides the work.',
   source: 'NAHB 2026 (94% of new single-family homes completed in 2025 timber-framed); Destatis 2021 (about two in three residential buildings approved in 2020 brick or other masonry); DIN 18015-3. The walls picture conditions; they are not evidence.',
   notes: `<p>My father is a civil engineer, and this picture is his. In America almost every new family home has a timber frame: the wall is hollow, so a new cable drops down inside it. In Germany it's mostly brick, built to stand, so a new cable means opening the wall. You can screw a duct onto the wall: quick, and the wall stays as it was. Or you cut a channel, lay the cable and plaster it over: slow, and the cable becomes part of the wall. The cable is the agent. The wall is what's already there: old systems, rules, people. The duct is repainting. Cutting into the wall is renovating. <b>The cable is the same. The wall decides the work.</b></p>`,
@@ -214,9 +214,9 @@ add({
     const top = 450, hgt = 350, ww = 500, gap = 114;
     const xs = [L, L + ww + gap, L + 2 * (ww + gap)];
     T(svg, xs[0], 330, 'US: timber frame', { size: 36, weight: 600 });
-    T(svg, xs[0], 374, '94% of new single-family homes', { size: 32, fill: C.muted });
+    T(svg, xs[0], 374, '94% of new single-family homes, 2025', { size: 32, fill: C.muted });
     if (b >= 1) {
-      T(svg, xs[1], 330, 'Germany: mostly brick', { size: 36, weight: 600 });
+      T(svg, xs[1], 330, 'Germany: mostly masonry', { size: 36, weight: 600 });
       T(svg, xs[1], 374, 'two in three residential buildings approved in 2020', { size: 32, fill: C.muted });
       ln(svg, xs[1], 398, xs[2] + ww, 398, { stroke: C.ink, 'stroke-width': 2 });
     }
@@ -241,7 +241,9 @@ add({
       rc(svg, x, top, ww, hgt, { 'stroke-width': 4 });
       for (let i = 1; i < 6; i++) ln(svg, x + i * ww / 6, top, x + i * ww / 6, top + hgt, { stroke: C.mid, 'stroke-width': 3 });
       const cx = x + ww / 12 * 3;
-      pth(svg, `M${cx} ${top - 34} L${cx} ${top + hgt - 70}`, { stroke: C.ink, 'stroke-width': 7 });
+      pth(svg, `M${cx} ${top - 34} L${cx} ${top}`, { stroke: C.ink, 'stroke-width': 7 });
+      pth(svg, `M${cx} ${top} L${cx} ${top + hgt - 70}`, { stroke: C.ink, 'stroke-width': 6, 'stroke-dasharray': '14 10', 'stroke-linecap': 'butt' });
+      T(svg, cx + 18, top + 150, 'inside', { family: 'serif', italic: true, size: 32, fill: C.muted });
       socket(cx, top + hgt - 48);
       T(svg, x, top + hgt + 66, 'pulled through', { size: 44, weight: 600 });
       T(svg, x, top + hgt + 112, 'quick', { size: 34, fill: C.muted });
@@ -249,11 +251,14 @@ add({
     if (b >= 1) { // a duct screwed onto the plastered brick: a box on the surface
       const x = xs[1], r0 = route(x);
       brick(x);
-      pth(svg, r0.d.replace(`M${x + ww - 40} ${top - 34}`, `M${x + ww - 40} ${top}`), { stroke: C.ink, 'stroke-width': 34, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter' });
+      const duct = r0.d.replace(`M${x + ww - 40} ${top - 34}`, `M${x + ww - 40} ${top}`);
+      h('path', { d: duct, fill: 'none', stroke: C.ink, 'stroke-width': 34, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter', transform: 'translate(7 7)' }, svg);
+      pth(svg, duct, { stroke: C.ink, 'stroke-width': 34, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter' });
       pth(svg, r0.d.replace(`M${x + ww - 40} ${top - 34}`, `M${x + ww - 40} ${top}`), { stroke: C.paper, 'stroke-width': 26, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter' });
       pth(svg, r0.d, { stroke: C.ink, 'stroke-width': 7 });
       [[x + 240, r0.yz], [x + 400, r0.yz], [r0.xz, top + 180]].forEach(([sx, sy]) => { dot(svg, sx, sy, 6, { fill: C.paper, stroke: C.ink, 'stroke-width': 2.5 }); ln(svg, sx - 4, sy, sx + 4, sy, { stroke: C.ink, 'stroke-width': 2 }); });
       socket(r0.xz, top + hgt - 48);
+      T(svg, x + 110, top + 170, 'on the wall', { family: 'serif', italic: true, size: 32, fill: C.muted });
       T(svg, x, top + hgt + 66, 'repaint', { size: 56, weight: 700 });
       T(svg, x, top + hgt + 112, 'quick; the wall unchanged', { size: 34, fill: C.muted });
     }
@@ -261,9 +266,11 @@ add({
       const x = xs[2], r0 = route(x);
       brick(x);
       const chase = r0.d.replace(`M${x + ww - 40} ${top - 34}`, `M${x + ww - 40} ${top}`);
-      pth(svg, chase, { stroke: C.accent, 'stroke-width': 52, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter' });
-      pth(svg, chase, { stroke: C.field, 'stroke-width': 44, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter' });
-      pth(svg, r0.d, { stroke: C.ink, 'stroke-width': 7 });
+      pth(svg, chase, { stroke: C.accent, 'stroke-width': 56, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter' });
+      pth(svg, chase, { stroke: C.field, 'stroke-width': 48, 'stroke-linecap': 'butt', 'stroke-linejoin': 'miter' });
+      pth(svg, `M${x + ww - 40} ${top - 34} L${x + ww - 40} ${top}`, { stroke: C.ink, 'stroke-width': 7 });
+      pth(svg, chase, { stroke: C.ink, 'stroke-width': 6, 'stroke-dasharray': '14 10', 'stroke-linecap': 'butt' });
+      T(svg, x + 110, top + 170, 'in the wall', { family: 'serif', italic: true, size: 32, fill: C.accent });
       socket(r0.xz, top + hgt - 48);
       T(svg, x, top + hgt + 66, 'renovate', { size: 56, weight: 700, fill: C.accent });
       T(svg, x, top + hgt + 112, 'slow; the wall changes', { size: 34, fill: C.muted });
@@ -273,7 +280,7 @@ add({
 
 // 6 ---------------------------------------------------------------------------
 add({
-  id: 'rebuilt', builds: 4, label: 'What T-Mobile actually did',
+  id: 'rebuilt', start: '4:40', clicks: ['before', 'now: one system', '78%', 'title'], builds: 4, label: 'What T-Mobile actually did',
   title: 'T-Mobile rebuilt alongside its agents.',
   source: "Deutsche Telekom, AI Investor Day transcript, 5 Oct 2026 (T-Mobile's head of IT); T-Mobile US, AI Investor Day deck; Form 10-K 2025. Share of chats: company figure.",
   notes: `<p>T-Mobile didn't just repaint. Their head of IT described it to investors. Before, outside contractors worked on other companies' systems. Now T-Mobile's own engineers work on T-Mobile's own systems. They built one system that knows each customer, and the agents read from it. On that base, almost eight in ten chats never reached a person. A real result. <b>T-Mobile rebuilt alongside its agents.</b></p>`,
@@ -309,9 +316,9 @@ add({
 
 // 7 ---------------------------------------------------------------------------
 add({
-  id: 'simplify', builds: 3, label: "Telekom's own slide",
+  id: 'simplify', start: '5:25', clicks: ['14 today', '3 planned', 'title'], builds: 3, label: "Telekom's own slide",
   title: 'Simplify before automating.',
-  source: 'Deutsche Telekom, AI Investor Day, "From AI Adoption to AI Impact", 5 Oct 2026. Three is a target.',
+  source: 'Deutsche Telekom, AI Investor Day, "From AI Adoption to AI Impact", 5 Oct 2026. Company figures; three is a target.',
   notes: `<p>Telekom isn't there yet. Across its European countries, a customer can prove who they are in fourteen different ways. Telekom wants three, and its own slide says why. <b>Simplify before automating.</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
@@ -335,7 +342,7 @@ add({
 
 // 8 ---------------------------------------------------------------------------
 add({
-  id: 'walkback', builds: 3, label: 'Repainting, twice',
+  id: 'walkback', start: '5:45', clicks: ['Klarna', 'Commonwealth Bank', 'title'], builds: 3, label: 'Repainting, twice',
   title: 'Both had to walk it back.',
   source: 'Klarna, press release, 27 Feb 2024 (700: company estimate); Entrepreneur, 9 May 2025; Information Age, Aug 2025 (Commonwealth Bank).',
   notes: `<p>From the street, repainting looks the same for a while, and it's cheaper. But if nothing changes behind the agent, the saving usually comes from the staff. In February 2024 Klarna had stopped hiring and said its assistant did the work of seven hundred service agents, by its own estimate. In 2025 it was hiring people again. Commonwealth Bank went the same way faster: forty-five roles declared redundant for a voice bot, the decision withdrawn within weeks. <b>Both had to walk it back.</b></p>`,
@@ -372,7 +379,7 @@ add({
 
 // 9 ---------------------------------------------------------------------------
 add({
-  id: 'staff', builds: 3, label: 'First brick', brick: 1,
+  id: 'staff', start: '6:40', clicks: ['no dismissals to 2028', 'about 4,000 a year', 'title'], builds: 3, label: 'First brick', brick: 1,
   title: 'First brick: the staff stay.',
   source: 'Deutsche Telekom and ver.di, agreement of May 2026 (about 60,000 employees under its collective agreements); Deutsche Telekom, HR Factbook 2025, company figures (totals added by me).',
   notes: `<p>The harder question is what the wall looks like in Germany. Three bricks matter. The first is the staff. This May, Telekom and ver.di agreed: no dismissals for business reasons until the end of 2028. People still go by agreed routes: partial retirement, early retirement, severance. From 2021 to 2025 that was about four thousand full-time positions a year, across Telekom in Germany. Sixteen every working day. Any saving has to fit into that. I think that helps more than it hurts: the people who stay are the first ones to train. <b>First brick: the staff stay.</b></p>`,
@@ -404,7 +411,7 @@ add({
 
 // 10 --------------------------------------------------------------------------
 add({
-  id: 'monitoring', builds: 2, label: 'Second brick', brick: 2,
+  id: 'monitoring', start: '7:45', clicks: ['79%', 'title'], builds: 2, label: 'Second brick', brick: 2,
   title: 'Nearly four in five Germans see monitoring at work as bad.',
   source: 'European Commission, Special Eurobarometer 554, Artificial Intelligence and the future of work (asked in the EU only).',
   notes: `<p>The second brick starts with a worry. The EU asked people about digital monitoring at work. In Germany nearly four in five see it as a bad thing. On AI and jobs, Germans are no more pessimistic than Americans; on monitoring at work they are. Any new system here has to answer that first. <b>Nearly four in five Germans see monitoring at work as bad.</b></p>`,
@@ -423,7 +430,7 @@ add({
 
 // 11 --------------------------------------------------------------------------
 add({
-  id: 'checks', builds: 4, label: 'Second brick', brick: 2,
+  id: 'checks', start: '8:10', clicks: ['United States', 'Germany: the two rules', 'since 2021', 'title'], builds: 4, label: 'Second brick', brick: 2,
   title: 'Second brick: here the checks come first.',
   source: 'BetrVG § 87(1) no. 6; AI Act Art. 50 (Regulation (EU) 2024/1689, as amended by 2026/1744); Telekom group framework agreement on IT systems, March 2021 (Bargmann 2022); T-Mobile US, press release, Sep 2024. Lengths schematic, not measured.',
   notes: `<p>German law makes it answer before launch. At T-Mobile I found no say for the staff before launch. Here, two rules matter most. One: a system that can watch the staff needs the works council to agree before it runs. Two: since August, the AI Act says customers must be told when they talk to an AI system. And here Telekom is ahead. In 2021 it agreed the rules with its works council once: nobody gets watched as a person, and results are only looked at in groups of more than five, without names. A system inside those rules needs no new decision. <b>Second brick: here the checks come first.</b></p>`,
@@ -459,7 +466,7 @@ add({
 
 // 12 --------------------------------------------------------------------------
 add({
-  id: 'knowhow', builds: 3, label: 'Third brick', brick: 3,
+  id: 'knowhow', start: '9:35', clicks: ['missing knowledge', 'law, data protection', 'title'], builds: 3, label: 'Third brick', brick: 3,
   title: 'Third brick: missing knowledge first. The law after.',
   source: 'Federal Statistical Office (Destatis), 2025: firms with ten or more employees that considered AI and do not use it; several answers possible.',
   notes: `<p>The third brick is know-how. Destatis went to the firms that had looked at these tools and didn't use them, and asked: why not? More than seven in ten said they were missing the knowledge. Legal uncertainty and data protection came after, each about six in ten. Without your own people who understand your systems, you can buy a language model. You can screw it onto the wall. You can't cut it in. <b>Third brick: missing knowledge first. The law after.</b></p>`,
@@ -496,14 +503,14 @@ const STEP_MEASURE = {
 };
 
 add({
-  id: 'steps1', builds: 3, label: 'How to address it',
+  id: 'steps1', start: '10:25', clicks: ['step 1', 'step 2', 'steps 3 and 4', 'title'], builds: 4, label: 'How to address it',
   title: 'Measure first. Start beside the staff.',
   source: 'The order is my hypothesis. Step 4: no control of individuals under the 2021 framework agreement. Bitkom 2025: 51% of firms with 20 or more staff strongly dependent on US digital technology.',
   notes: `<p>So how would I do it? Step one: before any agent, measure what one contact costs today and how often customers come back; then, with the agent, how many requests it finishes for good and what it costs. That's the business measure from this course, not accuracy. If it doesn't get better, the agent is the wrong tool and Telekom stops there. Step two: sign the works agreement while the system is still on paper. Steps three and four: keep the option to switch suppliers, since about half of German firms with twenty or more staff depend strongly on American technology, and train the staff before each new key, measuring teams, never single people. <b>Measure first. Start beside the staff.</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
     chrome(svg, this, b, ctx);
-    const show = b >= 1 ? [1, 2, 3, 4] : [1, 2];
+    const show = b >= 2 ? [1, 2, 3, 4] : b === 1 ? [1, 2] : [1];
     stepRow(svg, data, show, []);
     const st = data.plan.steps;
     show.forEach((n, k) => {
@@ -516,10 +523,10 @@ add({
 });
 
 add({
-  id: 'step5', builds: 3, label: 'How to address it',
+  id: 'step5', start: '11:40', clicks: ['step 5: 14 → 3', 'keys need step 5', 'title'], builds: 3, label: 'How to address it',
   title: 'The biggest job is one customer record.',
-  source: 'Deutsche Telekom, AI Investor Day, 5 Oct 2026 (14 ways today, 3 planned); T-Mobile US, Form 10-Q, Q3 2026 (write-off of billing software).',
-  notes: `<p>Step five. Fourteen ways of proving who you are become three, and the customer data becomes usable. An agent can't act on an account it can't identify. This is the channel cut into the brick. It takes years, and it can fail: even T-Mobile wrote off two hundred seventy-eight million dollars of billing software, about a tenth of that quarter's profit. <b>The biggest job is one customer record.</b></p>`,
+  source: 'Deutsche Telekom, AI Investor Day, 5 Oct 2026 (14 ways today, 3 planned: company figures, 3 a target); T-Mobile US, Form 10-K 2025 and 10-Q Q3 2026 (write-off in Q3 2025).',
+  notes: `<p>Step five. Fourteen ways of proving who you are become three, and the customer data becomes usable. An agent can't act on an account it can't identify. This is the channel cut into the brick. It takes years, and it can fail: in the third quarter of 2025 T-Mobile wrote off two hundred seventy-eight million dollars on a billing system it abandoned, about a tenth of its net income that quarter. <b>The biggest job is one customer record.</b></p>`,
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
     chrome(svg, this, b, ctx);
@@ -540,7 +547,7 @@ add({
 });
 
 add({
-  id: 'steps68', builds: 3, label: 'How to address it',
+  id: 'steps68', start: '12:20', clicks: ['step 6: keys in stages', 'steps 7 and 8', 'process model', 'title'], builds: 4, label: 'How to address it',
   title: 'Then the keys: read first, risky changes last.',
   source: 'The order is my hypothesis.',
   notes: `<p>But reading doesn't have to wait. Step six: first the agent only reads, for customers already logged in: show a bill, check an order. Then actions you can undo. Last, the changes a fraudster could use, like a new bank account; the customer confirms those in the app. Each key is enforced by the systems, not by the model: the model can ask, the system decides. Steps seven and eight: each new key is an annex to the works agreement, staff and works council sign off before the agent works alone, and a named team runs it. As a process model, it's a project life cycle with a works-council gate and a stop point added. The order is my hypothesis. <b>Then the keys: read first, risky changes last.</b></p>`,
@@ -566,14 +573,14 @@ add({
       T(svg, L + 880, 810, '8', { size: 72, weight: 600 });
       T(svg, L + 960, 790, 'Run it', { size: 42, weight: 600 });
       T(svg, L + 960, 836, 'a named team; cost per finished request', { size: 34, fill: C.muted });
-      T(svg, L, 920, 'Process model: a project life cycle with a works-council gate and a stop point. Every new key: an annex to the works agreement.', { size: 32, width: W, lh: 40 });
+      if (b >= 2) T(svg, L, 920, 'Process model: a project life cycle with a works-council gate and a stop point. Every new key: an annex to the works agreement.', { size: 34, width: W, lh: 42 });
     }
   },
 });
 
 // 16 --------------------------------------------------------------------------
 add({
-  id: 'close', builds: 5, label: 'Where this could be wrong',
+  id: 'close', start: '13:40', clicks: ['first', 'second', 'third', 'title', 'closing line'], builds: 5, label: 'Where this could be wrong',
   landings: { 3: 'Three things would prove me wrong.', 4: "Telekom can't import the 32%. It can copy the slow work behind it." },
   title: 'Three things would prove me wrong.',
   notes: `<p>If Telekom reports a German number like the thirty-two percent before its customer data is fixed, the record matters less than I think. If the service teams shrink faster than the agreed routes allow, the staff are leaving after all. If a works agreement comes months late, the law weighs more than I said. <b>Three things would prove me wrong.</b></p><p>(last build) People often say Germany is slow, and mean it as a weakness. Hall and Soskice argue the other way: economies like Germany's are better at step-by-step innovation than at radical innovation. Renovating is step-by-step work. <b>Telekom can't import the 32%. It can copy the slow work behind it.</b> Thank you.</p>`,
@@ -596,7 +603,7 @@ add({
       return;
     }
     h('image', { href: '../../articles/renovate/art/house.png', x: 0, y: 0, width: 1920, height: 1080, preserveAspectRatio: 'xMidYMid slice' }, svg);
-    T(svg, L, 420, "Telekom can't import the 32%.", { family: 'serif', size: 76, weight: 500, width: 820, lh: 86 });
+    T(svg, L, 420, 'Telekom can’t import the 32%.', { family: 'serif', size: 76, weight: 500, width: 820, lh: 86 });
     T(svg, L, 620, 'It can copy the slow work behind it.', { family: 'serif', size: 76, weight: 500, width: 820, lh: 86, fill: C.accent });
     T(svg, R, 1040, `16 / ${ctx.main}`, { size: 22, weight: 500, fill: C.muted, anchor: 'end' });
   },
@@ -621,7 +628,7 @@ add({
 // Backups -------------------------------------------------------------------------
 add({
   id: 'b1', backup: 'B1', builds: 1, label: 'Backup', title: 'The ten pairs: none compares fully.',
-  source: 'Sources per row in the article, appendix. Company figures.',
+  source: 'Sources per row in the article, appendix. Company figures; targets and outlooks marked.',
   notes: '<p>Q3: why not compare the numbers directly?</p>',
   draw(page, b, data, ctx) {
     const svg = svgOf(page);
@@ -635,7 +642,8 @@ add({
       const y = y0 + 66 + i * 64;
       T(svg, cx[0], y, `${r.n}. ${what[r.what] || r.what}`, { size: 26, weight: 600 });
       T(svg, cx[1], y, (r.us.show || r.us.absent || '').replace(/\[\[|\]\]/g, ''), { size: 26 });
-      T(svg, cx[2], y, (r.de.show || r.de.absent || '').replace(/\[\[|\]\]/g, ''), { size: 26 });
+      const tag = r.de.status === 'target' ? ' (target)' : r.de.status === 'ahead' ? ' (outlook)' : '';
+      T(svg, cx[2], y, (r.de.show || r.de.absent || '').replace(/\[\[|\]\]/g, '') + tag, { size: 26 });
       T(svg, cx[3], y, r.why, { size: 24, fill: C.muted, width: 900 });
       ln(svg, L, y + 24, R, y + 24, { stroke: C.hair, 'stroke-width': 1.5 });
     });
@@ -718,7 +726,7 @@ const SOURCES = [
   ['Information Age, 2025', 'Commonwealth Bank reverses job cuts'],
   ['Deutsche Telekom, 2025', 'HR Factbook: staff reduction by agreed routes'],
   ['Telekom and ver.di, 2026', 'collective agreement; DGB summary'],
-  ['European Commission, 2025', 'Special Eurobarometer 554, AI and work'],
+  ['European Commission, 2024', 'Special Eurobarometer 554, AI and work'],
   ['Stanford HAI, 2026', 'AI Index, public opinion (Ipsos surveys)'],
   ['BetrVG §§ 76, 87, 90', 'Works Constitution Act'],
   ['Bargmann, 2022', 'Telekom group framework agreement, 2021'],

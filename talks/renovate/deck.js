@@ -46,7 +46,7 @@ function render(data, n) {
 
 function fit(page) {
   const k = Math.min(innerWidth / 1920, innerHeight / 1080);
-  page.style.transform = `scale(${k})`;
+  page.style.transform = `translate(-50%, -50%) scale(${k})`;
 }
 
 function showNotes(n) {
