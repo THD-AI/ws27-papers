@@ -6,6 +6,7 @@ import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { mkdirSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { startServer } from './serve.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -61,6 +62,8 @@ const n = await page.evaluate(() => document.querySelectorAll('.page').length);
 const els = await page.$$('.page');
 for (let i = 0; i < n; i++) await els[i].screenshot({ path: join(OUT, `p${String(i + 1).padStart(2, '0')}.png`) });
 await page.pdf({ path: join(OUT, `${talk}-deck.pdf`), width: '13.333in', height: '7.5in', scale: 2 / 3, printBackground: true, preferCSSPageSize: true });
+// one page at a time, fitted, presentation mode where the viewer honours it
+spawnSync('python', [join(ROOT, 'tools', 'deck_pdf_view.py'), join(OUT, `${talk}-deck.pdf`)], { stdio: 'inherit' });
 
 // contact sheets, six pages each, for review
 const imgs = Array.from({ length: n }, (_, i) => `http://localhost:${port}/.shots/deck/${talk}/p${String(i + 1).padStart(2, '0')}.png`);
