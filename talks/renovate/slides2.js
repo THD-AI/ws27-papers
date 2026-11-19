@@ -392,12 +392,12 @@ function key(svg, x, yBase, k) {
   return (1433 - 103) * k;
 }
 // The plug in a socket set into the wall: the closing picture (slides 16, end).
-function pluggedIn(svg, cy = 740) {
+function pluggedIn(svg, cy = 740, route) {
   const wk = 1180 / 1536, wx = 1500 - 173 * wk;
   h('rect', { x: 1488, y: cy - 110, width: 150, height: 220, rx: 22, fill: C.field }, svg);
   img(svg, 'deck-wall.png', wx, cy - 1028 * wk, 1024 * wk, 1536 * wk);
   const k = 0.5, gx = 1497 - (1062 - 520) * k;
-  cable(svg, [[-30, CABLE_Y], [700, CABLE_Y], [gx - 140, cy], [gx + 3, cy]], { r: 220 });
+  cable(svg, route ? route(gx) : [[-30, CABLE_Y], [700, CABLE_Y], [gx - 140, cy], [gx + 3, cy]], { r: route ? 160 : 220 });
   art(svg, 'deck-plug.png', gx, cy - 232 * k, k, [520, 280, 542, 470]);   // the pins are inside the socket
   // the socket plate on the wall face, seen edge on; the pins disappear into it
   h('rect', { x: 1497, y: cy - 100, width: 24, height: 200, rx: 10, fill: 'none', stroke: C.ink, 'stroke-width': 2 }, svg);
@@ -750,6 +750,16 @@ add({
   },
 });
 
+
+// The article's QR code, plain: square modules, ink on a light field, with a
+// quiet zone of four modules. Size = the code itself, without the quiet zone.
+function qr(svg, x, y, size, o = {}) {
+  const n = QR_ARTICLE.length, m = size / n, q = 4 * m;
+  h('rect', { x: x - q, y: y - q, width: size + 2 * q, height: size + 2 * q, fill: o.field || C.paper }, svg);
+  QR_ARTICLE.forEach((row, r) => [...row].forEach((c, k) => { if (c === '1') h('rect', { x: x + k * m - 0.2, y: y + r * m - 0.2, width: m + 0.4, height: m + 0.4, fill: C.ink }, svg); }));
+  return { x0: x - q, y0: y - q, w: size + 2 * q };
+}
+
 // End ---------------------------------------------------------------------------
 add({
   id: 'end', end: true, builds: 1, clicks: ['questions'],
@@ -757,10 +767,20 @@ add({
   draw(page) {
     const svg = svgOf(page);
     pluggedIn(svg);
+    // One renovated stretch of the wall, from the socket up: fresh plaster with
+    // a hand-cut edge covers the brick, and the article's code sits in it on a
+    // white field with its full quiet zone.
+    const top = 120, bot = 868, l = 1494, r = 1922;
+    const P = [[l + 8, top + 10], [l + 120, top - 2], [l + 260, top + 6], [r, top - 4], [r, bot], [l + 300, bot + 6], [l + 170, bot - 4], [l + 2, bot + 2], [l - 4, bot - 160], [l + 4, bot - 330], [l - 3, top + 330], [l + 5, top + 160]];
+    h('path', { d: 'M' + P.map((q) => q.join(' ')).join(' L') + ' Z', fill: C.field }, svg);
+    const sz = 300, x = 1556, y = 176;
+    qr(svg, x, y, sz);
+    // the socket's rim again, over the plaster
+    h('rect', { x: 1497, y: 740 - 100, width: 24, height: 200, rx: 10, fill: 'none', stroke: C.ink, 'stroke-width': 2 }, svg);
     T(svg, L, 220, 'Innovation Management for AI', { size: 34, weight: 500, fill: C.muted });
     T(svg, L, 340, 'Renovate, don’t repaint', { family: 'serif', size: 96, weight: 500 });
     T(svg, L, 460, 'Thank you. Questions?', { size: 56, weight: 600 });
-    T(svg, L, 580, 'The article, with every source:', { size: 32, fill: C.muted });
+    T(svg, L, 580, 'The article and every source:', { size: 32, fill: C.muted });
     T(svg, L, 626, 'thd-ai.github.io/ws27-papers/renovate', { size: 36 });
     T(svg, L, 826, 'Alexander Rudaev', { size: 34, weight: 600 });
     T(svg, L, 872, 'TH Deggendorf, 12 December 2026', { size: 32, fill: C.muted });
@@ -888,20 +908,6 @@ const QR_ARTICLE = [
   '100000101011010100100010011110111',
   '111111100110010001101001110111000',
 ];   // https://thd-ai.github.io/ws27-papers/renovate/, error correction Q
-// The article's QR code set into a socket face: a round plate and recess, the
-// two pin holes and the earth clips of a German socket around the code, with a
-// quiet zone of two modules inside the recess so it still scans.
-function qrSocket(svg, cx, cy, R) {
-  const n = QR_ARTICLE.length, ring = R - 20, S = ring / 0.793, m = S / n, x0 = cx - S / 2, y0 = cy - S / 2;
-  dot(svg, cx, cy, R, { fill: C.paper, stroke: C.ink, 'stroke-width': 3 });
-  dot(svg, cx, cy, ring, { fill: C.paper, stroke: C.ink, 'stroke-width': 2 });
-  QR_ARTICLE.forEach((row, r) => [...row].forEach((c, q) => { if (c === '1') h('rect', { x: x0 + q * m - 0.15, y: y0 + r * m - 0.15, width: m + 0.3, height: m + 0.3, rx: m * 0.18, fill: C.ink }, svg); }));
-  const hx = S / 2 + 2 * m + 18, hy = S / 2 + 2 * m + 22;
-  [-1, 1].forEach((sgn) => {
-    dot(svg, cx + sgn * hx, cy, 10, { fill: C.ink });
-    h('rect', { x: cx - 22, y: cy + sgn * hy - 5, width: 44, height: 10, rx: 4, fill: C.ink }, svg);
-  });
-}
 const SOURCES = [
   ['Deutsche Telekom, 2026', 'press release, 5 Oct; AI Investor Day slides and transcript'],
   ['T-Mobile US, 2026', 'AI Investor Day deck; Form 10-Q, Q3'],
@@ -931,10 +937,8 @@ add({
   draw(page) {
     const svg = svgOf(page);
     frame(svg, this);
-    qrSocket(svg, 960, 560, 200);
-    T(svg, 960, 806, 'the article, with every source', { size: 24, fill: C.muted, anchor: 'middle' });
     SOURCES.forEach(([a, z], i) => {
-      const col = i < 10 ? 0 : 1, row = i % 10, x = L + col * 1060, y = 260 + row * 70;
+      const col = i < 10 ? 0 : 1, row = i % 10, x = L + col * 860, y = 260 + row * 70;
       T(svg, x, y, a, { size: 28, weight: 600 });
       T(svg, x, y + 30, z, { size: 24, fill: C.muted });
     });

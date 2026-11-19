@@ -2,6 +2,21 @@
 
 Kind: log, newest first. Read this before every loop on the deck; add to it at the end of every loop (the compound step). Each entry: what happened, what it means, the rule that follows. His words are in dotUni `.docs/transcripts/` (numbers given).
 
+## Loop 6 (19 November): where the QR code belongs, and how it may look
+
+What happened:
+- He rejected the socket-faced QR code on the sources slide ("it looks weird", `-014`) and asked for a brainstorm through the playbook.
+- Research: on slides the code should be about 15% of the slide's width and come with a plain call to action; the closing slide is the classic place; image-model "art" QR codes always trade scanning for looks.
+- Three directions on the closing slide (it stays up through the questions): a plaster patch in the wall, an engineer's title block, a tag hanging from the cable. A brick-wall QR from the image model could not be tried (no credits).
+- Four readers: three would ship the plaster patch, one the cable tag. Convergent fixes: the code on white with the green only around it; no sentence explaining the metaphor; keep clear of the slide's edges and the bottom third, where heads and the speaker stand.
+- Built: one renovated stretch of the wall, fresh plaster from the socket up to the code. The code is 300 px (16% of the width) on white with a four-module quiet zone. It decodes at 100%, 50% and 30% size, and in a simulated photo of a washed-out projector (flat, at an angle, with mild blur). The sources slide keeps only the link line.
+
+Rules that follow:
+34. **Put a QR code where people have time to scan it:** the slide that stays up longest, in the upper half, never the bottom third or a backup.
+35. **Style the surroundings, never the modules.** Square modules, ink on white, a four-module quiet zone; the story lives in what holds the code (here, the plaster).
+36. **"Perfect" means tested like the room:** decode the rendered slide small, washed out, at an angle and blurred, not only the clean file.
+37. **Metaphors aren't captioned.** "Scan the plaster" made readers decode the sentence instead of the code.
+
 ## Loop 5 (19 November): don't advertise how it was made; a way into the article
 
 What happened:
@@ -10,7 +25,7 @@ What happened:
 
 Rules that follow:
 32. **Disclosure stays complete, but quiet:** folded on the page, one link in the deck; never a slide or a headline of its own.
-33. **A styled QR code is tested by decoding the rendered page,** at several sizes, before it is shown; a quiet zone of two modules inside any decoration.
+33. **A styled QR code is tested by decoding the rendered page** at several sizes before it is shown (superseded in part by rules 34–36: the socket face was rejected).
 
 ## Loop 4 (19 November): one wall, reused instead of regenerated
 
