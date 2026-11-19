@@ -2,6 +2,16 @@
 
 Kind: log, newest first. Read this before every loop on the deck; add to it at the end of every loop (the compound step). Each entry: what happened, what it means, the rule that follows. His words are in dotUni `.docs/transcripts/` (numbers given).
 
+## Loop 5 (19 November): don't advertise how it was made; a way into the article
+
+What happened:
+- His call (`-014`): "How this was made" shouldn't be advertised. In both articles it is now a heading with its text folded (`:::details`), like the sources. In the deck it is no longer a slide (B6 is gone); the sources slide links to it.
+- A QR code to the article sits between the two columns of the sources slide, set into a German socket face (pin holes, earth clips, recess), drawn in code. It decodes at full, 70% and 50% size; image-model stylising would have risked the scan, and the account has no credits anyway.
+
+Rules that follow:
+32. **Disclosure stays complete, but quiet:** folded on the page, one link in the deck; never a slide or a headline of its own.
+33. **A styled QR code is tested by decoding the rendered page,** at several sizes, before it is shown; a quiet zone of two modules inside any decoration.
+
 ## Loop 4 (19 November): one wall, reused instead of regenerated
 
 What happened:

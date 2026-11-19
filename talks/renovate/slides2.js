@@ -853,6 +853,55 @@ add({
   },
 });
 
+const QR_ARTICLE = [
+  '111111100101100111101010001111111',
+  '100000101101000100011110001000001',
+  '101110100100111100000100101011101',
+  '101110101101010111101100101011101',
+  '101110101101101100110010101011101',
+  '100000100100010100000011001000001',
+  '111111101010101010101010101111111',
+  '000000001001100100110011100000000',
+  '010111101101101111010010111011010',
+  '011011001011010011110011000011110',
+  '110100110001001010000001001011111',
+  '000110010001000101001011000100111',
+  '010010101010011101110000001000000',
+  '010110001100110111100101010101100',
+  '001010100100000011011000101011000',
+  '110010011110000101001011110101101',
+  '110111100000101100100011111110000',
+  '011010011011011011111010111010101',
+  '000111100011111110011101111101111',
+  '011101000000111101111010001011100',
+  '010100110111101100100000000101001',
+  '100001011011101000110011010010100',
+  '100111100000101100001011011010011',
+  '100110010001000010011001000111101',
+  '110000111011011101011001111110000',
+  '000000001110001000000100100010110',
+  '111111100000101000110001101010100',
+  '100000101101110100000011100011111',
+  '101110101111001101000011111110000',
+  '101110101010110111011111110101101',
+  '101110100110011010110111010111011',
+  '100000101011010100100010011110111',
+  '111111100110010001101001110111000',
+];   // https://thd-ai.github.io/ws27-papers/renovate/, error correction Q
+// The article's QR code set into a socket face: a round plate and recess, the
+// two pin holes and the earth clips of a German socket around the code, with a
+// quiet zone of two modules inside the recess so it still scans.
+function qrSocket(svg, cx, cy, R) {
+  const n = QR_ARTICLE.length, ring = R - 20, S = ring / 0.793, m = S / n, x0 = cx - S / 2, y0 = cy - S / 2;
+  dot(svg, cx, cy, R, { fill: C.paper, stroke: C.ink, 'stroke-width': 3 });
+  dot(svg, cx, cy, ring, { fill: C.paper, stroke: C.ink, 'stroke-width': 2 });
+  QR_ARTICLE.forEach((row, r) => [...row].forEach((c, q) => { if (c === '1') h('rect', { x: x0 + q * m - 0.15, y: y0 + r * m - 0.15, width: m + 0.3, height: m + 0.3, rx: m * 0.18, fill: C.ink }, svg); }));
+  const hx = S / 2 + 2 * m + 18, hy = S / 2 + 2 * m + 22;
+  [-1, 1].forEach((sgn) => {
+    dot(svg, cx + sgn * hx, cy, 10, { fill: C.ink });
+    h('rect', { x: cx - 22, y: cy + sgn * hy - 5, width: 44, height: 10, rx: 4, fill: C.ink }, svg);
+  });
+}
 const SOURCES = [
   ['Deutsche Telekom, 2026', 'press release, 5 Oct; AI Investor Day slides and transcript'],
   ['T-Mobile US, 2026', 'AI Investor Day deck; Form 10-Q, Q3'],
@@ -877,33 +926,21 @@ const SOURCES = [
 ];
 add({
   id: 'b5', backup: 'B5', n: 'B5', beat: 'Backup', builds: 1, clicks: ['list'], title: 'Sources.',
-  source: 'Full list with links: the article, thd-ai.github.io/ws27-papers/renovate (sources).',
+  source: 'The full list with links, and how this was made: the article, thd-ai.github.io/ws27-papers/renovate (Sources; How this was made).',
   notes: '<p>Any "where is that from?"</p>',
   draw(page) {
     const svg = svgOf(page);
     frame(svg, this);
+    qrSocket(svg, 960, 560, 200);
+    T(svg, 960, 806, 'the article, with every source', { size: 24, fill: C.muted, anchor: 'middle' });
     SOURCES.forEach(([a, z], i) => {
-      const col = i < 10 ? 0 : 1, row = i % 10, x = L + col * 860, y = 260 + row * 70;
+      const col = i < 10 ? 0 : 1, row = i % 10, x = L + col * 1060, y = 260 + row * 70;
       T(svg, x, y, a, { size: 28, weight: 600 });
       T(svg, x, y + 30, z, { size: 24, fill: C.muted });
     });
   },
 });
 
-add({
-  id: 'b6', backup: 'B6', n: 'B6', beat: 'Backup', builds: 1, clicks: ['text'], title: 'How this was made.',
-  notes: '<p>Q31: did you use AI?</p>',
-  draw(page) {
-    const svg = svgOf(page);
-    frame(svg, this);
-    [
-      'Generative AI helped find and open sources, draft from my notes, and check every claim against its source. I decided what stays.',
-      'The drawings of the wall, plug, channel and key were generated with an image model from my own line drawing and real photographs.',
-      'The charts are drawn in code from the article’s data files; every number on these slides has its source on the slide and in B5.',
-    ].forEach((r, i) => T(svg, L, 340 + i * 180, r, { size: 40, width: 1600, lh: 52 }));
-  },
-});
-
 // The order of the talk; the file is written in the order the loops built it.
-const ORDER = ['title', 'agent', 'number', 'contacts', 'walls', 'rebuilt', 'simplify', 'walkback', 'staff', 'monitoring', 'checks', 'knowhow', 'steps1', 'step5', 'steps68', 'close', 'end', 'b1', 'b2', 'b3', 'b4', 'b5', 'b6'];
+const ORDER = ['title', 'agent', 'number', 'contacts', 'walls', 'rebuilt', 'simplify', 'walkback', 'staff', 'monitoring', 'checks', 'knowhow', 'steps1', 'step5', 'steps68', 'close', 'end', 'b1', 'b2', 'b3', 'b4', 'b5'];
 SLIDES.sort((a, z) => ORDER.indexOf(a.id) - ORDER.indexOf(z.id));
