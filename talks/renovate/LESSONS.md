@@ -2,6 +2,17 @@
 
 Kind: log, newest first. Read this before every loop on the deck; add to it at the end of every loop (the compound step). Each entry: what happened, what it means, the rule that follows. His words are in dotUni `.docs/transcripts/` (numbers given).
 
+## Loop 7 (19 November): no QR code; the title is the link
+
+What happened:
+- He rejected every QR placement on the main slides: the plaster patch, the access panel and the cable flag (`-015`). He asked for the closing slide he had liked before, and, in the HTML version, a link to the article from the title instead.
+- The closing slide is back as it was before loop 6. No QR code is left in the deck. In the HTML deck, the title on the first and last slides and the address on the last slide link to the article in a new tab; a click on them no longer turns the page. On paper and in the PDF they are plain text.
+
+Rules that follow:
+38. **When he likes a slide, adding to it needs his yes first.** Three variations on a slide he liked cost three rounds; the right move was to ask whether anything should be added at all.
+39. **Rules 34–37 are void for this deck:** no QR code on any slide. A link belongs where it costs nothing: the title, in the HTML version.
+40. **Readers choose between the options they are shown; they can't say "none of these".** Before a panel ranks variants, check with him that the thing is wanted.
+
 ## Loop 6 (19 November): where the QR code belongs, and how it may look
 
 What happened:

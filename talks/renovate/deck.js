@@ -81,7 +81,7 @@ async function main() {
     else if (e.key === 'End') go(pages.length - 1);
     else if (e.key === 'n' || e.key === 'N') notesEl.hidden = !notesEl.hidden;
   });
-  deck.addEventListener('click', () => go(n + 1));
+  deck.addEventListener('click', (e) => { if (!e.target.closest('a')) go(n + 1); });
   go(n);
   window.__deck = { ready: true, count: pages.length, pages, go: (k) => go(k) };
 }

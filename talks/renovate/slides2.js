@@ -53,6 +53,9 @@ function smooth(pts, r = 60) {
   return d + ` L${e[0]} ${e[1]}`;
 }
 const ART = '../../articles/renovate/art/';
+const ARTICLE = 'https://thd-ai.github.io/ws27-papers/renovate/';
+// Text that links to the article in the HTML deck; it looks like the rest.
+const toArticle = (svg) => h('a', { href: ARTICLE, target: '_blank', rel: 'noopener', class: 'to-article' }, svg);
 const img = (svg, file, x, y, w, hh, o = {}) => h('image', { href: ART + file, x, y, width: w, height: hh, preserveAspectRatio: 'xMidYMid meet', ...o }, svg);
 // A drawing cropped to part of its own canvas (crop = [sx, sy, sw, sh] in the
 // drawing's pixels), placed with its crop's top left at x, y and scaled by k.
@@ -158,8 +161,9 @@ add({
     cable(svg, [[-30, CABLE_Y], [700, CABLE_Y], [gx - 140, cy], [gx + 3, cy]], { r: 220 });
     plug(svg, gx, cy, k);
     T(svg, L, 220, 'Innovation Management for AI', { size: 34, weight: 500, fill: C.muted });
-    T(svg, L, 360, 'Renovate,', { family: 'serif', size: 132, weight: 500 });
-    T(svg, L, 500, 'don’t repaint', { family: 'serif', size: 132, weight: 500 });
+    const a = toArticle(svg);
+    T(a, L, 360, 'Renovate,', { family: 'serif', size: 132, weight: 500 });
+    T(a, L, 500, 'don’t repaint', { family: 'serif', size: 132, weight: 500 });
     if (b >= 1) T(svg, L, 630, 'Can Telekom copy what T-Mobile’s agents did?', { size: 52, weight: 600, width: 860, lh: 62 });
     T(svg, L, 826, 'Alexander Rudaev', { size: 34, weight: 600 });
     T(svg, L, 872, 'TH Deggendorf, 12 December 2026', { size: 32, fill: C.muted });
@@ -751,15 +755,6 @@ add({
 });
 
 
-// The article's QR code, plain: square modules, ink on a light field, with a
-// quiet zone of four modules. Size = the code itself, without the quiet zone.
-function qr(svg, x, y, size, o = {}) {
-  const n = QR_ARTICLE.length, m = size / n, q = 4 * m;
-  h('rect', { x: x - q, y: y - q, width: size + 2 * q, height: size + 2 * q, fill: o.field || C.paper }, svg);
-  QR_ARTICLE.forEach((row, r) => [...row].forEach((c, k) => { if (c === '1') h('rect', { x: x + k * m - 0.2, y: y + r * m - 0.2, width: m + 0.4, height: m + 0.4, fill: C.ink }, svg); }));
-  return { x0: x - q, y0: y - q, w: size + 2 * q };
-}
-
 // End ---------------------------------------------------------------------------
 add({
   id: 'end', end: true, builds: 1, clicks: ['questions'],
@@ -767,21 +762,12 @@ add({
   draw(page) {
     const svg = svgOf(page);
     pluggedIn(svg);
-    // One renovated stretch of the wall, from the socket up: fresh plaster with
-    // a hand-cut edge covers the brick, and the article's code sits in it on a
-    // white field with its full quiet zone.
-    const top = 120, bot = 868, l = 1494, r = 1922;
-    const P = [[l + 8, top + 10], [l + 120, top - 2], [l + 260, top + 6], [r, top - 4], [r, bot], [l + 300, bot + 6], [l + 170, bot - 4], [l + 2, bot + 2], [l - 4, bot - 160], [l + 4, bot - 330], [l - 3, top + 330], [l + 5, top + 160]];
-    h('path', { d: 'M' + P.map((q) => q.join(' ')).join(' L') + ' Z', fill: C.field }, svg);
-    const sz = 300, x = 1556, y = 176;
-    qr(svg, x, y, sz);
-    // the socket's rim again, over the plaster
-    h('rect', { x: 1497, y: 740 - 100, width: 24, height: 200, rx: 10, fill: 'none', stroke: C.ink, 'stroke-width': 2 }, svg);
+    const a = toArticle(svg);
     T(svg, L, 220, 'Innovation Management for AI', { size: 34, weight: 500, fill: C.muted });
-    T(svg, L, 340, 'Renovate, don’t repaint', { family: 'serif', size: 96, weight: 500 });
+    T(a, L, 340, 'Renovate, don’t repaint', { family: 'serif', size: 96, weight: 500 });
     T(svg, L, 460, 'Thank you. Questions?', { size: 56, weight: 600 });
-    T(svg, L, 580, 'The article and every source:', { size: 32, fill: C.muted });
-    T(svg, L, 626, 'thd-ai.github.io/ws27-papers/renovate', { size: 36 });
+    T(svg, L, 580, 'The article, with every source:', { size: 32, fill: C.muted });
+    T(a, L, 626, 'thd-ai.github.io/ws27-papers/renovate', { size: 36 });
     T(svg, L, 826, 'Alexander Rudaev', { size: 34, weight: 600 });
     T(svg, L, 872, 'TH Deggendorf, 12 December 2026', { size: 32, fill: C.muted });
   },
@@ -873,41 +859,6 @@ add({
   },
 });
 
-const QR_ARTICLE = [
-  '111111100101100111101010001111111',
-  '100000101101000100011110001000001',
-  '101110100100111100000100101011101',
-  '101110101101010111101100101011101',
-  '101110101101101100110010101011101',
-  '100000100100010100000011001000001',
-  '111111101010101010101010101111111',
-  '000000001001100100110011100000000',
-  '010111101101101111010010111011010',
-  '011011001011010011110011000011110',
-  '110100110001001010000001001011111',
-  '000110010001000101001011000100111',
-  '010010101010011101110000001000000',
-  '010110001100110111100101010101100',
-  '001010100100000011011000101011000',
-  '110010011110000101001011110101101',
-  '110111100000101100100011111110000',
-  '011010011011011011111010111010101',
-  '000111100011111110011101111101111',
-  '011101000000111101111010001011100',
-  '010100110111101100100000000101001',
-  '100001011011101000110011010010100',
-  '100111100000101100001011011010011',
-  '100110010001000010011001000111101',
-  '110000111011011101011001111110000',
-  '000000001110001000000100100010110',
-  '111111100000101000110001101010100',
-  '100000101101110100000011100011111',
-  '101110101111001101000011111110000',
-  '101110101010110111011111110101101',
-  '101110100110011010110111010111011',
-  '100000101011010100100010011110111',
-  '111111100110010001101001110111000',
-];   // https://thd-ai.github.io/ws27-papers/renovate/, error correction Q
 const SOURCES = [
   ['Deutsche Telekom, 2026', 'press release, 5 Oct; AI Investor Day slides and transcript'],
   ['T-Mobile US, 2026', 'AI Investor Day deck; Form 10-Q, Q3'],

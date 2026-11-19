@@ -82,6 +82,7 @@ html, body { margin: 0; height: 100%; background: #111214; overflow: hidden; }
 #stage { position: fixed; inset: 0; }
 #slide { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; background: #FBFBFC; transform-origin: center center; }
 #slide svg { display: block; width: 1920px; height: 1080px; }
+#slide a { cursor: pointer; }
 #notes { position: fixed; left: 0; right: 0; bottom: 0; max-height: 36vh; overflow: auto; background: #FBFBFC; color: #15171C;
   font: 19px/1.5 'Libre Franklin', Arial, sans-serif; padding: 14px 28px; box-shadow: 0 -1px 0 #DADDE3; }
 #notes .where { color: #5C6370; font-size: 15px; }
@@ -117,7 +118,7 @@ addEventListener('keydown', function (e) {
   else if (e.key === 'n' || e.key === 'N') notes.hidden = !notes.hidden;
   else if (e.key === 'g' || e.key === 'G') { var k = parseInt(prompt('Go to page (1–' + PAGES.length + ')'), 10); if (k) show(k - 1); }
 });
-slide.addEventListener('click', function () { document.body.classList.add('clean'); show(n + 1); });
+slide.addEventListener('click', function (e) { if (e.target.closest('a')) return; document.body.classList.add('clean'); show(n + 1); });
 fit(); show(n);
 </script>
 </body>
