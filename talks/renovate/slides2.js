@@ -70,7 +70,8 @@ function art(p, file, x, y, k, crop, W = 1536, H = 1024) {
 // lines 53 px apart, leaves the left edge centred on y 541; the plug's face is
 // at x 1072, the pin tips at x 1294. At k = 22/53 its cord is the deck's tube.
 const SIDE = { w: 1536, h: 1024, cordY: 541, cordW: 53, face: 1072, tip: 1294 };
-const KSIDE = 22 / SIDE.cordW;
+// scaled so the drawn cord's line centres (49.5 px apart) sit on the code tube's (22 - 1.6)
+const KSIDE = (22 - 1.6) / 49.5;
 // x0 = where the drawing (and its cord) begins; the code cable ends there.
 function plugSide(p, x0, cy, o = {}) {
   const k = KSIDE, crop = [0, 0, o.noPins ? SIDE.face - 34 : SIDE.w, SIDE.h];
@@ -80,8 +81,9 @@ function plugSide(p, x0, cy, o = {}) {
 // The same plug drawn upright (deck-plug-up.png, 1024 x 1536): pin tips at y 254,
 // cord 51 px wide centred on x 502, straight down. Cropped at row 900; the code
 // cable rises to meet it there.
-const UP = { w: 1024, cut: 1100, cordX: 502, cordW: 57, pinTop: 268 };
-const KUP = 20 / UP.cordW;
+const UP = { w: 1024, cut: 1100, cordX: 502.1, cordW: 57, pinTop: 268 };
+// the drawn cord's line centres are 53.75 px apart; the code tube's are 20 - 1.6
+const KUP = (20 - 1.6) / 53.75;
 // tipY = where the pin tips are; returns the y where the code cable must end
 // upEnd: where the drawing's cut edge is, for the cable drawn first; plugUp then
 // draws the plug over the cable's last 30 px.
@@ -517,7 +519,7 @@ add({
     T(svg, L, 336, 'outside contractors on suppliers’ systems', { size: 32, fill: C.muted });
     [[0, 0], [190, 30], [380, -6], [570, 22]].forEach(([dx, dy]) => rc(svg, L + dx, 380 + dy, 160, 100, { stroke: C.muted, 'stroke-width': 3 }));
     T(svg, L, 560, 'separate systems, worked on by others', { size: 32, fill: C.muted });
-    const x = 1000, bx = 1400;
+    const x = 1000, bx = 1480;
     T(svg, x, 290, 'Now', { size: 40, weight: 600 });
     T(svg, x, 336, 'its own engineers on its own systems', { size: 32 });
     const box = () => { h('rect', { x, y: 380, width: 800, height: 130, fill: C.paper, stroke: C.ink, 'stroke-width': 3 }, svg); T(svg, x + 400, 458, 'one system that knows each customer', { size: 38, weight: 600, anchor: 'middle' }); };
