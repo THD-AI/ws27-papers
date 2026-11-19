@@ -2,6 +2,20 @@
 
 Kind: log, newest first. Read this before every loop on the deck; add to it at the end of every loop (the compound step). Each entry: what happened, what it means, the rule that follows. His words are in dotUni `.docs/transcripts/` (numbers given).
 
+## Loop 3 (19 November): the whole deck in the v2 direction; two critic pairs on all 47 pages
+
+What happened:
+- Slides 2, 4, 6, 8–12, 15, 16, the end slide and six backups were built in the drafting grammar; the closing picture plugs the cable into a socket set in the wall, the bookend of slide 1.
+- Scores: designer 7/5/5/6 (first glance, human feel, consistency, legibility), sceptic 6/4/5/6, examiner 7/8/7/6 (clarity, honesty, fit, legibility), coach 8/8/6/6.
+- Fixed in the loop: the dashed grammar broken in three places (existing systems drawn dashed, dotted leaders, the plan's last floors drawn as built); four stills that looked unfinished (an empty chart, a lone sentence, reserved numbered boxes, a corner of small boxes); "all contacts" where the release never says whose; "error" where the bank's own words exist; Hall and Soskice stated as fact instead of argued; the course concepts (transformation, business measure) only spoken.
+
+Rules that follow:
+24. **Check the grammar on every page, not just the device slides.** A leader, a box for something that existed, a roof: each line is solid or dashed for a reason. Existing = solid, even when it is the bad old state.
+25. **Every first build is a still too** (rule 1 again, now for charts): an axis with nothing on it, a numbered slot with nothing in it, or one sentence on an empty page reads as broken. Merge builds before leaving a page half empty.
+26. **Quote the source's words or none.** A paraphrase in quotation marks ("error") or a word the source lacks ("all contacts") is the first thing an examiner checks.
+27. **Course concepts go on the page,** in the subtitle where they belong, not only in the notes.
+28. **Still open, for his eye:** the channel drawing on slide 14 has stones where the other walls have bricks, and the sockets are clean vectors beside a drawn plug. Both point to lesson 19: his own pen for a socket and a row of bricks would close the gap. The title-from-the-first-click rule (his) wins over the coach's wish to hide the title until the reveal.
+
 ## Loop 2, the build (19 November): what fixing the critics' points taught
 
 What happened:
