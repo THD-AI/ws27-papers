@@ -6,7 +6,7 @@ import { h, text, textSize } from '../../lib/fig.js';
 
 const C = { paper: '#FBFBFC', ink: '#15171C', muted: '#5C6370', hair: '#C9CDD4', faint: '#E3E6EB', accent: '#1F7A54', field: '#CDE9D9', mid: '#8A9099' };
 const L = 120, R = 1800, W = R - L;
-const LINE = '#2B2B2E';   // the ink of the cable, the sockets and (through the ink filter) the drawn plug and keys
+const LINE = '#505055';   // the ink of the cable, the sockets and (through the ink filter) the drawn plug and keys
 const CABLE_Y = 968;   // where the cable crosses the page edges between slides
 
 const T = (p, x, y, s, o = {}) => text(p, x, y, s, { family: 'sans', size: 36, fill: C.ink, free: true, ...o });
@@ -66,14 +66,29 @@ function art(p, file, x, y, k, crop, W = 1536, H = 1024) {
   h('image', { href: ART + file, x: 0, y: 0, width: W, height: H }, v);
   return v;
 }
-// The drawn plug without its own thin cable stub: the grip starts at drawing
-// x 520, centred on y 512; the pins end at x 1308. Placed by the grip centre.
-const PLUG = [520, 280, 800, 470];
-function plug(p, gx, gy, k, rot = 0) {
-  const g = h('g', { transform: `translate(${gx} ${gy}) rotate(${rot})` }, p);
-  art(g, 'deck-plug-body.png', 0, -232 * k, k, PLUG);
-  art(h('g', { filter: 'url(#ink)' }, g), 'deck-plug.png', 0, -232 * k, k, PLUG);
-  return g;
+// The plug drawn WITH its cord (deck-plug-side.png, 1536 x 1024): the cord, two
+// lines 53 px apart, leaves the left edge centred on y 541; the plug's face is
+// at x 1072, the pin tips at x 1294. At k = 22/53 its cord is the deck's tube.
+const SIDE = { w: 1536, h: 1024, cordY: 541, cordW: 53, face: 1072, tip: 1294 };
+const KSIDE = 22 / SIDE.cordW;
+// x0 = where the drawing (and its cord) begins; the code cable ends there.
+function plugSide(p, x0, cy, o = {}) {
+  const k = KSIDE, crop = [0, 0, o.noPins ? SIDE.face - 34 : SIDE.w, SIDE.h];
+  art(p, 'deck-plug-side.png', x0, cy - SIDE.cordY * k, k, crop);
+  return { tip: x0 + SIDE.tip * k, face: x0 + SIDE.face * k };
+}
+// The same plug drawn upright (deck-plug-up.png, 1024 x 1536): pin tips at y 254,
+// cord 51 px wide centred on x 502, straight down. Cropped at row 900; the code
+// cable rises to meet it there.
+const UP = { w: 1024, cut: 1100, cordX: 502, cordW: 57, pinTop: 268 };
+const KUP = 20 / UP.cordW;
+// tipY = where the pin tips are; returns the y where the code cable must end
+// upEnd: where the drawing's cut edge is, for the cable drawn first; plugUp then
+// draws the plug over the cable's last 30 px.
+const upEnd = (tipY) => tipY - UP.pinTop * KUP + UP.cut * KUP;
+function plugUp(p, cx, tipY) {
+  const k = KUP, x = cx - UP.cordX * k, y = tipY - UP.pinTop * k;
+  art(p, 'deck-plug-up.png', x, y, k, [0, 0, UP.w, UP.cut], 1024, 1536);
 }
 // A socket face: a plate, a round recess and its own pattern of holes. Each
 // pattern is one way to prove who you are; no two alike, as no two standards are.
@@ -109,7 +124,7 @@ function socket(p, cx, cy, size, kind, o = {}) {
 // The cable is a tube: an ink stroke with a paper stroke inside it, so it
 // matches the drawn plug's cable. tw = outer width.
 function cable(svg, pts, o = {}) {
-  const d = smooth(pts, o.r || 60), tw = o.tw || 22, line = o.line || 2.5;
+  const d = smooth(pts, o.r || 60), tw = o.tw || 22, line = o.line || 1.6;
   const cap = o.cap ? { 'stroke-linecap': o.cap } : {};
   pth(svg, d, { stroke: LINE, 'stroke-width': tw, ...cap });
   pth(svg, d, { stroke: o.fill || C.paper, 'stroke-width': tw - 2 * line, ...cap });
@@ -159,9 +174,9 @@ add({
     const wk = 1180 / 1536, cy = 740, wy = cy - 1028 * wk - 0, wx = 1500 - 173 * wk;
     img(svg, 'deck-wall.png', wx, wy, 1024 * wk, 1536 * wk);
     // the plug: pins end 50 px short of the wall
-    const k = 0.5, gx = 1500 - 50 - (1308 - 520) * k;
-    cable(svg, [[-30, CABLE_Y], [700, CABLE_Y], [gx - 140, cy], [gx + 16, cy]], { r: 220, cap: 'butt' });
-    plug(svg, gx, cy, k);
+    const x0 = 1450 - SIDE.tip * KSIDE;
+    cable(svg, [[-30, CABLE_Y], [700, CABLE_Y], [x0 - 120, cy], [x0 + 30, cy]], { r: 220, cap: 'butt' });
+    plugSide(svg, x0, cy);
     T(svg, L, 220, 'Innovation Management for AI', { size: 34, weight: 500, fill: C.muted });
     const a = toArticle(svg);
     T(a, L, 360, 'Renovate,', { family: 'serif', size: 132, weight: 500 });
@@ -294,9 +309,10 @@ add({
       const xs = [1215, 1405, 1595];
       xs.forEach((x, i) => socket(svg, x, 470, 150, [2, 5, 4][i], { fill: C.field, stroke: C.accent, w: 3.5, dash: '14 9' }));
       // the agent's plug, pointing up at the middle one
-      const k = 0.3, gy = 470 + 75 + 40 + (1308 - 520) * k;
-      cable(svg, [[-20, CABLE_Y], [xs[1], CABLE_Y], [xs[1], gy - 14]], { r: 90, tw: 20, cap: 'butt' });
-      plug(svg, xs[1], gy, k, -90);
+      const tip = 470 + 75 + 46;
+      cable(svg, [[-20, CABLE_Y], [xs[1], CABLE_Y], [xs[1], upEnd(tip) - 30]], { r: 90, tw: 20, cap: 'butt' });
+      plugUp(svg, xs[1], tip);
+      ln(svg, xs[1], 470 + 75, xs[1], tip - 8, { stroke: C.accent, 'stroke-width': 2, 'stroke-dasharray': '5 6' });
     } else cable(svg, [[-20, CABLE_Y], [1940, CABLE_Y]]);
   },
 });
@@ -393,23 +409,25 @@ function bar100(svg, x0, x1, y, hh, v, o = {}) {
   return X;
 }
 // The drawn key (1536 x 1024, ink x 103-1433, y 283-755): a permission.
-function key(svg, x, yBase, k) {
-  img(svg, 'deck-key.png', x - 103 * k, yBase - 755 * k, 1536 * k, 1024 * k, { filter: 'url(#ink)' });
-  return (1433 - 103) * k;
+// Three drawn keys with rings (deck-key-1..3.png), short, medium and deep bitting:
+// read, undoable, fraud-prone. Placed by width; yBase = the bottom of the drawing.
+const KEYS = { 1: [1331, 269], 2: [1321, 277], 3: [1423, 280] };
+function key(svg, x, yBase, w, i = 1) {
+  const [kw, kh] = KEYS[i], k = w / kw;
+  img(svg, `deck-key-${i}.png`, x, yBase - kh * k, w, kh * k, { filter: 'url(#ink)' });
+  return w;
 }
 // The plug in a socket set into the wall: the closing picture (slides 16, end).
 function pluggedIn(svg, cy = 740, route) {
   const wk = 1180 / 1536, wx = 1500 - 173 * wk;
   img(svg, 'deck-wall.png', wx, cy - 1028 * wk, 1024 * wk, 1536 * wk);
-  const k = 0.5, gx = 1494 - (1062 - 520) * k;
-  cable(svg, route ? route(gx) : [[-30, CABLE_Y], [700, CABLE_Y], [gx - 140, cy], [gx + 16, cy]], { r: route ? 160 : 220, cap: 'butt' });
-  // the plug, its pins inside the socket: body and line cropped at the face
-  art(svg, 'deck-plug-body.png', gx, cy - 232 * k, k, [520, 280, 542, 470]);
-  art(h('g', { filter: 'url(#ink)' }, svg), 'deck-plug.png', gx, cy - 232 * k, k, [520, 280, 542, 470]);
+  const x0 = 1486 + 34 * KSIDE - SIDE.face * KSIDE + 1;
+  cable(svg, route ? route(x0) : [[-30, CABLE_Y], [700, CABLE_Y], [x0 - 120, cy], [x0 + 30, cy]], { r: route ? 160 : 220, cap: 'butt' });
+  // the plug, its pins inside the socket: the drawing cropped at its face
+  plugSide(svg, x0, cy, { noPins: true });
   // the socket's cover plate seen edge on, standing proud of the plaster: the
   // renovated part, so green; opaque, so the bricks stop at it
-  h('rect', { x: 1494, y: cy - 150, width: 34, height: 300, rx: 7, fill: C.field, stroke: LINE, 'stroke-width': 2 }, svg);
-  ln(svg, 1528, cy - 128, 1528, cy + 128, { stroke: LINE, 'stroke-width': 1.5 });
+  h('rect', { x: 1486, y: cy - 140, width: 30, height: 280, rx: 3, fill: C.field, stroke: LINE, 'stroke-width': 1.6 }, svg);
 }
 
 // 2 ---------------------------------------------------------------------------
@@ -432,9 +450,9 @@ add({
       T(svg, L, 680, 'An agent', { size: 44, weight: 600 });
       T(svg, 540, 680, 'does it: the tariff in the account changes.', { size: 44 });
       T(svg, 540, 728, 'For that it needs keys, permissions given by the company:', { size: 34, fill: C.muted });
-      const w = key(svg, 540, 832, 0.17);
+      const w = key(svg, 540, 832, 330, 1);
       T(svg, 540 + w + 30, 818, 'a key to see the account', { size: 38 });
-      key(svg, 540, 930, 0.17);
+      key(svg, 540, 930, 330, 2);
       T(svg, 540 + w + 30, 916, 'a key to change it', { size: 38, weight: 600, fill: C.accent });
     }
     band(svg);
@@ -504,13 +522,14 @@ add({
     const x = 1000, bx = 1400;
     T(svg, x, 290, 'Now', { size: 40, weight: 600 });
     T(svg, x, 336, 'its own engineers on its own systems', { size: 32 });
-    h('rect', { x, y: 380, width: 800, height: 130, fill: C.paper, stroke: C.ink, 'stroke-width': 5 }, svg);
-    T(svg, x + 400, 458, 'one system that knows each customer', { size: 38, weight: 600, anchor: 'middle' });
+    const box = () => { h('rect', { x, y: 380, width: 800, height: 130, fill: C.paper, stroke: C.ink, 'stroke-width': 3 }, svg); T(svg, x + 400, 458, 'one system that knows each customer', { size: 38, weight: 600, anchor: 'middle' }); };
+    if (b < 1) box();
     if (b >= 1) {
-      const k = 0.22, gy = 512 + (1308 - 520) * k;
-      cable(svg, [[-20, CABLE_Y], [bx, CABLE_Y], [bx, gy - 14]], { r: 90, tw: 20, cap: 'butt' });
-      plug(svg, bx, gy, k, -90);
-      T(svg, bx + 70, 640, 'the agents read from it', { size: 34 });
+      const tip = 500;
+      cable(svg, [[-20, CABLE_Y], [bx, CABLE_Y], [bx, upEnd(tip) - 30]], { r: 90, tw: 20, cap: 'butt' });
+      plugUp(svg, bx, tip);
+      box();   // over the pin tips: they are in it
+      T(svg, bx + 100, 660, 'the agents read from it', { size: 34 });
     } else band(svg);
     if (b >= 2) {
       const v = R6.points[1].value, was = R6.points[0].value, x0 = 380, x1 = 1220, y = 760;
@@ -709,9 +728,9 @@ add({
     const stages = [['read', 'logged-in customers: a bill, an order'], ['undoable', 'actions that can be undone'], ['fraud-prone', 'confirmed by the customer in the app']];
     stages.forEach(([w, d], i) => {
       const y = 430 + i * 100;
-      key(svg, L, y + 8, 0.12);
-      T(svg, L + 190, y, w, { size: 40, weight: 600, fill: i === 0 ? C.accent : C.ink });
-      T(svg, L + 450, y, d, { size: 32, fill: C.muted });
+      key(svg, L, y + 10, 230, i + 1);
+      T(svg, L + 260, y, w, { size: 40, weight: 600, fill: i === 0 ? C.accent : C.ink });
+      T(svg, L + 520, y, d, { size: 32, fill: C.muted });
     });
     T(svg, L, 720, 'The model can ask; the system decides.', { size: 36, weight: 600 });
     if (b >= 1) {
@@ -836,9 +855,8 @@ add({
       ['Confirmation in the app', 'for changes a fraudster could use, like a new bank account'],
     ].forEach(([a, z], i) => {
       const y = 330 + i * 140;
-      key(svg, L, y + 4, 0.09);
-      T(svg, L + 160, y, a, { size: 42, weight: 600 });
-      T(svg, L + 160, y + 50, z, { size: 32, fill: C.muted });
+      T(svg, L, y, a, { size: 42, weight: 600 });
+      T(svg, L, y + 50, z, { size: 32, fill: C.muted });
     });
   },
 });
