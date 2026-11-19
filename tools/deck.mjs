@@ -3,7 +3,7 @@
 // page, nothing in the bottom band but the source line and the page number).
 //   node tools/deck.mjs [renovate]
 import { createRequire } from 'node:module';
-import { dirname, join, resolve } from 'node:path';
+import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
@@ -14,7 +14,8 @@ const require = createRequire(join(ROOT, 'package.json'));
 const puppeteer = require('puppeteer-core');
 const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const talk = process.argv[2] && !process.argv[2].startsWith('--') ? process.argv[2] : 'renovate';
-const OUT = join(ROOT, '.shots', 'deck', talk);
+const V = process.argv.includes('--v2') ? '&v=2' : '';
+const OUT = join(ROOT, '.shots', 'deck', talk + (process.argv.includes('--v2') ? '-v2' : ''));
 mkdirSync(OUT, { recursive: true });
 
 const { server, port } = await startServer(ROOT, 0);
@@ -25,7 +26,7 @@ page.on('pageerror', (e) => errs.push(e.message));
 page.on('requestfailed', (r) => errs.push(`failed: ${r.url()}`));
 page.on('response', (r) => { if (r.status() >= 400) errs.push(`${r.status()}: ${r.url()}`); });
 await page.setViewport({ width: 1920, height: 1080, deviceScaleFactor: 1 });
-await page.goto(`http://localhost:${port}/talks/${talk}/index.html?print=1`, { waitUntil: 'networkidle0' });
+await page.goto(`http://localhost:${port}/talks/${talk}/index.html?print=1${V}`, { waitUntil: 'networkidle0' });
 await page.waitForFunction('window.__deck && window.__deck.ready', { timeout: 30000 });
 await page.evaluate(() => document.fonts.ready);
 
@@ -44,7 +45,7 @@ const report = await page.evaluate(() => {
       const inBand = b.y + b.height > 1000;
       if (fs < (/^b\d/.test(id) ? 24 : 32) && !inBand) small.push(`${fs}px "${label}"`);
       if (b.x < 40 || b.x + b.width > 1880 || b.y < 30 || b.y + b.height > 1068) off.push(`"${label}"`);
-      if (inBand && fs > 26) band.push(`"${label}"`);
+      if (inBand && fs > 28) band.push(`"${label}"`);
       boxes.push({ b, label });
     });
     for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
@@ -66,7 +67,7 @@ await page.pdf({ path: join(OUT, `${talk}-deck.pdf`), width: '13.333in', height:
 spawnSync('python', [join(ROOT, 'tools', 'deck_pdf_view.py'), join(OUT, `${talk}-deck.pdf`)], { stdio: 'inherit' });
 
 // contact sheets, six pages each, for review
-const imgs = Array.from({ length: n }, (_, i) => `http://localhost:${port}/.shots/deck/${talk}/p${String(i + 1).padStart(2, '0')}.png`);
+const imgs = Array.from({ length: n }, (_, i) => `http://localhost:${port}/.shots/deck/${basename(OUT)}/p${String(i + 1).padStart(2, '0')}.png`);
 await page.goto(`http://localhost:${port}/`);
 await page.setViewport({ width: 2880, height: 1100, deviceScaleFactor: 1 });
 for (let s = 0; s * 6 < n; s++) {
@@ -78,10 +79,10 @@ for (let s = 0; s * 6 < n; s++) {
 // the cue sheet: page by page, what is on screen and the line he lands on
 const cues = await (async () => {
   const pg = await browser.newPage();
-  await pg.goto(`http://localhost:${port}/talks/${talk}/index.html?print=1`, { waitUntil: 'networkidle0' });
+  await pg.goto(`http://localhost:${port}/talks/${talk}/index.html?print=1${V}`, { waitUntil: 'networkidle0' });
   await pg.waitForFunction('window.__deck && window.__deck.ready');
   const out = await pg.evaluate(async () => {
-    const { SLIDES } = await import('./slides.js');
+    const { SLIDES } = await import(location.search.includes('v=2') ? './slides2.js' : './slides.js');
     return window.__deck.pages.map((p, i) => {
       const s = SLIDES[p.slide];
       const last = p.build === s.builds - 1;

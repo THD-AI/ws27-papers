@@ -4,9 +4,9 @@
 //   Home / End: first / last page         N: speaker notes
 //   ?print=1: every build as its own page (tools/deck.mjs prints it)
 //   ?page=N: open at page N (1-based)
-import { SLIDES } from './slides.js';
 
 const q = new URLSearchParams(location.search);
+const { SLIDES } = await import(q.get('v') === '2' ? './slides2.js' : './slides.js');
 const PRINT = q.get('print') === '1';
 if (PRINT) document.documentElement.classList.add('is-print');
 
