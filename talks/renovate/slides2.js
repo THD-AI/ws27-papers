@@ -6,6 +6,7 @@ import { h, text, textSize } from '../../lib/fig.js';
 
 const C = { paper: '#FBFBFC', ink: '#15171C', muted: '#5C6370', hair: '#C9CDD4', faint: '#E3E6EB', accent: '#1F7A54', field: '#CDE9D9', mid: '#8A9099' };
 const L = 120, R = 1800, W = R - L;
+const LINE = '#2B2B2E';   // the ink of the cable, the sockets and (through the ink filter) the drawn plug and keys
 const CABLE_Y = 968;   // where the cable crosses the page edges between slides
 
 const T = (p, x, y, s, o = {}) => text(p, x, y, s, { family: 'sans', size: 36, fill: C.ink, free: true, ...o });
@@ -70,32 +71,33 @@ function art(p, file, x, y, k, crop, W = 1536, H = 1024) {
 const PLUG = [520, 280, 800, 470];
 function plug(p, gx, gy, k, rot = 0) {
   const g = h('g', { transform: `translate(${gx} ${gy}) rotate(${rot})` }, p);
-  art(g, 'deck-plug.png', 0, -232 * k, k, PLUG);
+  art(g, 'deck-plug-body.png', 0, -232 * k, k, PLUG);
+  art(h('g', { filter: 'url(#ink)' }, g), 'deck-plug.png', 0, -232 * k, k, PLUG);
   return g;
 }
 // A socket face: a plate, a round recess and its own pattern of holes. Each
 // pattern is one way to prove who you are; no two alike, as no two standards are.
 const HOLES = [
-  [['c', -0.22, 0], ['c', 0.22, 0]],
-  [['v', -0.2, 0], ['v', 0.2, 0]],
-  [['v', -0.2, 0.1], ['v', 0.2, 0.1], ['c', 0, -0.22]],
-  [['h', 0, -0.2], ['v', -0.22, 0.14], ['v', 0.22, 0.14]],
-  [['s', -0.18, -0.04, 30], ['s', 0.18, -0.04, -30], ['v', 0, 0.22]],
-  [['c', -0.2, 0.12], ['c', 0.2, 0.12], ['c', 0, -0.2]],
-  [['c', 0, 0]],
-  [['c', -0.24, 0], ['c', 0, 0], ['c', 0.24, 0]],
-  [['h', 0, -0.13], ['h', 0, 0.13]],
-  [['q', -0.2, 0], ['q', 0.2, 0]],
-  [['v', -0.2, 0], ['h', 0.16, 0]],
-  [['c', -0.2, 0], ['v', 0.2, 0]],
-  [['q', 0, -0.2], ['c', -0.2, 0.16], ['c', 0.2, 0.16]],
-  [['v', -0.26, 0], ['v', 0, 0], ['v', 0.26, 0]],
+  [['v', -0.2, 0], ['v', 0.2, 0]],                                            // A
+  [['v', -0.2, -0.08], ['v', 0.2, -0.08], ['c', 0, 0.22]],                    // B
+  [['c', -0.2, 0], ['c', 0.2, 0]],                                            // C
+  [['c', -0.22, 0.12], ['c', 0.22, 0.12], ['c', 0, -0.2]],                    // D
+  [['c', -0.22, 0], ['c', 0.22, 0], ['c', 0, -0.25]],                         // E
+  [['c', -0.22, 0], ['c', 0.22, 0], ['h', 0, -0.33], ['h', 0, 0.33]],         // F
+  [['h', -0.18, 0.14], ['h', 0.18, 0.14], ['v', 0, -0.17]],                   // G
+  [['s', -0.17, -0.06, 30], ['s', 0.17, -0.06, -30], ['v', 0, 0.2]],          // H
+  [['s', -0.17, -0.05, -30], ['s', 0.17, -0.05, 30], ['v', 0, 0.23]],         // I
+  [['c', -0.22, -0.04], ['c', 0.22, -0.04], ['c', 0.05, 0.2]],                // J
+  [['c', -0.22, -0.04], ['c', 0.22, -0.04], ['q', 0, 0.2]],                   // K
+  [['c', -0.25, 0], ['c', 0, 0], ['c', 0.25, 0]],                             // L
+  [['c', -0.2, 0.06], ['c', 0.2, 0.06], ['c', 0, -0.17]],                     // N
+  [['c', -0.2, -0.09], ['c', 0.2, -0.09], ['c', 0, 0.17]],                    // O
 ];
 function socket(p, cx, cy, size, kind, o = {}) {
-  const st = { fill: o.fill || C.paper, stroke: o.stroke || C.ink, 'stroke-width': o.w || 3, ...(o.dash ? { 'stroke-dasharray': o.dash } : {}) };
+  const st = { fill: o.fill || C.paper, stroke: o.stroke || LINE, 'stroke-width': o.w || 2, ...(o.dash ? { 'stroke-dasharray': o.dash } : {}) };
   dot(p, cx, cy, size * 0.46, { ...st, 'stroke-width': (o.w || 3) * 0.8 });
   dot(p, cx, cy, size * 0.38, { ...st, fill: 'none', 'stroke-width': (o.w || 3) * 0.6 });
-  const ink = { fill: o.stroke || C.ink };
+  const ink = { fill: o.stroke || LINE };
   HOLES[kind].forEach(([t, dx, dy, a]) => {
     const x = cx + dx * size, y = cy + dy * size;
     if (t === 'c') dot(p, x, y, size * 0.055, ink);
@@ -107,9 +109,9 @@ function socket(p, cx, cy, size, kind, o = {}) {
 // The cable is a tube: an ink stroke with a paper stroke inside it, so it
 // matches the drawn plug's cable. tw = outer width.
 function cable(svg, pts, o = {}) {
-  const d = smooth(pts, o.r || 60), tw = o.tw || 22, line = o.line || 3.5;
+  const d = smooth(pts, o.r || 60), tw = o.tw || 22, line = o.line || 2.5;
   const cap = o.cap ? { 'stroke-linecap': o.cap } : {};
-  pth(svg, d, { stroke: C.ink, 'stroke-width': tw, ...cap });
+  pth(svg, d, { stroke: LINE, 'stroke-width': tw, ...cap });
   pth(svg, d, { stroke: o.fill || C.paper, 'stroke-width': tw - 2 * line, ...cap });
 }
 
@@ -158,7 +160,7 @@ add({
     img(svg, 'deck-wall.png', wx, wy, 1024 * wk, 1536 * wk);
     // the plug: pins end 50 px short of the wall
     const k = 0.5, gx = 1500 - 50 - (1308 - 520) * k;
-    cable(svg, [[-30, CABLE_Y], [700, CABLE_Y], [gx - 140, cy], [gx + 3, cy]], { r: 220 });
+    cable(svg, [[-30, CABLE_Y], [700, CABLE_Y], [gx - 140, cy], [gx + 16, cy]], { r: 220, cap: 'butt' });
     plug(svg, gx, cy, k);
     T(svg, L, 220, 'Innovation Management for AI', { size: 34, weight: 500, fill: C.muted });
     const a = toArticle(svg);
@@ -290,10 +292,10 @@ add({
       pth(svg, 'M930 488 L1060 488 M1036 470 L1060 488 L1036 506', { stroke: C.mid, 'stroke-width': 4 });
       T(svg, 1130, 340, `${D.plan.value}, planned: a target`, { size: 38, weight: 600, fill: C.accent });
       const xs = [1215, 1405, 1595];
-      xs.forEach((x, i) => socket(svg, x, 470, 150, [2, 0, 5][i], { fill: C.field, stroke: C.accent, w: 3.5, dash: '14 9' }));
+      xs.forEach((x, i) => socket(svg, x, 470, 150, [2, 5, 4][i], { fill: C.field, stroke: C.accent, w: 3.5, dash: '14 9' }));
       // the agent's plug, pointing up at the middle one
       const k = 0.3, gy = 470 + 75 + 40 + (1308 - 520) * k;
-      cable(svg, [[-20, CABLE_Y], [xs[1], CABLE_Y], [xs[1], gy - 2]], { r: 90, tw: 20 });
+      cable(svg, [[-20, CABLE_Y], [xs[1], CABLE_Y], [xs[1], gy - 14]], { r: 90, tw: 20, cap: 'butt' });
       plug(svg, xs[1], gy, k, -90);
     } else cable(svg, [[-20, CABLE_Y], [1940, CABLE_Y]]);
   },
@@ -398,13 +400,16 @@ function key(svg, x, yBase, k) {
 // The plug in a socket set into the wall: the closing picture (slides 16, end).
 function pluggedIn(svg, cy = 740, route) {
   const wk = 1180 / 1536, wx = 1500 - 173 * wk;
-  h('rect', { x: 1488, y: cy - 110, width: 150, height: 220, rx: 22, fill: C.field }, svg);
   img(svg, 'deck-wall.png', wx, cy - 1028 * wk, 1024 * wk, 1536 * wk);
-  const k = 0.5, gx = 1497 - (1062 - 520) * k;
-  cable(svg, route ? route(gx) : [[-30, CABLE_Y], [700, CABLE_Y], [gx - 140, cy], [gx + 3, cy]], { r: route ? 160 : 220 });
-  art(svg, 'deck-plug.png', gx, cy - 232 * k, k, [520, 280, 542, 470]);   // the pins are inside the socket
-  // the socket plate on the wall face, seen edge on; the pins disappear into it
-  h('rect', { x: 1497, y: cy - 100, width: 24, height: 200, rx: 10, fill: 'none', stroke: C.ink, 'stroke-width': 2 }, svg);
+  const k = 0.5, gx = 1494 - (1062 - 520) * k;
+  cable(svg, route ? route(gx) : [[-30, CABLE_Y], [700, CABLE_Y], [gx - 140, cy], [gx + 16, cy]], { r: route ? 160 : 220, cap: 'butt' });
+  // the plug, its pins inside the socket: body and line cropped at the face
+  art(svg, 'deck-plug-body.png', gx, cy - 232 * k, k, [520, 280, 542, 470]);
+  art(h('g', { filter: 'url(#ink)' }, svg), 'deck-plug.png', gx, cy - 232 * k, k, [520, 280, 542, 470]);
+  // the socket's cover plate seen edge on, standing proud of the plaster: the
+  // renovated part, so green; opaque, so the bricks stop at it
+  h('rect', { x: 1494, y: cy - 150, width: 34, height: 300, rx: 7, fill: C.field, stroke: LINE, 'stroke-width': 2 }, svg);
+  ln(svg, 1528, cy - 128, 1528, cy + 128, { stroke: LINE, 'stroke-width': 1.5 });
 }
 
 // 2 ---------------------------------------------------------------------------
@@ -503,7 +508,7 @@ add({
     T(svg, x + 400, 458, 'one system that knows each customer', { size: 38, weight: 600, anchor: 'middle' });
     if (b >= 1) {
       const k = 0.22, gy = 512 + (1308 - 520) * k;
-      cable(svg, [[-20, CABLE_Y], [bx, CABLE_Y], [bx, gy - 2]], { r: 90, tw: 20 });
+      cable(svg, [[-20, CABLE_Y], [bx, CABLE_Y], [bx, gy - 14]], { r: 90, tw: 20, cap: 'butt' });
       plug(svg, bx, gy, k, -90);
       T(svg, bx + 70, 640, 'the agents read from it', { size: 34 });
     } else band(svg);

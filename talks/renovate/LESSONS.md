@@ -2,6 +2,19 @@
 
 Kind: log, newest first. Read this before every loop on the deck; add to it at the end of every loop (the compound step). Each entry: what happened, what it means, the rule that follows. His words are in dotUni `.docs/transcripts/` (numbers given).
 
+## Loop 8 (19 November): the plug, the socket and the cable as one object
+
+What happened:
+- He said the plug, the cable going into it, the keys and the closing socket look off in every appearance (`-016`). Three readers (an electrician, an illustrator, an AI-sceptic) agreed on the main cause. The code cable was about three times heavier, and in darker ink, than the drawn plug's pen line. The drawn plug kept its own one-line cord, under a tube that ended in a rounded cap. The plug body was see-through. The closing socket was a face-on green box against a plug drawn from the side. Several of the 14 sockets were not real socket types.
+- Fixed in code: one ink (#2B2B2E) for the cable, the sockets and, through the ink filter, the drawn plug and keys; a lighter tube wall (2.5 px). The cable ends square inside an opaque paper silhouette of the plug body (`deck-plug-body.png`). The closing socket is now a cover plate seen edge on, proud of the wall, with the plug's face against it. Slide 7 uses the real IEC types A to O (without M), and the three planned sockets (C, F, E) are ones the Euro plug fits.
+- Not possible yet: new drawings (no OpenAI credits). Boards are ready in Paper Studio: `deck-plug-cord` (plug and cord in one drawing, side view), `deck-plug-up` (upright, for slides 6 and 7, instead of a rotated copy) and `deck-keys3` (three different keys for the three stages). The closing socket in section still needs a real socket photograph to draw from (a download, his OK first).
+
+Rules that follow:
+41. **Where code meets a drawing, they share one ink and one weight.** Measure the drawing's line in pixels before choosing the code's stroke.
+42. **Every drawn object is opaque.** A transparent body shows the joins behind it.
+43. **One projection per picture.** A plug seen from the side meets a socket seen from the side.
+44. **Symbols of real things must be real:** 14 sockets means 14 real socket types; the one the plug enters must fit it.
+
 ## Loop 7 (19 November): no QR code; the title is the link
 
 What happened:
