@@ -37,6 +37,16 @@ Checked: each text against its sources by an independent reviewer; the Quantum r
 
 Not checked: no person other than the author has read either article. The drawings were made with an image model from the author's own line reference. The Quantum opening drawing used a photograph under CC BY-SA 2.0 as one reference; the credit is on the page, and whether share-alike applies is undecided. The Quantum article is group work and needs the group's agreement before it is made public for good.
 
+## Publishing
+
+The site is the `gh-pages` branch, built from `dist/`:
+
+1. `node lib/build.mjs` builds both articles into `dist/`.
+2. `node tools/deck-offline.mjs renovate --v2 --site` adds the talk as `dist/renovate/talk/` (one file, fonts and drawings embedded, not indexed). Run it after the build, which rewrites `dist/renovate/`.
+3. Copy `dist/` into a fresh repository and force-push it to `gh-pages`.
+
+The talk page: right or space for the next page, left for back, N for the speaker notes, F for full screen. In full screen (F, F11 or a window the size of the screen) the notes are hidden.
+
 ## How this was made
 
 Research, code, drafts, figures and reviews were done with AI assistants under the author's direction. The questions, the choice of sources and every claim are the author's responsibility.

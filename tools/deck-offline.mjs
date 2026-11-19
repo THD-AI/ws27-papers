@@ -75,6 +75,7 @@ const doc = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
 <title>Renovate, don’t repaint: the talk</title>
 <style>
 ${fontCss}
@@ -88,12 +89,14 @@ html, body { margin: 0; height: 100%; background: #111214; overflow: hidden; }
 #notes .where { color: #5C6370; font-size: 15px; }
 #help { position: fixed; right: 12px; top: 10px; color: #8A9099; font: 13px 'Libre Franklin', Arial, sans-serif; opacity: 0.8; }
 body.clean #help { display: none; }
+/* in full screen the room sees the screen: the notes never show there */
+body.full #notes, body.full #help { display: none !important; }
 </style>
 </head>
 <body>
 <div id="stage"><div id="slide"></div></div>
 <aside id="notes" hidden></aside>
-<div id="help">F11 full screen, Right or Space next, Left back, N notes, G go to page (this hint hides after the first key)</div>
+<div id="help">F full screen (notes hide), Right or Space next, Left back, N notes, G go to page (this hint hides after the first key)</div>
 <script>
 var PAGES = ${JSON.stringify(pages)};
 var ART = ${JSON.stringify(ART)};
@@ -108,7 +111,12 @@ function show(k) {
     + (p.start ? ', starts at ' + p.start : '') + (p.click ? ': ' + p.click : '') + '</div>' + p.notes;
   history.replaceState(null, '', '#' + (n + 1));
 }
-addEventListener('resize', fit);
+// Full screen = the Fullscreen API, the browser's own full screen (F11) or a
+// window as large as the screen. In full screen the notes are hidden.
+function isFull() { return !!document.fullscreenElement || matchMedia('(display-mode: fullscreen)').matches || (Math.abs(innerHeight - screen.height) < 3 && Math.abs(innerWidth - screen.width) < 3); }
+function mode() { document.body.classList.toggle('full', isFull()); }
+addEventListener('resize', function () { fit(); mode(); });
+document.addEventListener('fullscreenchange', mode);
 addEventListener('keydown', function (e) {
   document.body.classList.add('clean');
   if (['ArrowRight', ' ', 'PageDown', 'Enter', 'ArrowDown'].indexOf(e.key) >= 0) { e.preventDefault(); show(n + 1); }
@@ -116,14 +124,22 @@ addEventListener('keydown', function (e) {
   else if (e.key === 'Home') show(0);
   else if (e.key === 'End') show(PAGES.length - 1);
   else if (e.key === 'n' || e.key === 'N') notes.hidden = !notes.hidden;
+  else if (e.key === 'f' || e.key === 'F') { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(function () {}); }
   else if (e.key === 'g' || e.key === 'G') { var k = parseInt(prompt('Go to page (1–' + PAGES.length + ')'), 10); if (k) show(k - 1); }
 });
 slide.addEventListener('click', function (e) { if (e.target.closest('a')) return; document.body.classList.add('clean'); show(n + 1); });
-fit(); show(n);
+fit(); mode(); show(n);
 </script>
 </body>
 </html>
 `;
 const file = join(OUT, `${talk}-talk.html`);
 writeFileSync(file, doc);
+// --site: the same file as the site's page for the talk, dist/<talk>/talk/ (after lib/build.mjs, which rewrites dist/<talk>)
+if (process.argv.includes('--site')) {
+  const site = join(ROOT, 'dist', talk, 'talk');
+  mkdirSync(site, { recursive: true });
+  writeFileSync(join(site, 'index.html'), doc);
+  console.log(`site page -> ${join(site, 'index.html')}`);
+}
 console.log(`${pages.length} pages, ${(doc.length / 1e6).toFixed(1)} MB, fonts ${cache.size} files, drawings ${Object.keys(ART).join(', ')} -> ${file}`);
