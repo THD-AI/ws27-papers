@@ -153,7 +153,7 @@ function build(el, ctx) {
       if (print) text(grp, R.x + 6, yc + 17, needs, { ...noteO, fill: C.muted, width: Math.min(R.w * 0.62, 190) });
     }
     const fp = `first point ${(pl.first * 100).toFixed(pl.first < 0.2 ? 1 : 0)}%`;
-    if (pl.x0 > X0) text(grp, R.x + R.w - 6, R.y + 15, inside ? fp + ',' + String.fromCharCode(10) + 'off the plate' : `${fp}, off the plate`, { ...mono, anchor: 'end', fill: C.ink, lh: 14 });
+    if (pl.x0 > X0) text(grp, R.x + R.w - 6, R.y + 15, inside ? fp + ',' + String.fromCharCode(10) + 'above the chart' : `${fp}, above the chart`, { ...mono, anchor: 'end', fill: C.ink, lh: 14 });
     else text(grp, pl.entry + 36, R.y + 15, fp, { ...mono, fill: C.ink });
     // the last fifth of the run
     const xa = pl.x(pn.training_shots * 0.8), xb = pl.xe, by = R.y + R.h - 9;

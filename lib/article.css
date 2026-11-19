@@ -284,12 +284,12 @@ h2.sec + .where, h2.sec + .margin-still + .where, .passage > .where:first-child 
 
 /* A figure that folds (":::figure <id> wide fold …"): the switch in the
    style of the list of sources; closed, the caption stands above it. */
-.fig-fold > summary { display: list-item; list-style: none; }
-.fig-fold > summary::-webkit-details-marker { display: none; }
-.fold-hide, .fig-fold[open] .fold-show { display: none; }
-.fig-fold[open] .fold-hide { display: inline; }
+.fig-fold > summary, .text-fold > summary { display: list-item; list-style: none; }
+.fig-fold > summary::-webkit-details-marker, .text-fold > summary::-webkit-details-marker { display: none; }
+.fold-hide, .fig-fold[open] .fold-show, .text-fold[open] .fold-show { display: none; }
+.fig-fold[open] .fold-hide, .text-fold[open] .fold-hide { display: inline; }
 @media screen {
-  .fig-fold > summary {
+  .fig-fold > summary, .text-fold > summary {
     cursor: pointer;
     padding: 0.6rem 0 0.9rem;
     font: 500 0.72rem/1.4 var(--mono);
@@ -297,7 +297,8 @@ h2.sec + .where, h2.sec + .margin-still + .where, .passage > .where:first-child 
     text-transform: uppercase;
     color: var(--accent-line);
   }
-  .fig-fold[open] > summary { color: var(--muted); }
+  .fig-fold[open] > summary, .text-fold[open] > summary { color: var(--muted); }
+  .text-fold { margin: 0 0 1.2rem; }
   .fig-fold > summary:hover { text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
   /* the caption stays above the switch when it is opened too: the drawing
      can be several windows long, and the caption must not jump below it */
