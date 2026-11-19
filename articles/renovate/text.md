@@ -280,7 +280,9 @@ What I couldn't show from public sources: that the agents alone caused the fall 
 
 ## How this was made
 
+:::details Show how this was made
 The question, the argument and the choice of the case are mine. The picture of timber and brick houses is my father's: he's a civil engineer. I used AI assistants to find and open sources (company reports and slides, filings, legal texts, official statistics, published studies), to draft passages from my notes and dictations, and to check every claim against its source. AI critics, each reading as someone else (a professor, an engineer, a practitioner, a reader with no background), went through the drafts, and I fixed what they found wrong. Every claim carries its source number; on screen, select the mark to open the source. The numbers behind the figures are published with the article's code, as JSON files: [github.com/THD-AI/ws27-papers](https://github.com/THD-AI/ws27-papers/tree/main/articles/renovate/data). I decided what stays.
+:::
 
 ## Appendix: the ten pairs
 
