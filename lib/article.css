@@ -796,6 +796,8 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
 }
 
 @media print {
+  /* a ":::details" block is open on paper and its switch is not printed */
+  .text-fold > summary { display: none; }
   html { font-size: 10pt; background: none; }
   body { background: none; font-size: 9.2pt; line-height: 13pt; overflow: visible; }
 
