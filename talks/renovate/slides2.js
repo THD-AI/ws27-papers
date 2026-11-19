@@ -39,7 +39,15 @@ function smooth(pts, r = 60) {
   const e = pts[pts.length - 1];
   return d + ` L${e[0]} ${e[1]}`;
 }
-const cable = (svg, pts, o = {}) => pth(svg, smooth(pts, o.r || 60), { stroke: C.ink, 'stroke-width': o.w || 7, ...o.attrs });
+const ART = '../../articles/renovate/art/';
+const img = (svg, file, x, y, w, hh, o = {}) => h('image', { href: ART + file, x, y, width: w, height: hh, preserveAspectRatio: 'xMidYMid meet', ...o }, svg);
+// The cable is a tube: an ink stroke with a paper stroke inside it, so it
+// matches the drawn plug's cable. tw = outer width.
+function cable(svg, pts, o = {}) {
+  const d = smooth(pts, o.r || 60), tw = o.tw || 22, line = o.line || 3.5;
+  pth(svg, d, { stroke: C.ink, 'stroke-width': tw });
+  pth(svg, d, { stroke: o.fill || C.paper, 'stroke-width': tw - 2 * line });
+}
 
 // Drafting marks: a dimension line with 45° ticks and extension lines.
 function dim(svg, x1, x2, y, o = {}) {
@@ -73,31 +81,30 @@ const add = (s) => { SLIDES.push(s); return s; };
 
 // 1 ---------------------------------------------------------------------------
 // An almost empty page: the cable comes in at the left and stops just short of
-// a brick wall. The plug isn't in.
+// a brick wall. The plug isn't in. Wall and plug are drawn in his line.
 add({
   id: 'title', n: '', builds: 2, start: '0:00', clicks: ['the cable, the wall', 'the question'],
   landings: { 1: "Can Telekom copy what T-Mobile's agents did?" },
   notes: `<p>Deutsche Telekom openly takes an American result as its benchmark. On 5 October it told its investors about T-Mobile: software agents there now do a big part of customer service, and Telekom wants the same in Europe by 2030. My position: born in the United States, studying in Germany, so I may see Germany as the harder case. That's why every claim has a source. <b>Can Telekom copy what T-Mobile's agents did?</b></p>`,
   draw(page, b) {
     const svg = svgOf(page);
-    // the wall face at the right, in section: masonry hatch between two plaster lines
-    const wx = 1540;
-    h('rect', { x: wx, y: 0, width: 380, height: 1080, fill: 'url(#masonry)' }, svg);
-    ln(svg, wx, 0, wx, 1080, { 'stroke-width': 4 });
-    ln(svg, wx + 14, 0, wx + 14, 1080, { stroke: C.mid, 'stroke-width': 2 });
-    // the cable, from the left edge, rising to the plug that stops short of the wall
-    const px = 1380, py = 700;
-    cable(svg, [[-20, CABLE_Y], [700, CABLE_Y], [1060, 860], [1240, py], [px, py]], { r: 220 });
-    // the plug: body and two pins, pointing at the wall
-    h('rect', { x: px, y: py - 34, width: 78, height: 68, rx: 10, fill: C.paper, stroke: C.ink, 'stroke-width': 4 }, svg);
-    ln(svg, px + 78, py - 14, px + 118, py - 14, { 'stroke-width': 6 });
-    ln(svg, px + 78, py + 14, px + 118, py + 14, { 'stroke-width': 6 });
+    // the wall, drawn: 1024 x 1536, its ink from x 219; placed so it runs off the right edge
+    const wh = 1180, ws = wh / 1536, ww = 1024 * ws;
+    const wallInk = 1500, wx = wallInk - 219 * ws;          // the drawing's ink starts at x 219
+    img(svg, 'deck-wall.png', wx, -50, ww, wh);
+    // the plug, drawn: 1536 x 1024, cable stub centred at y 560.5, tube 107 px wide at the left edge,
+    // pins ending at x 1311: placed so the pins stop 60 px short of the wall
+    const s = 0.40, pw = 1536 * s, ph = 1024 * s, tw = 107 * s;
+    const cy = 800, plugX = wallInk - 60 - 1311 * s, plugY = cy - 560.5 * s;
+    cable(svg, [[-30, CABLE_Y], [700, CABLE_Y], [plugX - 120, cy + 6], [plugX + 2, cy]], { r: 200, tw, line: 3.5 });
+    img(svg, 'deck-plug-proj.png', plugX, plugY, pw, ph);
     T(svg, L, 220, 'Innovation Management for AI', { size: 34, weight: 500, fill: C.muted });
     T(svg, L, 360, 'Renovate,', { family: 'serif', size: 132, weight: 500 });
     T(svg, L, 500, 'don’t repaint', { family: 'serif', size: 132, weight: 500 });
-    if (b >= 1) T(svg, L, 660, 'Can Telekom copy what T-Mobile’s agents did?', { size: 52, weight: 600, width: 900, lh: 62 });
+    if (b >= 1) T(svg, L, 640, 'Can Telekom copy what T-Mobile’s agents did?', { size: 52, weight: 600, width: 860, lh: 62 });
     T(svg, L, 880, 'Alexander Rudaev', { size: 34, weight: 600 });
     T(svg, L, 926, 'TH Deggendorf, 12 December 2026', { size: 32, fill: C.muted });
+    T(svg, L, 1050, 'Drawings: generated from my own line drawing', { size: 22, fill: C.muted });
   },
 });
 
@@ -189,15 +196,15 @@ add({
     // the cable: one height, the whole page
     const end = b >= 2 ? 1940 : b >= 1 ? xs[2] - 10 : xs[1] - 10;
     cable(svg, [[-20, cy], [end, cy]]);
-    // inside the timber wall it is hidden: dashed
-    ln(svg, xs[0], cy, xs[0] + ww, cy, { stroke: C.paper, 'stroke-width': 9, 'stroke-linecap': 'butt' });
-    ln(svg, xs[0], cy, xs[0] + ww, cy, { stroke: C.ink, 'stroke-width': 7, 'stroke-dasharray': '18 12', 'stroke-linecap': 'butt' });
+    // inside the timber wall it is hidden: dashed outline
+    const hidden = (x0, x1) => { h('rect', { x: x0, y: cy - 12, width: x1 - x0, height: 24, fill: C.paper }, svg); [cy - 9, cy + 9].forEach((yy) => ln(svg, x0, yy, x1, yy, { stroke: C.ink, 'stroke-width': 3.5, 'stroke-dasharray': '16 10', 'stroke-linecap': 'butt' })); };
+    hidden(xs[0], xs[0] + ww);
     if (b >= 1) { // the duct stands on the face: a box with its shadow edge, screws into the brick
       h('rect', { x: xs[1] + 6, y: cy - 22 + 8, width: ww - 12, height: 44, fill: C.ink }, svg);
       h('rect', { x: xs[1] - 2, y: cy - 22, width: ww - 12, height: 44, fill: C.paper, stroke: C.ink, 'stroke-width': 4 }, svg);
       [0.2, 0.5, 0.8].forEach((f) => { const x = xs[1] + f * ww; h('circle', { cx: x, cy, r: 7, fill: C.paper, stroke: C.ink, 'stroke-width': 2.5 }, svg); ln(svg, x - 5, cy, x + 5, cy, { 'stroke-width': 2 }); });
     }
-    if (b >= 2) ln(svg, xs[2], cy, xs[2] + ww, cy, { stroke: C.ink, 'stroke-width': 7, 'stroke-dasharray': '18 12', 'stroke-linecap': 'butt' });
+    if (b >= 2) { h('rect', { x: xs[2], y: cy - 12, width: ww, height: 24, fill: C.field }, svg); [cy - 9, cy + 9].forEach((yy) => ln(svg, xs[2], yy, xs[2] + ww, yy, { stroke: C.ink, 'stroke-width': 3.5, 'stroke-dasharray': '16 10', 'stroke-linecap': 'butt' })); }
     // names
     const head = (x, a, z) => { T(svg, x, 300, a, { size: 36, weight: 600 }); T(svg, x, 340, z, { size: 32, fill: C.muted }); };
     head(xs[0], 'US: timber frame, hollow', '94% of new single-family homes');
@@ -210,6 +217,43 @@ add({
       T(svg, L, 940, 'The cable is the agent. The wall is what’s already there: old systems, rules, people.', { family: 'serif', italic: true, size: 40 });
     }
     cable(svg, [[-20, CABLE_Y], [1940, CABLE_Y]]);
+  },
+});
+
+// 7 ---------------------------------------------------------------------------
+// Fourteen keys on one ring, then three: the ways a customer proves who they
+// are. One drawn key, placed fourteen times by code, so the count is exact.
+add({
+  id: 'simplify', n: 7, beat: 'What T-Mobile actually did', builds: 3, start: '5:25',
+  clicks: ['14 today', '3 planned', 'Telekom’s own words'],
+  title: 'Simplify before automating.',
+  sub: 'Telekom’s own words, on its own slide.',
+  source: 'Deutsche Telekom, AI Investor Day, “From AI Adoption to AI Impact”, 5 Oct 2026. Company figures; three is a target.',
+  notes: `<p>Telekom isn't there yet. Across its European countries, a customer can prove who they are in fourteen different ways. Telekom wants three, and its own slide says why. <b>Simplify before automating.</b></p>`,
+  draw(page, b, data) {
+    const svg = svgOf(page);
+    frame(svg, this, { titleSize: 72 });
+    const D = data.rewire.de;
+    const ring = (cx, cy, n, R, scale) => {
+      dot(svg, cx, cy, 42, { fill: 'none', stroke: C.ink, 'stroke-width': 4 });
+      const kw = 1536 * scale, kh = 1024 * scale;
+      for (let i = 0; i < n; i++) {
+        const a = -90 + (i - (n - 1) / 2) * (n > 3 ? 196 / (n - 1) : 24);
+        // the key's bow hole sits at about x 150, y 512 of the drawing; hang it on the ring
+        const g = h('g', { transform: `translate(${cx} ${cy}) rotate(${a + 90}) translate(${-150 * scale + 0} ${-512 * scale + 42})` }, svg);
+        h('image', { href: ART + 'deck-key-proj.png', x: 0, y: 0, width: kw, height: kh, transform: `rotate(90 ${150 * scale} ${512 * scale})` }, g);
+      }
+    };
+    ring(520, 380, D.now.value, 42, 0.19);
+    T(svg, 520, 790, `${D.now.value} ways to prove who you are, today`, { size: 38, weight: 600, anchor: 'middle' });
+    if (b >= 1) {
+      pth(svg, 'M900 520 L1080 520 M1056 502 L1080 520 L1056 538', { stroke: C.mid, 'stroke-width': 4 });
+      ring(1440, 380, D.plan.value, 42, 0.19);
+      T(svg, 1440, 790, `${D.plan.value}, planned: a target`, { size: 38, weight: 600, fill: C.accent, anchor: 'middle' });
+    }
+    if (b < 2) {   // the title waits for its build here only because it is Telekom's line, not his
+      // (frame drew it already; nothing to hide)
+    }
   },
 });
 
@@ -254,6 +298,34 @@ add({
       T(svg, L, y - 4, `${i}  ${st[i - 1].name}`, { size: 38, weight: 600 });
       T(svg, L + 430, y - 4, MEASURE[i], { size: 32, fill: C.muted, width: 840, lh: 36 });
     }
+    cable(svg, [[-20, CABLE_Y], [1940, CABLE_Y]]);
+  },
+});
+
+// 14 --------------------------------------------------------------------------
+// The biggest job, drawn: a brick wall cut open with a channel, the cable laid
+// in, the right half plastered over. That is what step 5 is.
+add({
+  id: 'step5', n: 14, beat: 'How to address it', builds: 3, start: '11:40',
+  clicks: ['the cut channel', 'keys need step 5', 'the cost of getting it wrong'],
+  title: 'The biggest job is one customer record.',
+  sub: 'Step 5: 14 ways to prove who you are become 3. Measure: callers recognised without questions.',
+  source: 'Deutsche Telekom, AI Investor Day, 5 Oct 2026 (14 ways, 3 planned: company figures, 3 a target); T-Mobile US, Form 10-K 2025 and 10-Q Q3 2026 (write-off in Q3 2025).',
+  notes: `<p>Step five. Fourteen ways of proving who you are become three, and the customer data becomes usable. An agent can't act on an account it can't identify. This is the channel cut into the brick. It takes years, and it can fail: in the third quarter of 2025 T-Mobile wrote off two hundred seventy-eight million dollars on a billing system it abandoned, about a tenth of its net income that quarter. <b>The biggest job is one customer record.</b></p>`,
+  draw(page, b) {
+    const svg = svgOf(page);
+    frame(svg, this);
+    // the drawing: 1536 x 1024, ink from y 262 to 850; the channel at about y 520-560
+    const s = 0.74, w = 1536 * s, hh = 1024 * s, x = 1920 - w - 90, y = 300 - 262 * s;
+    img(svg, 'deck-chase.png', x, y, w, hh);
+    const chY = y + 540 * s;
+    // leaders from the left column onto the drawing
+    const lead = (tx, ty, x1, y1, a, col) => { T(svg, tx, ty, a, { size: 34, weight: 600, fill: col || C.ink, width: 470 }); ln(svg, tx + 480, ty - 12, x1, y1, { stroke: C.ink, 'stroke-width': 2 }); dot(svg, x1, y1, 6, { fill: C.ink }); };
+    lead(L, 430, x + 330 * s, chY, 'cut open: the old systems, 14 ways in');
+    T(svg, x + 1150 * s, y + 900 * s, 'plastered: one record, 3 ways in', { size: 34, weight: 600, fill: C.accent, anchor: 'middle' });
+    ln(svg, x + 1150 * s, y + 850 * s, x + 1150 * s, chY + 30, { stroke: C.ink, 'stroke-width': 2 }); dot(svg, x + 1150 * s, chY + 30, 6, { fill: C.ink });
+    if (b >= 1) T(svg, L, 860, 'Keys that change an account need step 5: an agent can’t act on an account it can’t identify.', { size: 36, weight: 600, width: 1680 });
+    if (b >= 2) T(svg, L, 920, 'It can fail: in Q3 2025 T-Mobile wrote off $278 million on a billing system it abandoned.', { size: 32, fill: C.muted, width: 1680 });
     cable(svg, [[-20, CABLE_Y], [1940, CABLE_Y]]);
   },
 });
