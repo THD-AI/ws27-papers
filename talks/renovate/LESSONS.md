@@ -2,6 +2,24 @@
 
 Kind: log, newest first. Read this before every loop on the deck; add to it at the end of every loop (the compound step). Each entry: what happened, what it means, the rule that follows. His words are in dotUni `.docs/transcripts/` (numbers given).
 
+## State after loop 10 (20 November): where things are
+
+- The deck: `slides2.js` (open `index.html?v=2`), 46 pages. Build: `node tools/deck.mjs renovate --v2` (PDF, cue sheet `CUES-v2.md`, gates), `node tools/deck-offline.mjs renovate --v2` (one presenting file in `.shots/deck/renovate-v2/`).
+- Live: https://thd-ai.github.io/ws27-papers/renovate/talk/ (add `--site` after `node lib/build.mjs`; publish steps in the README). Notes on N, hidden in full screen; F for full screen.
+- Merged: ws27-papers#11 (the deck). Open: ws27-papers#12 (the talk on the site), paper-studio#3 (the drawings, stacked on #2).
+- His standing calls: no QR code on any slide; plugs and keys stay simple one-line drawings; the closing socket plate stays as it is; "How this was made" is folded, never a slide.
+- Not done: nobody has checked the deck on the real projector; do it before 12 December (both the PDF and the site page, in full screen).
+
+## Loop 10 (20 November): the last kink, and the talk on the site
+
+What happened:
+- On slide 6 a 2 px kink showed where the drawn cord met the cable. The cause: the drawings were scaled by the cord's outer width, but the eye follows the line centres. The drawn cords' line centres are 49.5 px (side) and 53.75 px (upright) apart; scaled to the cable's 20.4 and 18.4 px, they now meet without a step. The cable on slide 6 moved 80 px clear of the text.
+- He asked for the deck on the site with speaker notes, but never in full screen. The page hides the notes when the Fullscreen API is on, the browser is in its own full screen (F11), or the window is as large as the screen; tested in a window and at full-screen size.
+
+Rules that follow:
+48. **Scale a drawing to meet code by its line centres, not its outer edge.**
+49. **What the room sees in full screen is not what the speaker sees in a window.** Anything private (notes, hints) hides in full screen, whichever way full screen was reached.
+
 ## Loop 9 (19 November): drawn plugs with their cords, and a full audit
 
 What happened:
