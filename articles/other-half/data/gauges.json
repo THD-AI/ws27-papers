@@ -1,0 +1,66 @@
+{
+ "generated": "2026-11-21",
+ "generated_by": "tools/other-half-data.mjs",
+ "inputs": [],
+ "source": "OWN-ARITH",
+ "what": "An analogy for the flip-checks of the three-qubit row: three blocks, a glass strip where two blocks meet. A strip cracks when the blocks on its two sides moved against each other since the last look; at each look a cracked strip is replaced.",
+ "blocks": 3,
+ "strips": [
+  {
+   "strip": 0,
+   "between": [
+    0,
+    1
+   ]
+  },
+  {
+   "strip": 1,
+   "between": [
+    1,
+    2
+   ]
+  }
+ ],
+ "step": "a block stays level or drops by one step, never by different amounts",
+ "rule": "a strip cracks when exactly one of its two blocks dropped since the last look",
+ "look_shown": [
+  0,
+  1
+ ],
+ "stories": [
+  {
+   "id": "middle",
+   "label": "the middle one?",
+   "dropped": [
+    1
+   ],
+   "cracked": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "ends",
+   "label": "both ends?",
+   "dropped": [
+    0,
+    2
+   ],
+   "cracked": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "all",
+   "label": "all three moved",
+   "dropped": [
+    0,
+    1,
+    2
+   ],
+   "cracked": []
+  }
+ ],
+ "checked": "the script recomputes the cracked strips and stops if the middle and both ends differ, or if all three crack any"
+}

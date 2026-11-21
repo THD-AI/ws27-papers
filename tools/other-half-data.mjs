@@ -13,6 +13,8 @@
 //   syndromes.json        all 256 check patterns at distance 3             OWN-ENUM
 //   lattice.json          the distance-3 grid and the computed example     OWN-ENUM
 //   line.json             a distance-5 grid, three errors, the wrong guess OWN-ARITH
+//   gauges.json           section 4's analogy: three blocks, two glass strips OWN-ARITH
+//   film.json             section 4's film: three rounds, two stories that fit OWN-ARITH
 //   qubits.json           qubits per logical qubit, distances 3 to 9       OWN-ARITH
 //   results-summary.json  every own number used in text.md, with its file
 //
@@ -299,6 +301,73 @@ write('lattice.json', {
     source: 'OWN-ENUM',
   },
 });
+
+// ---------------------------------------------------------------- section 4: the glass strips (an analogy)
+// Three blocks in a row and a glass strip where two blocks meet. A block stays level or drops by one
+// step. A strip cracks when the blocks on its two sides end the look at different levels (a parity
+// check on two neighbours); at each look a cracked strip is replaced, so a crack means "moved since
+// the last look". Computed, never typed.
+{
+  const BLOCKS = 3, strips = Array.from({ length: BLOCKS - 1 }, (_, j) => ({ strip: j, between: [j, j + 1] }));
+  const cracked = dropped => strips.filter(s => dropped.includes(s.between[0]) !== dropped.includes(s.between[1])).map(s => s.strip);
+  const stories = [
+    { id: 'middle', label: 'the middle one?', dropped: [1] },
+    { id: 'ends', label: 'both ends?', dropped: [0, 2] },
+    { id: 'all', label: 'all three moved', dropped: [0, 1, 2] },
+  ].map(s => ({ ...s, cracked: cracked(s.dropped) }));
+  const [mid, ends, all] = stories;
+  if (mid.cracked.join() !== ends.cracked.join() || mid.cracked.length !== 2) throw new Error('gauges: the middle and both ends must crack the same two strips');
+  if (all.cracked.length !== 0) throw new Error('gauges: all three together must crack no strip');
+  if (cracked([0]).length !== 1 || cracked([2]).length !== 1) throw new Error('gauges: an end block must crack one strip');
+  write('gauges.json', {
+    ...head([]), source: 'OWN-ARITH',
+    what: 'An analogy for the flip-checks of the three-qubit row: three blocks, a glass strip where two blocks meet. A strip cracks when the blocks on its two sides moved against each other since the last look; at each look a cracked strip is replaced.',
+    blocks: BLOCKS, strips, step: 'a block stays level or drops by one step, never by different amounts',
+    rule: 'a strip cracks when exactly one of its two blocks dropped since the last look',
+    look_shown: mid.cracked, stories,
+    checked: 'the script recomputes the cracked strips and stops if the middle and both ends differ, or if all three crack any',
+  });
+}
+
+// ---------------------------------------------------------------- section 4: the film on the real grid
+// Three rounds of the distance-3 grid. A check fires in round r when its answer differs from round r - 1
+// (round 0 is the round before the film). One flip on qubit 4 between rounds 1 and 2: frame 2 lights z0
+// and z1, frames 1 and 3 stay dark although nothing is repaired. Beside frame 2, a second story that
+// lights the same checks: flips on 1 and 7. Computed from the check definitions, never typed.
+{
+  const ROUNDS = 3, LOGICAL_ROW = [3, 4, 5];
+  const story = { qubits: [4], between: [1, 2] };
+  const checks = [...c3.x, ...c3.z];
+  // a flip (X) is seen by the flip-checks (z) only; the answer in round r is the parity of the flips so far
+  const answer = (c, r, s) => (c.kind === 'z' && s.between[1] <= r ? c.qubits.filter(q => s.qubits.includes(q)).length % 2 : 0);
+  const frames = [];
+  for (let r = 1; r <= ROUNDS; r++) frames.push({ round: r, lit: checks.filter(c => answer(c, r, story) !== answer(c, r - 1, story)).map(c => c.id) });
+  const stories = [[4], [1, 7]].map(qs => ({ flips: qs, lit_flip_checks: fired(c3.z, qs), lit_phase_checks: [] }));
+  const same = (a, b) => [...a].sort().join() === [...b].sort().join();
+  if (frames[0].lit.length || frames[2].lit.length || !same(frames[1].lit, ['z0', 'z1'])) throw new Error('film: frame 2 must light z0 and z1, frames 1 and 3 nothing');
+  for (const s of stories) if (!same(s.lit_flip_checks, ['z0', 'z1'])) throw new Error(`film: story ${s.flips} must light exactly z0 and z1`);
+  // no phase-check fires for either story: a flip is not their kind of error (checked, not assumed)
+  for (const s of stories) {
+    const phase = checks.filter(c => c.kind === 'x' && answer(c, 2, { qubits: s.flips, between: [1, 2] }) !== 0);
+    if (phase.length) throw new Error('film: a phase-check fires');
+  }
+  // the logical row is a logical operator for the flips: it overlaps every phase-check evenly
+  if (c3.x.some(c => c.qubits.filter(q => LOGICAL_ROW.includes(q)).length % 2)) throw new Error('film: the row {3,4,5} does not commute with every phase-check');
+  // the two stories together differ by a logical flip: they overlap the row an odd number of times
+  const together = [...stories[0].flips, ...stories[1].flips].filter((q, i, a) => a.indexOf(q) === a.lastIndexOf(q));
+  if (fired(c3.z, together).length) throw new Error('film: the two stories together must fire nothing');
+  if (together.filter(q => LOGICAL_ROW.includes(q)).length % 2 !== 1) throw new Error('film: the two stories together must overlap the row {3,4,5} an odd number of times');
+  write('film.json', {
+    ...head(['data/lattice.json check definitions']), source: 'OWN-ARITH',
+    what: 'A constructed example, not a measurement: three rounds of the distance-3 grid, one flip on qubit 4 between rounds 1 and 2, and a second story that lights the same checks.',
+    rule: 'A check fires in round r when its answer differs from round r - 1; round 1 is compared with the round before the film.',
+    distance: 3, rounds: ROUNDS, checks: checks.map(checkOut),
+    story, frames, stories_that_fit: stories,
+    logical_row: LOGICAL_ROW, stories_together: together,
+    checked: 'the script recomputes every frame and both stories, checks that no phase-check fires, that the row {3,4,5} commutes with every phase-check and that the two stories together overlap it an odd number of times',
+    scale: 'one round every 1.1 millionths of a second (GQA-2024), about a million looks a second (OWN-ARITH); in the passage, not drawn',
+  });
+}
 
 // ---------------------------------------------------------------- a logical error at distance 5
 const c5 = code(5);

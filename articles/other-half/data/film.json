@@ -1,0 +1,175 @@
+{
+ "generated": "2026-11-21",
+ "generated_by": "tools/other-half-data.mjs",
+ "inputs": [
+  "data/lattice.json check definitions"
+ ],
+ "source": "OWN-ARITH",
+ "what": "A constructed example, not a measurement: three rounds of the distance-3 grid, one flip on qubit 4 between rounds 1 and 2, and a second story that lights the same checks.",
+ "rule": "A check fires in round r when its answer differs from round r - 1; round 1 is compared with the round before the film.",
+ "distance": 3,
+ "rounds": 3,
+ "checks": [
+  {
+   "id": "x0",
+   "asks_about": "phase errors",
+   "shape": "square",
+   "row": 0,
+   "col": 0,
+   "qubits": [
+    0,
+    1,
+    3,
+    4
+   ]
+  },
+  {
+   "id": "x1",
+   "asks_about": "phase errors",
+   "shape": "square",
+   "row": 1,
+   "col": 1,
+   "qubits": [
+    4,
+    5,
+    7,
+    8
+   ]
+  },
+  {
+   "id": "x2",
+   "asks_about": "phase errors",
+   "shape": "half",
+   "edge": "top",
+   "row": -1,
+   "col": 1,
+   "qubits": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "x3",
+   "asks_about": "phase errors",
+   "shape": "half",
+   "edge": "bottom",
+   "row": 2,
+   "col": 0,
+   "qubits": [
+    6,
+    7
+   ]
+  },
+  {
+   "id": "z0",
+   "asks_about": "flips",
+   "shape": "square",
+   "row": 0,
+   "col": 1,
+   "qubits": [
+    1,
+    2,
+    4,
+    5
+   ]
+  },
+  {
+   "id": "z1",
+   "asks_about": "flips",
+   "shape": "square",
+   "row": 1,
+   "col": 0,
+   "qubits": [
+    3,
+    4,
+    6,
+    7
+   ]
+  },
+  {
+   "id": "z2",
+   "asks_about": "flips",
+   "shape": "half",
+   "edge": "left",
+   "row": 0,
+   "col": -1,
+   "qubits": [
+    0,
+    3
+   ]
+  },
+  {
+   "id": "z3",
+   "asks_about": "flips",
+   "shape": "half",
+   "edge": "right",
+   "row": 1,
+   "col": 2,
+   "qubits": [
+    5,
+    8
+   ]
+  }
+ ],
+ "story": {
+  "qubits": [
+   4
+  ],
+  "between": [
+   1,
+   2
+  ]
+ },
+ "frames": [
+  {
+   "round": 1,
+   "lit": []
+  },
+  {
+   "round": 2,
+   "lit": [
+    "z0",
+    "z1"
+   ]
+  },
+  {
+   "round": 3,
+   "lit": []
+  }
+ ],
+ "stories_that_fit": [
+  {
+   "flips": [
+    4
+   ],
+   "lit_flip_checks": [
+    "z0",
+    "z1"
+   ],
+   "lit_phase_checks": []
+  },
+  {
+   "flips": [
+    1,
+    7
+   ],
+   "lit_flip_checks": [
+    "z0",
+    "z1"
+   ],
+   "lit_phase_checks": []
+  }
+ ],
+ "logical_row": [
+  3,
+  4,
+  5
+ ],
+ "stories_together": [
+  4,
+  1,
+  7
+ ],
+ "checked": "the script recomputes every frame and both stories, checks that no phase-check fires, that the row {3,4,5} commutes with every phase-check and that the two stories together overlap it an odd number of times",
+ "scale": "one round every 1.1 millionths of a second (GQA-2024), about a million looks a second (OWN-ARITH); in the passage, not drawn"
+}

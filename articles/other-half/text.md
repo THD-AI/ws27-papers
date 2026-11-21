@@ -13,7 +13,7 @@ card_alt: Card with the title The other half of a quantum computer beside a line
 seo_title: The other half of a quantum computer: neural-network decoders
 ---
 
-Drawing: made with an image model from Alexander Rudaev's own line reference and reference photographs; the cryostat after a photograph by Lars Ploughman, CC BY-SA 2.0.
+Drawing: made with an image model from Alexander Rudaev's own line reference and reference photographs; the cryostat after a photograph by Lars Ploughman, CC BY-SA 2.0; the glass strip in section 4 after photographs by Coyau, CC BY-SA 3.0.
 
 :::margin qubits 0
 
@@ -63,7 +63,27 @@ One round of checks takes 1.1 millionths of a second, and a grid of distance 7 h
 
 While the computer runs, that stream is all that comes out of it. We ended up thinking of it as a film in which a few points light up in every frame.
 
+:::scene gauges
+
+@caption Three blocks in a row and a glass strip where two blocks meet; a strip cracks if one block moves against the other, up or down, and at each look a cracked strip is replaced. Both strips have cracked: the middle block moved, or both end blocks did. Either cracks the same two strips, so a program has to guess which it was, before the next look. If all three move together, nothing cracks, and the level of the row, the stored value, has changed unseen.
+
+@step 0 screen
+Picture three blocks in a row, with a glass strip where two blocks meet. The glass cracks if one block moves against the other, up or down. At each look, any cracked strip is noted and replaced.
+
+@step 1 screen
+Both strips have cracked. Which block moved? The move is far too small to see; only the glass shows it.
+
+@step 2
 The fired checks say roughly where something happened and which kind of error it was. They don't say which qubits were hit. Many sets of errors light up the same points.
+
+@step 3 screen
+If all three blocks move together, nothing cracks, so nobody can tell. That is the dangerous case: the level of the row was what was stored.
+
+:::
+
+:::figure film wide
+Three looks at the smallest grid, one after another: nothing, then two flip-checks lit, then nothing again, although nothing was repaired, because a check lights when its answer changes. Two of the stories that fit the middle look: one flip in the centre, or two flips, above and below it. Others fit too. Constructed and checked by our script.
+:::
 
 :::margin qubits 4
 
@@ -269,6 +289,7 @@ Every figure from outside our group comes from a source one of us opened: publis
 - Second scripts: by an AI agent that had not seen ours; a check on our code, not a replication by other people.
 - Reviews: four AI readers in different roles (student, outsider, examiner, voice) on an earlier draft, an AI fact checker on a later one; we worked in their lists. No person outside the group has read it yet.
 - Opening drawing: an image model, from our own line reference and photographs of real hardware.
+- Blocks and glass strip in section 4: the same image model, from our own line reference and photographs of a real glass strip on a wall; cracks, lit marks and words placed by code.
 
 We are responsible for the question and every claim.
 :::

@@ -15,6 +15,8 @@
 const FIGS = {
   qubits:      { role: 'margin', steps: 6 },
   lattice:     { role: 'scene',  steps: 6 },
+  gauges:      { role: 'scene',  steps: 4 },
+  film:        { role: 'wide',   steps: 1 },
   line:        { role: 'column', steps: 1 },
   syndromes:   { role: 'wide',   steps: 1 },
   suppression: { role: 'column', steps: 1 },
