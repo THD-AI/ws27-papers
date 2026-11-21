@@ -71,8 +71,15 @@ function build(el, ctx) {
   const keyG = g(svg);
   const K = grid(keyG, { checks: d.checks, d: d.distance, cx: L.kx, cy: L.ky, pitch: L.kp, C, helper: 0, qr: L.kp * 0.12 });
   for (const ch of d.checks) {
-    const c = K.tiles[ch.id].c, o = ch.shape === 'half' ? OUT[ch.edge] : [0, 0];
-    text(keyG, c[0] + o[0] * L.kp * 0.36, c[1] + o[1] * L.kp * 0.36 + 4, ch.id, { family: 'mono', size: 11.5, anchor: 'middle', fill: C.ink });
+    const t = K.tiles[ch.id];
+    let [x, y] = t.c;
+    if (ch.shape === 'half') {
+      // a half check's name stands outside its arc, clear of the line: the
+      // arc's radius, 3 units of air, and half the name (wider than tall)
+      const o = OUT[ch.edge], k = t.geom.r + 3 + (o[0] ? 9 : 6);
+      [x, y] = [t.geom.edgeMid[0] + o[0] * k, t.geom.edgeMid[1] + o[1] * k];
+    }
+    text(keyG, x, y + 4, ch.id, { family: 'mono', size: 11.5, anchor: 'middle', fill: C.ink });
   }
   // the flip: two short dashed strokes on qubit 4, never seen by the chip
   const q = K.pos(flip.qubit), xr = L.kp * 0.2;
