@@ -85,11 +85,11 @@ If all three blocks move together, nothing cracks, so nobody can tell. That is t
 Three looks at the smallest grid, one after another: nothing, then two flip-checks lit, then nothing again, although nothing was repaired, because a check lights when its answer changes. Two of the stories that fit the middle look: one flip in the centre, or two flips, above and below it. Others fit too. Constructed and checked by our script.
 :::
 
-:::margin qubits 4
-
 ## 5. The decoder, and the one mistake that matters
 
 A program on a classical computer watches that film and decides which errors happened. It's called the **decoder**. Nothing on the chip gets repaired: the decoder keeps a record of the errors it believes in, and the final result is corrected in software. For simply storing a qubit that's enough. For calculating it isn't, because some operations can only go ahead once the decoder has answered. So its speed matters too (section 8).
+
+:::margin qubits 4
 
 The decoder guesses: from the checks that fired, it picks one explanation. Most small mistakes in that guess are harmless. A wrong guess that fires the same checks usually differs from the truth in a way the code doesn't care about.
 

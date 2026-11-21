@@ -33,3 +33,12 @@ Brief: `VISUALS-PURPOSE.md` section 6 (draft 3 and the 3.1 changes); section 0 i
 5. **Where the art is served from.** `lib/build.mjs` copies only `card.png` and the hero layers from `art/` into `dist/`; I may not touch `lib/`. Folders inside `figures/` are copied whole, so the figure uses trimmed copies of the two drawings in `figures/tt/` (cropped to the ink box plus a margin, pixels otherwise unchanged; the originals stay in `art/`). To be decided by him: allow `tt-*` in the builder's art filter instead, and drop the copies.
 6. **Lab frame width.** The task asks for wide shots at 708 px (scene width beside the text at 1440); the lab's default scene frame is 860. Shots are taken at `w=708`.
 7. **"Lights are the strips" vs only flip-checks.** The bridging line's 3.1 wording ("a lit square is a cracked strip, for flips") is used as given; phase-check tiles stay drawn but dark, as in `lattice`.
+
+## After the build
+
+- The art copies in `figures/tt/` are cropped to the ink box plus 8 px, scaled to 504 px (block) and 723 px (strip), and the near-white paper noise (all channels above 240) is set to pure white so the files are 83 KB and 109 KB instead of about 0.9 MB each. Line and glass pixels are unchanged.
+- The strip sits low on the wall (at 79% of the block's height), the one band where it covers neither the window, the door nor a drawn line on either side of the gap.
+- The lit dot sits above the strip, in the gap, so the crack line never runs through it; the accent field covers the glass.
+- Phones: the tall drawing is 360 × 368 and is pinned on top at 390×844 and 360×800 (`read.mjs`); the two guesses are stacked with their labels at the left so the strips stay legible.
+- The film uses no helper dots on the tiles (unlike `lattice`), so the only dots are the qubits, as the bridging line says; its lit dot is enlarged to 0.15 of the pitch to match the strips' dot.
+- Gate finding: `motion.mjs` flagged the margin rail at 1536×864 (state changed while faded out behind the new wide film figure). Fixed by moving the rail's marker into section 5 (see `s4-text-changes.md`).

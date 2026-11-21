@@ -45,3 +45,7 @@ None of "tell-tale", "elevation", "movement joint" or "joint" appears on the pag
 | "How this was made", list | – | new item: "Blocks and glass strip in section 4: the same image model, from our own line reference and photographs of a real glass strip on a wall; cracks, lit marks and words placed by code." |
 
 Open: the credit line still starts "Drawing:" (singular) and describes the opening drawing first; "Drawings:" would be more exact. The share-alike question in `art/SOURCES.md` applies to the strip drawing too.
+
+## Moved, no words changed
+
+- The margin marker `:::margin qubits 4` (the rail's "the other half: the decoder") moved from the end of section 4 to after the first paragraph of section 5, where the decoder is named. Reason: section 4 now ends with a wide figure that crosses the margin column, so the rail was faded out when its marker passed and changed state unseen; `tools/motion.mjs` flagged that at 1536×864. After the move it passes.
