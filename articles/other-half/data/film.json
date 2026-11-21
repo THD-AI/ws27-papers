@@ -1,0 +1,169 @@
+{
+ "generated": "2026-11-21",
+ "generated_by": "tools/other-half-data.mjs",
+ "inputs": [
+  "data/lattice.json check definitions"
+ ],
+ "source": "OWN-ENUM",
+ "what": "A constructed example, not a measurement: 8 rounds of the distance-3 grid from a longer run, with one flip and one wrong report.",
+ "rule": "A check fires in round r when its answer differs from round r - 1; round 1 is compared with an earlier round that is not drawn.",
+ "distance": 3,
+ "rounds": 8,
+ "checks": [
+  {
+   "id": "x0",
+   "asks_about": "phase errors",
+   "shape": "square",
+   "row": 0,
+   "col": 0,
+   "qubits": [
+    0,
+    1,
+    3,
+    4
+   ]
+  },
+  {
+   "id": "x1",
+   "asks_about": "phase errors",
+   "shape": "square",
+   "row": 1,
+   "col": 1,
+   "qubits": [
+    4,
+    5,
+    7,
+    8
+   ]
+  },
+  {
+   "id": "x2",
+   "asks_about": "phase errors",
+   "shape": "half",
+   "edge": "top",
+   "row": -1,
+   "col": 1,
+   "qubits": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "x3",
+   "asks_about": "phase errors",
+   "shape": "half",
+   "edge": "bottom",
+   "row": 2,
+   "col": 0,
+   "qubits": [
+    6,
+    7
+   ]
+  },
+  {
+   "id": "z0",
+   "asks_about": "flips",
+   "shape": "square",
+   "row": 0,
+   "col": 1,
+   "qubits": [
+    1,
+    2,
+    4,
+    5
+   ]
+  },
+  {
+   "id": "z1",
+   "asks_about": "flips",
+   "shape": "square",
+   "row": 1,
+   "col": 0,
+   "qubits": [
+    3,
+    4,
+    6,
+    7
+   ]
+  },
+  {
+   "id": "z2",
+   "asks_about": "flips",
+   "shape": "half",
+   "edge": "left",
+   "row": 0,
+   "col": -1,
+   "qubits": [
+    0,
+    3
+   ]
+  },
+  {
+   "id": "z3",
+   "asks_about": "flips",
+   "shape": "half",
+   "edge": "right",
+   "row": 1,
+   "col": 2,
+   "qubits": [
+    5,
+    8
+   ]
+  }
+ ],
+ "flips": [
+  {
+   "qubit": 4,
+   "kind": "X",
+   "between": [
+    2,
+    3
+   ]
+  }
+ ],
+ "wrong_reports": [
+  {
+   "check": "z3",
+   "round": 5
+  }
+ ],
+ "lights": [
+  {
+   "check": "z0",
+   "round": 3
+  },
+  {
+   "check": "z1",
+   "round": 3
+  },
+  {
+   "check": "z3",
+   "round": 5
+  },
+  {
+   "check": "z3",
+   "round": 6
+  }
+ ],
+ "pairs": [
+  {
+   "kind": "across the grid",
+   "round": 3,
+   "checks": [
+    "z0",
+    "z1"
+   ],
+   "cause": "a flip on qubit 4 between rounds 2 and 3"
+  },
+  {
+   "kind": "along time",
+   "check": "z3",
+   "rounds": [
+    5,
+    6
+   ],
+   "cause": "z3 reports wrongly in round 5; no qubit is hit"
+  }
+ ],
+ "source_scale": "GQA-2024 OWN-ARITH (in the passage, not drawn)"
+}

@@ -12,6 +12,7 @@
 //   noise.json            the 250-million run over eight noise levels      OWN-D5-250M
 //   syndromes.json        all 256 check patterns at distance 3             OWN-ENUM
 //   lattice.json          the distance-3 grid and the computed example     OWN-ENUM
+//   film.json             the grid as 8 rounds: one flip, one wrong report   OWN-ENUM
 //   line.json             a distance-5 grid, three errors, the wrong guess OWN-ARITH
 //   qubits.json           qubits per logical qubit, distances 3 to 9       OWN-ARITH
 //   results-summary.json  every own number used in text.md, with its file
@@ -299,6 +300,40 @@ write('lattice.json', {
     source: 'OWN-ENUM',
   },
 });
+
+// film: the checks as a film of rounds (section 4, the held scene). A check
+// fires in round r when its answer differs from round r - 1; round 1 is
+// compared with an earlier round that isn't drawn. The lights are computed
+// here from the error list and the check definitions, never typed.
+{
+  const ROUNDS = 8;
+  const flips = [{ qubit: 4, kind: 'X', between: [2, 3] }];            // a flip on qubit 4 between rounds 2 and 3
+  const wrong = [{ check: 'z3', round: 5 }];                             // z3 reports wrongly in round 5 only
+  const checks = [...c3.x, ...c3.z];
+  const answer = (c, r) => {                                             // the check's answer in round r (0 = as before the window)
+    let a = 0;
+    if (c.kind === 'z') for (const f of flips) if (f.kind === 'X' && f.between[1] <= r && c.qubits.includes(f.qubit)) a ^= 1;
+    for (const w of wrong) if (w.check === c.id && w.round === r) a ^= 1;
+    return a;
+  };
+  const lights = [];
+  for (let r = 1; r <= ROUNDS; r++) for (const c of checks) if (answer(c, r) !== answer(c, r - 1)) lights.push({ check: c.id, round: r });
+  const pairs = [
+    ...flips.map(f => ({ kind: 'across the grid', round: f.between[1], checks: fired(c3.z, [f.qubit]), cause: `a flip on qubit ${f.qubit} between rounds ${f.between[0]} and ${f.between[1]}` })),
+    ...wrong.map(w => ({ kind: 'along time', check: w.check, rounds: [w.round, w.round + 1], cause: `${w.check} reports wrongly in round ${w.round}; no qubit is hit` })),
+  ];
+  // every light belongs to exactly one pair
+  const inPair = l => pairs.filter(p => p.round ? p.round === l.round && p.checks.includes(l.check) : p.check === l.check && p.rounds.includes(l.round)).length;
+  if (lights.some(l => inPair(l) !== 1) || pairs.reduce((n, p) => n + (p.checks || p.rounds).length, 0) !== lights.length) throw new Error('film: lights and pairs disagree');
+  write('film.json', {
+    ...head(['data/lattice.json check definitions']), source: 'OWN-ENUM',
+    what: 'A constructed example, not a measurement: 8 rounds of the distance-3 grid from a longer run, with one flip and one wrong report.',
+    rule: 'A check fires in round r when its answer differs from round r - 1; round 1 is compared with an earlier round that is not drawn.',
+    distance: 3, rounds: ROUNDS, checks: checks.map(checkOut),
+    flips, wrong_reports: wrong, lights, pairs,
+    source_scale: 'GQA-2024 OWN-ARITH (in the passage, not drawn)',
+  });
+}
 
 // ---------------------------------------------------------------- a logical error at distance 5
 const c5 = code(5);

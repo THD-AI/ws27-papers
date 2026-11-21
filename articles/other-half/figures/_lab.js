@@ -21,6 +21,7 @@ const FIGS = {
   learning:    { role: 'scene',  steps: 3 },
   noise:       { role: 'wide',   steps: 1 },
   clock:       { role: 'scene',  steps: 5 },
+  film:        { role: 'scene',  steps: 5 },
 };
 const MM = 96 / 25.4;
 
