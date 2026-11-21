@@ -91,3 +91,57 @@ Requirement 8 ("median near 9") is a process gate, fine.
 7. Drop or keep the misreading claim consistently: requirement 3 shows no misreading, so section 0 shouldn't promise the analogy carries it.
 
 Optional: one line in the analogy that all three slabs sinking moves no gauge, the analogy's own silent logical error.
+
+## Draft 3
+
+Read: `VISUALS-PURPOSE.md` section 6, draft 3, and section 0 again.
+
+### Scores
+
+| | Score |
+|---|---|
+| Truth | 8.5 |
+| Plan quality | 8.5 |
+| Overall | 8.5 |
+
+### Did the seven points land?
+
+1. **Direction-free device:** landed. The glass tell-tale cracks on movement either way and says nothing else. Correct.
+2. **Discrete one-step drops:** landed ("level or drops by one step, never by different amounts"), and the blocks are drawn as separate elements so code can drop them. Correct.
+3. **Requirement 4 assertions:** landed. Both stories light exactly `z0` and `z1`, no phase-check fires, the two together overlap a logical row in an odd number of qubits, and frames are computed as round-to-round changes. One precision is still missing (see below).
+4. **Requirement 3 assertions:** landed. Middle and both ends crack the same strips, and all three together crack none.
+5. **Qubits 1 and 7:** landed. Re-checked against `lattice.json`: qubit 1 is only in `z0`, qubit 7 only in `z1`, neither is in `z2` {0,3} or `z3` {5,8}, so the story lights exactly `z0` and `z1`. {1,4,7} meets `z0` in {1,4} and `z1` in {4,7}, both even, and meets the row {3,4,5} in one qubit, so it is a logical flip running top to bottom.
+6. **"Two of the stories that fit":** landed in section 6.
+7. **Misreading claim:** dropped in section 6, with the right reason: a strip cracked by a knock shows once, while a wrong check report fires twice.
+
+### Is a fresh glass strip each look a faithful detection event?
+
+Yes, for what the scene shows. A strip fitted at one look and inspected at the next cracks exactly when the two blocks moved against each other in between. That is "the parity of this pair changed since the last round", which is what the text calls a check firing. Since the strip is replaced, a block that stays down doesn't keep showing, which is also right: after a flip the check results stay changed, but nothing new fires.
+
+Two limits, neither needing a change while the scene shows a single look and one-step drops:
+- A block that drops and comes back within one interval would crack the glass, while a qubit flipped twice fires nothing. The one-step rule keeps this out of the picture.
+- The analogy can't show a wrong report, as draft 3 already says.
+
+### What is still wrong or overclaimed
+
+a. **Section 0 is stale and contradicts section 6.** It still describes the draft 2 device ("a settlement gauge across each joint", floor slabs in section) and still says "Both move exactly the same two gauges", "That's why it has to be a film", "Two stories fit frame 2", and qubits 2 and 6 on the corners. Anyone reading the brief from the top gets the rejected version first. Mark section 0 as superseded by section 6, or bring it in line.
+
+b. **The bridging line overclaims.** "Dots are the hidden qubits, lights are the strips" has three problems:
+   - Lights are *cracked* strips. Every flip-check tile is a strip, lit or not. As written, a reader takes the dark tiles to be nothing.
+   - Only the flip-checks have strips. The phase-check tiles have no counterpart in the analogy, so "the tiles are the strips" without that qualification is wrong for half the grid.
+   - On the grid, a check sits among two or four qubits, not between two neighbours, so the line shouldn't suggest one strip per pair of dots.
+   - "One look every millionth of a second": the article's figure is 1.1 millionths. Say "about a million looks a second" (1 / 1.1 µs ≈ 909,000, so "about a million" holds) or use 1.1.
+   Suggested wording: "The real chip is a square, not a row. The dots are the hidden qubits; the squares that watch for flips are the strips, and a lit one has cracked. About a million looks a second."
+
+c. **"The dangerous case" needs its reason.** To a builder, a whole row settling evenly is the harmless kind of settlement. What makes it dangerous here is that the row's level is the stored value, and it changed with no strip to show it. Without that, the label fights the reader's building sense. Label it something like "the whole row moved and no strip shows it", so the danger is "unseen change", not structural.
+
+d. **Name the logical row in requirement 4's generator.** "A logical row" should be pinned down: a row of the grid read as a phase-type operator, e.g. {3,4,5}. The generator should also check that the row commutes with every phase-check rather than assume it. Otherwise the test could pass against a row that isn't a logical operator.
+
+Not a problem: the main state no longer shows the answer, and the guesses are marked "?". That is correct, since the gauges alone can't decide.
+
+### Remaining required changes
+
+1. Mark section 0 as superseded by section 6, or update it: device, film claim, qubits 1 and 7, "two of the stories that fit".
+2. Reword the bridging line: a lit square is a cracked strip, only the flip-check squares are strips, and use "about a million looks a second" or 1.1 millionths.
+3. Give "the dangerous case" its reason: the row's level is the stored value, and it changed unseen.
+4. In requirement 4, name the logical row (e.g. {3,4,5}) and have the generator check that it commutes with every phase-check.

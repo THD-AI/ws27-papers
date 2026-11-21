@@ -47,3 +47,30 @@ Frame 3 going dark again would also puzzle me. If the slab has sunk and nobody f
 1. Hide the slabs in the main picture and show only the meters; draw the two stories as dotted guesses with a question mark, never as the answer.
 2. Make the gauge a plain "moved / not moved" light that the engineer resets after each look, so the stories match and frame 3 going dark makes sense.
 3. Put one line or a tiny key between the two pictures: "The real chip is a square, not a row: dots are the hidden parts, lights are the gauges, one look every millionth of a second."
+
+## Draft 3
+
+Same reader, same rules: I read section 6 of the rewritten plan and pictured it again.
+
+| Picture | "I'd get it" |
+|---|---|
+| The blocks and glass strips | 8 / 10 (was 6) |
+| The film on the grid | 6 / 10 (was 4) |
+
+**The block picture.** Yes, now I'd get it in five seconds. A glass strip that is either whole or cracked needs no explaining; I've seen cracked tiles and cracked shop windows. Hiding which block moved and showing the two guesses dotted with a "?" is exactly what was missing: I'm reading the cracks, not the blocks. The key strip drawn once is a good idea, as long as it sits at the start and isn't a fourth thing to look at on the last step.
+
+What holds it back from a 9:
+- **"The dangerous case" doesn't say why.** If all three blocks drop together and nothing cracks, my first thought is "good, nothing broke, the house just settled evenly". I need three or four words saying why that's the worst one: the whole row moved and no strip told you. Something like "the dangerous case: everything moved, nothing shows".
+- **Step 2 gets crowded.** Two guesses, the question, and the dangerous case is a lot for five seconds on a phone. If the dangerous case can wait for its own step (or for section 5, where the silent line is), the main point stays clean.
+
+**The film.** The bridging line rescues me: without it I'd be lost, with it I know dots are hidden parts and lights are the checks. Frame 3 going dark now makes sense too, because I've just been told a fresh strip goes on after every look. But two snags remain:
+- **Cracks become lights.** In the block picture the signal is a crack; in the grid it's a lit dot. The line says "lights are the strips", but a strip doesn't light. Put the same lit dot on each cracked strip in the block picture, so I've already seen the mark before the grid.
+- **Which dots are which?** If the hidden qubits and the checks are both small dots on the grid, "dots are the hidden qubits" leaves me unsure what the lit ones are. The checks need to look like the strips: in between, a different shape, or at least never the same as a qubit dot.
+- Small and fine: "two of the stories that fit" is a good honest caption. A middle dot against a straight line of three reads like the middle block against the two ends, so I'd recognise it.
+
+**Words.** "Glass tell-tale", "elevation" and "movement joints" are fine in the plan, but none of them should reach the page: to me "elevation" means height or a lift, and "tell-tale" means a gossip. "A glass strip" and "the gap between two blocks" are enough. "Look" instead of "frame" in the caption is better for me.
+
+**Fixes for draft 3:**
+1. Give the dangerous case its reason in a few words ("everything moved, nothing shows") and, if possible, its own step, so step 2 holds only the question and the two guesses.
+2. Mark each cracked strip with the same lit dot the grid uses, so cracks and lights are visibly the same thing before the bridge.
+3. Draw the grid's checks in a different shape from the qubits, placed between them like the strips.

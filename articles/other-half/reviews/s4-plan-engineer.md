@@ -74,3 +74,68 @@ Nothing below was downloaded. Each file's licence must be checked on its own pag
 5. Add one large tell-tale (grid, cross at zero, screws either side of the joint) beside the row in step 0, so a lay reader learns the device once.
 6. Keep the end units free-ended (nothing beyond them), so an end unit truly has one joint.
 7. Do not let the figure suggest uniform movement is harmless: invisible to every gauge, yes; harmless in the code, no.
+
+## Draft 3
+
+Read: `VISUALS-PURPOSE.md` section 6, draft 3. Date: 21 November 2026.
+
+### Scores
+
+| | Draft 2 | Draft 3 | Draft 3 with the changes below |
+|---|---|---|---|
+| Truth to the trade | 5 | 8 | 9 |
+| Recognisability for a lay reader | 5 | 8 | 8.5 |
+| Overall | 5.5 | 8 | 9 |
+
+### Did the required changes land
+
+| Draft 2 change | Draft 3 | Verdict |
+|---|---|---|
+| 1. No "settlement gauge" | Gone from section 6. Section 0, line 20, still says "settlement gauge" and "floor slabs seen in section" | Landed in the plan; mark line 20 as superseded so nobody briefs the illustrator from it |
+| 2. The two stories must read the same | A glass strip shows only whole or cracked, no direction | Landed. A valid alternative to heave, and the reason for not taking heave is sound: no scale to read |
+| 3. Blocks in elevation, gauges on vertical faces | Yes, free-ended, flat-roofed | Landed |
+| 4. "Changed since the last look" is the engineer's, not the gauge's | Done through "a fresh strip after every look" | Landed in substance; the wording is not trade practice (below) |
+| 5. A large key gauge | Yes, step 0 | Landed |
+| 6. Free ends | Yes | Landed |
+| 7. Uniform movement invisible, not harmless | Yes, drawn small and labelled | Landed; one wording care (below) |
+
+Dropping the misreading claim is right: a glass strip knocked by a ladder cracks once and stays cracked until replaced, so it cannot show the "wrong, then right again" pair.
+
+### Is the glass tell-tale true to the trade
+
+Yes. It is a real and old device, still fitted on historic masonry (in French a *témoin à lame de verre*; the plaster-dab version is the *témoin en plâtre*, in German *Gipsmarke*). It is crude and has largely been replaced by grid monitors wherever numbers are needed, but for "has it moved, yes or no" it is the honest picture. Three corrections to how the plan describes it:
+
+- **How it is fixed.** Not "glued across the joint". A strip of glass (often about microscope-slide size, or a longer strip) is bedded on a dab of mortar, plaster or epoxy at *each end only*, one end on each side of the crack or joint, with the middle spanning the gap unbonded. That is what makes it work: the two ends are carried by the two sides, and the glass between them takes the movement. It is usually dated in pencil or scratched on the wall beside it. The drawing must show the two end dabs; they also make it read as a fitted instrument, not a stuck-on label.
+- **What cracks it.** One side dropping against the other (shear) cracks it readily, and so does the joint opening. Closing tends to debond or crush the ends rather than crack the glass cleanly. The picture only uses a block dropping, so "cracks if the blocks either side move against each other" holds for everything shown. Very small movements (a fraction of a millimetre) do not crack it; fine for an analogy where a block "drops by one step".
+- **"A fresh strip after every look."** Not practice. A whole strip stays on the wall for years; at each inspection a cracked strip is recorded, photographed and replaced with a new dated one, often fixed beside the old one. The result the plan needs is the same: if every cracked strip is renewed at each look, a cracked strip means "moved since the last look". Say it that way: "at each look, any cracked strip is noted and replaced with a new one". A builder accepts that; "a fresh strip after every look" would make him smile.
+
+**Recognisable once the key is drawn:** yes, more than any grid monitor. Everyone knows what cracked glass means, and the key sentence "a glass strip: it cracks if the blocks either side move" carries it. Draw the crack as one clean diagonal line through the strip at the joint, the way a shear crack runs, not as a shattered star (that reads as a blow, which is the knock case the plan dropped).
+
+### What is still wrong for a builder
+
+1. **"Movement joint" is the wrong joint for a glass strip.** A movement (expansion) joint is designed to open and close with the seasons; a glass strip across it would crack every summer from nothing. Builders put tell-tales across *settlement* joints, or across the crack where an extension meets the old house. In the plan, write "settlement joint" (blocks on separate foundations); on the page, do not name the joint at all, just "where two blocks meet".
+2. **Ground line.** A block that "drops by one step" in elevation needs a ground line, or the reader sees a block moving down a white page rather than settling. Keep one ground line under all three; the dropped block's base goes below it by one step. In the silent case (all three dropped together) the ground line is the only thing that shows they moved at all.
+3. **The silent-case label.** "The dangerous case: nothing shows" is right for the code, but a builder reads uniform settlement as the harmless case. Tie the danger to whoever reads the strips, e.g. "nothing cracks, so nobody can tell" or "the case no strip can show". The danger then comes from the article's text, not from the building.
+4. **The dropped block keeps its height.** Draw it the same size, simply moved down, so the step shows at both its roof and its base. A block that looks shorter reads as a different building.
+
+### References (none downloaded; licences read from the Commons file pages on 21 November 2026)
+
+**Glass tell-tale on a wall:**
+- `File:Chartres, Église Saint-Aignan, Témoin à lame de verre 01.jpg` – Coyau, CC BY-SA 3.0, 3456 × 2304 px, about 9.1 MB. https://commons.wikimedia.org/wiki/File:Chartres,_%C3%89glise_Saint-Aignan,_T%C3%A9moin_%C3%A0_lame_de_verre_01.jpg – first choice; the title names exactly this device.
+- `File:Chartres, Église Saint-Aignan, Témoin à lame de verre 02.jpg` – Coyau, CC BY-SA 3.0, 3456 × 2304 px, about 8.0 MB. https://commons.wikimedia.org/wiki/File:Chartres,_%C3%89glise_Saint-Aignan,_T%C3%A9moin_%C3%A0_lame_de_verre_02.jpg – a second view.
+- Backups (tell-tales on masonry, type to be checked by eye): `File:Basilique de Saint-Quentin -Témoin de fissure 1922.jpg` (Renhour48, CC0, 6000 × 4000 px, about 10.9 MB) and `File:Montbazon - donjon témoin de fissure.jpg` (Joël Thibault, CC BY-SA 4.0, 3648 × 2736 px, about 1.7 MB).
+- Commons search terms that work: "témoin à lame de verre", "témoin de fissure", "fissurometer", "crack monitor". English "glass tell-tale" finds nothing.
+
+None of the photographs was opened at full size; the content is judged from titles and descriptions and must be checked by eye before use. Note for `SOURCES.md`: under CC BY-SA, a drawing derived from the photograph may have to carry the same licence. If that is a problem, give the model the CC0 Saint-Quentin photograph (if it shows a glass strip) and keep the Chartres pair for checking only.
+
+**HABS/HAER elevation of a plain row of blocks:** I found no measured sheet of exactly three flat blocks with joints. The nearest candidate for the line register is `File:ELEVATIONS, SHEET NO. 1-10-39-6 OF 12. - Oakland Army Base, Warehouse Type, Tobruk Street, between Warehouse Road …` (HAER, US government work, public domain; elevations of a long flat-roofed warehouse), not yet looked at by eye. To find others, search Commons for "HAER sheet elevation warehouse" or "HABS sheet elevation" and pick a sheet of plain flat-roofed masses with few openings. Titles beginning "Historic American Buildings Survey … Photographer" are photographs, not drawings; the measured drawings carry "SHEET NO." in the title.
+
+### Remaining required changes
+
+1. Fixing: "a glass strip bedded on a dab at each end, one end on each side of the joint", not "glued across"; draw the two dabs.
+2. Wording: "at each look, any cracked strip is noted and replaced", not "a fresh strip after every look".
+3. Joint: "settlement joint" in the plan and no joint name on the page; never "movement joint".
+4. One ground line under the row; a dropped block moves down one step at its full height.
+5. Silent-case label: say no strip can show it, not that the building is in danger.
+6. Draw the crack as one diagonal line through the strip, not a shatter.
+7. Mark section 0, line 20 ("settlement gauge", "floor slabs in section") as superseded.

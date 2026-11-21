@@ -4,7 +4,7 @@ Status: draft 2 (section 0). Draft 1 was judged by the three readers, the specia
 
 The held-scene prototype (`HELD-SCENE.md`, branch `feat/held-scene`) is set aside. If a visual below turns out to need its own way of scrolling, it can come back as a tool; it is not the starting point.
 
-## 0. Draft 2: what the review changed
+## 0. Draft 2: what the review changed (SUPERSEDED by section 6, draft 3.1; the gauge and the slabs below are not the brief)
 
 All five pick C, the analogy and then the film:
 
@@ -116,6 +116,22 @@ Status: draft 3. Draft 2's plan was reviewed by a civil engineer (the trade revi
 - **The misreading claim is dropped:** a strip cracked by a knock shows once, not twice, so the analogy can't show a wrong report. Draft 2's sentence "that's why it has to be a film" goes; the film is there because the looks come every millionth of a second (specialist).
 - **The film's second story is qubits 1 and 7,** a straight column with qubit 4, like the line in section 5. The caption says "two of the stories that fit": others fit too (specialist).
 - **One bridging line between the two scenes:** "The real chip is a square, not a row: dots are the hidden qubits, lights are the strips, one look every millionth of a second" (lay reader, wording to be fitted to the article's terms).
+
+**Draft 3.1, after the second plan review** (engineer 8 → 9 with these, specialist 8.5, lay reader 8 for the blocks and 6 for the film):
+- **The strip as a builder fixes it:** a glass strip bedded on a dab at each end, one end on each side of the joint; the two dabs are drawn, and the unbonded middle is what makes it work. At each look, any cracked strip is noted and replaced with a new one. A crack is one diagonal shear line through the strip, not a shatter (engineer).
+- **The words on the page:** "a glass strip" and "where two blocks meet". "Tell-tale", "elevation" and "movement joint" stay off the page; in the plan the joint is a settlement joint (engineer and lay reader).
+- **A ground line under the row.** A dropped block keeps its height and moves down one step. In the silent case the ground line is the only thing that shows it (engineer).
+- **The silent case gets its reason:** "all three moved: nothing cracks, so nobody can tell, and the level of the row was what was stored". It is a step of its own after the two guesses, not crowded into them (engineer, specialist, lay reader).
+- **One mark across both scenes:** the grid's lit mark (accent field and solid dot) sits on each cracked strip in the block picture too, so "lit" means the same in both (lay reader).
+- **On the grid, checks look different from qubits:** checks are drawn as the article's tiles between the qubit dots, the way the strips sit between blocks (lay reader).
+- **The bridging line, exact:** "The real chip is a square, not a row. The dots are the hidden qubits; a lit square is a cracked strip, for flips; and it looks about a million times a second." Phase-checks have no strip and are left out of the comparison (specialist).
+- **The logical row is named:** `{3, 4, 5}`, the middle row. The generator checks that it commutes with every phase-check, and that the two stories together overlap it in an odd number of qubits (specialist).
+
+**References** (engineer's search; nothing downloaded yet):
+- First choice: [Chartres, Église Saint-Aignan, témoin à lame de verre 01](https://commons.wikimedia.org/wiki/File:Chartres,_%C3%89glise_Saint-Aignan,_T%C3%A9moin_%C3%A0_lame_de_verre_01.jpg) by Coyau, CC BY-SA 3.0, 3456×2304, about 9.1 MB.
+- Second view of the same: `…_02.jpg` by Coyau, CC BY-SA 3.0, about 8.0 MB.
+- Backup, CC0: "Basilique de Saint-Quentin – Témoin de fissure 1922" by Renhour48, about 10.9 MB.
+- A HABS/HAER elevation (public domain) for the line is still to be found by eye. Otherwise `hand.png` alone carries the line.
 
 | # | Requirement | File | Done when |
 |---|---|---|---|
