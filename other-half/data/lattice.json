@@ -1,0 +1,170 @@
+{
+ "generated": "2026-11-16",
+ "generated_by": "tools/other-half-data.mjs",
+ "inputs": [
+  "port of docs/proposal/paper/data/find_example.py"
+ ],
+ "source": "OWN-ENUM",
+ "what": "The surface code at distance 3 and the computed example of the proposal's Figure 1.",
+ "distance": 3,
+ "storing_qubits": 9,
+ "helpers": 8,
+ "total": 17,
+ "qubit_position": "q = row * 3 + col, rows from the top, columns from the left",
+ "checks": [
+  {
+   "id": "x0",
+   "asks_about": "phase errors",
+   "shape": "square",
+   "row": 0,
+   "col": 0,
+   "qubits": [
+    0,
+    1,
+    3,
+    4
+   ]
+  },
+  {
+   "id": "x1",
+   "asks_about": "phase errors",
+   "shape": "square",
+   "row": 1,
+   "col": 1,
+   "qubits": [
+    4,
+    5,
+    7,
+    8
+   ]
+  },
+  {
+   "id": "x2",
+   "asks_about": "phase errors",
+   "shape": "half",
+   "edge": "top",
+   "row": -1,
+   "col": 1,
+   "qubits": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "x3",
+   "asks_about": "phase errors",
+   "shape": "half",
+   "edge": "bottom",
+   "row": 2,
+   "col": 0,
+   "qubits": [
+    6,
+    7
+   ]
+  },
+  {
+   "id": "z0",
+   "asks_about": "flips",
+   "shape": "square",
+   "row": 0,
+   "col": 1,
+   "qubits": [
+    1,
+    2,
+    4,
+    5
+   ]
+  },
+  {
+   "id": "z1",
+   "asks_about": "flips",
+   "shape": "square",
+   "row": 1,
+   "col": 0,
+   "qubits": [
+    3,
+    4,
+    6,
+    7
+   ]
+  },
+  {
+   "id": "z2",
+   "asks_about": "flips",
+   "shape": "half",
+   "edge": "left",
+   "row": 0,
+   "col": -1,
+   "qubits": [
+    0,
+    3
+   ]
+  },
+  {
+   "id": "z3",
+   "asks_about": "flips",
+   "shape": "half",
+   "edge": "right",
+   "row": 1,
+   "col": 2,
+   "qubits": [
+    5,
+    8
+   ]
+  }
+ ],
+ "walk": [
+  {
+   "step": 1,
+   "errors": {
+    "4": "X"
+   },
+   "fired": [
+    "z0",
+    "z1"
+   ],
+   "note": "one flip in the middle fires the two flip-checks beside it"
+  },
+  {
+   "step": 2,
+   "errors": {
+    "4": "X",
+    "7": "X"
+   },
+   "fired": [
+    "z0"
+   ],
+   "note": "a row of two: the check between them sees two errors and stays quiet; the row ends at the edge without firing"
+  }
+ ],
+ "example": {
+  "conditions": {
+   "error_per_storing_qubit": 0.05,
+   "checks": "perfect, one round"
+  },
+  "fired": [
+   "z2",
+   "x0",
+   "x1"
+  ],
+  "chance_of_pattern": 0.000635700376467001,
+  "plain_matching": {
+   "errors": {
+    "0": "X",
+    "4": "Z"
+   },
+   "chance_right": 0.33299441259676155,
+   "flip_puzzle": "z2 joined to the left edge through qubit 0",
+   "phase_puzzle": "x0 joined to x1 through qubit 4"
+  },
+  "read_together": {
+   "errors": {
+    "0": "Y",
+    "8": "Z"
+   },
+   "chance_right": 0.6221838324894758
+  },
+  "rest": 0.04482175491376261,
+  "source": "OWN-ENUM"
+ }
+}

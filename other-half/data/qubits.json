@@ -1,0 +1,37 @@
+{
+ "generated": "2026-11-16",
+ "generated_by": "tools/other-half-data.mjs",
+ "inputs": [],
+ "source": "OWN-ARITH",
+ "what": "Physical qubits for one logical qubit in the surface code: d × d storing qubits and d × d − 1 helpers, 2d² − 1 in all.",
+ "rows": [
+  {
+   "distance": 3,
+   "storing": 9,
+   "helpers": 8,
+   "total": 17,
+   "source": "OWN-ARITH"
+  },
+  {
+   "distance": 5,
+   "storing": 25,
+   "helpers": 24,
+   "total": 49,
+   "source": "OWN-ARITH"
+  },
+  {
+   "distance": 7,
+   "storing": 49,
+   "helpers": 48,
+   "total": 97,
+   "source": "OWN-ARITH"
+  },
+  {
+   "distance": 9,
+   "storing": 81,
+   "helpers": 80,
+   "total": 161,
+   "source": "OWN-ARITH"
+  }
+ ]
+}

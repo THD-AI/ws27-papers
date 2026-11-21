@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en-GB" data-slug="other-half" data-accent="other-half">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#4254C5">
+<meta name="robots" content="noindex">
+<title>The other half of a quantum computer: neural-network decoders</title>
+<meta name="description" content="The program that reads a quantum chip’s errors decides whether the computer works: what it does, why a neural network can do it better, and the cost.">
+<meta name="author" content="Alexander Rudaev and group">
+<link rel="canonical" href="https://thd-ai.github.io/ws27-papers/other-half/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Alexander Rudaev">
+<meta property="og:locale" content="en_GB">
+<meta property="og:title" content="The other half of a quantum computer">
+<meta property="og:description" content="The program that reads a quantum chip’s errors decides whether the computer works: what it does, why a neural network can do it better, and the cost.">
+<meta property="og:url" content="https://thd-ai.github.io/ws27-papers/other-half/">
+<meta property="og:image" content="https://thd-ai.github.io/ws27-papers/other-half/art/card.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Card with the title The other half of a quantum computer beside a line drawing of a quantum computer’s cooling stack wired to an ordinary computer.">
+<meta property="article:published_time" content="2026-11-16">
+<meta property="article:modified_time" content="2026-11-16">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The other half of a quantum computer">
+<meta name="twitter:description" content="The program that reads a quantum chip’s errors decides whether the computer works: what it does, why a neural network can do it better, and the cost.">
+<meta name="twitter:image" content="https://thd-ai.github.io/ws27-papers/other-half/art/card.png">
+<meta name="twitter:image:alt" content="Card with the title The other half of a quantum computer beside a line drawing of a quantum computer’s cooling stack wired to an ordinary computer.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-48.png" type="image/png" sizes="48x48">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ScholarlyArticle","headline":"The other half of a quantum computer","description":"The program that reads a quantum chip’s errors decides whether the computer works: what it does, why a neural network can do it better, and the cost.","url":"https://thd-ai.github.io/ws27-papers/other-half/","inLanguage":"en-GB","datePublished":"2026-11-16","dateModified":"2026-11-16","author":[{"@type":"Person","name":"Alexander Rudaev"}],"publisher":{"@type":"Person","name":"Alexander Rudaev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://thd-ai.github.io/ws27-papers/other-half/"},"image":{"@type":"ImageObject","url":"https://thd-ai.github.io/ws27-papers/other-half/art/card.png","width":1200,"height":630},"isPartOf":{"@type":"Course","name":"Quantum Computing seminar","provider":{"@type":"CollegeOrUniversity","name":"Technische Hochschule Deggendorf"}},"keywords":"quantum error correction, surface code, neural network decoder, AlphaQubit, Google Willow, matching decoder","abstract":"The program that reads a quantum chip’s errors decides whether the computer works: what it does, why a neural network can do it better, and the cost.","isAccessibleForFree":true,"contributor":{"@type":"Organization","name":"Quantum Computing seminar group, TH Deggendorf"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Libre+Franklin:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&display=swap">
+<link rel="stylesheet" href="article.css">
+<link rel="modulepreload" href="article.js">
+<link rel="modulepreload" href="fig.js">
+<link rel="modulepreload" href="figures/line.js">
+<link rel="modulepreload" href="figures/syndromes.js">
+<link rel="preload" as="fetch" href="data/line.json" crossorigin>
+<link rel="preload" as="fetch" href="data/syndromes.json" crossorigin>
+<style>
+/* Running footer of the printed paper: short title left, page number right. */
+@page { @bottom-left { content: "The other half of a quantum computer"; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#text">Skip to the text</a>
+
+<header class="title-block has-hero">
+<p class="kicker"><span>Quantum Computing seminar · WS 2026/27</span></p>
+<div class="hero" aria-hidden="true" style="--ar:0.6667;--bw:0.9453;--bh:0.8564;--pl:0.0332;--pr:0.0215;--pt:0.0693;--pb:0.0742;--ratio:0.6040;--sy:0.24%"><img class="hero-field" src="art/hero-field.png" width="1536" height="1024" alt=""><img class="hero-line" src="art/hero-line.png" width="1536" height="1024" alt=""></div>
+<div class="title-text">
+<h1>The other half of a quantum computer</h1>
+<p class="deck">The same recorded data from one of Google’s quantum chips gave two different results, depending on which program read it. We asked what that program has to do, why a neural network can do it better, and what that costs. In our own small runs, it didn’t always.</p>
+<p class="byline"><span class="author">Alexander Rudaev and group</span> <span class="context">Quantum Computing seminar · TH Deggendorf · winter semester 2026/27</span></p>
+<p class="status">Draft for review, 16 November 2026</p>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sections">
+<details class="toc-fold" open>
+<summary>Contents</summary>
+<ol>
+<li><a href="#what-we-wanted-to-know"><span class="toc-num"></span> <span class="toc-title">What we wanted to know</span></a></li>
+<li><a href="#s-1"><span class="toc-num">1</span> <span class="toc-title">A qubit doesn’t hold still</span></a></li>
+<li><a href="#s-2"><span class="toc-num">2</span> <span class="toc-title">The cure costs what it protects</span></a></li>
+<li><a href="#s-3"><span class="toc-num">3</span> <span class="toc-title">Asking without looking</span></a></li>
+<li><a href="#s-4"><span class="toc-num">4</span> <span class="toc-title">A film of hints</span></a></li>
+<li><a href="#s-5"><span class="toc-num">5</span> <span class="toc-title">The decoder, and the one mistake that matters</span></a></li>
+<li><a href="#s-6"><span class="toc-num">6</span> <span class="toc-title">Where the standard method goes wrong</span></a></li>
+<li><a href="#s-7"><span class="toc-num">7</span> <span class="toc-title">The result that started us off</span></a></li>
+<li><a href="#s-8"><span class="toc-num">8</span> <span class="toc-title">Accurate, or in time</span></a></li>
+<li><a href="#s-9"><span class="toc-num">9</span> <span class="toc-title">What we measured ourselves</span></a></li>
+<li><a href="#s-10"><span class="toc-num">10</span> <span class="toc-title">What this doesn’t show</span></a></li>
+<li><a href="#what-we-could-not-show"><span class="toc-num"></span> <span class="toc-title">What we could not show</span></a></li>
+<li><a href="#words-used"><span class="toc-num"></span> <span class="toc-title">Words used</span></a></li>
+<li><a href="#how-this-was-made"><span class="toc-num"></span> <span class="toc-title">How this was made</span></a></li>
+<li><a href="#sources"><span class="toc-num"></span> <span class="toc-title">Sources</span></a></li>
+</ol>
+</details>
+</nav>
+
+<main id="text" class="body">
+<aside class="rail" aria-hidden="true"><div class="rail-pin"><figure class="fig fig-margin" data-fig="qubits" data-role="margin"><div class="fig-frame" data-frame="qubits"></div></figure></div></aside>
+<p>Drawing: made with an image model from Alexander Rudaev’s own line reference and reference photographs; the cryostat after a photograph by Lars Ploughman, CC BY-SA 2.0.</p>
+<span class="margin-mark" data-margin="qubits" data-state="0"></span>
+<h2 id="what-we-wanted-to-know" class="sec"><span class="sec-num" aria-hidden="true"></span> <span class="sec-title">What we wanted to know</span></h2>
+<figure class="margin-still" data-fig="qubits" data-role="still" data-state="0"><div class="fig-frame" data-frame="qubits"></div></figure>
+<p>A quantum chip can be excellent and the computer can still fail. The cause sits beside the chip: a program running on an ordinary computer.</p>
+<p>We came across this in a paper Google published in December 2024. It reports the first quantum memory that gets more reliable as it gets bigger, which nobody had managed before. One detail in it is easy to miss. Two programs read the same recording from the same chip and came out with different error rates. A neural network, a program that learns from examples, read it better than the standard program almost every experiment uses.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="1" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[1]</span></span></p>
+<p>So we set ourselves three questions: what the program has to do, why a network can do it better, and at what cost. We answer them in the order we understood them.</p>
+<h2 id="s-1" class="sec"><span class="sec-num" aria-hidden="true">1</span> <span class="sec-title">A qubit doesn’t hold still</span></h2>
+<p>A qubit is the quantum version of a bit, and its weakness is that it doesn’t keep its state. It behaves like a pattern drawn on the surface of water: it starts to smear as soon as it’s made. On Google’s 2024 chip the median qubit lifetime is 85 millionths of a second, about a thousandth of a blink.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="1 2" aria-haspopup="dialog" aria-expanded="false" aria-label="2 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">2</span></button><span class="src-print">[1, 2]</span></span> The operations add errors of their own: each one has a small chance of going wrong.</p>
+<p>That sounds harmless until it’s set against a real job. A well-known estimate for breaking the encryption that protects much of the internet’s traffic puts two numbers side by side. The hardware it assumes slips about once in every thousand basic operations. The calculation it plans needs between two and three billion steps of the costly kind, each built from many basic operations, and a single uncorrected slip can spoil the answer.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="3" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[3]</span></span> At one slip per thousand, that means millions of slips where one is enough. Unaided, such hardware cannot finish the calculation.</p>
+<h2 id="s-2" class="sec"><span class="sec-num" aria-hidden="true">2</span> <span class="sec-title">The cure costs what it protects</span></h2>
+<p>Ordinary computers protect a bit by storing it three times and taking a vote. That doesn’t work for qubits. A quantum state can’t be copied, and it can’t be looked at to see whether it’s still right, because looking destroys it.</p>
+<p>The way around this is to store the information in the way several qubits relate to each other, and in none of them alone. The simplest version uses three qubits that are only ever all-0 or all-1 together. No single one holds the information, and no copy of it exists anywhere. Many real qubits working together like this are called a <strong>logical qubit</strong>.</p>
+<span class="margin-mark" data-margin="qubits" data-state="1"></span>
+<figure class="margin-still" data-fig="qubits" data-role="still" data-state="1"><div class="fig-frame" data-frame="qubits"></div></figure>
+<p>In the scheme we studied, the surface code, the qubits sit on a square grid, and the size of the grid is called its <strong>distance</strong>. A bigger grid should protect better, but only if each qubit is good enough. Below a certain error rate, called the <strong>threshold</strong>, it does. Above it, a bigger grid is worse, since every added qubit is one more thing that smears. For years the hardware sat above it.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="4 1" aria-haspopup="dialog" aria-expanded="false" aria-label="2 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">2</span></button><span class="src-print">[4, 1]</span></span></p>
+<h2 id="s-3" class="sec"><span class="sec-num" aria-hidden="true">3</span> <span class="sec-title">Asking without looking</span></h2>
+<p>Only about half of the qubits store anything. The rest are helpers, each sitting between two or four storing qubits. The smallest grid, distance 3, has 9 storing qubits and 8 helpers, 17 in all. Distance 5 has 49 qubits, and distance 7 has 97.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="2 1" aria-haspopup="dialog" aria-expanded="false" aria-label="2 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">2</span></button><span class="src-print">[2, 1]</span></span></p>
+<span class="margin-mark" data-margin="qubits" data-state="2"></span>
+<figure class="margin-still" data-fig="qubits" data-role="still" data-state="2"><div class="fig-frame" data-frame="qubits"></div></figure>
+<p>Once every round, each helper interacts with its neighbours and is measured. One bit comes out. It doesn’t say what state any neighbour is in – only whether the number of errors among those neighbours is even or odd. That answer is the same whatever is stored. So measuring it leaves the stored information alone.</p>
+<p>These questions are called <strong>checks</strong>. While nothing goes wrong, a check gives the same answer round after round. When a qubit next to it is hit, the answer changes, and we say the check <strong>fires</strong>.</p>
+<p>Two kinds of error can hit a qubit. A flip swaps 0 and 1, as in an ordinary bit. A phase error is harder to picture. In the water image, it keeps the pattern’s shape and shifts its rhythm: 0 and 1 stay as they are, but “0 plus 1” becomes “0 minus 1”. That only shows while the qubit is in both states at once, which an ordinary bit can’t be. Half of the checks notice flips and the other half notice phase errors. Some errors are both at once and fire checks of both kinds. We come back to those in section 6.</p>
+<p>A check can also just report wrongly. Then it fires twice in a row, once when the wrong answer appears and once when the right one returns, although no storing qubit was hit. So a single round is never enough. The checks must be read as a sequence.</p>
+<span class="margin-mark" data-margin="qubits" data-state="3"></span>
+<h2 id="s-4" class="sec"><span class="sec-num" aria-hidden="true">4</span> <span class="sec-title">A film of hints</span></h2>
+<figure class="margin-still" data-fig="qubits" data-role="still" data-state="3"><div class="fig-frame" data-frame="qubits"></div></figure>
+<p>One round of checks takes 1.1 millionths of a second, and a grid of distance 7 has 48 checks. In the time of one blink the chip gets through about ninety thousand rounds and puts out about four million check results, for a single logical qubit.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="1 2" aria-haspopup="dialog" aria-expanded="false" aria-label="2 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">2</span></button><span class="src-print">[1, 2]</span></span></p>
+<p>While the computer runs, that stream is all that comes out of it. We ended up thinking of it as a film in which a few points light up in every frame.</p>
+<p>The fired checks say roughly where something happened and which kind of error it was. They don’t say which qubits were hit. Many sets of errors light up the same points.</p>
+<span class="margin-mark" data-margin="qubits" data-state="4"></span>
+<h2 id="s-5" class="sec"><span class="sec-num" aria-hidden="true">5</span> <span class="sec-title">The decoder, and the one mistake that matters</span></h2>
+<figure class="margin-still" data-fig="qubits" data-role="still" data-state="4"><div class="fig-frame" data-frame="qubits"></div></figure>
+<p>A program on a classical computer watches that film and decides which errors happened. It’s called the <strong>decoder</strong>. Nothing on the chip gets repaired: the decoder keeps a record of the errors it believes in, and the final result is corrected in software. For simply storing a qubit that’s enough. For calculating it isn’t, because some operations can only go ahead once the decoder has answered. So its speed matters too (section 8).</p>
+<p>The decoder guesses: from the checks that fired, it picks one explanation. Most small mistakes in that guess are harmless. A wrong guess that fires the same checks usually differs from the truth in a way the code doesn’t care about.</p>
+<p>The harmful case looks like this. A correction acts on the grid just as errors do. If the real errors and the decoder’s correction together make an unbroken line across the grid, from one edge to the opposite edge, the stored value has changed. No check fires, because every check along such a line sees an even number of errors. A shorter line of errors behaves the same way inside: only the checks at its two ends fire.</p>
+<p>This silent failure is a <strong>logical error</strong>, and how often it happens is what every decoder is measured by. It also shows what distance (section 2) is worth. On a grid of distance 5 a line needs five storing qubits. So three real errors can be enough. A decoder that sees them may add two more.</p>
+<figure class="fig fig-column" id="fig-1" data-fig="line" data-role="figure" data-layout="column" data-where=""><div class="fig-frame" data-frame="line"></div><figcaption><span class="fig-label">Figure 1</span> A grid of distance 5, showing flips and the checks that notice them. Three real errors in one column fire a single check. The shortest explanation of that one check is two errors below it. If the decoder corrects those two, errors and correction together cross the grid from edge to edge: the stored value has changed and no check fires. Constructed and checked by our script.</figcaption></figure>
+<h2 id="s-6" class="sec"><span class="sec-num" aria-hidden="true">6</span> <span class="sec-title">Where the standard method goes wrong</span></h2>
+<p>We went through every possible error on the smallest grid and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 possible patterns on the smallest grid, 103 get an answer from the standard decoder that isn’t the most likely one.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="5" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[5]</span></span> That sounds like a lot, but these patterns are rare: together they turn up in fewer than 2 cases in 100.</p>
+<figure class="fig fig-wide breakout" id="fig-2" data-fig="syndromes" data-role="figure" data-layout="wide" data-where=""><div class="fig-frame" data-frame="syndromes"></div><figcaption><span class="fig-label">Figure 2</span> All 256 patterns of the eight checks at distance 3, one mark each, ordered by how many checks fire. Filled: the 103 patterns where the standard decoder’s answer isn’t the most likely one. These are the rarer patterns: with a 5% chance of an error per storing qubit they turn up in about 1.6% of cases, and in 63% of cases no check fires at all. Our own count.</figcaption></figure>
+<section class="scene breakout" id="fig-3" data-scene="lattice">
+<div class="scene-stage"><figure class="fig fig-scene" data-fig="lattice" data-role="scene" data-steps="6" data-where=""><p class="fig-where" aria-hidden="true"></p><div class="fig-frame" data-frame="lattice"></div><figcaption><span class="fig-label">Figure 3</span> The smallest grid: 9 storing qubits and 8 checks; X is a flip, Z a phase error, Y both. On screen, one flip fires the two checks beside it; then a line of two flips fires only its upper end, as the lower end meets the edge (on paper, at the left). Then our example’s three fired checks and two explanations; the dots count 30 times this pattern shows up. Plain matching’s answer is right in 10, the other in 19, because it can happen in two ways: the phase error in the far corner or one place above it (5% error per storing qubit, checks never wrong; our own count).</figcaption></figure></div>
+<p class="scene-caption"><span class="fig-label">Figure 3</span> The smallest grid: 9 storing qubits and 8 checks; X is a flip, Z a phase error, Y both. On screen, one flip fires the two checks beside it; then a line of two flips fires only its upper end, as the lower end meets the edge (on paper, at the left). Then our example’s three fired checks and two explanations; the dots count 30 times this pattern shows up. Plain matching’s answer is right in 10, the other in 19, because it can happen in two ways: the phase error in the far corner or one place above it (5% error per storing qubit, checks never wrong; our own count).</p>
+<div class="scene-text">
+<figure class="fig seq-still" data-fig="lattice" data-role="seq" data-state="0" data-where=""><div class="fig-frame" data-frame="lattice"></div><figcaption class="seq-cap"><span class="fig-label">Figure 3</span> The smallest grid: 9 storing qubits and 8 checks; X is a flip, Z a phase error, Y both. On screen, one flip fires the two checks beside it; then a line of two flips fires only its upper end, as the lower end meets the edge (on paper, at the left). Then our example’s three fired checks and two explanations; the dots count 30 times this pattern shows up. Plain matching’s answer is right in 10, the other in 19, because it can happen in two ways: the phase error in the far corner or one place above it (5% error per storing qubit, checks never wrong; our own count).</figcaption></figure>
+<div class="passage" data-step="0" data-where="">
+<p>The standard decoder is called <strong>matching</strong>, and the smallest grid shows how it works: 9 storing qubits, never read directly, and 8 checks between them, each asking its neighbours one question.</p>
+</div>
+<figure class="fig seq-still seq-later" aria-hidden="true" data-fig="lattice" data-role="seq" data-state="1" data-where=""><div class="fig-frame" data-frame="lattice"></div></figure>
+<div class="passage" data-step="1" data-where="">
+<p>In the middle of the grid, a single flip fires the two flip-checks on either side of it. The phase-checks stay quiet: a flip isn’t their kind of error. The decoder never sees the flip, only two lit checks.</p>
+</div>
+<figure class="fig seq-still seq-later" aria-hidden="true" data-fig="lattice" data-role="seq" data-state="2" data-where=""><div class="fig-frame" data-frame="lattice"></div></figure>
+<div class="passage" data-step="2" data-where="">
+<p>Now put several errors in a line. Each check along the line sees two of them, an even number, and stays quiet. Only the checks at the two ends fire. At the edge of the grid a line can end without firing anything.</p>
+</div>
+<figure class="fig seq-still seq-later" aria-hidden="true" data-fig="lattice" data-role="seq" data-state="3" data-where=""><div class="fig-frame" data-frame="lattice"></div></figure>
+<div class="passage" data-step="3" data-where="">
+<p>Decoding then becomes a pairing puzzle: join every fired check to another fired check, or to the edge. Matching picks the pairing with the shortest lines in total, since a few errors are more likely than many. Fast, exact methods exist for it, and almost every experiment uses it.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="6" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[6]</span></span> Plain matching has two blind spots.</p>
+<p>Plain matching solves the puzzle separately for flip-checks and phase-checks, so an error that is both at once (section 3) counts as two. And it seeks the single likeliest explanation, though explanations that differ only in a way the code doesn’t care about (section 5) add up.</p>
+</div>
+<figure class="fig seq-still seq-later" aria-hidden="true" data-fig="lattice" data-role="seq" data-state="4" data-where=""><div class="fig-frame" data-frame="lattice"></div></figure>
+<div class="passage" data-step="4" data-where="">
+<p>The first of our 103 patterns shows it. Three checks fire. Plain matching explains them with two errors: a flip in one corner and a phase error in the centre. It fits the checks, and it is right one time in three.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="5" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[5]</span></span> But when the truth is the other answer, matching’s correction and the real errors together cross the grid: a silent logical error, about two times in three. Two cautions: we gave every storing qubit a 5% chance of an error, far more than a real chip has, so the effect is easy to count, and we assumed the checks never report wrongly.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="5" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[5]</span></span></p>
+</div>
+<figure class="fig seq-still seq-later" aria-hidden="true" data-fig="lattice" data-role="seq" data-state="5" data-where=""><div class="fig-frame" data-frame="lattice"></div></figure>
+<div class="passage" data-step="5" data-where="">
+<p>The same checks also fit a combined error in that corner, a flip and a phase error at once, which the figure marks Y, plus one phase error on the right. Counting Y as one error, this answer also has two, and on its own it is exactly as likely as plain matching’s. What tips the balance is that it can happen in two ways. The phase error can sit in the far corner. Or it can sit one place above it, and the checks fire just the same. Together, the two ways are right about six times in ten.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="5" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[5]</span></span> The rest are rarer explanations.</p>
+</div>
+</div>
+</section>
+<p>Real chips add trouble of the same sort: errors that hit two neighbouring qubits at once, and qubits that slip into a third state they should never be in. A decoder that learns can take them in.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="7" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[7]</span></span> Plain matching’s picture has no place for either.</p>
+<h2 id="s-7" class="sec"><span class="sec-num" aria-hidden="true">7</span> <span class="sec-title">The result that started us off</span></h2>
+<p>Google first showed, in 2023, a grid of distance 5 that beat distance 3, but only just. A year later, on a new chip, the errors were finally below the threshold – the error rate from section 2 under which bigger grids win – and the effect was clear. Each step from distance 3 to 5 to 7 cut the rate of logical errors roughly in half. At distance 7 the logical qubit lasted more than twice as long as the best single qubit on the chip.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="4 1" aria-haspopup="dialog" aria-expanded="false" aria-label="2 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">2</span></button><span class="src-print">[4, 1]</span></span></p>
+<span class="margin-mark" data-margin="qubits" data-state="5"></span>
+<figure class="margin-still" data-fig="qubits" data-role="still" data-state="5"><div class="fig-frame" data-frame="qubits"></div></figure>
+<p>The factor by which the error shrinks per step is written <strong>Λ</strong> (lambda), and it decides how big a useful machine has to be. With Λ near 2, halving the error once more means going from distance 7 to distance 9: from 97 qubits to 161.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="1 2" aria-haspopup="dialog" aria-expanded="false" aria-label="2 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">2</span></button><span class="src-print">[1, 2]</span></span> That one halving costs 64 more qubits.</p>
+<p>Google read the same recorded data with two decoders. Its best matching decoder already links the two kinds of check in a limited way – the idea behind the correlated matching we use in section 9. It learns no rules of its own, though its error weights were tuned on the chip’s data. It gave Λ = 2.04, and a neural network gave Λ = 2.14. At distance 7 the matching decoder’s logical error rate was 171 per 100,000 rounds and the network’s 143, about one in six fewer.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="1" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[1]</span></span> Same chip, same data; only the reader changed.</p>
+<p>Other labs have got below the threshold with other hardware, some with decoders that learn&#8288;<span class="src"><button type="button" class="src-mark" data-nums="8 9 10 11" aria-haspopup="dialog" aria-expanded="false" aria-label="4 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">4</span></button><span class="src-print">[8, 9, 10, 11]</span></span>, and IBM has shown in simulation a fast one that doesn’t&#8288;<span class="src"><button type="button" class="src-mark" data-nums="12 13" aria-haspopup="dialog" aria-expanded="false" aria-label="2 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">2</span></button><span class="src-print">[12, 13]</span></span>. None of these results settles which route is best.</p>
+<figure class="fig fig-column" id="fig-4" data-fig="suppression" data-role="figure" data-layout="column" data-where=""><div class="fig-frame" data-frame="suppression"></div><figcaption><span class="fig-label">Figure 4</span> Logical error rate per round, times 100,000, on Google’s 2024 chip at distances 3, 5 and 7, each recording read afterwards by two decoders. The values at distances 3 and 5 are averages over 9 and 4 smaller grids on the same chip, so each distance is its own recording. Each step in distance divides the rate by Λ: 2.04 for the matching decoder, 2.14 for the network. Google’s measurements, not ours. Source: Google Quantum AI, Nature 638 (2025), with its supplementary table S1.</figcaption></figure>
+<span class="margin-mark margin-end" data-margin="qubits"></span>
+<h2 id="s-8" class="sec"><span class="sec-num" aria-hidden="true">8</span> <span class="sec-title">Accurate, or in time</span></h2>
+<p>Nobody writes a neural decoder’s rules; it learns them. It’s trained first on a simulator, where the true errors are known, then on the chip’s own data, where only the outcome is known: whether the stored value came out as it went in. From this it picks up whatever regularities are there, including the ones matching leaves out.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="7 1" aria-haspopup="dialog" aria-expanded="false" aria-label="2 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">2</span></button><span class="src-print">[7, 1]</span></span></p>
+<section class="scene breakout" id="fig-5" data-scene="clock">
+<div class="scene-stage"><figure class="fig fig-scene" data-fig="clock" data-role="scene" data-steps="5" data-where=""><p class="fig-where" aria-hidden="true"></p><div class="fig-frame" data-frame="clock"></div><figcaption><span class="fig-label">Figure 5</span> One time line in millionths of a second. The chip finishes a round of checks every 1.1. The 2024 network needs 24 for each round, so its backlog grows without end. The matching decoder that ran live keeps pace: its answer comes about 63 after the last round of a run, for runs of up to a million rounds. A preprint of December 2025 claims a network under 1 per round on accelerator chips; it is drawn as a claim.</figcaption></figure></div>
+<p class="scene-caption"><span class="fig-label">Figure 5</span> One time line in millionths of a second. The chip finishes a round of checks every 1.1. The 2024 network needs 24 for each round, so its backlog grows without end. The matching decoder that ran live keeps pace: its answer comes about 63 after the last round of a run, for runs of up to a million rounds. A preprint of December 2025 claims a network under 1 per round on accelerator chips; it is drawn as a claim.</p>
+<div class="scene-text">
+<figure class="fig seq-still" data-fig="clock" data-role="seq" data-state="0" data-where=""><div class="fig-frame" data-frame="clock"></div><figcaption class="seq-cap"><span class="fig-label">Figure 5</span> One time line in millionths of a second. The chip finishes a round of checks every 1.1. The 2024 network needs 24 for each round, so its backlog grows without end. The matching decoder that ran live keeps pace: its answer comes about 63 after the last round of a run, for runs of up to a million rounds. A preprint of December 2025 claims a network under 1 per round on accelerator chips; it is drawn as a claim.</figcaption></figure>
+<div class="passage" data-step="0" data-where="">
+<p>The clock is where it struggles. The chip asks its checks once every 1.1 millionths of a second, about 900,000 times a second.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="1 2" aria-haspopup="dialog" aria-expanded="false" aria-label="2 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">2</span></button><span class="src-print">[1, 2]</span></span> A live decoder has to handle each round in that time.</p>
+</div>
+<figure class="fig seq-still seq-later" aria-hidden="true" data-fig="clock" data-role="seq" data-state="1" data-where=""><div class="fig-frame" data-frame="clock"></div></figure>
+<div class="passage" data-step="1" data-where="">
+<p>Google’s paper quotes 24 millionths of a second per round for its network, from earlier work.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="1 7" aria-haspopup="dialog" aria-expanded="false" aria-label="2 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">2</span></button><span class="src-print">[1, 7]</span></span> In that time the chip finishes about 22 more rounds. The network is accurate, but each answer comes late.</p>
+</div>
+<figure class="fig seq-still seq-later" aria-hidden="true" data-fig="clock" data-role="seq" data-state="2" data-where=""><div class="fig-frame" data-frame="clock"></div></figure>
+<div class="passage" data-step="2" data-where="">
+<p>By the time the network has answered round 3, at 72 millionths of a second, the chip is at round 65. An interpreter who needs twenty-two seconds for every second of speech is more than twenty minutes behind after one minute.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="2" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[2]</span></span> And the gap keeps growing.</p>
+</div>
+<figure class="fig seq-still seq-later" aria-hidden="true" data-fig="clock" data-role="seq" data-state="3" data-where=""><div class="fig-frame" data-frame="clock"></div></figure>
+<div class="passage" data-step="3" data-where="">
+<p>So the network’s results were worked out afterwards, on recorded data. The decoder that ran live was a fast, plain version of matching, and it kept pace. On a smaller chip, at distance 5 and on the same data, live matching’s logical error rate was 350 per 100,000 rounds and the network’s, afterwards, 269.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="1" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[1]</span></span> Part of that gap is live against offline, not only matching against network.</p>
+</div>
+<figure class="fig seq-still seq-later" aria-hidden="true" data-fig="clock" data-role="seq" data-state="4" data-where=""><div class="fig-frame" data-frame="clock"></div></figure>
+<div class="passage" data-step="4" data-where="">
+<p>A preprint from December 2025 reports a network that keeps pace: under one millionth of a second per round, on the kind of accelerator chips that can simply be bought, for grids up to distance 11.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="14" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[14]</span></span> As far as we know other researchers haven’t reviewed it yet, and we can’t test it ourselves. Until then it stays a claim.</p>
+</div>
+</div>
+</section>
+<h2 id="s-9" class="sec"><span class="sec-num" aria-hidden="true">9</span> <span class="sec-title">What we measured ourselves</span></h2>
+<p>We can’t build a chip and we can’t match Google’s network. We can measure, in simulation, what a small neural decoder costs to train and run. The short answer: on the smallest grid our network soon beats plain matching; one grid larger it needs about 250 million examples to do so, and never catches correlated matching. We simulate the surface code with Stim, a free simulator written at Google, and use its standard noise model.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="15" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[15]</span></span></p>
+<p>We wanted three measurements. First, whether a small network beats matching, and how many more examples it needs at distance 5 than at 3. Second, how long each decoder takes per run of three or five rounds on the same machine, next to how often it’s wrong. Third, whether a network trained in simulation still works on the recordings Google has made public&#8288;<span class="src"><button type="button" class="src-mark" data-nums="16 17" aria-haspopup="dialog" aria-expanded="false" aria-label="2 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">2</span></button><span class="src-print">[16, 17]</span></span>, before and after it has seen some of them. We did the first, part of the second, and not the third.</p>
+<p><strong>What we ran.</strong> One simulated run stores a logical qubit for as many rounds of checks as the grid’s distance: three rounds at distance 3, five at distance 5. Every operation in the simulated circuit goes wrong with the same chance, which we call the noise level. Unless we say otherwise it is 0.5%, five times the one slip per thousand that the estimate in section 1 assumed. Every training step draws 4,096 fresh runs at one of seven noise levels between 0.2% and 1%, and afterwards every decoder reads the same 2 million fresh runs at each noise level.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="18 19" aria-haspopup="dialog" aria-expanded="false" aria-label="2 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">2</span></button><span class="src-print">[18, 19]</span></span> No training batch is reused. The network is small and plain: three layers of 256 units. That makes 138,241 adjustable numbers at distance 3 and 162,817 at distance 5, few enough to train in minutes on a GPU. It is told only which checks fired, never how the grid is laid out. It gives one answer per run: was the stored value flipped or not.</p>
+<p>We compare against two versions of matching from PyMatching, the standard matching program.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="6" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[6]</span></span> One is the plain version of section 6. The other is correlated matching, which solves the puzzle in two passes and lets the first inform the second. That is a limited way of linking the two kinds of check, like the one mentioned in section 7. Both are given an estimate of how often each kind of error happens: here, the exact one from the simulator, an advantage matching won’t have on a chip. The comparison leans towards matching.</p>
+<p>Each training was repeated from different random starting points, or seeds: eight at distance 3, five at distance 5.</p>
+<section class="scene breakout" id="fig-6" data-scene="learning">
+<div class="scene-stage"><figure class="fig fig-scene" data-fig="learning" data-role="scene" data-steps="3" data-where=""><p class="fig-where" aria-hidden="true"></p><div class="fig-frame" data-frame="learning"></div><figcaption><span class="fig-label">Figure 6</span> Our own runs, at a noise level of 0.5%. Share of simulated runs in which a decoder was wrong, against the number of examples the network had seen; one thin line per seed. The two level lines are plain and correlated matching, which need no examples. Distance 3: the network ends below both, but its lead over correlated matching is about what a library defect costs that decoder (see “A finding we didn’t plan for”). Distance 5 after 66 million examples: above both. Distance 5 after 250 million: below plain matching, above correlated matching. Points along a curve are scored on 1 million runs, not the final test’s 2 million, so the crossings are less sharp than the end values.</figcaption></figure></div>
+<p class="scene-caption"><span class="fig-label">Figure 6</span> Our own runs, at a noise level of 0.5%. Share of simulated runs in which a decoder was wrong, against the number of examples the network had seen; one thin line per seed. The two level lines are plain and correlated matching, which need no examples. Distance 3: the network ends below both, but its lead over correlated matching is about what a library defect costs that decoder (see “A finding we didn’t plan for”). Distance 5 after 66 million examples: above both. Distance 5 after 250 million: below plain matching, above correlated matching. Points along a curve are scored on 1 million runs, not the final test’s 2 million, so the crossings are less sharp than the end values.</p>
+<div class="scene-text">
+<figure class="fig seq-still" data-fig="learning" data-role="seq" data-state="0" data-where=""><div class="fig-frame" data-frame="learning"></div><figcaption class="seq-cap"><span class="fig-label">Figure 6</span> Our own runs, at a noise level of 0.5%. Share of simulated runs in which a decoder was wrong, against the number of examples the network had seen; one thin line per seed. The two level lines are plain and correlated matching, which need no examples. Distance 3: the network ends below both, but its lead over correlated matching is about what a library defect costs that decoder (see “A finding we didn’t plan for”). Distance 5 after 66 million examples: above both. Distance 5 after 250 million: below plain matching, above correlated matching. Points along a curve are scored on 1 million runs, not the final test’s 2 million, so the crossings are less sharp than the end values.</figcaption></figure>
+<div class="passage" data-step="0" data-where="">
+<p><strong>Distance 3.</strong> Here the network beats plain matching, and early. After about 66 million examples it failed in 1.48% of runs, its eight seeds between 1.46% and 1.49%. Plain matching failed in 1.72% and correlated matching in 1.66%. The curves first dip below plain matching at 6.6 million examples in four seeds and at 9.3 million in the other four. By 13 million all eight were at or below correlated matching.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="18" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[18]</span></span> That second win we don’t count. In our library version correlated matching mishandles six single errors, and by a first-order estimate that costs it about the whole gap of 0.18 percentage points (see “A finding we didn’t plan for”).</p>
+</div>
+<figure class="fig seq-still seq-later" aria-hidden="true" data-fig="learning" data-role="seq" data-state="1" data-where=""><div class="fig-frame" data-frame="learning"></div></figure>
+<div class="passage" data-step="1" data-where="">
+<p><strong>Distance 5, the same 66 million examples.</strong> One grid larger, the same network loses in all five seeds. It failed in 1.90% to 2.16% of runs, plain matching in 1.41% and correlated matching in 1.09%. That is about a third to a half more failures than plain matching, and 1.7 to 2 times as many as correlated matching.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="19" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[19]</span></span> The seeds also spread more than at distance 3.</p>
+</div>
+<figure class="fig seq-still seq-later" aria-hidden="true" data-fig="learning" data-role="seq" data-state="2" data-where=""><div class="fig-frame" data-frame="learning"></div></figure>
+<div class="passage" data-step="2" data-where="">
+<p><strong>Distance 5, about 250 million examples.</strong> Trained longer, it passes plain matching, not correlated matching. The curves were still falling at 66 million, so we trained it again from scratch on nearly four times as many. The five long runs failed in 1.29% to 1.36% of runs, 1.33% together, or about one run in 75, against 1.41% for plain matching and 1.09% for correlated matching. That is 4% to 8% fewer failures than one, and a fifth to a quarter more than the other.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="20" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[20]</span></span></p>
+</div>
+</div>
+</section>
+<p>At distance 3 the best answer for every pattern can simply be looked up. A table built from 200 million runs per noise level, a hundred times the test set, holds the more frequent answer for each pattern of fired checks. It failed in 1.47% of runs.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="18" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[18]</span></span> Whether its runs overlap the test runs, and how it answers a pattern it never saw, our result files don’t record. That table is our estimate of the best possible; since we can’t say whether it saw the test runs, it may flatter itself slightly. The network’s 1.48% is barely above it.</p>
+<figure class="fig fig-wide breakout" id="fig-7" data-fig="noise" data-role="figure" data-layout="wide" data-where=""><div class="fig-frame" data-frame="noise"></div><figcaption><span class="fig-label">Figure 7</span> Distance 5, network trained on about 250 million examples: share of runs in which each decoder was wrong, at eight noise levels, with 95% intervals. Five seeds together, 10 million runs per noise level. At 0.1% the network and correlated matching can’t be told apart. From 0.2% the network is behind correlated matching, and from 0.8% it is behind plain matching too. Our own runs.</figcaption></figure>
+<p><strong>A finding we didn’t plan for.</strong> We had expected correlated matching to be at least as good as plain matching everywhere. At distance 5 it was, at every noise level we tried. At distance 3 and low noise it was worse. On 4 million runs at a noise level of 0.1%, with both decoders reading the same runs, plain matching failed in 0.075% (0.073% to 0.078%). Correlated matching failed in 0.113% (0.109% to 0.116%), about one and a half times as many failures. At 0.3% it was still worse, 0.705% against 0.659%. From 0.4% upwards it was the better one. When we stored the other kind of value, it was again worse at 0.1%: 0.0986% against 0.0856%.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="21 18" aria-haspopup="dialog" aria-expanded="false" aria-label="2 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">2</span></button><span class="src-print">[21, 18]</span></span></p>
+<p>We first suspected our script. Two checks say it isn’t at fault. The first: the simulator’s error model for this circuit lists 219 error mechanisms. We applied each of them alone and decoded it; at distance 3 a decoder should survive every one. Plain matching corrects all 219. Correlated matching, in the version we used (PyMatching 2.4.0, called the way its documentation says), gets 6 of them wrong. Together those six happen with a chance of 0.4 times the noise level. At a noise level of 0.1% that is 0.04%, about the gap we measured, 0.037%. With the other kind of stored value it gets 4 of 221 wrong, 0.27 times the noise level. The second check: a second script, written by an AI agent from only a description of the test and without seeing ours, found the same six.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="21" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[21]</span></span></p>
+<p>At distances 5 and 7 no single error defeats correlated matching. At distance 5 we also tried every pair of errors: it fails on 1,253 of 1,405,326 pairs, about one pair in 1,100, and plain matching on none. That pair check was not repeated independently.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="21" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[21]</span></span> A search turned up no report of any of this, and we haven’t traced the cause inside the library. So we state it for our setup only: this circuit, three rounds at distance 3, this version. At distance 3 and low noise it makes plain matching the harder comparison. That is why we always show both.</p>
+<details class="text-fold"><summary><span class="fold-show">The numbers behind this: by noise level and seed, timings, and a second implementation</span><span class="fold-hide">Hide the details</span></summary>
+<p><strong>Seeds and intervals.</strong> Three seeds at distance 3, and three of the five long runs at distance 5, were added later as a repeat. A range in brackets is a 95% interval. A run at distance 5 is longer than one at distance 3, so the failure rates of the two distances can’t be set against each other; within one distance, every decoder reads the same runs.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="18 19 20" aria-haspopup="dialog" aria-expanded="false" aria-label="3 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">3</span></button><span class="src-print">[18, 19, 20]</span></span></p>
+<p><strong>Learning rate.</strong> How many more examples it would take to reach correlated matching, we can’t say. The curves were still falling at the last point. But the last fifth of every run also lowers the learning rate, the size of the network’s adjustments, and that alone brings the error down; with the same seed, a long and a short run are identical until the short one starts lowering it, at 52 million examples.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="20" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[20]</span></span> So the final slope may promise too much.</p>
+<p><strong>Against the noise level.</strong> At the lowest noise level, one the network never saw in training, it is level with correlated matching: 0.0099% of runs failed, about one in ten thousand, against 0.0105%. From a noise level of 0.2% it fails more often than correlated matching: 8% more there, and a fifth to a quarter more from 0.4% on. Against plain matching it is ahead up to 0.6%, where four of five seeds still lead and the fifth is level, and behind in every seed from 0.8%.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="20" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[20]</span></span> The pooled intervals count only the chance in the test runs; the five networks differ from each other far more.</p>
+<p><strong>Over noise levels.</strong> The five long runs were also tested at eight noise levels, with 2 million runs each. The table pools them, 10 million runs per noise level, and gives the lowest and the highest seed beside the network’s value.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="20" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[20]</span></span></p>
+<div class="table-frame table-wide"><table class="cols-5">
+<thead>
+<tr>
+<th scope="col">Noise level</th>
+<th scope="col">Network, five seeds together</th>
+<th scope="col">Lowest to highest seed</th>
+<th scope="col">Plain matching</th>
+<th scope="col">Correlated matching</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="num">0.1%</td>
+<td>0.0099% (0.0093–0.0105)</td>
+<td>0.0093–0.0101%</td>
+<td>0.0136% (0.0129–0.0143)</td>
+<td>0.0105% (0.0099–0.0111)</td>
+</tr>
+<tr>
+<td class="num">0.2%</td>
+<td>0.079% (0.077–0.080)</td>
+<td>0.077–0.080%</td>
+<td>0.102% (0.100–0.104)</td>
+<td>0.073% (0.071–0.074)</td>
+</tr>
+<tr>
+<td class="num">0.3%</td>
+<td>0.276% (0.273–0.279)</td>
+<td>0.271–0.284%</td>
+<td>0.330% (0.326–0.334)</td>
+<td>0.243% (0.240–0.246)</td>
+</tr>
+<tr>
+<td class="num">0.4%</td>
+<td>0.670% (0.665–0.675)</td>
+<td>0.648–0.686%</td>
+<td>0.756% (0.751–0.762)</td>
+<td>0.564% (0.559–0.569)</td>
+</tr>
+<tr>
+<td class="num">0.5%</td>
+<td>1.331% (1.324–1.339)</td>
+<td>1.292–1.357%</td>
+<td>1.411% (1.404–1.418)</td>
+<td>1.090% (1.084–1.097)</td>
+</tr>
+<tr>
+<td class="num">0.6%</td>
+<td>2.260% (2.251–2.269)</td>
+<td>2.196–2.310%</td>
+<td>2.309% (2.299–2.318)</td>
+<td>1.835% (1.827–1.843)</td>
+</tr>
+<tr>
+<td class="num">0.8%</td>
+<td>5.090% (5.077–5.104)</td>
+<td>4.928–5.200%</td>
+<td>4.898% (4.884–4.911)</td>
+<td>4.094% (4.081–4.106)</td>
+</tr>
+<tr>
+<td class="num">1.0%</td>
+<td>9.074% (9.056–9.091)</td>
+<td>8.801–9.268%</td>
+<td>8.379% (8.361–8.396)</td>
+<td>7.335% (7.319–7.351)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Time.</strong> Training ran on a GPU at Kaggle: about 50 seconds per seed at distance 3, about 100 seconds at distance 5 for 66 million examples, and a little over six minutes for 250 million. On a laptop, running emulated, a training step took about 90 thousandths of a second at distance 3 and a tenth of a second at distance 5. At that pace the long run would take about an hour and three-quarters per seed, about sixteen times as long; without emulation it would likely be faster.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="22" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[22]</span></span></p>
+<p>Decoding we timed only roughly: on one laptop core, with an untrained network of the same size, as an average over a large batch, and on a machine that has to emulate the processor our software was built for. There the network took between 14 and 27 millionths of a second per run whatever the noise, while matching got faster as errors got rarer. At distance 3 the network was about 20 times slower than plain matching. At distance 5, taking its two timings together (about 17 millionths of a second), it was about twice as slow at a noise level of 0.5% and about ten times as slow at 0.1%. Repeat timings of the same network varied by about half, so these ratios are rough.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="22" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[22]</span></span> Per round, these times are three or five times shorter. None of this is a live decoder on its own hardware, so we don’t set it against the chip’s clock.</p>
+<p><strong>A second implementation.</strong> We also had the main result rerun by code that shares nothing with ours: a script and network written by an AI agent from only a description of the claim, without seeing ours, and run on Kaggle. At distance 3 its networks also beat plain matching, failing in 1.46% to 1.48% of runs against 1.71% to 1.73%, also at our network size; against correlated matching (1.66% to 1.67%) the same library defect may apply. At distance 5, after about 250 million examples, its network also ended between the two matchers, closer to correlated matching than ours: 1.15% and 1.16% against 1.09%. Unlike ours, they trained only at their test noise level, 0.5%, which favours them there. But that network is about twenty times larger, with 3.3 million adjustable numbers. At our size its script reached only 1.51%, behind plain matching, where ours reached 1.33%. It ran two seeds for each larger network at the main setting and one at our size, and did not test the finding about correlated matching.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="23" aria-haspopup="dialog" aria-expanded="false" aria-label="1 source for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">1</span></button><span class="src-print">[23]</span></span> So the order of the three decoders held up where it is clean, at distance 5. How far a small network gets depends on its training.</p>
+</details>
+<p>Before starting we wrote down what would make us drop the idea: if the network needs so many more examples at distance 5 that a laptop can’t train it, or if it loses on real recordings, then for a group like ours a neural decoder isn’t worth its cost. We now have numbers for the first. On a laptop the long run would take under two hours per seed, so by the rule we set, the idea survives. But it took about 250 million examples to pass plain matching, and correlated matching, which needs no training and is free to download, stayed about a fifth ahead.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="18 19 20" aria-haspopup="dialog" aria-expanded="false" aria-label="3 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">3</span></button><span class="src-print">[18, 19, 20]</span></span> The second test, real recordings, is still open.</p>
+<h2 id="s-10" class="sec"><span class="sec-num" aria-hidden="true">10</span> <span class="sec-title">What this doesn’t show</span></h2>
+<p>A decoder doesn’t make a quantum algorithm faster in itself. It lets a calculation run longer before an error ruins it, and a better one means fewer qubits for the same reliability. A slow one holds up every step that waits for it.</p>
+<p>Our numbers come from small grids and from a network far smaller than Google’s. They say something about how the cost of learning grows. About larger grids they say nothing.</p>
+<h2 id="what-we-could-not-show" class="sec"><span class="sec-num" aria-hidden="true"></span> <span class="sec-title">What we could not show</span></h2>
+<ul>
+<li>How any of our decoders would do on a real chip. Every run of ours is a simulation with the same noise on every operation, unlike a real chip’s errors (section 6), and matching was handed the exact error model.&#8288;<span class="src"><button type="button" class="src-mark" data-nums="18 19 20 22" aria-haspopup="dialog" aria-expanded="false" aria-label="4 sources for this passage"><span class="src-ring" aria-hidden="true"></span><span class="src-count" aria-hidden="true">4</span></button><span class="src-print">[18, 19, 20, 22]</span></span></li>
+<li>How the decoders do on the other of the two kinds of value a logical qubit can hold. We stored only one.</li>
+<li>How many examples our network needs to reach correlated matching at distance 5, and whether it learns distance 7 at all.</li>
+<li>Why correlated matching gets those single errors and pairs wrong, and whether another version of the library does too.</li>
+</ul>
+<h2 id="words-used" class="sec"><span class="sec-num" aria-hidden="true"></span> <span class="sec-title">Words used</span></h2>
+<div class="table-frame"><table class="cols-3">
+<thead>
+<tr>
+<th scope="col">Word</th>
+<th scope="col">Meaning here</th>
+<th scope="col">First used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logical qubit</td>
+<td>One qubit’s worth of information, stored in the way many real qubits relate to each other</td>
+<td>Section 2</td>
+</tr>
+<tr>
+<td>Distance</td>
+<td>The size of the grid; also the number of storing qubits a line needs to cross it</td>
+<td>Sections 2 and 5</td>
+</tr>
+<tr>
+<td>Threshold</td>
+<td>The error rate below which a bigger grid protects better</td>
+<td>Section 2</td>
+</tr>
+<tr>
+<td>Check</td>
+<td>A question asked of two or four neighbouring qubits through a helper: is the number of errors among you even or odd?</td>
+<td>Section 3</td>
+</tr>
+<tr>
+<td>Fires</td>
+<td>A check gives a different answer than in the round before</td>
+<td>Section 3</td>
+</tr>
+<tr>
+<td>Decoder</td>
+<td>The classical program that works out from the fired checks which errors happened</td>
+<td>Section 5</td>
+</tr>
+<tr>
+<td>Logical error</td>
+<td>Real errors and the decoder’s correction together make a line across the grid: the stored value changes and no check fires</td>
+<td>Section 5</td>
+</tr>
+<tr>
+<td>Matching</td>
+<td>The standard decoder: it joins fired checks to each other or to the edge along the shortest lines</td>
+<td>Section 6</td>
+</tr>
+<tr>
+<td>Λ (lambda)</td>
+<td>The factor by which the logical error rate shrinks when the distance grows by two</td>
+<td>Section 7</td>
+</tr>
+<tr>
+<td>Noise level</td>
+<td>In our simulation, the chance that any one operation goes wrong</td>
+<td>Section 9</td>
+</tr>
+<tr>
+<td>Correlated matching</td>
+<td>Matching in two passes, where the first pass informs the second</td>
+<td>Section 9</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="how-this-was-made" class="sec"><span class="sec-num" aria-hidden="true"></span> <span class="sec-title">How this was made</span></h2>
+<details class="text-fold"><summary><span class="fold-show">Show how this was made</span><span class="fold-hide">Hide the details</span></summary>
+<p>Every figure from outside our group comes from a source one of us opened: published papers, preprints and data records. Each passage carries its sources; they open when you select a mark. Where only an abstract was read, and where a paper has not been peer-reviewed, the source entry says so. Our own results come from code and data in our repository, which is private for now. The figures are drawn from the result files; the numbers in the text were checked against them. A blink is taken as a tenth of a second, a rule of thumb.</p>
+<ul>
+<li>Question, choices, what to keep and drop, and conclusions: the group.</li>
+<li>Code and prose: written and revised with AI assistants under our direction; the code run by us on Kaggle.</li>
+<li>Second scripts: by an AI agent that had not seen ours; a check on our code, not a replication by other people.</li>
+<li>Reviews: four AI readers in different roles (student, outsider, examiner, voice) on an earlier draft, an AI fact checker on a later one; we worked in their lists. No person outside the group has read it yet.</li>
+<li>Opening drawing: an image model, from our own line reference and photographs of real hardware.</li>
+</ul>
+<p>We are responsible for the question and every claim.</p>
+</details>
+<section class="sources" id="sources" aria-labelledby="sources-h">
+<h2 id="sources-h" class="sec"><span class="sec-num"></span><span class="sec-title">Sources<span class="src-total"> (23)</span></span></h2>
+<details class="src-fold" open>
+<summary><span class="src-show">Show the 23 sources</span><span class="src-hide">Hide the sources</span></summary>
+<ol class="src-list">
+<li id="src-1" data-id="GQA-2024"><span class="src-n">1</span><span class="src-body"><a class="src-title" href="https://doi.org/10.1038/s41586-024-08449-y" target="_blank" rel="noopener noreferrer">Quantum error correction below the surface code threshold<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">Google Quantum AI and Collaborators · Nature 638, 920–926 · peer-reviewed article <span class="src-host">doi.org</span></span></span></li>
+<li id="src-2" data-id="OWN-ARITH"><span class="src-n">2</span><span class="src-body"><span class="src-title">Counting and arithmetic on published values (qubits per grid, rounds per second, ratios)</span><span class="src-meta">This work · own arithmetic</span></span></li>
+<li id="src-3" data-id="GE-2021"><span class="src-n">3</span><span class="src-body"><a class="src-title" href="https://doi.org/10.22331/q-2021-04-15-433" target="_blank" rel="noopener noreferrer">How to factor 2048 bit RSA integers in 8 hours using 20 million noisy qubits<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">Gidney and Ekerå · Quantum 5, 433 · peer-reviewed article <span class="src-host">doi.org</span></span></span></li>
+<li id="src-4" data-id="GQA-2023"><span class="src-n">4</span><span class="src-body"><a class="src-title" href="https://doi.org/10.1038/s41586-022-05434-1" target="_blank" rel="noopener noreferrer">Suppressing quantum errors by scaling a surface code logical qubit<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">Google Quantum AI · Nature 614, 676–681 · peer-reviewed article <span class="src-host">doi.org</span></span></span></li>
+<li id="src-5" data-id="OWN-ENUM"><span class="src-n">5</span><span class="src-body"><span class="src-title">All errors on the distance-3 grid, counted: 256 check patterns, 103 where the smallest correction is not the most likely kind</span><span class="src-meta">This work · own measurement</span></span></li>
+<li id="src-6" data-id="SB-2025"><span class="src-n">6</span><span class="src-body"><a class="src-title" href="https://doi.org/10.22331/q-2025-01-20-1600" target="_blank" rel="noopener noreferrer">Sparse Blossom: correcting a million errors per core second with minimum-weight matching<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">Higgott and Gidney · Quantum 9, 1600 · peer-reviewed article · 2025 <span class="src-host">doi.org</span></span></span></li>
+<li id="src-7" data-id="AQ-2024"><span class="src-n">7</span><span class="src-body"><a class="src-title" href="https://doi.org/10.1038/s41586-024-08148-8" target="_blank" rel="noopener noreferrer">Learning high-accuracy error decoding for quantum processors<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">Bausch et al. · Nature 635, 834–840 · peer-reviewed article <span class="src-host">doi.org</span></span></span></li>
+<li id="src-8" data-id="NA-2025"><span class="src-n">8</span><span class="src-body"><a class="src-title" href="https://doi.org/10.1038/s41586-025-09848-5" target="_blank" rel="noopener noreferrer">A fault-tolerant neutral-atom architecture for universal quantum computation<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">Bluvstein et al. (Harvard, MIT, QuEra) · Nature 649, 39–46 · peer-reviewed article <span class="src-host">doi.org</span></span></span></li>
+<li id="src-9" data-id="QTN-2026"><span class="src-n">9</span><span class="src-body"><a class="src-title" href="https://arxiv.org/abs/2610.24077" target="_blank" rel="noopener noreferrer">Quantum error correction well below the color code threshold<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">Lavasani et al. (Quantinuum) · arXiv:2610.24077 · preprint, not peer-reviewed <span class="src-host">arxiv.org</span></span></span></li>
+<li id="src-10" data-id="QTN-PR-2026"><span class="src-n">10</span><span class="src-body"><a class="src-title" href="https://www.quantinuum.com/press-releases/quantinuum-breaks-error-correction-world-record-by-10x-validating-its-leading-path-to-fault-tolerant-quantum-computing-by-2029" target="_blank" rel="noopener noreferrer">Press release on the error-correction record on the Helios machine<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">Quantinuum · company press release <span class="src-host">quantinuum.com</span></span></span></li>
+<li id="src-11" data-id="USTC-2025"><span class="src-n">11</span><span class="src-body"><a class="src-title" href="https://doi.org/10.1103/rqkg-dw31" target="_blank" rel="noopener noreferrer">Experimental Quantum Error Correction below the Surface Code Threshold via All-Microwave Leakage Suppression<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">He et al. (University of Science and Technology of China) · Physical Review Letters 135, 260601 · peer-reviewed article (abstract read) <span class="src-host">doi.org</span></span></span></li>
+<li id="src-12" data-id="IBM-RELAY-2025"><span class="src-n">12</span><span class="src-body"><a class="src-title" href="https://arxiv.org/abs/2506.01779" target="_blank" rel="noopener noreferrer">Improved belief propagation is sufficient for real-time decoding of quantum memory<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">Müller et al. (IBM) · arXiv:2506.01779 · preprint, not peer-reviewed <span class="src-host">arxiv.org</span></span></span></li>
+<li id="src-13" data-id="IBM-FPGA-2025"><span class="src-n">13</span><span class="src-body"><a class="src-title" href="https://arxiv.org/abs/2510.21600" target="_blank" rel="noopener noreferrer">Real-time decoding of the gross code memory with FPGAs<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">Maurer et al. (IBM) · arXiv:2510.21600 · preprint, not peer-reviewed <span class="src-host">arxiv.org</span></span></span></li>
+<li id="src-14" data-id="AQ2-2025"><span class="src-n">14</span><span class="src-body"><a class="src-title" href="https://arxiv.org/abs/2512.07737" target="_blank" rel="noopener noreferrer">A scalable and real-time neural decoder for topological quantum codes<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">Senior et al. (Google DeepMind and Google Quantum AI) · arXiv:2512.07737 · preprint, not peer-reviewed <span class="src-host">arxiv.org</span></span></span></li>
+<li id="src-15" data-id="STIM-2021"><span class="src-n">15</span><span class="src-body"><a class="src-title" href="https://doi.org/10.22331/q-2021-07-06-497" target="_blank" rel="noopener noreferrer">Stim: a fast stabilizer circuit simulator<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">Gidney · Quantum 5, 497 · peer-reviewed article · 2021 <span class="src-host">doi.org</span></span></span></li>
+<li id="src-16" data-id="GQA-DATA-2022"><span class="src-n">16</span><span class="src-body"><a class="src-title" href="https://doi.org/10.5281/zenodo.6804040" target="_blank" rel="noopener noreferrer">Data for &quot;Suppressing quantum errors by scaling a surface code logical qubit&quot;<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">Google · Zenodo · data set (CC BY 4.0) <span class="src-host">doi.org</span></span></span></li>
+<li id="src-17" data-id="GQA-DATA-2024"><span class="src-n">17</span><span class="src-body"><a class="src-title" href="https://doi.org/10.5281/zenodo.13273331" target="_blank" rel="noopener noreferrer">Data for &quot;Quantum error correction below the surface code threshold&quot;<span class="vh" lang="en-GB"> (opens in a new tab)</span></a><span class="src-meta">Google · Zenodo · data set (CC BY 4.0) <span class="src-host">doi.org</span></span></span></li>
+<li id="src-18" data-id="OWN-D3"><span class="src-n">18</span><span class="src-body"><span class="src-title">Neural decoder against matching at distance 3: eight seeds, about 66 million training runs each</span><span class="src-meta">This work · own measurement</span></span></li>
+<li id="src-19" data-id="OWN-D5"><span class="src-n">19</span><span class="src-body"><span class="src-title">Neural decoder against matching at distance 5: five seeds, about 66 million training runs each</span><span class="src-meta">This work · own measurement</span></span></li>
+<li id="src-20" data-id="OWN-D5-250M"><span class="src-n">20</span><span class="src-body"><span class="src-title">Neural decoder against matching at distance 5: five seeds, about 250 million training runs each, eight noise levels</span><span class="src-meta">This work · own measurement</span></span></li>
+<li id="src-21" data-id="OWN-CORR"><span class="src-n">21</span><span class="src-body"><span class="src-title">Plain against correlated matching on the same simulated runs; every single error mechanism decoded alone; every pair at distance 5</span><span class="src-meta">This work · own measurement</span></span></li>
+<li id="src-22" data-id="OWN-TIME"><span class="src-n">22</span><span class="src-body"><span class="src-title">Training time on a GPU; rough decoding times on one laptop core</span><span class="src-meta">This work · own measurement</span></span></li>
+<li id="src-23" data-id="OWN-REPL"><span class="src-n">23</span><span class="src-body"><span class="src-title">Replication with code written separately by an AI agent, 16 November 2026</span><span class="src-meta">This work · own measurement</span></span></li>
+</ol>
+</details>
+</section>
+
+</main>
+
+<footer class="colophon">
+<p><span>Alexander Rudaev and group</span> · <span>Draft for review, 16 November 2026</span> · <a href="../index.html">All articles</a></p>
+</footer>
+
+<script type="application/json" id="article-data">{"slug":"other-half","margin":"qubits","figures":{"qubits":{"module":true,"data":true},"line":{"module":true,"data":true},"syndromes":{"module":true,"data":true},"lattice":{"module":true,"data":true,"steps":6},"suppression":{"module":true,"data":true},"clock":{"module":true,"data":true,"steps":5},"learning":{"module":true,"data":true,"steps":3},"noise":{"module":true,"data":true}}}</script>
+<script type="module" src="article.js"></script>
+</body>
+</html>

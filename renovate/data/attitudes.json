@@ -1,0 +1,73 @@
+{
+  "id": "attitudes",
+  "reading": "Germans are no more afraid than Americans that AI will take jobs, and trust their government to regulate it more; what stands out is that Germans reject monitoring of workers.",
+  "unit": {
+    "percentPerDot": 2,
+    "dotsPerStrip": 50,
+    "note": "one dot is [[2%]], rounded",
+    "print": {
+      "percentPerDot": 5,
+      "dotsPerStrip": 20,
+      "rows": 1,
+      "group": 5,
+      "note": "one dot is [[5%]], rounded",
+      "why": "In print the dots are larger and fewer, so that they stay legible at 100 dpi."
+    },
+    "rows": 1,
+    "group": 10,
+    "why": "One row per country at every width: 50 dots of 2% each (100 dots of 1% wrapped into two rows of 50 on tablets and phones, which read as broken). The exact value stands at the end of each row."
+  },
+  "panels": [
+    {
+      "question": "AI will ‘eliminate jobs and disrupt industries’",
+      "survey": "Ipsos for Google, 2025 · 21 countries",
+      "choice": "(the other option: create new jobs)",
+      "source": "R12-25",
+      "rows": [
+        {
+          "country": "Germany",
+          "value": 61,
+          "source": "R12-25"
+        },
+        {
+          "country": "United States",
+          "value": 67,
+          "source": "R12-25"
+        }
+      ]
+    },
+    {
+      "question": "I trust my government to regulate AI responsibly",
+      "survey": "Ipsos AI Monitor, 2025 · 30 countries",
+      "source": "R12-25",
+      "rows": [
+        {
+          "country": "Germany",
+          "value": 49,
+          "source": "R12-25"
+        },
+        {
+          "country": "United States",
+          "value": 31,
+          "source": "R12-25"
+        }
+      ]
+    },
+    {
+      "question": "Digital monitoring of workers: negative",
+      "survey": "Eurobarometer, 2024 · EU only",
+      "source": "R12-28",
+      "standsOut": true,
+      "rows": [
+        {
+          "country": "Germany",
+          "value": 79,
+          "source": "R12-28"
+        }
+      ],
+      "note": "second-highest in the EU, after Sweden's [[80%]]; asked in the EU only",
+      "surveyNote": "The survey line is taken from the caption in text.md (Eurobarometer 2024, EU only)."
+    }
+  ],
+  "headline": "Germany and the United States · the same question, asked in both countries"
+}

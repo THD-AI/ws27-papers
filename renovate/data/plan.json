@@ -1,0 +1,78 @@
+{
+  "id": "plan",
+  "reading": "The renovation of Telekom's customer service as one path of eight numbered steps, in the order each needs the one before, each with the measure that shows it is done: 1 measure first; 2 works agreement; 3 choose suppliers; 4 train staff; 5 one customer record, which every step after it depends on; 6 permissions in stages (read, then undoable actions, then changes fraud could use); 7 acceptance; 8 run it. A separate note: no dismissals for business reasons until 31 December 2028, for about 60,000 staff under the collective agreements; about 4,000 positions a year leave by agreed routes. No dates or durations are drawn: the path shows order only.",
+  "headline": "The renovation, in order: eight steps, each needing the one before",
+  "orderNote": "order only · no dates",
+  "orderWhy": "The text gives an order and a measure for each step, but no dates or durations; the figure draws none.",
+  "measureWord": "measure:",
+  "steps": [
+    {
+      "name": "Measure first",
+      "measure": "the pair is published",
+      "source": "proposal"
+    },
+    {
+      "name": "Works agreement",
+      "measure": "signed before the first agent acts",
+      "source": "R11-07"
+    },
+    {
+      "name": "Choose suppliers",
+      "measure": "time to switch, tests included",
+      "source": "R6-04"
+    },
+    {
+      "name": "Train staff",
+      "measure": "cases per hour and repeat contacts",
+      "source": "R4-29"
+    },
+    {
+      "name": "One customer record",
+      "measure": "callers recognised without questions",
+      "source": "R6-05"
+    },
+    {
+      "name": "Permissions in stages",
+      "measure": "errors per thousand actions, stage by stage",
+      "stages": [
+        "read",
+        "undoable",
+        "fraud-prone"
+      ],
+      "stagesNote": "read, then actions that can be undone, then changes fraud could use (section 9, step 6)",
+      "source": "R6-16"
+    },
+    {
+      "name": "Acceptance",
+      "measure": "accepted by staff and works council",
+      "source": "proposal"
+    },
+    {
+      "name": "Run it",
+      "measure": "cost per finished request",
+      "source": "proposal"
+    }
+  ],
+  "depends": {
+    "on": 4,
+    "from": 5,
+    "to": 7,
+    "note": "6 to 8 need step 5: an agent can't act on an account it can't identify",
+    "short": "everything after needs this step",
+    "source": "R6-05",
+    "tag": "need step 5"
+  },
+  "staff": {
+    "label": "no dismissals for business reasons until 31 Dec 2028",
+    "detail": "covers about 60,000 staff · about 4,000 positions a year left by agreed routes, 2021–25",
+    "why": "Drawn as a separate note with a band that stops at a marked end, not under the path: the protection ends on 31 Dec 2028 and the plan has no dates, so the figure cannot say at which step it ends. Scope: about 60,000 employees under the collective agreements (agreement with ver.di, 28 May 2026); about 4,000 full-time positions a year left by agreed routes, 2021 to 2025.",
+    "source": [
+      "R11-14",
+      "DGB-2026",
+      "R12-01"
+    ]
+  },
+  "headShort": "The renovation, in order",
+  "stepWord": "step {n} of {N}",
+  "overview": "eight steps, each needing the one before"
+}

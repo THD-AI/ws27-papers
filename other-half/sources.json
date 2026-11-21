@@ -1,0 +1,186 @@
+{
+  "GQA-2024": {
+    "title": "Quantum error correction below the surface code threshold",
+    "publisher": "Google Quantum AI and Collaborators · Nature 638, 920–926",
+    "url": "https://doi.org/10.1038/s41586-024-08449-y",
+    "type": "peer-reviewed article",
+    "date": "9 December 2024 (online); volume dated 2025",
+    "note": "Also arXiv:2408.13687. Main text read in full and checked on 15 November 2026. Table S1 of the supplement (errors per round at distances 3 and 5) confirmed against the arXiv PDF on 16 November 2026. An Author Correction of 28 April 2026 exists (Nature 653, E5, DOI 10.1038/s41586-026-10559-8). Its open-access text was read on 16 November 2026 through a summarising fetch: it corrects labels in Fig. 3a (the axis now reads \"Repetition code distance\", and the key reads \"Ref. 17\" and \"This work\") and reports no change to data or conclusions. No number used here comes from that figure."
+  },
+  "GQA-2023": {
+    "title": "Suppressing quantum errors by scaling a surface code logical qubit",
+    "publisher": "Google Quantum AI · Nature 614, 676–681",
+    "url": "https://doi.org/10.1038/s41586-022-05434-1",
+    "type": "peer-reviewed article",
+    "date": "22 February 2023",
+    "note": "Abstract and data statement read."
+  },
+  "AQ-2024": {
+    "title": "Learning high-accuracy error decoding for quantum processors",
+    "publisher": "Bausch et al. · Nature 635, 834–840",
+    "url": "https://doi.org/10.1038/s41586-024-08148-8",
+    "type": "peer-reviewed article",
+    "date": "20 November 2024",
+    "note": "Also arXiv:2310.05900. Read in full (open-access text and arXiv v1)."
+  },
+  "AQ2-2025": {
+    "title": "A scalable and real-time neural decoder for topological quantum codes",
+    "publisher": "Senior et al. (Google DeepMind and Google Quantum AI) · arXiv:2512.07737",
+    "url": "https://arxiv.org/abs/2512.07737",
+    "type": "preprint, not peer-reviewed",
+    "date": "8 December 2025 (v2 11 March 2026)",
+    "note": "No journal reference on arXiv as of 15 November 2026. The abstract claims decoding faster than 1 µs per cycle on commercial accelerators, for the surface code up to distance 11. Read on 16 November 2026 from the arXiv HTML (v2) through a summarising fetch: the timing is on Trillium TPU accelerators; the figure comparing speed and accuracy uses simulated noise; no loop with a quantum chip is reported, and the discussion says the delay after the final measurement is not yet addressed. The methods section on how speed was measured was not read."
+  },
+  "SB-2025": {
+    "title": "Sparse Blossom: correcting a million errors per core second with minimum-weight matching",
+    "publisher": "Higgott and Gidney · Quantum 9, 1600",
+    "url": "https://doi.org/10.22331/q-2025-01-20-1600",
+    "type": "peer-reviewed article",
+    "date": "2025",
+    "note": "The paper behind PyMatching 2. Bibliographic data checked against Crossref; we used the software (version 2.4.0)."
+  },
+  "STIM-2021": {
+    "title": "Stim: a fast stabilizer circuit simulator",
+    "publisher": "Gidney · Quantum 5, 497",
+    "url": "https://doi.org/10.22331/q-2021-07-06-497",
+    "type": "peer-reviewed article",
+    "date": "2021",
+    "note": "Bibliographic data checked against Crossref; we used the software (version 1.16.0)."
+  },
+  "GE-2021": {
+    "title": "How to factor 2048 bit RSA integers in 8 hours using 20 million noisy qubits",
+    "publisher": "Gidney and Ekerå · Quantum 5, 433",
+    "url": "https://doi.org/10.22331/q-2021-04-15-433",
+    "type": "peer-reviewed article",
+    "date": "15 April 2021",
+    "note": "Abstract read on 15 November 2026. The DOI is not in the research notes; it was looked up at Crossref on 16 November 2026."
+  },
+  "NA-2025": {
+    "title": "A fault-tolerant neutral-atom architecture for universal quantum computation",
+    "publisher": "Bluvstein et al. (Harvard, MIT, QuEra) · Nature 649, 39–46",
+    "url": "https://doi.org/10.1038/s41586-025-09848-5",
+    "type": "peer-reviewed article",
+    "date": "10 November 2025 (online)",
+    "note": "Also arXiv:2506.20661. Abstract read."
+  },
+  "IBM-RELAY-2025": {
+    "title": "Improved belief propagation is sufficient for real-time decoding of quantum memory",
+    "publisher": "Müller et al. (IBM) · arXiv:2506.01779",
+    "url": "https://arxiv.org/abs/2506.01779",
+    "type": "preprint, not peer-reviewed",
+    "date": "2 June 2025 (v2 22 August 2025)",
+    "note": "Abstract read."
+  },
+  "IBM-FPGA-2025": {
+    "title": "Real-time decoding of the gross code memory with FPGAs",
+    "publisher": "Maurer et al. (IBM) · arXiv:2510.21600",
+    "url": "https://arxiv.org/abs/2510.21600",
+    "type": "preprint, not peer-reviewed",
+    "date": "24 October 2025",
+    "note": "Abstract read. Simulated check results; no logical qubit was run."
+  },
+  "QTN-2026": {
+    "title": "Quantum error correction well below the color code threshold",
+    "publisher": "Lavasani et al. (Quantinuum) · arXiv:2610.24077",
+    "url": "https://arxiv.org/abs/2610.24077",
+    "type": "preprint, not peer-reviewed",
+    "date": "16 October 2026",
+    "note": "The company's own preprint; release and first pages read. A colour code at distances 3, 5 and 7, not a surface code; suppression factor about 12."
+  },
+  "QTN-PR-2026": {
+    "title": "Press release on the error-correction record on the Helios machine",
+    "publisher": "Quantinuum",
+    "url": "https://www.quantinuum.com/press-releases/quantinuum-breaks-error-correction-world-record-by-10x-validating-its-leading-path-to-fault-tolerant-quantum-computing-by-2029",
+    "type": "company press release",
+    "date": "19 October 2026",
+    "note": "Company framing; not independently checked. The release speaks of \"tailored AI decoders\"."
+  },
+  "USTC-2025": {
+    "title": "Experimental Quantum Error Correction below the Surface Code Threshold via All-Microwave Leakage Suppression",
+    "publisher": "He et al. (University of Science and Technology of China) · Physical Review Letters 135, 260601",
+    "url": "https://doi.org/10.1103/rqkg-dw31",
+    "type": "peer-reviewed article (abstract read)",
+    "date": "22 December 2025",
+    "note": "Distance-7 surface code, Λ = 1.40(6). Publication details from the fact check of 16 November 2026."
+  },
+  "GQA-DATA-2024": {
+    "title": "Data for \"Quantum error correction below the surface code threshold\"",
+    "publisher": "Google · Zenodo",
+    "url": "https://doi.org/10.5281/zenodo.13273331",
+    "type": "data set (CC BY 4.0)",
+    "date": "26 August 2024",
+    "note": "Located, not used in this text."
+  },
+  "GQA-DATA-2022": {
+    "title": "Data for \"Suppressing quantum errors by scaling a surface code logical qubit\"",
+    "publisher": "Google · Zenodo",
+    "url": "https://doi.org/10.5281/zenodo.6804040",
+    "type": "data set (CC BY 4.0)",
+    "date": "14 July 2022",
+    "note": "Located, not used in this text."
+  },
+  "OWN-D3": {
+    "title": "Neural decoder against matching at distance 3: eight seeds, about 66 million training runs each",
+    "publisher": "This work",
+    "url": "",
+    "type": "own measurement",
+    "date": "15 and 16 November 2026",
+    "note": "results/kaggle-d3/d3-seeds/seed-1 to seed-5 and results/kaggle-d3-rerun/d3-seeds/seed-11 to seed-13 (run later as a repeat with new seeds), neural_pilot_d3.json"
+  },
+  "OWN-D5": {
+    "title": "Neural decoder against matching at distance 5: five seeds, about 66 million training runs each",
+    "publisher": "This work",
+    "url": "",
+    "type": "own measurement",
+    "date": "15 November 2026",
+    "note": "results/kaggle-d5/d5-seeds/seed-1 to seed-5/neural_pilot_d5.json"
+  },
+  "OWN-D5-250M": {
+    "title": "Neural decoder against matching at distance 5: five seeds, about 250 million training runs each, eight noise levels",
+    "publisher": "This work",
+    "url": "",
+    "type": "own measurement",
+    "date": "15 and 16 November 2026",
+    "note": "results/kaggle-d5-250m/d5-seeds/seed-1, seed-2 and results/kaggle-d5-250m-rerun/d5-seeds/seed-11 to seed-13 (run later as a repeat with new seeds), neural_pilot_d5.json"
+  },
+  "OWN-CORR": {
+    "title": "Plain against correlated matching on the same simulated runs; every single error mechanism decoded alone; every pair at distance 5",
+    "publisher": "This work",
+    "url": "",
+    "type": "own measurement",
+    "date": "15 November 2026",
+    "note": "results/correlated-check-2026-11-15.json. The single-mechanism result at distance 3 was reproduced by a second script written by a second AI agent; the pair check at distance 5 was not repeated."
+  },
+  "OWN-ENUM": {
+    "title": "All errors on the distance-3 grid, counted: 256 check patterns, 103 where the smallest correction is not the most likely kind",
+    "publisher": "This work",
+    "url": "",
+    "type": "own measurement",
+    "date": "recounted 15 and 16 November 2026",
+    "note": "docs/proposal/paper/data/find_example.py, ported into tools/other-half-data.mjs"
+  },
+  "OWN-TIME": {
+    "title": "Training time on a GPU; rough decoding times on one laptop core",
+    "publisher": "This work",
+    "url": "",
+    "type": "own measurement",
+    "date": "15 November 2026",
+    "note": "training.seconds in the result files; results/timing-2026-11-15.json (untrained network, average over a batch, x64 Python emulated on an ARM laptop). The range of 19 to 232 ms per training step on the laptop is from FINDINGS-2026-11-15.md, not from a result file. Training step times in the text are from timing-2026-11-15.json (91 to 132 ms per step)."
+  },
+  "OWN-ARITH": {
+    "title": "Counting and arithmetic on published values (qubits per grid, rounds per second, ratios)",
+    "publisher": "This work",
+    "url": "",
+    "type": "own arithmetic",
+    "date": "16 November 2026",
+    "note": "No measurement. A blink is taken as a tenth of a second."
+  },
+  "OWN-REPL": {
+    "title": "Replication with code written separately by an AI agent, 16 November 2026",
+    "publisher": "This work",
+    "url": "",
+    "type": "own measurement",
+    "date": "16 November 2026",
+    "note": "replication/REPORT.md; replication/results/d3/results_d3.json and d5/results_d5.json"
+  }
+}

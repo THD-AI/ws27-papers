@@ -1,0 +1,121 @@
+{
+  "id": "numbers",
+  "reading": {
+    "a": "The announcement said 40 of 100 contacts; the company's own slide says 32, and those are contacts that start with the software, not ones it finished.",
+    "b": "A customer account contacted care 7 times a year in 2021 and about 3 times in 2026; the software agents arrived late in that fall."
+  },
+  "tag": "company-reported",
+  "plateA": {
+    "total": {
+      "value": 100,
+      "note": "[[{v}]] contacts from contract customers, Q2 2026",
+      "source": "R6-06"
+    },
+    "release": {
+      "value": 40,
+      "note": "release: [[{v}]] handled by AI agents",
+      "source": "R6-01",
+      "short": "release: [[{v}]] by AI agents"
+    },
+    "slide": {
+      "value": 32,
+      "note": "T-Mobile's slide: [[{v}]] served by an AI agent",
+      "source": "R6-06"
+    },
+    "rest": {
+      "note": "not in T-Mobile's material",
+      "source": "R6-06",
+      "derivation": "release value minus slide value; drawn, not printed as a number"
+    },
+    "overlap": {
+      "note": "drawn on the same {t} to compare; whether the {a} include the {b} isn't published",
+      "source": [
+        "R6-01",
+        "R6-06"
+      ],
+      "why": "The 40 comes from a press release, the 32 from an investor slide. Drawing the 32 inside the 40 on the same 100 is the figure's choice, made to compare them; the note says that nobody published whether the 40 include the 32.",
+      "short": "whether the {a} include the {b} isn't published"
+    },
+    "start": {
+      "note": "that is: they start with the software",
+      "source": "R6-02"
+    },
+    "finished": {
+      "value": null,
+      "note": "how many of these [[{v}]] the software finished: T-Mobile does not say",
+      "source": "R6-02"
+    }
+  },
+  "plateB": {
+    "axis": {
+      "from": {
+        "year": 2021,
+        "quarter": 4
+      },
+      "to": {
+        "year": 2026,
+        "quarter": 2
+      },
+      "source": "R6-06"
+    },
+    "points": [
+      {
+        "label": "2021",
+        "year": 2021,
+        "quarter": 4,
+        "value": 7.0,
+        "decimals": 1,
+        "count": "[[{v}]] contacts a year",
+        "note": "about one every seven weeks",
+        "source": "R6-06",
+        "when": "Q4 2021"
+      },
+      {
+        "label": "2026",
+        "year": 2026,
+        "quarter": 2,
+        "value": 3.1,
+        "decimals": 1,
+        "count": "[[{v}]] contacts a year",
+        "note": "about one every four months; [[{v}]] is an average",
+        "source": "R6-06",
+        "when": "Q2 2026"
+      }
+    ],
+    "between": {
+      "years": [
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "value": null,
+      "note": "{a} to {b}: no figures published",
+      "source": "R6-06"
+    },
+    "fall": {
+      "value": 55,
+      "show": "−{v}%",
+      "source": "R6-06",
+      "derivation": "(7.0 − 3.1) / 7.0 = 55.7%; T-Mobile reports the fall as 55%",
+      "against": "against Q4 2021"
+    },
+    "event": {
+      "year": 2024,
+      "month": 9,
+      "note": "agents announced, September 2024",
+      "before": "first point almost three years before the agents",
+      "source": "R6-08"
+    },
+    "causes": {
+      "block": "T-Mobile also names: problems removed before customers call; customers using the app",
+      "source": "R6-14"
+    },
+    "unitWord": "contacts a year",
+    "drawing": "The two values are drawn as numbers over their dates on one axis; nothing joins them, because the values between are not published."
+  },
+  "headline": {
+    "a": "United States · of 100 contacts at T-Mobile US: how many did the software handle?",
+    "b": "United States · how often one customer account contacts care in a year"
+  }
+}
