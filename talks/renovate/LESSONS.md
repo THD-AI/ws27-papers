@@ -9,7 +9,7 @@ Kind: log, newest first. Read this before every loop on the deck; add to it at t
 - Q&A: `QUESTIONS.md`, nine expected questions with short answers from the article's facts.
 - Clock: the notes speak in about 14 minutes (130 words a minute, 1.5 s a click, 2.5 s a landing); the cue sheet's start times are computed from that, not set by hand.
 - Readers: round 11 median 7.5, round 12 median 8 (professor 8 and grade 1.7, voice 8, facts 8, projector 8, sceptic 7). Reports in `readers-r11/`, `readers-r12/`.
-- Open PRs: ws27-papers#12 (the talk on the site, now with loops 11–12), paper-studio#3 (stacked on #2).
+- Merged: ws27-papers#12 (the talk on the site). Open: ws27-papers#13 (loops 11–12), paper-studio#3 (stacked on #2).
 - His standing calls: no QR code on any slide; plugs and keys stay simple one-line drawings; the closing socket plate stays as it is; "How this was made" is folded, never a slide.
 - Waiting on him: is 12 December 2026 (a Saturday) right; are the two new first-person lines true (slide 15 "read first, then we see", the closing "It is harder. That doesn't make it worse."); does the worker thesis go on the closing slide (the sceptic's ask, a slide he liked). Then the real projector, and rehearsal run 0.
 
