@@ -198,7 +198,7 @@ add({
   clicks: ['the release: 40', 'T-Mobile’s slide: 32, another count', 'finished: not published'],
   title: 'Telekom’s release says 40 percent. T-Mobile’s own slide counts 32 percent.',
   source: 'Deutsche Telekom, press release, 5 Oct 2026; T-Mobile US, AI Investor Day deck, Q2 2026. Company figures, not audited. Two separate counts on different bases; whether the 40 include the 32 isn’t published.',
-  notes: `<p>A correction to my own proposal. Telekom's press release says AI agents now handle forty percent of customer contacts in the US. I used that number. In T-Mobile's own material I couldn't find the forty. Its investor slide shows thirty-two, and it counts something narrower: only contract customers, only contacts the software serves. Served means the customer meets the software first. Whether it also finished the job, T-Mobile doesn't say. Company numbers, not audited. Still, one in three is a lot. <b>Telekom's release says forty percent. T-Mobile's own slide counts thirty-two percent.</b></p>`,
+  notes: `<p>A correction to my own proposal. Telekom's press release says AI agents now handle forty percent of customer contacts in the US. I used that number. In T-Mobile's own material I couldn't find the forty. Its investor slide shows thirty-two, and it counts something narrower: only contract customers, only contacts the software serves. Served means the customer meets the software first. Whether it also finished the job, T-Mobile doesn't say. Company numbers, not audited. One in three is still a lot. <b>Telekom's release says forty percent. T-Mobile's own slide counts thirty-two percent.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -235,7 +235,7 @@ add({
   clicks: ['timber', 'repaint: the duct', 'renovate, on “cutting into the wall”', 'the cable is the agent'],
   title: 'The cable is the same. The wall decides the work.',
   source: 'NAHB 2026 (94% of new single-family homes completed in 2025 timber-framed); Destatis 2021 (about two in three residential buildings approved in 2020 brick or other masonry); DIN 18015-3. The walls picture conditions; they are not evidence.',
-  notes: `<p>My father is a civil engineer, and this picture is his. In America almost every new family home has a timber frame: the wall is hollow, so a new cable drops down inside it. In Germany it's mostly masonry, brick and block, built to stand, so a new cable means opening the wall. You can screw a duct onto the wall: quick, and the wall stays as it was. Or you cut a channel, lay the cable and plaster it over. That's slow, loud and dusty, and afterwards the cable is part of the wall. The cable is the agent. The wall is everything already there: old systems, rules, people. The duct is repainting. Cutting in is renovating. <b>The cable is the same. The wall decides the work.</b></p>`,
+  notes: `<p>My father is a civil engineer, and this picture is his. In America almost every new family home has a timber frame: the wall is hollow, so a new cable drops down inside it. In Germany it's mostly masonry, brick and block, built to stand, so a new cable means opening the wall. You can screw a duct onto the wall: quick, and the wall stays as it was. Or you cut a channel, lay the cable and plaster it over. That's slow and dusty, and afterwards the cable is part of the wall. The cable is the agent. The wall is everything already there: old systems, rules, people. The duct is repainting. Cutting in is renovating. <b>The cable is the same. The wall decides the work.</b></p>`,
   draw(page, b) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -279,11 +279,11 @@ add({
     if (b >= 1) head(xs[1], 'Germany: brick', 'two in three approved in 2020');
     if (b >= 2) head(xs[2], 'Germany: the same brick', 'opened, then closed again', C.accent);
     const under = (x, a, z, col) => { T(svg, x, bot + 72, a, { size: 56, weight: 700, fill: col || C.ink }); T(svg, x, bot + 118, z, { size: 34, fill: C.muted }); };
-    under(xs[0], 'pulled through', 'quick; the wall stays closed');
-    if (b >= 1) under(xs[1], 'repaint', 'a duct on the face; quick');
-    if (b >= 2) under(xs[2], 'renovate', 'cut in, plastered; slow', C.accent);
+    under(xs[0], 'pulled through', 'quick, the wall stays closed');
+    if (b >= 1) under(xs[1], 'repaint', 'a duct on the face, quick');
+    if (b >= 2) under(xs[2], 'renovate', 'cut in and plastered, slow', C.accent);
     if (b >= 3) {
-      T(svg, L, 900, 'The cable is the agent. The wall is what’s already there: old systems, rules, people.', { family: 'serif', italic: true, size: 40 });
+      T(svg, L, 900, 'The cable is the agent. The wall is what’s already there: old systems, rules, people.', { size: 36, fill: C.muted });
     }
   },
 });
@@ -328,7 +328,7 @@ add({
   title: 'Measure first. Start beside the staff.',
   sub: 'Step 1 is this course’s business measure, not accuracy. The order of the eight is my hypothesis.',
   source: 'Step 1: the business measure from this course. Step 4: teams, never single people (2021 framework agreement). Bitkom 2025: 51% of firms with 20 or more staff strongly dependent on US digital technology.',
-  notes: `<p>So how would I do it? Step one: before any agent, measure what one contact costs today, and how often customers come back. Then, with the agent: how many requests it finishes for good, and at what cost. That's the business measure from this course, not accuracy. If it doesn't get better, the agent is the wrong tool, and Telekom stops there. Step two: sign the works agreement while the system is still on paper. Step three: keep the option to switch suppliers. About half of German firms say they depend strongly on the US. Step four: train the staff before each new key. Measure teams, never single people, and watch the load on the people who stay: they get the hardest calls. <b>Measure first. Start beside the staff.</b></p>`,
+  notes: `<p>So how would I do it? Step one: before any agent, measure what one contact costs today, and how often customers come back. Then, with the agent: how many requests it finishes for good, and at what cost. That's the business measure from this course. If it doesn't get better, the agent is the wrong tool, and Telekom stops there. Step two: sign the works agreement while the system is still on paper. Step three: keep the option to switch suppliers. About half of German firms say they depend strongly on the US. Step four: train the staff before each new key. Measure teams, never single people, and watch the load on the people who stay: they get the hardest calls. <b>Measure first. Start beside the staff.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -362,7 +362,7 @@ add({
 // comes in from the left, lies in the open channel and runs on, hidden, under
 // the plaster. That is what step 5 is.
 add({
-  id: 'step5', n: 14, beat: 'How to address it', builds: 3, start: '10:28',
+  id: 'step5', n: 14, beat: 'How to address it', builds: 3, start: '10:26',
   clicks: ['the cut channel', 'keys need step 5', 'the cost of getting it wrong'],
   title: 'The biggest job is one customer record.',
   sub: 'Step 5: 14 ways to prove who you are become 3. Measure: callers recognised without questions.',
@@ -437,8 +437,8 @@ add({
   id: 'agent', n: 2, beat: 'Why this case', builds: 2, start: '0:38',
   clicks: ['request and chatbot', 'the agent and its keys'],
   title: 'An agent doesn’t just answer. It acts.',
-  sub: 'In this course’s terms: a transformation, not a change.',
-  notes: `<p>My short answer: not the number, but the slow work behind it. Two reasons for this case: both sides publish numbers, and this software does something a chatbot doesn't. A customer writes, "Please move me to a cheaper tariff." A chatbot answers, "Here's how." An agent just does it. For that it needs keys: permission to see and change your account. <b>An agent doesn't just answer. It acts.</b></p>`,
+  sub: 'In this course’s terms, a transformation.',
+  notes: `<p>My short answer: Telekom should copy the slow work behind the number. Two reasons for this case: both sides publish numbers, and this software does something a chatbot doesn't. A customer writes, "Please move me to a cheaper tariff." A chatbot answers, "Here's how." An agent just does it. For that it needs keys: permission to see and change your account. <b>An agent doesn't just answer. It acts.</b></p>`,
   draw(page, b) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -511,7 +511,7 @@ add({
   clicks: ['before and now', 'the agents plugged in', '78%'],
   title: 'T-Mobile rebuilt alongside its agents.',
   source: "Deutsche Telekom, AI Investor Day transcript, 5 Oct 2026 (T-Mobile's head of IT); T-Mobile US, AI Investor Day deck; Form 10-K 2025. Share of chats: company figure.",
-  notes: `<p>T-Mobile didn't just repaint. Their head of IT described it to investors. Before, outside contractors worked on the suppliers' systems. Now T-Mobile's own engineers work on T-Mobile's own systems. They built one customer record, one system that knows each customer, and the agents read from it. With that in place, almost eight in ten chats never reached a person. That's not the same as solved. Still, a real result. And the staff got help too: in about three of four conversations, the staff see the system's recommendations. Company figures again. <b>T-Mobile rebuilt alongside its agents.</b></p>`,
+  notes: `<p>Look at what T-Mobile did. Their head of IT described it to investors. Before, outside contractors worked on the suppliers' systems. Now T-Mobile's own engineers work on T-Mobile's own systems. They built one customer record, one system that knows each customer, and the agents read from it. With that in place, almost eight in ten chats never reached a person. That's not the same as solved. Still, a real result. And the staff got help too: in about three of four conversations, the staff see the system's recommendations. Company figures again. <b>T-Mobile rebuilt alongside its agents.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -550,7 +550,7 @@ add({
   clicks: ['Klarna', 'Commonwealth Bank, about a month later'],
   title: 'Both took part of it back.',
   source: 'Klarna, press release, 27 Feb 2024 (700: company estimate); Entrepreneur, 9 May 2025; Information Age, Aug 2025 (Commonwealth Bank).',
-  notes: `<p>From the street, repainting looks the same for a while, and it's cheaper. But if nothing changes behind the agent, the saving usually comes from the staff. By February 2024 Klarna had stopped hiring and said its assistant did the work of seven hundred people in customer service, by its own estimate. In 2025 it was hiring people again, and it kept the assistant. Commonwealth Bank went the same way, faster. It declared forty-five jobs redundant for a voice bot, and took that back within weeks. Two cases don't make a rule. They show what repainting can cost. <b>Both took part of it back.</b></p>`,
+  notes: `<p>From the street, repainting looks the same for a while, and it's cheaper. But if nothing changes behind the agent, the saving usually comes from the staff. By February 2024 Klarna had stopped hiring and said its assistant did the work of seven hundred people in customer service, by its own estimate. In 2025 it was hiring people again, and it kept the assistant. Commonwealth Bank went the same way, faster. It declared forty-five jobs redundant for a voice bot, and took that back within weeks. These are only two cases. Both cost the companies money and trust. <b>Both took part of it back.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -600,7 +600,7 @@ add({
     T(svg, L, 338, 'Telekom and ver.di, May 2026; about 60,000 employees under its collective agreements', { size: 32, fill: C.muted });
     {
       ln(svg, L, 386, R, 386, { stroke: C.hair, 'stroke-width': 2 });
-      T(svg, L, 450, 'Still, positions leave Telekom in Germany by agreed routes', { size: 36, weight: 600 });
+      T(svg, L, 450, 'Positions leave Telekom in Germany by agreed routes', { size: 36, weight: 600 });
       const base = 880, k = 0.075, x0 = 760, pitch = 210, bw = 120, Y = (v) => base - v * k;
       E.years.forEach((yr, i) => {
         const v = E.totals.values[i], x = x0 + i * pitch;
@@ -687,7 +687,7 @@ add({
   clicks: ['missing knowledge', 'law, data protection'],
   title: 'Third brick: missing knowledge first. The law after.',
   source: 'Federal Statistical Office (Destatis), 2025: firms with ten or more employees that considered AI and do not use it; several answers possible.',
-  notes: `<p>The third brick is know-how. The Federal Statistical Office went to the firms that had looked at these tools and didn't use them, and asked: why not? More than seven in ten said they were missing the knowledge. Legal uncertainty and data protection came after, each about six in ten. Most of those firms are much smaller than Telekom. Still, the order says a lot. <b>Third brick: missing knowledge first. The law after.</b> You can buy a language model. You can screw it onto the wall. Without your own people who understand your systems, you can't cut it in.</p>`,
+  notes: `<p>The third brick is know-how. The Federal Statistical Office went to the firms that had looked at these tools and didn't use them, and asked: why not? More than seven in ten said they were missing the knowledge. Legal uncertainty and data protection came after, each about six in ten. Most of those firms are much smaller than Telekom. But the order is clear. <b>Third brick: missing knowledge first. The law after.</b> You can buy a language model. You can screw it onto the wall. Without your own people who understand your systems, you can't cut it in.</p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -701,7 +701,7 @@ add({
       bar100(svg, 800, 1600, y, 60, r.value, { fill: first ? C.field : C.faint, col: first ? C.accent : C.ink });
       T(svg, R, y + 50, `${r.value}%`, { size: first ? 64 : 48, weight: 600, fill: first ? C.accent : C.ink, anchor: 'end' });
     });
-    if (b >= 1) T(svg, L, 890, 'You can buy a language model and screw it onto the wall. Without your own people, you can’t cut it in.', { family: 'serif', italic: true, size: 38, width: 1680 });
+    if (b >= 1) T(svg, L, 890, 'You can buy a language model and screw it onto the wall. Without your own people, you can’t cut it in.', { size: 36, fill: C.muted, width: 1680 });
     band(svg);
   },
 });
@@ -710,12 +710,12 @@ add({
 // The building again, five floors built, then the keys: one drawn key per
 // stage, in the order they are handed over.
 add({
-  id: 'steps68', n: 15, beat: 'How to address it', builds: 3, start: '11:14',
+  id: 'steps68', n: 15, beat: 'How to address it', builds: 3, start: '11:12',
   clicks: ['step 6: keys in stages', 'steps 7 and 8', 'process model'],
   title: 'Then the keys: read first, risky changes last.',
   sub: 'Reading doesn’t have to wait for step 5. The order is my hypothesis.',
   source: 'Every new key: an annex to the works agreement (step 7).',
-  notes: `<p>But reading doesn't have to wait. Step six: first the agent only reads, for customers already logged in: show a bill, check an order. Then actions you can undo. Last, the changes a fraudster could use, like a new bank account. The customer confirms those in the app. My requirement: if the agent gets a tariff wrong, the customer undoes it in one tap, and there's always a way to a person. Each key is enforced by the systems, not by the model: the model can ask, the system decides. It's how I'd give any new program access to real data: read first, then we see. Step seven: each new key becomes an annex to the works agreement, and staff and works council sign off before the agent works alone. Step eight: a named team runs it. So: <b>Then the keys: read first, risky changes last.</b></p>`,
+  notes: `<p>But reading doesn't have to wait. Step six: first the agent only reads, for customers already logged in: show a bill, check an order. Then actions you can undo. Last, the changes a fraudster could use, like a new bank account. The customer confirms those in the app. My requirement: if the agent gets a tariff wrong, the customer undoes it in one tap, and there's always a way to a person. The system enforces each key: the model can ask, the system decides. It's how I'd give any new program access to real data: read first, then we see. Step seven: each new key becomes an annex to the works agreement, and staff and works council sign off before the agent works alone. Step eight: a named team runs it. So: <b>Then the keys: read first, risky changes last.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -741,7 +741,7 @@ add({
       T(svg, L, 790, '7  staff and works council sign off before it works alone', { size: 32 });
       T(svg, L, 832, '8  a named team runs it; cost per finished request', { size: 32 });
     }
-    if (b >= 2) T(svg, L, 878, 'Stage-gate: the stages are the keys; each gate, the error rate and a works-council annex. Step 1 is the kill rule.', { size: 32, weight: 600, width: 1100, lh: 38 });
+    if (b >= 2) T(svg, L, 878, 'Each key is a stage gate: error rate checked, works-council annex signed. If step 1 shows no gain, it stops.', { size: 32, weight: 600, width: 1100, lh: 38 });
     band(svg);
   },
 });
@@ -749,11 +749,11 @@ add({
 // 16 --------------------------------------------------------------------------
 // Three ways to be wrong, then the closing picture: the plug finally in.
 add({
-  id: 'close', n: 16, beat: 'Where this could be wrong', builds: 4, start: '12:28',
+  id: 'close', n: 16, beat: 'Where this could be wrong', builds: 4, start: '12:24',
   clicks: ['first', 'second', 'third', 'the plug in, the closing line'],
   landings: { 2: 'Three things would prove me wrong.', 3: "Telekom can't import the 32%. It can copy the slow work behind it." },
   title: 'Three things would prove me wrong.',
-  notes: `<p>Three things would prove me wrong. One: Telekom reports a German number like the thirty-two percent before its customer data is fixed. Then the record matters less than I think. Two: the service teams shrink faster than the agreed routes allow. Then the staff are leaving after all. Three: a works agreement comes months late. Then the law weighs more than I said.</p><p>(last build) I can't prove the rebuild caused T-Mobile's result. I argue it from need: an agent can't act on an account it can't identify. People often say Germany is slow. Two economists, Hall and Soskice, argue the other way: economies like Germany's are better at step-by-step innovation than at radical innovation. The agent is the transformation. The way in is step by step, and the agent works with the staff, not instead of them. I started out thinking Germany was the harder case. It is harder. That doesn't make it worse. <b>Telekom can't import the 32%. It can copy the slow work behind it.</b> Thank you.</p>`,
+  notes: `<p>Three things would prove me wrong. One: Telekom reports a German number like the thirty-two percent before its customer data is fixed. Then the record matters less than I think. Two: the service teams shrink faster than the agreed routes allow. Then the staff are leaving after all. Three: a works agreement comes months late. Then the law weighs more than I said.</p><p>(last build) I can't prove the rebuild caused T-Mobile's result. I argue it from need: an agent can't act on an account it can't identify. People often say Germany is slow. Two economists, Hall and Soskice, argue the other way: economies like Germany's are better at step-by-step innovation than at radical innovation. The agent is the transformation. The way in is step by step, with the staff. I started out thinking Germany was the harder case, and I still do. <b>Telekom can't import the 32%. It can copy the slow work behind it.</b> Thank you.</p>`,
   draw(page, b) {
     const svg = svgOf(page);
     if (b < 3) {
@@ -816,9 +816,9 @@ add({
     data.pairs.rows.forEach((r, i) => {
       const y = y0 + 64 + i * 66;
       T(svg, cx[0], y, `${r.n}. ${what[r.what] || r.what}`, { size: 26, weight: 600, width: 400 });
-      T(svg, cx[1], y, (r.us.show || r.us.absent || '').replace(/\[\[|\]\]/g, ''), { size: 26, width: 250 });
+      T(svg, cx[1], y, (r.us.show || r.us.absent || '').replace(/\[\[|\]\]/g, '').replace('≈ ', 'about '), { size: 26, width: 250 });
       const tag = r.de.status === 'target' ? ' (target)' : r.de.status === 'ahead' ? ' (outlook)' : '';
-      T(svg, cx[2], y, (r.de.show || r.de.absent || '').replace(/\[\[|\]\]/g, '') + tag, { size: 26, width: 270 });
+      T(svg, cx[2], y, (r.de.show || r.de.absent || '').replace(/\[\[|\]\]/g, '').replace('≈ ', 'about ') + tag, { size: 26, width: 270 });
       T(svg, cx[3], y, r.why, { size: 24, fill: C.muted, width: 840 });
       ln(svg, L, y + 26, R, y + 26, { stroke: C.hair, 'stroke-width': 1.5 });
     });
@@ -853,7 +853,7 @@ add({
     const svg = svgOf(page);
     frame(svg, this);
     [
-      ['read → undoable → fraud-prone', 'keys handed over in that order, each stage measured'],
+      ['read, then undoable, then fraud-prone', 'keys handed over in that order, each stage measured'],
       ['The model can ask, the system decides', 'permissions checked by the systems the agent calls'],
       ['A test set with hidden instructions', 'before each new key goes live'],
       ['Confirmation in the app', 'for changes a fraudster could use, like a new bank account'],

@@ -11,7 +11,17 @@ Kind: log, newest first. Read this before every loop on the deck; add to it at t
 - Readers: round 11 median 7.5, round 12 median 8 (professor 8 and grade 1.7, voice 8, facts 8, projector 8, sceptic 7). Reports in `readers-r11/`, `readers-r12/`.
 - Merged: ws27-papers#12 (the talk on the site). Open: ws27-papers#13 (loops 11–12), paper-studio#3 (stacked on #2).
 - His standing calls: no QR code on any slide; plugs and keys stay simple one-line drawings; the closing socket plate stays as it is; "How this was made" is folded, never a slide.
-- Waiting on him: is 12 December 2026 (a Saturday) right; are the two new first-person lines true (slide 15 "read first, then we see", the closing "It is harder. That doesn't make it worse."); does the worker thesis go on the closing slide (the sceptic's ask, a slide he liked). Then the real projector, and rehearsal run 0.
+- His answers (21 November): 12 December is right; the talk and the article are separate works and needn't match; the AI-sceptic seat means a sceptic of AI-made look and sound, not of AI at work, so the closing slide stays as it is. Rules that carry to any talk: dotPrivate `BRAND/methods/talks.md`. Left: the real projector and rehearsal run 0.
+
+## Loop 13 (21 November): the AI-made look and sound
+
+What happened:
+- He redefined the AI-sceptic seat: a sceptic of AI-made work, who researches the current tells first. One reader did (Pangram, WikiProject AI Cleanup and others): visuals 8, motion 9, words and speech 6, overall 7. The visuals and the drawings pass; the speech didn't. The tell was the contrast sentence ("doesn't just X. It Y", "not X, but Y"), about once a minute, much of it added by rounds 11–12's fixes. Other tells: the italic serif aside under a sans slide, "Still," four times, semicolons in captions, → and ≈ in backups.
+- Fixed: the notes keep about three contrasts on purpose; captions in the body sans; plain separators. Proposed to him, not done: plain titles instead of the "First brick: …" run and the slogan pairs.
+
+Rules that follow:
+55. **Count the contrast sentences.** "Not X, but Y" and "doesn't just X. It Y" are the first thing a trained ear hears as AI. Three in a talk, placed on purpose; every fix round adds more, so count again after each.
+56. **No italic serif aside, no → or ≈, no repeated concessive opener.** They are house-style tells, not typography.
 
 ## Loops 11–12 (21 November): the room, the clock and the defence
 
