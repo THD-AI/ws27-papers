@@ -15,13 +15,12 @@ h2.sec .sec-num { color: var(--accent-line); font-family: var(--mono); font-weig
 /* the notes, as the figure sets them: italic serif */
 .held-notes { list-style: none; margin: 0; padding: 0; font: italic 400 1.06rem/1.45 var(--serif); }
 .held-notes > li::before { content: none !important; }
-.held-notes li { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); margin: 0 0 0.6rem; opacity: 0; transition: opacity 0.25s ease, color 0.25s ease; }
+.held-notes li { margin: 0 0 0.6rem; opacity: 0; transition: opacity 0.25s ease, color 0.25s ease; }
 .held-notes li.is-on { opacity: 1; color: #4A4D55; }
 .held-notes li.is-current { color: var(--ink); }
-.held-notes .n, .held-still-note .n { font: 400 0.72rem/2 var(--mono); font-style: normal; color: var(--muted); font-variant-numeric: tabular-nums; }
 
 /* ---- the held block ------------------------------------------------------ */
-.held { position: relative; height: calc((1 + var(--hold, 1.95)) * 100svh); max-width: none !important; }
+.held { position: relative; height: calc(100svh + var(--hold-px, 195svh)); max-width: none !important; }
 .held-stage { position: sticky; top: 0; height: 100svh; box-sizing: border-box; display: grid; align-content: center; }
 .held-text > p { margin: 0 0 1.1rem; }
 .held-fig .fig-frame { width: var(--fig-w, 100%); max-width: none; aspect-ratio: var(--fig-ar, 1.6); margin: 0; }
@@ -39,6 +38,9 @@ h2.sec .sec-num { color: var(--accent-line); font-family: var(--mono); font-weig
 .held.is-top .held-notes { display: grid; }
 .held.is-top .held-notes li { grid-area: 1 / 1; margin: 0; }
 .held.is-top .held-notes li.is-on:not(.is-current) { opacity: 0; }
+/* one note at a time: the old one fades out (0.12 s), then the new one in */
+.held.is-top .held-notes li { transition: opacity 0.12s linear; }
+.held.is-top .held-notes li.is-current { transition: opacity 0.2s linear 0.12s; }
 .held.is-top .held-fig { justify-self: center; }
 
 /* stills: no hold, no empty scroll */
@@ -46,8 +48,10 @@ h2.sec .sec-num { color: var(--accent-line); font-family: var(--mono); font-weig
 .held.is-seq .held-stage { position: static; height: auto; display: block; }
 .held.is-seq .held-fig, .held.is-seq .held-notes { display: none; }
 
+/* out of the flow, focused or not: it never moves the block; on focus it
+   stands just above the block's top, on paper, shown whole */
 .held-skip { position: absolute; left: -999rem; }
-.held-skip:focus { position: static; display: inline-block; margin: 0 0 0.6rem; font: 500 0.85rem var(--sans); }
+.held-skip:focus { left: auto; transform: translateY(calc(-100% - 0.4rem)); z-index: 5; padding: 0.35rem 0.6rem; background: var(--paper); font: 500 0.85rem var(--sans); scroll-margin: 4rem 0 6rem; }
 
 /* ---- the pinned page: article.css's .scene, plus the figure's size -------- */
 .scene .scene-stage .fig { margin: 0; }
@@ -60,7 +64,7 @@ h2.sec .sec-num { color: var(--accent-line); font-family: var(--mono); font-weig
 /* ---- stills ---------------------------------------------------------------- */
 .held-stills { max-width: none !important; width: calc(var(--measure) + 2 * var(--out, 0px)); margin: 0 0 1rem calc(-1 * var(--out, 0px)); }
 .held-still { margin: 0 0 2.2rem; }
-.held-still-note { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); max-width: var(--measure); margin: 0 0 0.6rem var(--out, 0px); font: italic 400 1.06rem/1.45 var(--serif); }
+.held-still-note { max-width: var(--measure); margin: 0 0 0.6rem var(--out, 0px); font: italic 400 1.06rem/1.45 var(--serif); }
 .held-still .fig-frame { margin: 0 auto; max-width: 100%; }
 
 @media print {

@@ -16,7 +16,8 @@
 // ---------------------------------------------------------------------------
 // Pure: scroll to step, and the two players
 // ---------------------------------------------------------------------------
-export const DEFAULTS = { lead: 0.10, band: 0.45, rest: 0.5 };
+export const DEFAULTS = { lead: 0.10, band: 0.6, rest: 0.6 };
+export const REF = 900;       // band and rest never get shorter than in a 900 px window: 0.6 -> 540 px
 export const HYST = 25;       // px a reader must go back past an edge before a step is played back
 export const ENTRY = 0.65;    // step 0 is due when the block's top passes 65% of the window
 export const FLOOR = 1.2;     // no forward step of the held scene is shorter
@@ -24,15 +25,22 @@ export const BACK = 0.6;      // a step played backwards
 export const EXIT = 0.6;      // once the block lets go, the step in flight ends within this
 export const MIN_STEP = 0.5;  // the engine's shortest step (pinned)
 export const IN_VIEW = 0.1;   // under this share of the figure on screen, a step is set, not played
+export const FAST = 0.35;     // four or more behind: each queued step in order, this long (never set while seen)
 
 // the engine's ease: a prompt start (1.4 times the mean speed), a gentle end
 export const soft = (x) => x * (1.4 - 0.4 * x);
-export const holdOf = (o) => o.lead + 3 * o.band + o.rest;
+// The hold in px: the lead in svh; band and rest in svh but never shorter
+// than in a 900 px window (fix round 1: max(0.6 svh, 540 px) at the default).
+export function bands(svh, o = DEFAULTS) {
+  const lead = o.lead * svh, band = Math.max(o.band * svh, o.band * REF), rest = Math.max(o.rest * svh, o.rest * REF);
+  return { lead, band, rest, hold: lead + 3 * band + rest };
+}
 
 // Scroll positions (px) at which goal 1..5 is due; goal k shows step k - 1 complete.
 export function triggers(top, svh, o = DEFAULTS) {
-  const t = [top - ENTRY * svh, top + o.lead * svh];
-  for (let k = 1; k <= 3; k++) t.push(top + (o.lead + k * o.band) * svh);
+  const b = bands(svh, o);
+  const t = [top - ENTRY * svh, top + b.lead];
+  for (let k = 1; k <= 3; k++) t.push(top + b.lead + k * b.band);
   return t;
 }
 
@@ -54,19 +62,21 @@ export function stateOf(pos, steps = 5) {
   const i = Math.min(steps - 1, Math.ceil(pos) - 1);
   return [i, soft(Math.min(1, Math.max(0, pos - i)))];
 }
-export const newPlayer = (pos = 0) => ({ pos, goal: pos, i: -1, d: 0, squeeze: 1 });
+export const newPlayer = (pos = 0) => ({ pos, goal: pos, i: -1, d: 0, squeeze: 1, fast: false });
 
 // Held. Returns why the position was set instead of played, or null.
-//   - four or more behind: set to the second-last, play only the last;
+//   - four or more behind: nothing is set; the queued steps run through in
+//     order, FAST each, until the figure has caught up (fix round 1);
 //   - `now` (a reason: jump, offscreen, …): set at once.
 export function aimHeld(p, goal, now = false) {
   let how = null;
   if (goal !== p.goal) {
     const n = Math.ceil(Math.abs(goal - p.pos) - 1e-6);
     p.goal = goal;
-    if (n >= 4) { p.pos = goal - Math.sign(goal - p.pos); p.i = -1; how = 'skip'; }
+    if (n >= 4) { p.fast = true; p.i = -1; }
   }
   if (now && p.pos !== p.goal) { p.pos = p.goal; p.i = -1; how = now; }
+  if (p.pos === p.goal) p.fast = false;
   return how;
 }
 // The time of forward step i when it starts with `behind` steps to go:
@@ -79,16 +89,18 @@ export function stepHeld(p, dt, dur, exiting = false) {
   const dir = Math.sign(p.goal - p.pos);
   if (dir < 0) {
     const i = Math.ceil(p.pos) - 1;
-    p.pos = Math.max(p.goal, i, p.pos - dt / BACK);
+    p.pos = Math.max(p.goal, i, p.pos - dt / (p.fast ? FAST : BACK));
     p.i = -1;
+    if (p.pos === p.goal) p.fast = false;
     return null;
   }
   const i = Math.floor(p.pos);
-  if (exiting && p.pos === i) { p.pos = p.goal; p.i = -1; return 'exit'; }
-  if (p.i !== i) { p.i = i; p.d = heldStepTime(dur, i, Math.ceil(p.goal - p.pos - 1e-6)); }
+  if (exiting && p.pos === i) { p.pos = p.goal; p.i = -1; p.fast = false; return 'exit'; }
+  if (p.i !== i) { p.i = i; p.d = p.fast ? FAST : heldStepTime(dur, i, Math.ceil(p.goal - p.pos - 1e-6)); }
   const d = exiting ? Math.min(p.d, EXIT) : p.d;
   p.pos = Math.min(p.goal, i + 1, p.pos + dt / d);
   if (p.pos === i + 1) p.i = -1;
+  if (p.pos === p.goal) p.fast = false;
   return null;
 }
 
@@ -200,13 +212,13 @@ async function main() {
   const q = new URLSearchParams(location.search);
   const num = (k, d) => { const v = Number(q.get(k)); return q.get(k) !== null && Number.isFinite(v) ? v : d; };
   const O = { lead: num('lead', DEFAULTS.lead), band: num('band', DEFAULTS.band), rest: num('rest', DEFAULTS.rest) };
-  const HOLD = holdOf(O);
 
   try { await Promise.all(['italic 16px "Newsreader"', '16px "Libre Franklin"', '600 16px "Libre Franklin"', '14px "JetBrains Mono"'].map((f) => document.fonts.load(f))); } catch { /* fallbacks */ }
   const mod = await import('./film.js');
   const data = await (await fetch('../data/film.json')).json();
   const NOTES = mod.notes(data);
   const DUR = mod.durations.large;
+  const ASPECT = mod.aspectFor ? mod.aspectFor({ notes: false }) : mod.aspect;
   const css = (name) => getComputedStyle(root).getPropertyValue(name).trim();
 
   // copied from lib/article.js (2d): how a scene is laid out
@@ -230,7 +242,7 @@ async function main() {
   if (kick) {
     const other = MODE === 'held' ? `<a href="./_pinned.html">pinned</a>` : `<a href="./_held.html">held</a>`;
     kick.innerHTML = MODE === 'held'
-      ? `Lab · held scene · band ${O.band} · rest ${O.rest} · hold ${HOLD.toFixed(2)} windows · compare ${other}`
+      ? `Lab · held scene · band ${O.band} · rest ${O.rest} (at least as in a 900 px window) · compare ${other}`
       : `Lab · pinned scene (the engine's rules) · compare ${other}`;
   }
 
@@ -240,7 +252,7 @@ async function main() {
     const ol = block.querySelector('.held-notes');
     NOTES.forEach((s, i) => {
       const li = document.createElement('li');
-      li.innerHTML = `<span class="n" aria-hidden="true">${i + 1}</span><span>${s}</span>`;
+      li.textContent = s;
       ol.append(li); noteEls.push(li);
     });
   } else {
@@ -260,9 +272,10 @@ async function main() {
   const TIMES = engineTimes(DUR, words);
   let handle = null, raf = 0, last = 0, pending = 0;
   let L = null;
+  let focusAt = -1e9;
   const now = () => performance.now();
   function reset() {
-    L = { t0: now(), steps: NOTES.map(() => ({ trig: null, start: null, done: null, set: null, cut: null, share: null, capped: false })), goals: [], back: [], exit: null };
+    L = { t0: now(), steps: NOTES.map(() => ({ trig: null, start: null, done: null, set: null, cut: null, share: null, capped: false, fast: false })), goals: [], back: [], exit: null };
   }
   reset();
 
@@ -271,7 +284,7 @@ async function main() {
     if (!r.height) return 0;
     return Math.max(0, Math.min(r.bottom, innerHeight) - Math.max(r.top, 0)) / r.height;
   };
-  function track(prev, next, how) {
+  function track(prev, next, how, fast = false) {
     const t = now() - L.t0;
     if (next > prev) {
       for (let i = 0; i < NOTES.length; i++) {
@@ -279,6 +292,7 @@ async function main() {
         if (how === 'play') {
           if (prev <= i && next > i && s.start === null) s.start = t;
           if (G.exiting && next > i && prev < i + 1) s.capped = true;
+          if (fast && next > i && prev < i + 1) s.fast = true;
           if (next >= i + 1 && prev < i + 1 && s.done === null) { s.done = t; s.share = +share().toFixed(2); }
         } else if (next >= i + 1 && prev < i + 1 && s.done === null) {
           if (s.start === null) { s.set = how; s.start = t; } else s.cut = how;
@@ -325,11 +339,12 @@ async function main() {
     NOTES.forEach((s, k) => {
       const fig = document.createElement('figure');
       fig.className = 'held-still';
-      fig.innerHTML = `<p class="held-still-note"><span class="n">${k + 1}</span>${s}</p><div class="fig-frame"></div>`;
+      fig.innerHTML = `<p class="held-still-note"></p><div class="fig-frame"></div>`;
+      fig.querySelector('.held-still-note').textContent = s;
       stillsBox.append(fig);
       const f = fig.querySelector('.fig-frame');
       f.style.width = `${fw}px`;
-      f.style.aspectRatio = String(mod.aspect[layout]);
+      f.style.aspectRatio = String(ASPECT[layout]);
       mod.default(f, { layout, print: false, reduced: true, data, css, notes: false }).set(k, 1);
     });
   }
@@ -339,7 +354,7 @@ async function main() {
     block.className = `held is-${mode}`;
     const text = block.querySelector('.held-text');
     if (mode === 'side') {
-      const ar = mod.aspect.wide;
+      const ar = ASPECT.wide;
       const col = figBox.getBoundingClientRect().width;
       const w = Math.floor(Math.min(col, (G.svh - 64) * ar));
       const textH = text.getBoundingClientRect().height;
@@ -350,7 +365,7 @@ async function main() {
       block.style.setProperty('--fig-ar', String(ar));
       return 'wide';
     }
-    const ar = mod.aspect.tall;
+    const ar = ASPECT.tall;
     const room = stage.getBoundingClientRect().width - 24;
     const textH = text.getBoundingClientRect().height;
     const w = Math.floor(Math.min(room, 432, ((G.svh - textH - 40) * ar)));
@@ -367,7 +382,7 @@ async function main() {
     ['--stage-top', '--pitch'].forEach((k) => st.removeProperty(k));
     text.style.paddingTop = ''; text.style.paddingBottom = '';
     if (mode === 'side') {
-      const ar = mod.aspect.wide;
+      const ar = ASPECT.wide;
       const col = stage.getBoundingClientRect().width;
       const w = Math.floor(Math.min(col, (G.svh - 32) * ar));
       G.figW = w;
@@ -387,7 +402,7 @@ async function main() {
     }
     // on top: the tall drawing in at most 45% of the window, lettering 11.5 px
     // (the engine measures the drawing cut to its content; this uses its frame)
-    const ar = mod.aspect.tall;
+    const ar = ASPECT.tall;
     const room = innerWidth - 24;
     const w = Math.floor(Math.min(room, 432, 0.45 * G.svh * ar));
     G.figW = w;
@@ -405,11 +420,12 @@ async function main() {
   function layout() {
     G.svh = probe.getBoundingClientRect().height;
     G.why = '';
+    G.B = bands(G.svh, O);
+    if (MODE === 'held') block.style.setProperty('--hold-px', `${Math.round(G.B.hold)}px`);
     let mode = sceneMode();
     if (reduced.matches) { mode = 'seq'; G.why = 'reduced motion'; }
     if (q.get('stills') === '1') { mode = 'seq'; G.why = 'stills=1'; }
     if (mode === 'seq' && !G.why) G.why = 'MODES: stills on this window';
-    if (MODE === 'held') block.style.setProperty('--hold', String(HOLD));
     let kind = mode === 'seq' ? false : MODE === 'held' ? fitHeld(mode) : fitPinned(mode);
     if (!kind) mode = 'seq';
     G.mode = mode;
@@ -425,7 +441,7 @@ async function main() {
     G.top = block.getBoundingClientRect().top + scrollY;
     if (MODE === 'held') {
       G.T = triggers(G.top, G.svh, O);
-      G.end = G.top + HOLD * G.svh;
+      G.end = G.top + G.B.hold;
       G.start = G.T[0] - 0.3 * G.svh;
       G.stop = G.end + 0.6 * G.svh;
     } else {
@@ -452,6 +468,9 @@ async function main() {
   }
   function update(jump = false) {
     if (G.mode === 'seq' || frozen) return;
+    // a scroll that follows a focus move (Tab, Shift+Tab into or over the
+    // block) is a jump: the figure is set, never played back or forth
+    if (now() - focusAt < 600) jump = true;
     const y = scrollY;
     const was = G.exiting;
     G.exiting = y > G.end;
@@ -476,9 +495,9 @@ async function main() {
   function frameLoop(t) {
     const dt = last ? Math.min(0.1, (t - last) / 1000) : 1 / 60;
     last = t;
-    const prev = p.pos;
+    const prev = p.pos, fast = !!p.fast;
     const how = MODE === 'held' ? stepHeld(p, dt, DUR, G.exiting) : stepPinned(p, dt, TIMES);
-    track(prev, p.pos, how || 'play');
+    track(prev, p.pos, how || 'play', fast);
     draw();
     raf = p.pos !== p.goal ? requestAnimationFrame(frameLoop) : 0;
     root.dataset.moving = raf ? '1' : '';
@@ -504,6 +523,7 @@ async function main() {
     }, 200);
   });
   addEventListener('pageshow', (e) => { if (e.persisted) update(true); });
+  addEventListener('focusin', () => { focusAt = now(); update(true); }, true);
   addEventListener('hashchange', () => update(true));
   document.querySelector('.held-skip')?.addEventListener('click', () => setTimeout(() => update(true), 0));
   reduced.addEventListener?.('change', () => { layout(); update(true); });
@@ -519,7 +539,7 @@ async function main() {
   } else update(true);
 
   window.__held = {
-    mode: MODE, O, HOLD, G, p, NOTES, DUR, TIMES, goalAt, triggers,
+    mode: MODE, O, G, p, NOTES, DUR, TIMES, goalAt, triggers,
     get log() { return L; },
     reset() { reset(); },
     update(jump) { update(!!jump); },
