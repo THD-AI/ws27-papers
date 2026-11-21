@@ -320,7 +320,7 @@ write('lattice.json', {
   for (let r = 1; r <= ROUNDS; r++) for (const c of checks) if (answer(c, r) !== answer(c, r - 1)) lights.push({ check: c.id, round: r });
   const pairs = [
     ...flips.map(f => ({ kind: 'across the grid', round: f.between[1], checks: fired(c3.z, [f.qubit]), cause: `a flip on qubit ${f.qubit} between rounds ${f.between[0]} and ${f.between[1]}` })),
-    ...wrong.map(w => ({ kind: 'along time', check: w.check, rounds: [w.round, w.round + 1], cause: `${w.check} reports wrongly in round ${w.round}; no qubit is hit` })),
+    ...wrong.map(w => ({ kind: 'along time', check: w.check, rounds: [w.round, w.round + 1], cause: `${w.check} reports wrongly in round ${w.round}; no storing qubit is hit` })),
   ];
   // every light belongs to exactly one pair
   const inPair = l => pairs.filter(p => p.round ? p.round === l.round && p.checks.includes(l.check) : p.check === l.check && p.rounds.includes(l.round)).length;

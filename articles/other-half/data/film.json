@@ -162,7 +162,7 @@
     5,
     6
    ],
-   "cause": "z3 reports wrongly in round 5; no qubit is hit"
+   "cause": "z3 reports wrongly in round 5; no storing qubit is hit"
   }
  ],
  "source_scale": "GQA-2024 OWN-ARITH (in the passage, not drawn)"
