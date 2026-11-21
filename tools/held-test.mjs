@@ -32,7 +32,7 @@ const DUR = [1.4, 2.0, 1.4, 1.4, 1.6];      // film.js durations.large (checked 
 function unitChecks() {
   const out = [];
   const ok = (name, cond, extra = '') => out.push({ name, pass: !!cond, extra });
-  for (const O of [H.DEFAULTS, { lead: 0.1, band: 0.6, rest: 0.6 }]) {
+  for (const O of [H.DEFAULTS, { lead: 0.1, band: 0.45, rest: 0.5 }]) {
     for (const svh of [900, 720, 844, 660]) {
       const T = H.triggers(2000, svh, O);
       const tag = `band ${O.band} rest ${O.rest}, svh ${svh}`;
@@ -59,8 +59,16 @@ function unitChecks() {
   }
   // play rule
   const p = H.newPlayer(1);
-  H.aimHeld(p, 5);                                  // four behind
-  ok('four or more behind: set to the second-last, play only the last', p.pos === 4 && p.goal === 5);
+  const how4 = H.aimHeld(p, 5);                     // four behind
+  ok('four or more behind: nothing is set in that frame', p.pos === 1 && p.goal === 5 && how4 === null);
+  let tt = 0;
+  while (p.pos < 5 && tt < 5) { H.stepHeld(p, 1 / 60, DUR); tt += 1 / 60; }
+  ok('four or more behind: each queued step in order at 0.35 s', Math.abs(tt - 4 * H.FAST) < 0.05, `${tt.toFixed(2)} s for 4 steps`);
+  ok('the run-through ends with the player back at full time', p.fast === false);
+  const bk = H.newPlayer(5); H.aimHeld(bk, 0); let tb = 0; while (bk.pos > 0 && tb < 5) { H.stepHeld(bk, 1 / 60, DUR); tb += 1 / 60; }
+  ok('five back: run through at 0.35 s each, not set', Math.abs(tb - 5 * H.FAST) < 0.05, `${tb.toFixed(2)} s`);
+  const bp = H.bands(720, H.DEFAULTS);
+  ok('band px = max(0.6 svh, 540 px) at the default', bp.band === 540 && H.bands(1000, H.DEFAULTS).band === 600, `${bp.band}`);
   const q = H.newPlayer(0); H.aimHeld(q, 3);         // three behind
   H.stepHeld(q, 1 / 60, DUR);
   ok('three behind: 1/1.5 of the time, never under 1.2 s', Math.abs(q.d - Math.max(1.2, DUR[0] / 1.5)) < 1e-9, `d ${q.d.toFixed(3)}`);
@@ -99,7 +107,7 @@ function readerCurve(kind, svh) {
   };
 }
 function simulate(kind, svh, O) {
-  const top = 1000, T = H.triggers(top, svh, O), end = top + H.holdOf(O) * svh;
+  const top = 1000, T = H.triggers(top, svh, O), end = top + H.bands(svh, O).hold;
   const p = H.newPlayer(), dy = readerCurve(kind, svh), dt = 1 / 60;
   const steps = DUR.map(() => ({ trig: null, start: null, done: null, set: null, capped: false }));
   const goals = [];
@@ -114,18 +122,20 @@ function simulate(kind, svh, O) {
     let how = H.aimHeld(p, g);
     if (how) mark(prev, p.pos, how);
     prev = p.pos;
+    const fast = p.fast;
     how = H.stepHeld(p, dt, DUR, exiting);
-    mark(prev, p.pos, how || 'play', exiting);
+    mark(prev, p.pos, how || 'play', exiting, fast);
     t += dt;
     if (y > end + 0.6 * svh && p.pos === p.goal) break;
   }
   return { steps, goals, exit };
-  function mark(prev, next, how, exiting) {
+  function mark(prev, next, how, exiting, fast) {
     if (next <= prev) return;
     steps.forEach((s, i) => {
       if (how === 'play') {
         if (prev <= i && next > i && s.start === null) s.start = t;
         if (exiting && next > i && prev < i + 1) s.capped = true;
+        if (fast && next > i && prev < i + 1) s.fast = true;
         if (next >= i + 1 && prev < i + 1 && s.done === null) s.done = t + dt;
       } else if (next >= i + 1 && prev < i + 1 && s.done === null) {
         if (s.start === null) { s.set = how; s.start = t; } else s.cut = how;
@@ -153,7 +163,7 @@ function judge(kind, r, { lastShare = null } = {}) {
   if ((kind === 'wheel' || kind === 'space') && lastShare !== null && lastShare < 0.75) flags.push(`last step ends ${Math.round(lastShare * 100)}% in view`);
   return flags;
 }
-const fmtSteps = (r) => r.steps.map((s) => (s.done === null ? '–' : s.set ? `set:${s.set}` : s.cut ? `cut:${s.cut} after ${(s.done - s.start).toFixed(2)}` : `${(s.done - s.start).toFixed(2)}${s.capped ? '*' : ''}`)).join(' · ');
+const fmtSteps = (r) => r.steps.map((s) => (s.done === null ? '–' : s.set ? `set:${s.set}` : s.cut ? `cut:${s.cut} after ${(s.done - s.start).toFixed(2)}` : `${s.fast ? 'f' : ''}${(s.done - s.start).toFixed(2)}${s.capped ? '*' : ''}`)).join(' · ');
 const fmtWait = (r) => {
   const w = r.steps.filter((s) => s.trig !== null && s.start !== null).map((s) => s.start - s.trig);
   return w.length ? Math.max(...w).toFixed(2) : '–';
@@ -169,7 +179,7 @@ const SIZES = [
   { name: '1280x720', width: 1280, height: 720 },
   { name: '390x844', width: 390, height: 844, phone: true },
 ];
-const VARIANTS = [{ name: 'band 0.45 / rest 0.5', q: '' }, { name: 'band 0.6 / rest 0.6', q: '?band=0.6&rest=0.6' }];
+const VARIANTS = [{ name: 'default 0.6 / 0.6', q: '' }, { name: 'band 0.45 / rest 0.5', q: '?band=0.45&rest=0.5', only: '1440x900' }];
 const READERS = ['wheel', 'trackpad', 'flick', 'space'];
 
 async function open(browser, size, url, { dsf = 1, reduced = false } = {}) {
@@ -312,11 +322,11 @@ async function main() {
   // 2. simulation
   P('## 2. Simulation at 60 fps (Node, no browser)');
   P('');
-  P('Each step\'s played time in seconds (`*` shortened by the exit rule; `cut:skip after t` a step in flight cut short by the four-behind rule; `set:skip` set by the four-behind rule, `set:exit` set because it was still queued when the block let go). "Wait": the longest a due step waited for the one before. "At let-go": what was still to play when the block let go. Flags (the brief): a step under 1.2 s at the steady wheel; a step flipped back; a step still queued at let-go; for wheel and Space in Chrome, the last step ending with under 75% of the figure in view.');
+  P('Each step\'s played time in seconds (`*` shortened by the exit rule; `f` played in the run-through at 0.35 s, four or more behind; `set:exit` set because it was still queued when the block let go). "Wait": the longest a due step waited for the one before. "At let-go": what was still to play when the block let go. Flags (the brief): a step under 1.2 s at the steady wheel; a step flipped back; a step still queued at let-go; for wheel and Space in Chrome, the last step ending with under 75% of the figure in view.');
   P('');
   P('| Variant | svh | Reader | Steps 0–4 played (s) | Wait | At let-go | Flags | |');
   P('|---|---:|---|---|---:|---|---|---|');
-  const simVariants = [H.DEFAULTS, { lead: 0.1, band: 0.6, rest: 0.6 }];
+  const simVariants = [H.DEFAULTS, { lead: 0.1, band: 0.45, rest: 0.5 }];
   for (const O of simVariants) for (const svh of [900, 720, 630, 844, 660]) for (const kind of READERS) {
     const r = simulate(kind, svh, O);
     const f = judge(kind, r);
@@ -351,6 +361,7 @@ async function main() {
     const summary = [];
     const edges = [];
     for (const V of VARIANTS) for (const size of SIZES) {
+      if (V.only && V.only !== size.name) continue;
       const page = await open(browser, size, `${base}/_held.html${V.q}`);
       const g = await G(page);
       for (const kind of READERS) {
@@ -371,6 +382,7 @@ async function main() {
     P(`| Variant | Size | ${READERS.join(' | ')} |`);
     P(`|---|---|${READERS.map(() => '---').join('|')}|`);
     for (const V of VARIANTS) for (const size of SIZES) {
+      if (V.only && V.only !== size.name) continue;
       const row = READERS.map((k) => summary.find((s) => s.v === V.name && s.size === size.name && s.kind === k)?.pass ? 'pass' : 'FAIL');
       P(`| ${V.name} | ${size.name} | ${row.join(' | ')} |`);
     }
@@ -380,6 +392,39 @@ async function main() {
     P('| Variant | Size | Edges 0–4 | |');
     P('|---|---|---|---|');
     for (const e of edges) P(`| ${e.v} | ${e.size} | ${e.res.map((r) => (r.changed ? `${r.edge}: FLIP` : `${r.edge}: held`)).join(' · ')} | ${e.res.some((r) => r.changed) ? 'FAIL' : 'pass'} |`);
+    P('');
+
+    // keyboard: the skip link never moves the block and shows whole; Enter
+    // lands after the figure, set; Shift+Tab back over the block is a jump
+    P('### Keyboard (default)');
+    P('');
+    P('| Size | Block moves on focus | Link whole in view | Enter: focus, figure | Shift+Tab back: played? | |');
+    P('|---|---|---|---|---|---|');
+    for (const size of SIZES) {
+      const page = await open(browser, size, `${base}/_held.html`);
+      const g = await G(page);
+      if (g.mode === 'seq') { await page.close(); continue; }
+      const top0 = await page.evaluate(() => document.getElementById('film-block').getBoundingClientRect().top + scrollY);
+      for (let i = 0; i < 6 && !(await page.evaluate(() => document.activeElement?.classList.contains('held-skip'))); i++) await page.keyboard.press('Tab');
+      await sleep(500);
+      const k = await page.evaluate(() => {
+        const r = document.querySelector('.held-skip').getBoundingClientRect();
+        return { top: document.getElementById('film-block').getBoundingClientRect().top + scrollY, whole: r.top >= 0 && r.bottom <= innerHeight && r.height > 0, focused: document.activeElement?.classList.contains('held-skip') };
+      });
+      await page.evaluate(() => { window.__played = false; new MutationObserver(() => { if (document.documentElement.dataset.moving === '1') window.__played = true; }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-moving'] }); });
+      await page.keyboard.press('Enter');
+      await sleep(700);
+      const e = await page.evaluate(() => ({ id: document.activeElement?.id, pos: window.__held.p.pos, goal: window.__held.p.goal, played: window.__played }));
+      await page.evaluate(() => { window.__played = false; });
+      await page.keyboard.down('Shift'); await page.keyboard.press('Tab'); await page.keyboard.up('Shift');
+      await sleep(900);
+      const b = await page.evaluate(() => ({ focused: document.activeElement?.classList.contains('held-skip'), pos: window.__held.p.pos, goal: window.__held.p.goal, played: window.__played }));
+      const moved = Math.abs(k.top - top0) > 0.5;
+      const pass = k.focused && !moved && k.whole && e.id === 'after-film' && e.pos === e.goal && !e.played && b.focused && b.pos === b.goal && !b.played;
+      P(`| ${size.name} | ${moved ? `yes, ${Math.round(k.top - top0)} px` : 'no'} | ${k.whole ? 'yes' : 'no'} | ${e.id || '–'}, ${e.played ? 'played' : 'set'} (${e.pos}/${e.goal}) | ${b.played ? 'played' : 'set'} (${+b.pos.toFixed(2)}/${b.goal}) | ${pass ? 'pass' : 'FAIL'} |`);
+      log(`keyboard ${size.name}: ${pass ? 'pass' : 'FAIL'} ${JSON.stringify({ k, e, b, moved })}`);
+      await page.close();
+    }
     P('');
 
     // pinned, for comparison

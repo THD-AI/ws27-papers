@@ -50,3 +50,33 @@ At a steady wheel of 300 px/s in a 900 px window, defaults: step 1 due 0.3 s aft
 - **Pinned, for comparison:** at the same steady wheel the engine squeezes steps 2 to 4 to 0.7–0.8 s; on a 390×844 phone the ordinary pinned scene cannot pin this figure at all (235 px in 45% of the window) and reads as stills, where the held block holds it at 366 px.
 - **Gates:** the first run found the key's half-check names (x2, x3, z2, z3) struck through by their arcs; `film.js` now sets those names outside the arc. After that: no line through lettering, smallest figure lettering 11.5 px beside and 11.7 px on top, page text 11.5 px or more, no sideways scroll, no em dash.
 - **Fit test:** holds at 1440×900, 1366×768, 1280×720, 1280×630 and 390×844; stills at 390×660 (figure 267 px), 844×390 (MODES) and 720×450 (304 px beside).
+
+## Fix round 1: plan (before coding)
+
+From `held-proto-lay.md` (7), `held-proto-ai-made.md` (7) and `held-proto-motion.md` (7.5), as the coordinator sorted them into nine items.
+
+| # | Item | File | Done when |
+|---|---|---|---|
+| 1 | Qubit 4: a mono "4" outside its ring; the dashed X as four short arms that start outside the ring; the key's joins stop short of the X; the square tiles' names moved out from the centre to make room | `figures/film.js` | the audit finds no line through "4" or any key name; the step 4 shot shows the ring clear at reading size |
+| 2 | An honest key: step 2 z0 and z1 lit (and the X); step 3 only z3; step 4 all three, the X, and "every check that fired, rounds 1–8" under the key; print = step 4 | `film.js` | the step 2, 3 and 4 shots show exactly that; the print composite has the caption |
+| 3 | Rounds at an even real-time pace: the shell eases t with `soft()`, so the figure inverts it for the columns; each round number (and "round …", the end "…") arrives with its column | `film.js` | in the recording the round columns arrive at even intervals; no number shows before its column |
+| 4 | Step 4 in the drawing: "across the chip" beside the vertical join, "along time" beside the horizontal one (muted mono 11.5, between row lines, never on one); chart joins under the lit boxes (2 px dashes so they show in the gap); boxes inset 6 px across so the flip line stays clear; "lit: …" moved to the foot, left-aligned with it; without the in-figure notes the chart and key move up (no empty band) and the wide key sits on the flip-check rows. Without notes the drawing is shorter, so `film.js` exports `aspectFor(ctx)` for the page | `film.js`, `_held.js` | the audit passes at every step; shots show no gap above the chart |
+| 5 | Notes without numbers. Laptop: read notes grey, current in ink. Phone: the current note alone; the old one fades out in 0.12 s, then the new one fades in | `_held.js`, `_held.css` | no number in the notes or the stills; a phone frame never shows two notes |
+| 6 | Defaults band 0.6, rest 0.6; band px = max(band × svh, band × 900), which is max(0.6 svh, 540 px) at the default; the rest gets the same floor (it must cover the last step). The track's height follows in px (`--hold-px`) | `_held.js`, `_held.css`, `tools/held-test.mjs` | at 1280×720 the bands are 540 px; the harness's default runs use them |
+| 7 | No set of several steps while the figure is on screen: four or more behind becomes a run-through, each queued step in order at 0.35 s (also backwards). Set at once only off screen, on a jump, and for steps still queued when the block lets go | `_held.js`, test | unit check: four behind changes nothing in that frame and then plays each step at 0.35 s; no `set:skip` in any run |
+| 8 | Skip link out of the flow on focus (absolute, above the block's top, on paper), with `scroll-margin` so it shows whole | `_held.css` | harness: the block's top does not move when the link is focused, and the link is fully in the window |
+| 9 | Focus moving into or over the block (Shift+Tab) is a jump: set, not played back | `_held.js` | harness: after Shift+Tab from `#after-film` to the skip link, `data-moving` never set and the figure equals the goal |
+
+Harness: the default only at all three sizes, plus 0.45/0.5 at 1440×900; pinned kept for comparison; keyboard checks for 8 and 9; with the video.
+
+Notes: the key's X now shows at steps 2 and 4, not 3 (item 2's honesty applies to it too: the flip is in round 3). Item 7 overrides section 0's "jump to the second-last": the run-through is the coordinator's later decision after the motion review.
+
+## Fix round 1: after measuring (`node tools/held-test.mjs`, with the recording)
+
+- Steady wheel, new default (band 0.6, rest 0.6, at least 540 px each): passes at 1440×900, 1280×720 and 390×844, every step at full length (1.4, 2.0, 1.4, 1.4, 1.6 s), nothing in flight at let-go. In the simulation it also passes at svh 630 and 660.
+- Trackpad, flick, Space at the default: no step is set while the figure is held in view any more (four behind runs through at 0.35 s a step), so these fast readers now arrive at let-go with 1 to 3 steps queued, and those are set by the exit rule. That is the cost of item 7 under a hold of about 2.5 windows. Space at 1440×900 carries the figure off screen before the last step.
+- 0.45 / 0.5 at 1440×900, for comparison: wheel passes (step 4 cut to 1.31 s at let-go), trackpad and Space pass by running through, flick fails (2 queued).
+- Edges: no flip anywhere. Keyboard: the skip link no longer moves the block and shows whole; Enter lands on `#after-film` with the figure set; Shift+Tab back is set, never played.
+- Gates: no line through lettering at any step, size or in print; figure lettering 11.5 px or more beside, 11.7 on top; page text 16.5 px or more in the held stage. Fit: 390×660 is still stills (296 px, under 313; it was 267).
+- In the figure, the wide key grew (pitch 34 to 50) and the tall one (30 to 40), and the tall drawing is 24 units taller, so that the 4, the X and the joins have room. "along time" sits above its pair in the tall drawing, where the chart ends close after it.
+- Gap: the recording is still about 10 frames a second (headless screencast), so the even cadence of the rounds is not judged by it. The phone's sequential crossfade is set in CSS and not measured.
