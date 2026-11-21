@@ -41,3 +41,12 @@ At a steady wheel of 300 px/s in a 900 px window, defaults: step 1 due 0.3 s aft
 - Phone flick: 4000 px/s decaying with τ 0.5 s, one every 1.5 s, by scripted scrolling (headless Chrome has no real touch fling); at 390×844 the page is emulated as a touch phone.
 - Space: the real key, every 1.5 s (Chrome scrolls 0.875 of the window, smoothly).
 - Flags: a forward step played in under 1.2 s at the steady wheel; any backward goal change while the reader rests at a band edge (a dedicated ±20 px jitter test at every edge, plus every backward change in the forward runs); any step still queued when the block lets go; for wheel and Space, the last step ending with under 75% of the figure in view.
+
+## After measuring (21 November, `node tools/held-test.mjs`; full report in `.shots/held/report.md`, not committed)
+
+- **Steady wheel:** the defaults (band 0.45, rest 0.5) pass at 1440×900 only (step 4 shortened to 1.25 s by the exit rule). At 1280×720 step 4 is still queued when the block lets go; at 390×844 it is cut to 1.03 s. Band 0.6 / rest 0.6 passes at all three sizes, every step at full length. The estimate above held.
+- **Trackpad, flick, Space:** these readers cross a band faster than a step plays, so the four-behind rule sets steps 1 to 3 or the exit sets the last; no setting of band and rest is clean for all of them, because five steps take at least 6 s (7.8 s at full length) and these readers cross 2.5 windows in 2 to 4 s. Space also carries the figure out of view before the last step ends (one press is 0.875 of a window).
+- **Resting on an edge:** no flip at any edge, size or setting (±20 px after crossing).
+- **Pinned, for comparison:** at the same steady wheel the engine squeezes steps 2 to 4 to 0.7–0.8 s; on a 390×844 phone the ordinary pinned scene cannot pin this figure at all (235 px in 45% of the window) and reads as stills, where the held block holds it at 366 px.
+- **Gates:** the first run found the key's half-check names (x2, x3, z2, z3) struck through by their arcs; `film.js` now sets those names outside the arc. After that: no line through lettering, smallest figure lettering 11.5 px beside and 11.7 px on top, page text 11.5 px or more, no sideways scroll, no em dash.
+- **Fit test:** holds at 1440×900, 1366×768, 1280×720, 1280×630 and 390×844; stills at 390×660 (figure 267 px), 844×390 (MODES) and 720×450 (304 px beside).
