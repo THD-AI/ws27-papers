@@ -2,13 +2,32 @@
 
 Kind: log, newest first. Read this before every loop on the deck; add to it at the end of every loop (the compound step). Each entry: what happened, what it means, the rule that follows. His words are in dotUni `.docs/transcripts/` (numbers given).
 
-## State after loop 10 (20 November): where things are
+## State after loop 12 (21 November): where things are
 
 - The deck: `slides2.js` (open `index.html?v=2`), 46 pages. Build: `node tools/deck.mjs renovate --v2` (PDF, cue sheet `CUES-v2.md`, gates), `node tools/deck-offline.mjs renovate --v2` (one presenting file in `.shots/deck/renovate-v2/`).
-- Live: https://thd-ai.github.io/ws27-papers/renovate/talk/ (add `--site` after `node lib/build.mjs`; publish steps in the README). Notes on N, hidden in full screen; F for full screen.
-- Merged: ws27-papers#11 (the deck). Open: ws27-papers#12 (the talk on the site), paper-studio#3 (the drawings, stacked on #2).
+- Live: https://thd-ai.github.io/ws27-papers/renovate/talk/ (gh-pages `145ee27`, loop 12). Notes on N, hidden in full screen; F for full screen. Publish steps in the README.
+- Q&A: `QUESTIONS.md`, nine expected questions with short answers from the article's facts.
+- Clock: the notes speak in about 14 minutes (130 words a minute, 1.5 s a click, 2.5 s a landing); the cue sheet's start times are computed from that, not set by hand.
+- Readers: round 11 median 7.5, round 12 median 8 (professor 8 and grade 1.7, voice 8, facts 8, projector 8, sceptic 7). Reports in `readers-r11/`, `readers-r12/`.
+- Open PRs: ws27-papers#12 (the talk on the site, now with loops 11–12), paper-studio#3 (stacked on #2).
 - His standing calls: no QR code on any slide; plugs and keys stay simple one-line drawings; the closing socket plate stays as it is; "How this was made" is folded, never a slide.
-- Not done: nobody has checked the deck on the real projector; do it before 12 December (both the PDF and the site page, in full screen).
+- Waiting on him: is 12 December 2026 (a Saturday) right; are the two new first-person lines true (slide 15 "read first, then we see", the closing "It is harder. That doesn't make it worse."); does the worker thesis go on the closing slide (the sceptic's ask, a slide he liked). Then the real projector, and rehearsal run 0.
+
+## Loops 11–12 (21 November): the room, the clock and the defence
+
+What happened:
+- Projector: every page rendered at 1024×768 with 12% ambient light and slight blur (`.shots/deck/projector/`). It all reads; the wall strip on slide 14 nearly vanished (thin grey lines in the drawing) and now carries the ink filter. A label on slide 8 sat under the wrong dot.
+- Clock: the notes spoke in 11 minutes against a cue sheet planned for 14:40, with some windows too tight and others too loose. The start times are now computed from the words.
+- Round 11 (projector, professor, fact checker, voice and pacing, AI-sceptic): median 7.5. Convergent: the thesis came only at minute 14, the worker side of his thesis was never said, the course theory was hidden, ten fact wordings overstated their sources ("Telekom says 40" was only its press release; "walked it back" was half true for Klarna; "the staff stay" over a chart of 4,000 positions a year leaving).
+- Fixed: his short answer at the start of slide 2; "the agent works with them, not instead of them" on slide 9 and in the close; an honest line that the rebuild can't be shown to have caused T-Mobile's result; a customer case and "always a way to a person" in step 6; the staff load in step 4; adoption terms (TOE) on slide 9 and stage-gate on slide 15, on the slide and not in speech; spoken grammar throughout; every fact fix.
+- Round 12 (the four seats whose part changed): median 8. The sceptic stays at 7 until the worker thesis is on a slide, not only spoken.
+
+Rules that follow:
+50. **Time a talk from its words, never by hand.** 130 words a minute, plus the clicks and the landings; a cue sheet wrong in both directions is worse than none.
+51. **Test the projector, not the file.** Low resolution, lifted blacks and blur first: thin grey drawing lines are the first to go.
+52. **Course terms go on the slide; the voice stays in the notes.** The grader reads the slide; a spoken aside for the grader is the sentence the room loses.
+53. **Say the claim first and end on his own line.** When the title only repeats the slide, the landing steps backwards.
+54. **Every fact rewrite gets checked again.** Round 12 found five new overstatements made by round 11's fixes ("cut forty-five jobs", "close to a tenth", "next step").
 
 ## Loop 10 (20 November): the last kink, and the talk on the site
 
