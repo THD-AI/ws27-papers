@@ -102,3 +102,25 @@ The analogy as the section's picture, generated in his line: it makes the idea f
 ## 5. How the concepts get judged (before any sketch)
 
 The three readers from round 1 judge section 3 against their own words: does A, B or C make section 4 land? A quantum error-correction specialist judges whether the analogy is true enough, and where it would mislead. The AI-made sceptic judges whether a generated building in his line can avoid the generic generated look. Then he gets one recommendation with the reasons, not a prototype.
+
+## 6. Build plan for section 4 (playbook: plan, to be reviewed before any work)
+
+He agreed to the slab-and-gauge analogy on 21 November (transcript `-007`), on the condition that it goes through the playbook. Every number below is a claim for the reviewers to check.
+
+| # | Requirement | File | Done when |
+|---|---|---|---|
+| 1 | **Research first:** what a real tell-tale crack monitor and a settlement gauge look like and how an engineer reads them, from free-licensed photographs and a building-section reference | `21-Paper-Studio/forge/refs/SOURCES.md`, `sources.json` | Two or three references, each with author, licence (CC BY, CC BY-SA, CC0 or public domain) and fetch date recorded. **Downloads only with his OK** (filename, source and size stated) |
+| 2 | **The drawing:** a row of three floor slabs in section with a gauge across each of the two joints, the gauges unread and neutral; his line from `hand.png`; on white, no people, no props, no text, a shape distinct from the Renovate house | `21-Paper-Studio/forge/boards/gauge-slabs.json` | At most two rounds of three candidates. Each is looked at full size on white and on dark. One is approved as a first pass, then by him |
+| 3 | **The analogy scene,** placed by code over the drawing. Step 0: the row and its two gauges, all at rest. Step 1: both gauges moved, accent field and solid dot, and the question "which slab moved?". Step 2: two small copies of the same drawing (reused, never generated again): the middle slab sank, or both end slabs sank. Both move the same two gauges. Caption ending: "so a program has to guess which it was, before the next frame". The scene says what it is: "the simplest version: three in a row" | `articles/other-half/figures/gauges.js`, data `data/gauges.json` written by `tools/other-half-data.mjs` | A fresh lay reader, given five seconds on the last step, states the one idea. Every moved gauge is computed from the data, not placed by hand |
+| 4 | **The film on the real grid:** three small frames, unlabelled. Frame 1 dark; frame 2 with `z0` and `z1` lit; frame 3 dark. Beside frame 2, the two stories small: qubit 4, or qubits 2 and 6. The lit mark is the same as in the analogy | `figures/film.js` (rewritten), `data/film.json` (regenerated) | The generator checks that both stories light exactly `z0` and `z1`, and that together they commute with every flip-check and cross from edge to edge. Five-second test as above |
+| 5 | **Text:** the two scenes go into section 4 at its second and third paragraphs, with the fewest words changed. Any change to his text is listed for his yes | `articles/other-half/text.md` | A diff of section 4 only, with every changed sentence listed |
+| 6 | **Print and phones:** both scenes print as stills and read at 390 px | the same files | Gates below pass |
+| 7 | **Gates:** lettering at least 11 px (11.5 on top); no line through lettering; nothing outside the frame; en dashes; `node tools/read.mjs other-half`; the motion and timing tools on the new scenes; print | – | All green |
+| 8 | **Review the work:** three fresh readers (lay, specialist, AI-made sceptic) on the built scenes, with video; then his eye | `reviews/s4-*.md` | Median near 9, or Limits to him after three rounds |
+
+Not taken, with reasons:
+- The held-scroll mechanism stays on its branch: ordinary scenes are enough for two short scenes.
+- The other candidate visuals (threshold, scoreboard, "two ways") come later, by his choice.
+- The section 2 wording fix is a separate text pass.
+
+Branch: this work moves to a new branch from `main` (`feat/section4-visuals`), carrying this brief and its reviews. `feat/held-scene` keeps the prototype.
