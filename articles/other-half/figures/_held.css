@@ -1,0 +1,70 @@
+/* Lab pages _held.html and _pinned.html. lib/article.css gives the page,
+   the type and (pinned) the real .scene geometry; this file only adds the
+   held block, the notes as text, the stills and the lab kicker. */
+
+.svh-probe { position: fixed; top: 0; left: 0; width: 0; height: 100svh; visibility: hidden; pointer-events: none; }
+
+.lab-kicker {
+  margin: 0 0 2.4rem; padding-top: 0.9rem; border-top: 1px solid var(--hairline);
+  font: 500 0.72rem/1.6 var(--mono); letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted);
+}
+.lab-kicker a { color: var(--accent-line); }
+
+h2.sec .sec-num { color: var(--accent-line); font-family: var(--mono); font-weight: 400; margin-right: 0.35em; }
+
+/* the notes, as the figure sets them: italic serif */
+.held-notes { list-style: none; margin: 0; padding: 0; font: italic 400 1.06rem/1.45 var(--serif); }
+.held-notes > li::before { content: none !important; }
+.held-notes li { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); margin: 0 0 0.6rem; opacity: 0; transition: opacity 0.25s ease, color 0.25s ease; }
+.held-notes li.is-on { opacity: 1; color: #4A4D55; }
+.held-notes li.is-current { color: var(--ink); }
+.held-notes .n, .held-still-note .n { font: 400 0.72rem/2 var(--mono); font-style: normal; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---- the held block ------------------------------------------------------ */
+.held { position: relative; height: calc((1 + var(--hold, 1.95)) * 100svh); max-width: none !important; }
+.held-stage { position: sticky; top: 0; height: 100svh; box-sizing: border-box; display: grid; align-content: center; }
+.held-text > p { margin: 0 0 1.1rem; }
+.held-fig .fig-frame { width: var(--fig-w, 100%); max-width: none; aspect-ratio: var(--fig-ar, 1.6); margin: 0; }
+
+/* beside: the article's scene grid (article.css 2d), so held and pinned match */
+.held.is-side { --pad: clamp(1.5rem, calc((var(--pw) - 62rem) * 0.2), 4rem); margin: 0 calc(var(--pad) - var(--gutter)) 0 0; }
+.held.is-side .held-stage { grid-template-columns: clamp(20rem, 26%, 23rem) minmax(0, 1fr); column-gap: var(--gap); align-items: start; }
+.held.is-side .held-fig { display: flex; justify-content: center; }
+
+/* on top: the passage, the current note, then the figure, full bleed */
+.held.is-top { margin: 0 calc(-1 * var(--gutter)) 0 calc(-1 * var(--left)); }
+.held.is-top .held-stage { grid-template-columns: minmax(0, 1fr); row-gap: 0.75rem; padding: 1rem 0 0.75rem; }
+.held.is-top .held-text { max-width: var(--measure); margin: 0 var(--gutter) 0 var(--left); }
+.held.is-top .held-text > p { margin-bottom: 0.7rem; }
+.held.is-top .held-notes { display: grid; }
+.held.is-top .held-notes li { grid-area: 1 / 1; margin: 0; }
+.held.is-top .held-notes li.is-on:not(.is-current) { opacity: 0; }
+.held.is-top .held-fig { justify-self: center; }
+
+/* stills: no hold, no empty scroll */
+.held.is-seq { height: auto; }
+.held.is-seq .held-stage { position: static; height: auto; display: block; }
+.held.is-seq .held-fig, .held.is-seq .held-notes { display: none; }
+
+.held-skip { position: absolute; left: -999rem; }
+.held-skip:focus { position: static; display: inline-block; margin: 0 0 0.6rem; font: 500 0.85rem var(--sans); }
+
+/* ---- the pinned page: article.css's .scene, plus the figure's size -------- */
+.scene .scene-stage .fig { margin: 0; }
+.scene .scene-stage .fig-frame { width: var(--fig-w, 100%); max-width: none; aspect-ratio: var(--fig-ar, 1.6); }
+.scene .passage .note { margin: 0; font: italic 400 1.06rem/1.45 var(--serif); }
+.scene .passage.is-read { color: #4A4D55; }
+.scene.is-seq .scene-stage, .scene.is-seq .scene-text { display: none; }
+.scene.is-seq { display: block; margin: 0; }
+
+/* ---- stills ---------------------------------------------------------------- */
+.held-stills { max-width: none !important; width: calc(var(--measure) + 2 * var(--out, 0px)); margin: 0 0 1rem calc(-1 * var(--out, 0px)); }
+.held-still { margin: 0 0 2.2rem; }
+.held-still-note { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); max-width: var(--measure); margin: 0 0 0.6rem var(--out, 0px); font: italic 400 1.06rem/1.45 var(--serif); }
+.held-still .fig-frame { margin: 0 auto; max-width: 100%; }
+
+@media print {
+  .held { height: auto; }
+  .held-stage { position: static; height: auto; }
+  .held-skip, .lab-kicker { display: none; }
+}

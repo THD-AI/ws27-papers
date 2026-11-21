@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en-GB" data-slug="other-half" data-accent="other-half" data-held="held">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Held scene – lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Libre+Franklin:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400;1,6..72,600&display=swap">
+<link rel="stylesheet" href="../../../lib/article.css">
+<link rel="stylesheet" href="./_held.css">
+</head>
+<body>
+<main id="text" class="body">
+<p class="lab-kicker"></p>
+<h2 class="sec"><span class="sec-num" aria-hidden="true">3</span> <span class="sec-title">Asking without looking</span></h2>
+<p>These questions are called <strong>checks</strong>. While nothing goes wrong, a check gives the same answer round after round. When a qubit next to it is hit, the answer changes, and we say the check <strong>fires</strong>.</p>
+<p>Two kinds of error can hit a qubit. A flip swaps 0 and 1, as in an ordinary bit. A phase error is harder to picture. In the water image, it keeps the pattern's shape and shifts its rhythm: 0 and 1 stay as they are, but "0 plus 1" becomes "0 minus 1". That only shows while the qubit is in both states at once, which an ordinary bit can't be. Half of the checks notice flips and the other half notice phase errors. Some errors are both at once and fire checks of both kinds. We come back to those in section 6.</p>
+<p>A check can also just report wrongly. Then it fires twice in a row, once when the wrong answer appears and once when the right one returns, although no storing qubit was hit. So a single round is never enough. The checks must be read as a sequence.</p>
+<h2 class="sec"><span class="sec-num" aria-hidden="true">4</span> <span class="sec-title">A film of hints</span></h2>
+<p>One round of checks takes 1.1 millionths of a second, and a grid of distance 7 has 48 checks. In the time of one blink the chip gets through about ninety thousand rounds and puts out about four million check results, for a single logical qubit.</p>
+<a class="held-skip" href="#after-film">Skip the film figure</a>
+<section class="held" id="film-block" data-fig="film" aria-label="A film of hints, step by step">
+<div class="held-stage">
+<div class="held-text">
+<p>While the computer runs, that stream is all that comes out of it. We ended up thinking of it as a film in which a few points light up in every frame.</p>
+<ol class="held-notes"></ol>
+</div>
+<div class="held-fig" aria-hidden="true"><div class="fig-frame"></div></div>
+</div>
+</section>
+<div class="held-stills" hidden></div>
+<p id="after-film" tabindex="-1">The fired checks say roughly where something happened and which kind of error it was. They don't say which qubits were hit. Many sets of errors light up the same points.</p>
+<h2 class="sec"><span class="sec-num" aria-hidden="true">5</span> <span class="sec-title">The decoder, and the one mistake that matters</span></h2>
+<p>A program on a classical computer watches that film and decides which errors happened. It's called the <strong>decoder</strong>. Nothing on the chip gets repaired: the decoder keeps a record of the errors it believes in, and the final result is corrected in software. For simply storing a qubit that's enough. For calculating it isn't, because some operations can only go ahead once the decoder has answered. So its speed matters too (section 8).</p>
+<p>The decoder guesses: from the checks that fired, it picks one explanation. Most small mistakes in that guess are harmless. A wrong guess that fires the same checks usually differs from the truth in a way the code doesn't care about.</p>
+<p>The harmful case looks like this. A correction acts on the grid just as errors do. If the real errors and the decoder's correction together make an unbroken line across the grid, from one edge to the opposite edge, the stored value has changed. No check fires, because every check along such a line sees an even number of errors. A shorter line of errors behaves the same way inside: only the checks at its two ends fire.</p>
+<p>This silent failure is a <strong>logical error</strong>, and how often it happens is what every decoder is measured by. It also shows what distance (section 2) is worth. On a grid of distance 5 a line needs five storing qubits. So three real errors can be enough. A decoder that sees them may add two more.</p>
+</main>
+<div class="svh-probe" aria-hidden="true"></div>
+<script type="module" src="./_held.js"></script>
+</body>
+</html>
