@@ -26,6 +26,8 @@ const NOTES = (d) => {
     'the decoder pairs lights across rounds, not round by round – across the chip, along time, or to the edge',
   ];
 };
+// the notes as page text (the held and pinned lab pages): the same words the drawing uses
+export const notes = NOTES;
 const OUT = { top: [0, -1], bottom: [0, 1], left: [-1, 0], right: [1, 0] };
 const DASH = (C) => ({ stroke: C.ink, 'stroke-width': 1.25, 'stroke-dasharray': '2 5', 'stroke-linecap': 'round', fill: 'none' });
 
@@ -51,7 +53,8 @@ function build(el, ctx) {
   notes.forEach((s, i) => {
     const n = g(svg);
     if (print) text(n, 16, 42 + i * 18, `${i + 1}  ${s}`, { ...noteO, size: 12.5, width: W - 32 });
-    else { text(n, 16, tall ? 44 : 48, s, noteO); st.fade(n, i + 0.05, i + 0.3, i < notes.length - 1 ? [i + 1, i + 1.1] : null); }
+    // ctx.notes === false: the page sets the notes as text, the band stays empty
+    else if (ctx.notes !== false) { text(n, 16, tall ? 44 : 48, s, noteO); st.fade(n, i + 0.05, i + 0.3, i < notes.length - 1 ? [i + 1, i + 1.1] : null); }
   });
 
   // ---- layout ---------------------------------------------------------------
