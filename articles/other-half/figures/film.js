@@ -12,7 +12,7 @@ import { mountFigure, svgRoot, g, circle, line, path, stage } from '../../../lib
 import { pal, grid, text, floor } from './shared.js';
 
 export const steps = 5;
-export const durations = { large: [1.8, 2.4, 1.8, 1.8, 1.8] };
+export const durations = { large: [1.4, 2.0, 1.4, 1.4, 1.6] };
 const SIZE = { wide: [720, 450], tall: [360, 580] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
@@ -128,7 +128,10 @@ function build(el, ctx) {
   const iw = order.findIndex((c) => c.id === along.check);
   line(joins, colX(along.rounds[0]), rowY(iw), colX(along.rounds[1]), rowY(iw), DASH(C));
   const ka = K.tiles[across.checks[0]].c, kb = K.tiles[across.checks[1]].c;
-  path(joins, `M${ka[0]} ${ka[1]} L${q[0]} ${q[1]} L${kb[0]} ${kb[1]}`, DASH(C));
+  // on the key the join runs from each tile's edge to qubit 4, clear of the names
+  const toward = (c, f) => [c[0] + (q[0] - c[0]) * f, c[1] + (q[1] - c[1]) * f];
+  const [sa, sb] = [toward(ka, 0.5), toward(kb, 0.5)];
+  path(joins, `M${sa[0]} ${sa[1]} L${q[0]} ${q[1]} L${sb[0]} ${sb[1]}`, DASH(C));
 
   const keyLine = g(svg);
   text(keyLine, tall ? 16 : L.x0, bottom + 36, 'lit: the answer changed since the round before', { family: 'mono', size: 11.5, fill: C.muted });
@@ -141,7 +144,7 @@ ${R} rounds from a longer run` : `a constructed example · ${R} rounds from a lo
     st.fade(keyG, 0, 0.5);
     // the rounds arrive at an even pace, like the clock that drives them
     cols.forEach((c, k) => {
-      const at = k === 0 ? 0.2 : 1 + (k - 1) * 0.12;
+      const at = k === 0 ? 0.2 : 1.05 + (k - 1) * 0.12;
       st.on((gg) => { c.style.display = gg >= at ? '' : 'none'; });
     });
     st.on((gg) => { roundsG.style.display = gg >= 1 ? '' : 'none'; keyLine.style.display = gg >= 1 ? '' : 'none'; });

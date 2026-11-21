@@ -1,6 +1,19 @@
 # Plan: a held scene, and the film of hints
 
-Status: plan, round 2. The round 1 plan was reviewed by three readers before anything was built (his rule, 21 November 2026: measure twice, cut once): a quantum error-correction specialist (overall 7.5), a scroll-story designer (6) and the AI-made sceptic (6). Their reviews are in `reviews/held-plan-*.md`. His words: dotUni `.docs/transcripts/2026-11-21-004` and `-005`.
+Status: plan, round 3 (form C chosen; the held mechanism checked again, see section 0). Round 2: The round 1 plan was reviewed by three readers before anything was built (his rule, 21 November 2026: measure twice, cut once): a quantum error-correction specialist (overall 7.5), a scroll-story designer (6) and the AI-made sceptic (6). Their reviews are in `reviews/held-plan-*.md`. His words: dotUni `.docs/transcripts/2026-11-21-004` and `-005`.
+
+## 0. Round 3: decisions that override the sections below
+
+- **Form C, the space-time chart, is chosen:** sceptic 8, specialist 8.5 and lay reader 8, against 5 to 7 for the filmstrip. Forms A and B in sections 2, 4, 6 and 7 are history. The figure is `figures/film.js`; its notes and step lengths (1.4, 2.0, 1.4, 1.4, 1.6 s) are the ones that count.
+- **The hold must outlast the steps** (motion designer, `reviews/held-plan2-motion.md`). At a steady wheel of about 300 px a second, 1.5 windows pass in about 4.5 s, but the steps need 6 to 8 s. Band and rest become URL parameters (`band=`, `rest=`), so he can compare about 1.5 and 2 windows. Defaults: a band of 0.45 of the window and a rest of 0.5.
+- **Play rule:** up to two steps behind, each plays at full length. Three behind, each plays at 1/1.5 of its time. Four or more behind, it jumps to the second-last step and plays only the last.
+- **Exit rule:** the block can't wait without holding the scroll. When it lets go, queued steps are set at once and the step in flight finishes within 0.6 s.
+- **Entry:** step 0 is due when the block's top passes 65% of the window, so the figure is never blank when it pins.
+- **Held fit test** on top of `MODES`: the passage and the figure must fit together in one `svh` window. Beside the passage, the figure column must be at least 690 px wide; on top, the figure at least 313 px wide. Otherwise the scene falls back to stills. By estimate a real iPhone in Safari (`svh` about 660) falls back, and he will be told.
+- **Bands are measured in `svh` px** from a fixed probe element, never from `innerHeight`.
+- **Text in the held block:** the section 4 paragraph, then the step notes as page text. The note drawn inside the figure is hidden there, so no words are read twice.
+- **Harness:** the held page exports its pure functions (`goalAt`, the play queue), and a Puppeteer harness drives it with the four reader models (steady wheel, trackpad, flick, Space). New gate: no line through lettering.
+- **Readers get videos,** not only stills. The real-phone runs are his.
 
 ## 1. What he asked for
 
