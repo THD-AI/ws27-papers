@@ -223,7 +223,9 @@ function build(el, ctx) {
   text(seven, B7.lx, B7.row2 + 4, 'all four pairs', lab);
   circle(seven, B7.gx, B7.row2, B7.r, { fill: C.ink });
   text(seven, B7.tx, B7.gy + (tall ? 22 : 14), `${n} : 1`, { family: 'mono', size: 13 });
-  text(seven, tall ? B7.gx + 14 : print ? B7.gx + 12 : B7.tx, B7.row2 + 4, tall ? 'so the decoder bets on the flip' : 'so the decoder bets on the single flip', { ...noteO, width: tall ? 220 : 150 });
+  if (tall) text(seven, B7.lx, B7.gy + 40, `1 in ${Math.round(1 / bet.p).toLocaleString('en')}`, { ...mono });
+  else text(seven, B7.tx, B7.gy + 32, `each qubit: 1 slip in ${Math.round(1 / bet.p).toLocaleString('en')} rounds`, { ...mono, width: 150 });
+  text(seven, print ? B7.gx + 12 : B7.gx + 14, B7.row2 + 4, tall ? 'so the decoder bets on the flip' : 'so the decoder bets on the single flip', { ...noteO, width: tall ? 220 : 150 });
   st.fade(seven, 7, 7.2).fill(betDots, 7.1, 7.85);
 
   if (print) {

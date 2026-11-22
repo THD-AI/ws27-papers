@@ -40,7 +40,8 @@ function build(el, ctx) {
   K.forEach((k, i) => {
     const r = byD(k.d);
     if (!r) return;
-    if (!k.label) k.label = `${r.total} · distance ${r.distance}`;
+    if (!k.label) k.label = `${r.total} qubits for one`;
+    if (!k.sub) k.sub = `distance ${r.distance}`;
     if (i === 1) k.sub = `${r.storing} store, ${r.helpers} help`;
     if (i === 3) k.sub = `${r.helpers} checks a round`;
     k.say = `Distance ${r.distance}: ${r.storing} storing qubits and ${r.helpers} helpers, ${r.total} qubits in all.`

@@ -90,6 +90,7 @@ function build(el, ctx) {
     line(key, 196, ky - 4, 214, ky - 4, { stroke: C.ink, 'stroke-width': 1.6, 'stroke-dasharray': '6 4' }); text(key, 220, ky, 'correlated', { size: 13, fill: C.ink });
   }
 
+  text(cor, lx(rel[0].p) + 8, ly(rel[0].cHi) - 4, 'level', { italic: true, size: 13 });
   st.fade(axes, -1, 0).fade(plain, 0.05, 0.25).fade(net, 0.3, 0.6).fade(cor, 0.55, 0.85);
   return { set: (s, t) => st.set(s, t) };
 }

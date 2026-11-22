@@ -32,7 +32,7 @@ function build(el, ctx) {
     + `The same ${ex.fired.length} fired checks can be explained in two ways: plain matching picks the one that is right ${1} time in ${inN}; the other, read together, is right about ${in10} times in 10. `
     + `Counted by us with ${pctErr} error per storing qubit and checks that are never wrong.`);
   svg0.style.color = C.ink;
-  text(g(svg0, { 'data-role': 'title' }), 16, 18, tall ? 'the likelier answer can happen in two ways' : `the likelier answer can happen in two ways · the smallest grid: ${d.storing_qubits} qubits, ${d.helpers} checks`, { family: 'sans', size: 13, weight: 600 });
+  text(g(svg0, { 'data-role': 'title' }), 16, 18, tall ? 'the likelier answer can happen in two ways' : 'the likelier answer can happen in two ways', { family: 'sans', size: 13, weight: 600 });
   const svg = tall ? g(svg0, { transform: 'translate(0 24)' }) : svg0;
   const st = stage();
   const noteO = { italic: true, size: tall ? 13 : 14.5 };

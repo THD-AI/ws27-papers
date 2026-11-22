@@ -167,7 +167,7 @@ function build(el, ctx) {
     const grp = g(parent), yp = pl.y(pl.pn.levels.plain.rate);
     const xa = pl.x(vals[0]), xb = pl.x(vals[vals.length - 1]), xm = (xa + xb) / 2;
     const ny = pl.y(tall ? 0.0088 : 0.0098);
-    const nt = text(grp, inside ? pl.R.x + 44 : xm - 60, ny, `the lines first dip below plain matching at [[${vals.map((v) => M(v)).join(']] or [[')}]] million examples`, { ...noteO, width: inside ? 170 : 250, lh: inside ? 15 : 18 });
+    const nt = text(grp, inside ? pl.R.x + 44 : xm - 60, ny, 'the lines go below plain matching between [[4.6]] and [[9.3]] million examples', { ...noteO, width: inside ? 170 : 250, lh: inside ? 15 : 18 });
     leader(grp, xm, nt.y - 4, xm, yp + (inside ? 50 : 32), { stroke: C.muted, dot: false });
     return grp;
   }
@@ -204,7 +204,10 @@ function build(el, ctx) {
   const R = tall ? { x: 42, y: 76, w: 304, h: 250 } : { x: 62, y: 60, w: 496, h: 296 };
   const fr = frame(svg, R), fr5 = frame(svg, R, X5, XT5);
   const tg = g(svg);
-  text(g(tg, { 'data-role': 'title' }), tall ? R.x : 16, 16, tall ? 'past plain matching, behind correlated' : HEAD, { family: 'sans', size: 13, weight: 600 });
+  const head3 = g(tg, { 'data-role': 'title' }), head5 = g(tg);
+  text(head3, tall ? R.x : 16, 16, tall ? 'distance 3: ahead of both' : 'distance 3: ahead of both, one of them hurt by a defect', { family: 'sans', size: 13, weight: 600 });
+  text(head5, tall ? R.x : 16, 16, tall ? 'past plain matching, behind correlated' : HEAD, { family: 'sans', size: 13, weight: 600 });
+  st.fade(head3, -1, 0, [1.02, 1.15]).fade(head5, 1.15, 1.3);
   if (tall) text(tg, 14, 33, `${tagStr} · lower is better`, mono); else text(tg, W - 8, 16, tagStr, { ...mono, anchor: 'end' });
   if (!tall) {
     // rotated axis title, centred on the plate, its letters 10 units clear
