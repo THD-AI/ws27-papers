@@ -1,115 +1,107 @@
 // water: a qubit is like a pattern drawn on water, and it smears almost at
-// once. One patch of water (a forge drawing from the author's line reference,
-// art/water.png) three times in a row, with the hero's own cable loop on it
-// (art/water-loop.png, cut from the hero). The loop is broken and faded in
-// code with hand-cut masks: nothing is redrawn and nothing is filtered.
-// The time line and its lettering come from data/water.json.
+// once. One strip of still water in the hand of the opening drawing (forge
+// board water r2 c3, split into its line and its flat field, art/water-*.png).
+// On it, one closed loop drawn with the article's pen line, three times along
+// the strip: just drawn, then loosened, then a ghost. The loosening is the
+// same loop drawn again with a looser hand, drifting, spreading and fading;
+// the ink each stage keeps is data/water.json `ink_left` (the decay of the
+// median qubit). No raster filter, no holes punched in a line.
 import {
-  mountFigure, svgRoot, g, h, path, rng, pen, stage, clamp, easeOut,
+  mountFigure, svgRoot, g, h, path, pen, stage, clamp, easeOut,
 } from '../../../lib/fig.js';
 import { pal, text, floor } from './shared.js';
 
 export const steps = 1;
 export const playAt = 0.75;          // play where the reader is looking
 export const durations = { medium: [2.4] };
-const SIZE = { wide: [600, 184], tall: [360, 150] };
+const SIZE = { wide: [520, 176], tall: [360, 168] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
-const WATER = [1091, 424], LOOP = [370, 120];
+const STRIP = [1468, 230];
 const art = (name) => new URL(`../art/${name}`, import.meta.url).href;
 
-// An irregular, hand-cut blob: a closed polygon with seeded wobble.
-function blob(r, cx, cy, rx, ry) {
-  const n = 9, pts = [];
-  for (let i = 0; i < n; i++) {
-    const a = (i / n) * Math.PI * 2, k = 0.7 + r() * 0.55;
-    pts.push([cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k]);
-  }
-  return `M${pts.map((p) => p.map((v) => v.toFixed(1)).join(' ')).join('L')}Z`;
-}
+// The loop: one closed, uneven round shape drawn in one stroke, its end
+// running a little past its start, as a hand closes a loop. Unit radius;
+// two slow harmonics keep it from reading as a letter, a digit or a circle.
+const LOOP = Array.from({ length: 73 }, (_, i) => {
+  const a = -2.2 + (i / 72) * (Math.PI * 2 + 0.45);
+  const r = 1 + 0.1 * Math.sin(2 * a + 0.8) + 0.06 * Math.sin(3 * a + 2.1);
+  return [Math.cos(a) * r * 0.5, Math.sin(a) * r * 0.33];
+});
+const CRISP = 1.3;                   // the pen weight of the crisp loop
 
 function build(el, ctx) {
   const tall = ctx.layout === 'tall';
   floor(tall ? 13 : 0);
   const C = pal(ctx), d = ctx.data;
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
-  const svg = svgRoot(el, W, H, `A qubit is like a pattern drawn on water. The same drawn loop on a patch of water three times: just drawn, then broken and faint after ${d.stages[1].say} (${d.stages[1].mono}), then almost gone after ${d.stages[2].say} (${d.stages[2].mono}). ${d.lifetime_us.say}.`);
+  const S = d.stages;
+  const svg = svgRoot(el, W, H, `A qubit is like a pattern drawn on water. One loop on a strip of still water, three times: ${S[0].say}; after ${S[1].say} (${S[1].mono}) loosened, with about a third of its ink left; after ${S[2].say} (${S[2].mono}) a faint ghost. ${d.lifetime_us.say}.`);
   svg.style.color = C.ink;
   const st = stage();
-  const uid = `w${Math.random().toString(36).slice(2, 7)}`;
-  const defs = h('defs', {}, svg);
-  // The hero's line is drawn for 1536 px; at this size it would be a hair.
-  // A small dilation keeps its weight (geometry only, no noise, no blur).
-  const thick = h('filter', { id: `${uid}k`, x: '-5%', y: '-5%', width: '110%', height: '110%' }, defs);
-  h('feMorphology', { operator: 'dilate', radius: tall ? 0.55 : 1.1 }, thick);
 
-  const gap = tall ? 12 : 30, pad = tall ? 16 : 8;
-  const pw = (W - 2 * pad - 2 * gap) / 3;
-  const ph = pw * WATER[1] / WATER[0];
-  const top = tall ? 28 : 36;
-  const lw = pw * 0.62, lh = lw * LOOP[1] / LOOP[0];
+  // the strip, wider than the figure on a phone so the water has some height
+  const sx = tall ? -46 : 0, sw = tall ? W + 92 : W, sh = sw * STRIP[1] / STRIP[0];
+  const sy = tall ? 26 : 30;
+  const water = g(svg);
+  h('image', { href: art('water-field.png'), x: sx, y: sy, width: sw, height: sh }, water);
+  h('image', { href: art('water-line.png'), x: sx, y: sy, width: sw, height: sh }, water);
 
-  // How much of the loop each stage keeps: whole, broken, a few fragments.
-  const r = rng(85);
-  const keep = [null,
-    { cut: Array.from({ length: 7 }, () => [r(), r(), 0.07 + r() * 0.06]), alpha: 0.8 },
-    { islands: Array.from({ length: 6 }, () => [r(), r(), 0.05 + r() * 0.05]), alpha: 0.55 }];
-
-  const panels = [0, 1, 2].map((i) => {
-    const x = pad + i * (pw + gap);
+  const cxs = [W / 6, W / 2, (5 * W) / 6];
+  const cy = sy + sh * 0.48, size = tall ? 64 : 84;
+  const loopPts = (cx, dx = 0, dy = 0) => LOOP.map(([u, v]) => [cx + dx + u * size, cy + dy + v * size]);
+  const share = d.ink_left.value;
+  // stage k: copies drawn with a looser hand, each drifting a little; their
+  // opacity × width adds up to the share of ink the stage keeps
+  const STAGES = [
+    [{ amp: 0.7, dx: 0, dy: 0, w: CRISP, seed: 11 }],
+    [{ amp: 2.4, dx: 1.5, dy: -1, w: 1.6, seed: 23 }, { amp: 3.2, dx: 4, dy: 1.5, w: 1.6, seed: 37 }],
+    [{ amp: 4.5, dx: 3, dy: -2, w: 2.2, seed: 41 }, { amp: 6, dx: 9, dy: 2.5, w: 2.2, seed: 59 }],
+  ];
+  const loops = STAGES.map((copies, k) => {
     const grp = g(svg);
-    h('image', { href: art('water.png'), x, y: top, width: pw, height: ph, preserveAspectRatio: 'xMidYMid meet' }, grp);
-    const lx = x + (pw - lw) / 2, ly = top + ph * 0.46 - lh / 2;
-    const loop = h('image', { href: art('water-loop.png'), x: lx, y: ly, width: lw, height: lh, preserveAspectRatio: 'none', filter: `url(#${uid}k)` }, grp);
-    const k = keep[i];
-    if (k) {
-      const m = h('mask', { id: `${uid}m${i}`, maskUnits: 'userSpaceOnUse', x: lx - 4, y: ly - 4, width: lw + 8, height: lh + 8 }, defs);
-      if (k.cut) {
-        h('rect', { x: lx - 4, y: ly - 4, width: lw + 8, height: lh + 8, fill: '#fff' }, m);
-        k.cut.forEach(([u, v, s]) => h('path', { d: blob(r, lx + u * lw, ly + v * lh, s * lw, s * lw * 0.8), fill: '#000' }, m));
-      } else {
-        k.islands.forEach(([u, v, s]) => h('path', { d: blob(r, lx + u * lw, ly + v * lh, s * lw * 1.6, s * lw), fill: '#fff' }, m));
-      }
-      loop.setAttribute('mask', `url(#${uid}m${i})`);
-      loop.setAttribute('opacity', String(k.alpha));
-    }
-    return { grp, x, cx: x + pw / 2 };
+    const op = (share[k] * CRISP) / copies.reduce((a, c) => a + c.w, 0);
+    copies.forEach((c) => path(grp, pen(loopPts(cxs[k], c.dx, c.dy), c.seed, c.amp), {
+      stroke: C.ink, 'stroke-width': c.w, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: Math.min(1, op).toFixed(3),
+    }));
+    return grp;
   });
 
-  // "a qubit" over the first panel
   const title = g(svg);
-  text(title, panels[0].cx, tall ? 16 : 22, 'a qubit', { italic: true, size: tall ? 14 : 16, anchor: 'middle' });
+  text(title, cxs[0], tall ? 15 : 18, 'a qubit', { italic: true, size: tall ? 14 : 16, anchor: 'middle' });
 
-  // the time line, in a hand weight, from the first panel to the third
-  const ty = top + ph + (tall ? 16 : 22);
-  const seg = (a, b, seed) => path(svg, pen([[a, ty], [b, ty]], seed, 0.8), { stroke: C.ink, 'stroke-width': 1.3, 'stroke-linecap': 'round' });
-  const line1 = seg(panels[0].cx, panels[1].cx, 3), line2 = seg(panels[1].cx, panels[2].cx, 7);
-  const tick = (x) => path(svg, `M${x} ${ty - 4}L${x + 0.6} ${ty + 4}`, { stroke: C.ink, 'stroke-width': 1.3, 'stroke-linecap': 'round' });
-  const t0 = tick(panels[0].cx), t1 = tick(panels[1].cx), t2 = tick(panels[2].cx);
+  // the time line under the strip, in the pen's hand, with a tick per stage
+  const ty = sy + sh + (tall ? 14 : 16);
+  const seg = (a, b, seed) => path(svg, pen([[a, ty], [b, ty]], seed, 0.6), { stroke: C.ink, 'stroke-width': 1, 'stroke-linecap': 'round' });
+  const line1 = seg(cxs[0], cxs[1], 3), line2 = seg(cxs[1], cxs[2], 7);
+  const tick = (x) => path(svg, `M${x} ${ty - 3.5}L${x + 0.5} ${ty + 3.5}`, { stroke: C.ink, 'stroke-width': 1, 'stroke-linecap': 'round' });
+  const ticks = cxs.map(tick);
+  const monoY = ty + (tall ? 50 : 38);
   const label = (i) => {
     const lg = g(svg);
-    // on a phone the words go on two lines, so the two labels never meet
-    const words = tall ? d.stages[i].say.replace(/^(a thousandth|two thousandths) /, '$1\n') : d.stages[i].say;
-    const w = text(lg, panels[i].cx, ty + (tall ? 19 : 22), words, { italic: true, size: tall ? 13 : 14.5, anchor: 'middle', lh: 15 });
-    text(lg, panels[i].cx, (w.bottom || ty + 22) + (tall ? 15 : 18), d.stages[i].mono, { family: 'mono', size: tall ? 11.5 : 12, fill: C.muted, anchor: 'middle' });
+    const words = tall ? S[i].say.replace(/^(about a thousandth|two) /, '$1\n') : S[i].say;
+    text(lg, cxs[i], ty + (tall ? 18 : 20), words, { italic: true, size: tall ? 13 : 14, anchor: 'middle', lh: 15 });
+    if (S[i].mono) text(lg, cxs[i], monoY, S[i].mono, { family: 'mono', size: tall ? 11.5 : 12, fill: C.muted, anchor: 'middle' });
     return lg;
   };
-  const l1 = label(1), l2 = label(2);
+  const labels = [0, 1, 2].map(label);
 
-  // Timeline (2.4 s): the first panel stands; the line draws to the first
-  // mark; panel 2 settles in; its label; the line on; panel 3; its label.
+  // 2.4 s: the first loop and its words stand; the line draws to the first
+  // mark; the loosened loop settles in, then its words; the line on; the
+  // ghost; its words. One thing moves at a time.
   const settle = (grp, a, b) => st.on((gg) => {
     const p = clamp((gg - a) / (b - a));
     grp.style.display = p <= 0.001 ? 'none' : '';
     grp.style.opacity = p >= 0.999 ? '' : easeOut(p).toFixed(3);
     grp.setAttribute('transform', p >= 0.999 ? '' : `translate(0 ${(3 * (1 - easeOut(p))).toFixed(2)})`);
   });
-  st.fade(t0, 0, 0.05);
-  st.draw(line1, 0, 0.36).fade(t1, 0.34, 0.4);
-  settle(panels[1].grp, 0.33, 0.48);
-  st.fade(l1, 0.46, 0.56);
-  st.draw(line2, 0.5, 0.79).fade(t2, 0.77, 0.83);
-  settle(panels[2].grp, 0.75, 0.9);
-  st.fade(l2, 0.92, 1);
+  st.fade(ticks[0], 0, 0.04);
+  st.draw(line1, 0, 0.36).fade(ticks[1], 0.34, 0.4);
+  settle(loops[1], 0.33, 0.48);
+  st.fade(labels[1], 0.46, 0.56);
+  st.draw(line2, 0.5, 0.79).fade(ticks[2], 0.77, 0.83);
+  settle(loops[2], 0.75, 0.9);
+  st.fade(labels[2], 0.92, 1);
+  void water; void loops[0]; void labels[0];
 
   return { set: (s, t) => st.set(s, t) };
 }

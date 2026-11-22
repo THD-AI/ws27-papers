@@ -27,7 +27,7 @@ So we set ourselves three questions: what the program has to do, why a network c
 
 A qubit is the quantum version of a bit, and its weakness is that it doesn't keep its state. It behaves like a pattern drawn on the surface of water: it starts to smear as soon as it's made. On Google's 2024 chip the median qubit lifetime is 85 millionths of a second, about a thousandth of a blink. {{GQA-2024 OWN-ARITH}} The operations add errors of their own: each one has a small chance of going wrong.
 
-:::figure water wide
+:::figure water column
 A qubit holds its state like a pattern drawn on water. The same loop on the same water, just drawn, after 85 millionths of a second and after 170: it loosens, breaks and fades. 85 µs is the median lifetime of the qubits in Google's largest grid in 2024; a blink is taken as a tenth of a second. Drawing: an image model, from our own line reference, with the loop of the opening drawing.
 :::
 
