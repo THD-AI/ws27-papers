@@ -1,0 +1,17 @@
+{
+  "sections": [
+    { "h": "What we wanted to know", "blocks": [
+      { "fig": "two-readers", "name": "One recording from a quantum chip, read by two programs, gives two different error counts.", "kinds": ["step", "step", "rest"] } ] },
+    { "h": "1. A qubit doesn't hold still", "blocks": [
+      { "fig": "water", "name": "A qubit's state starts to smear within a thousandth of a blink.", "kinds": ["step", "step"] } ] },
+    { "h": "2. The cure costs what it protects", "blocks": [ { "gap": 1 }, { "todo": "grid", "n": 2 } ] },
+    { "h": "3. Asking without looking", "blocks": [ { "todo": "grid", "n": 5 } ] },
+    { "h": "4. A film of hints", "blocks": [ { "todo": "film", "n": 3 } ] },
+    { "h": "5. The decoder, and the one mistake that matters", "blocks": [ { "todo": "line", "n": 4 } ] },
+    { "h": "6. Where the standard method goes wrong", "blocks": [ { "todo": "two-ways", "n": 0 } ] },
+    { "h": "7. The result that started us off", "blocks": [ { "todo": "ladder", "n": 0 } ] },
+    { "h": "8. Accurate, or in time", "blocks": [ { "todo": "clock", "n": 0 } ] },
+    { "h": "9. What we measured ourselves", "blocks": [ { "todo": "reels, six, two-readers answered", "n": 0 } ] },
+    { "h": "10. What this doesn't show", "blocks": [] }
+  ]
+}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studio: figure lab</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Libre+Franklin:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="tell.css">
+<style>
+  body { margin: 0; }
+  .cell { display: inline-block; vertical-align: top; margin: 8px; }
+  .cell div { background: var(--paper); outline: 1px solid var(--hairline); }
+  .cell svg { width: 100%; height: 100%; display: block; }
+  .cap { font: 12px var(--mono); color: var(--muted); }
+</style>
+</head>
+<body>
+<!-- ?fig=id&pos=1,2&w=360&h=370 : the figure at each position, in a stage of w x h CSS px -->
+<script type="module">
+const q = new URLSearchParams(location.search);
+const id = q.get('fig'), w = +(q.get('w') || 360), h = +(q.get('h') || 370);
+const mod = (await import(`./figures/${id}.js`)).default;
+for (const pos of (q.get('pos') || '1').split(',').map(Number)) {
+  const cell = document.createElement('div'); cell.className = 'cell';
+  cell.innerHTML = `<p class="cap">${id} · pos ${pos} · ${w}×${h}</p>`;
+  const box = document.createElement('div'); box.style.width = w + 'px'; box.style.height = h + 'px';
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  box.appendChild(svg); cell.appendChild(box); document.body.appendChild(cell);
+  const api = mod.mount(svg, { layout: w / h < 1.05 ? 'tall' : w / h < 1.45 ? 'mid' : 'wide', k: 1, reduced: true });
+  api.render(pos);
+}
+document.documentElement.classList.add('lab-ready');
+</script>
+</body>
+</html>

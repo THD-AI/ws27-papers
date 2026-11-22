@@ -1,0 +1,84 @@
+/* Scroll telling, v2 (studio). The system is described in studio/README.md:
+ * one sticky stage per run of chapters, three layout classes chosen as a
+ * cascade by tell.js (html.tell-stills / .tell-beside / .tell-top), held
+ * paragraphs pinned while the scroll sets frames. Palette: the article's. */
+
+:root {
+  --paper: #FBFBFC; --ink: #15171C; --muted: #5C6370; --hairline: #DADDE3;
+  --accent: #4254C5; --field: #C9D3F7;
+  --sans: 'Libre Franklin', 'Helvetica Neue', Arial, sans-serif;
+  --serif: 'Newsreader', Georgia, serif;
+  --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  /* written by tell.js from the stable-height probe */
+  --H: 100svh; --stage-h: 44svh; --held-top: 50svh;
+  /* very large screens: type and figure grow together, continuously from
+     1920 to 2560 CSS px, up to 1.25 (written by tell.js) */
+  --k: 1;
+}
+
+html { overflow-anchor: none; background: var(--paper); color: var(--ink); scroll-padding-top: calc(var(--stage-pad, 0px) + 1rem); }
+body { margin: 0; font-family: var(--sans); font-size: calc(1.06rem * var(--k)); line-height: 1.62; }
+.tell-probe { position: fixed; top: 0; left: -9999px; width: 1px; height: 100svh; visibility: hidden; pointer-events: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+
+main.tell { max-width: calc(1480px * var(--k)); margin: 0 auto; padding: 0 1rem; overflow: clip; }
+main.tell > h1, main.tell > p, main.tell > h2, main.tell > .text { max-width: 34em; margin-left: auto; margin-right: auto; }
+h1 { font-family: var(--serif); font-weight: 500; font-size: 2.2em; line-height: 1.15; margin: 2.5rem auto 1rem; }
+h2 { font-size: 1.15em; font-weight: 600; margin: 2.4em 0 0.6em; }
+p { margin: 0 0 1em; }
+
+/* paragraphs inside a chapter: the active one in ink, read ones step back */
+.chapter p[data-k] { transition: color 0.3s; }
+html.js .chapter p[data-k].is-read { color: var(--muted); }
+
+/* ---------------------------------------------------------------- stage */
+.stage { position: relative; background: var(--paper); }
+.stage svg { display: block; width: 100%; height: 100%; }
+.stage .layer { position: absolute; inset: 0; }
+.stage .ghost-out { pointer-events: none; }
+
+/* stills (and no JavaScript): no stage, a still after each step */
+html:not(.js) .stage, html.tell-stills .stage, html.js-failed .stage { display: none; }
+.still { margin: 0.4em 0 1.4em; aspect-ratio: var(--still-aspect, 1.6); max-height: 70vh; }
+.still svg { width: 100%; height: 100%; display: block; }
+.strip { display: grid; grid-template-columns: repeat(var(--n, 6), 1fr); gap: 4px; margin: 0.4em 0 1.4em; }
+html.tell-top .still, html.tell-top .strip, html.tell-beside .still, html.tell-beside .strip { display: none; }
+
+/* ------------------------------------------------------------ top class */
+html.tell-top .run { position: relative; }
+html.tell-top .stage {
+  position: sticky; top: 0; z-index: 2; height: var(--stage-h);
+  margin: 0 calc(-1rem); padding: 0 1rem;
+}
+html.tell-top .stage::after { /* the paper fade at its lower edge */
+  content: ''; position: absolute; left: 0; right: 0; bottom: -20px; height: 20px;
+  background: linear-gradient(var(--paper), color-mix(in srgb, var(--paper) 0%, transparent));
+}
+html.tell-top .run .flow { max-width: 34em; margin: 0 auto; }
+
+/* --------------------------------------------------------- beside class */
+html.tell-beside .run {
+  display: grid; grid-template-columns: minmax(28em, 34em) minmax(440px, 1fr);
+  column-gap: clamp(2rem, 4vw, 5rem); align-items: start;
+}
+html.tell-beside .run .flow { grid-column: 1; grid-row: 1; }
+html.tell-beside .stage {
+  grid-column: 2; grid-row: 1; position: sticky;
+  top: calc((var(--H) - var(--stage-h)) / 2); height: var(--stage-h);
+}
+
+/* ------------------------------------------------------------- held */
+.held { position: relative; }
+html.tell-top .held > p, html.tell-beside .held > p { position: sticky; top: var(--held-top); }
+.held .frames-note { display: none; }
+
+/* --------------------------------------------------------------- print */
+@media print {
+  .stage { display: none !important; }
+  .still, .strip { display: block !important; }
+  .strip { display: grid !important; }
+  .still, .strip { break-inside: avoid; }
+  .held { height: auto !important; }
+  .held > p { position: static !important; }
+  .step-desc { position: static; width: auto; height: auto; clip: auto; clip-path: none; white-space: normal; font-size: 0.85em; color: var(--muted); }
+}

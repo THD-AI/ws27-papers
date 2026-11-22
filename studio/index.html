@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studio: devices</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { --paper:#FBFBFC; --ink:#15171C; --muted:#5C6370; --hairline:#DADDE3; --accent:#4254C5; }
+  body { margin:0; background:#ECEDF0; color:var(--ink); font:14px 'Libre Franklin', Arial, sans-serif; }
+  header { position:sticky; top:0; z-index:5; display:flex; gap:12px; align-items:center; flex-wrap:wrap; padding:10px 16px; background:var(--paper); border-bottom:1px solid var(--hairline); }
+  header h1 { font-size:16px; font-weight:600; margin:0 auto 0 0; }
+  select, button, label { font:13px 'JetBrains Mono', Consolas, monospace; }
+  select, button { padding:6px 10px; border:1px solid var(--ink); background:var(--paper); border-radius:4px; }
+  .grid { display:flex; flex-wrap:wrap; gap:24px; padding:20px; align-items:flex-start; }
+  figure { margin:0; }
+  figcaption { font:12px 'JetBrains Mono', Consolas, monospace; color:var(--muted); margin:0 0 6px; }
+  .frame { position:relative; overflow:hidden; border:1px solid #C5C8CF; border-radius:10px; background:var(--paper); box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .frame iframe { border:0; transform-origin:0 0; position:absolute; top:0; left:0; }
+  p.note { margin:0; padding:0 20px; color:var(--muted); max-width:70em; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Studio</h1>
+  <label>page <select id="page"><option value="article.html">the article, v2</option><option value="run.html">system test</option></select></label>
+  <label>set <select id="set">
+    <option value="his">his devices</option>
+    <option value="phones">phones</option>
+    <option value="tablets">tablets</option>
+    <option value="screens">laptops and screens</option>
+    <option value="all">all</option>
+  </select></label>
+  <label><input type="checkbox" id="sync" checked> scroll together</label>
+</header>
+<p class="note">Each frame is the real page at that device's size in CSS pixels, scaled to fit. Scroll inside any frame; with "scroll together" the others follow by the same share of the page. Chromium cannot show iOS toolbars or momentum: those are checked on the real iPhone.</p>
+<div class="grid" id="grid"></div>
+<script>
+const SETS = {
+  his: [['phone 360×800', 360, 800], ['iPhone SE', 375, 667], ['Surface upright', 960, 1440], ['Surface sideways', 1440, 960]],
+  phones: [['360×800', 360, 800], ['iPhone SE', 375, 667], ['390×844', 390, 844], ['430×932', 430, 932], ['sideways 844×390', 844, 390]],
+  tablets: [['768×1024', 768, 1024], ['820×1180', 820, 1180], ['sideways 1180×820', 1180, 820], ['iPad Pro upright', 1024, 1366]],
+  screens: [['960×540 window', 960, 540], ['1366×768', 1366, 768], ['1440×900', 1440, 900], ['1920×1080', 1920, 1080], ['2560×1440', 2560, 1440]],
+};
+SETS.all = [...SETS.phones, ...SETS.tablets, ...SETS.screens];
+const grid = document.getElementById('grid');
+let frames = [], syncing = false;
+function build() {
+  const set = SETS[document.getElementById('set').value];
+  const page = document.getElementById('page').value;
+  grid.replaceChildren(); frames = [];
+  const maxH = Math.max(320, innerHeight - 150);
+  for (const [name, w, h] of set) {
+    const s = Math.min(1, maxH / h, (innerWidth - 60) / w, 0.55 * 1440 / Math.max(w, 800));
+    const fig = document.createElement('figure');
+    fig.innerHTML = `<figcaption>${name} · ${w}×${h} · ${Math.round(s * 100)}%</figcaption>`;
+    const box = document.createElement('div');
+    box.className = 'frame'; box.style.width = w * s + 'px'; box.style.height = h * s + 'px';
+    const f = document.createElement('iframe');
+    f.width = w; f.height = h; f.style.transform = `scale(${s})`; f.src = page;
+    box.appendChild(f); fig.appendChild(box); grid.appendChild(fig); frames.push(f);
+    f.addEventListener('load', () => f.contentWindow.addEventListener('scroll', () => follow(f)));
+  }
+}
+function follow(src) {
+  if (syncing || !document.getElementById('sync').checked) return;
+  const d = src.contentDocument.documentElement;
+  const share = src.contentWindow.scrollY / Math.max(1, d.scrollHeight - src.contentWindow.innerHeight);
+  syncing = true;
+  for (const f of frames) if (f !== src) { const e = f.contentDocument.documentElement; f.contentWindow.scrollTo(0, share * (e.scrollHeight - f.contentWindow.innerHeight)); }
+  requestAnimationFrame(() => { syncing = false; });
+}
+document.getElementById('set').onchange = build;
+document.getElementById('page').onchange = build;
+build();
+</script>
+</body>
+</html>
