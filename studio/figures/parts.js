@@ -32,15 +32,21 @@ export function cryostat(g, C, x, y, w) {
 // enters at the left at height inY and leaves at the right; the screen is the
 // hooded window on the right of the body.
 export function gate(g, C, x, y, w) {
+  // after the Kalart EV-8 editor-viewer: a wedge-shaped body (low in front,
+  // high at the back), the film gate on the left, a hooded screen on the
+  // right, two reel spindles on top and the crank at the side
   const s = w / 120, S = [];
   const P = (px, py) => [x + px * s, y + py * s];
-  S.push(pen(g, penPath([P(0, 60), P(6, 12), P(114, 8), P(120, 60), P(0, 60)]), C));   // sloped body
-  S.push(pen(g, penPath([P(66, 22), P(110, 20), P(112, 52), P(66, 54), P(66, 22)]), C));  // screen hood
-  const screen = el('path', { d: 'M' + [P(72, 28), P(104, 27), P(105, 47), P(72, 48)].map((p) => p.join(',')).join(' L') + ' Z', fill: C.paper, stroke: C.ink, 'stroke-width': 1.2 }, g);
+  S.push(pen(g, penPath([P(0, 62), P(2, 30), P(118, 14), P(120, 62), P(0, 62)]), C));        // the wedge body
+  S.push(pen(g, penPath([P(8, 62), P(8, 70), P(112, 70), P(112, 62)]), C, 1.2));              // the front lip
+  S.push(pen(g, penPath([P(64, 24), P(116, 18), P(118, 56), P(64, 58), P(64, 24)]), C));      // the screen hood
+  const screen = el('path', { d: 'M' + [P(70, 29), P(110, 25), P(111, 51), P(70, 52)].map((p) => p.join(',')).join(' L') + ' Z', fill: C.paper, stroke: C.ink, 'stroke-width': 1.2 }, g);
   S.push(screen);
-  for (const px of [16, 50]) { const [cx, cy] = P(px, 40); S.push(pen(g, ell(cx, cy, 5 * s, 5 * s), C)); }   // rollers
-  S.push(pen(g, penPath([P(120, 30), P(130, 30), P(130, 22)]), C));                        // crank
-  return { strokes: S, screen, inAt: P(0, 40), outAt: P(120, 40), width: 120 * s };
+  S.push(pen(g, penPath([P(14, 34), P(14, 58)]), C, 1.2), pen(g, penPath([P(40, 31), P(40, 58)]), C, 1.2)); // the gate's guides
+  for (const px of [14, 40]) { const [cx, cy] = P(px, 40); S.push(pen(g, ell(cx, cy, 4 * s, 4 * s), C)); }   // sprocket rollers
+  for (const px of [12, 108]) { S.push(pen(g, penPath([P(px, 22 - (px > 60 ? 8 : 0)), P(px, 8 - (px > 60 ? 8 : 0))]), C, 1.2)); }   // reel spindles
+  S.push(pen(g, penPath([P(120, 38), P(130, 38), P(130, 28), P(134, 28)]), C));               // crank
+  return { strokes: S, screen, inAt: P(0, 44), outAt: P(120, 44), width: 120 * s };
 }
 
 // A film strip along a polyline: frames of the grid's eight checks (four

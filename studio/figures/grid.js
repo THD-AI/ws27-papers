@@ -135,6 +135,19 @@ export default {
     });
     const every = el('text', { x: VW / 2, y: fy - 1.6 * cell * fsc - 16, 'text-anchor': 'middle', fill: C.muted, ...font() }, svg);
     every.textContent = 'one frame every 1.1 millionths of a second';
+    // the held step's film: a strip under the big frame that grows by one
+    // frame per stretch of scroll; the current frame is outlined
+    const hs = { tall: { y: 350, sc: 0.21 }, mid: { y: 284, sc: 0.18 }, wide: { y: 398, sc: 0.24 } }[lay];
+    const hfw = 2.9 * cell * hs.sc;
+    const hx0 = VW / 2 - 2.5 * hfw;
+    const heldStrip = el('g', {}, svg);
+    const heldEdges = [hs.y - 1.6 * cell * hs.sc, hs.y + 1.6 * cell * hs.sc].map((yy) => pen(heldStrip, penPath([[hx0 - hfw / 2, yy], [hx0 + 5.5 * hfw, yy]]), 1.1, C.muted));
+    const heldFrames = HELD.map((h, k) => {
+      const g = el('g', { transform: `translate(${hx0 + k * hfw - cx * hs.sc} ${hs.y - cy * hs.sc}) scale(${hs.sc})` }, heldStrip);
+      const layer = checksLayer(g);
+      const cur = el('rect', { x: hx0 + k * hfw - hfw / 2 + 1, y: hs.y - 1.6 * cell * hs.sc + 1, width: hfw - 2, height: 3.2 * cell * hs.sc - 2, fill: 'none', stroke: C.accent, 'stroke-width': 1.6 }, heldStrip);
+      return { g, layer, cur };
+    });
     const heldLab = el('text', { x: VW / 2, y: wide ? 28 : 26, 'text-anchor': 'middle', fill: C.muted, ...mono }, svg);
     const tag = el('text', { x: VW - 6, y: VH - 8, 'text-anchor': 'end', fill: C.muted, ...font(fs - 1, 'JetBrains Mono, monospace') }, svg);
     tag.textContent = 'simplified: errors between rounds';
@@ -207,8 +220,10 @@ export default {
         lit = HELD[f - 1].lit;
         heldLab.textContent = `picked round ${HELD[f - 1].round} · ${(HELD[f - 1].round * 1.1).toFixed(1)} µs`;
         heldLab.style.opacity = 1;
-        G.setAttribute('transform', '');
-      } else heldLab.style.opacity = 0;
+        G.setAttribute('transform', `translate(0 ${-0.12 * cell}) scale(1)`);
+        heldStrip.style.opacity = 1;
+        heldFrames.forEach((fr, k) => { fr.g.style.opacity = k < f ? 1 : 0; fr.cur.style.opacity = k === f - 1 ? 1 : 0; setLit(fr.layer, HELD[k].lit); });
+      } else { heldLab.style.opacity = 0; heldStrip.style.opacity = 0; }
       // 10: round 2 again, with its explanations
       if (pos > 9) { lit = ['z0', 'z1']; G.setAttribute('transform', ''); }
       const e = pos > 9 ? at(pos, 10, 2) : 0;

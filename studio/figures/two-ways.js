@@ -28,7 +28,7 @@ export default {
 
     const G0 = { tall: [180, 176, 84], mid: [200, 148, 64], wide: [360, 196, 92] }[lay];   // as in `grid`
     const lights = { tall: [150, 318, 0.42], mid: [170, 240, 0.42], wide: [360, 340, 0.45] }[lay];
-    const mini = { tall: { y: 84, cell: 24, xs: [76, 224, 304] }, mid: { y: 64, cell: 20, xs: [84, 262, 336] }, wide: { y: 96, cell: 32, xs: [180, 470, 590] } }[lay];
+    const mini = { tall: { y: 88, cell: 28, xs: [72, 218, 306] }, mid: { y: 66, cell: 22, xs: [80, 258, 338] }, wide: { y: 104, cell: 44, xs: [170, 450, 600] } }[lay];
     const tsz = wide ? 7 : 5, tw = 10 * (tsz + 3) - 3;
     const tTop = mini.y + 1.5 * mini.cell + (wide ? 16 : 12), tLab = tTop + 3 * (tsz + 3) + (wide ? 16 : 13);
 
@@ -66,7 +66,7 @@ export default {
     const B2 = mk(mini.xs[2], [[0, 'Y'], [5, 'Z']]);
     const ty = mini.y - 1.5 * mini.cell - (wide ? 22 : 14);
     const labA = el('text', { x: mini.xs[0], y: ty, 'text-anchor': 'middle', fill: C.ink, ...font() }, svg);
-    labA.textContent = 'the standard program';
+    labA.textContent = 'plain matching';
     const labB = el('text', { x: (mini.xs[1] + mini.xs[2]) / 2, y: ty, 'text-anchor': 'middle', fill: C.ink, ...font() }, svg);
     labB.textContent = 'the other answer, two ways';
     const tA = el('g', {}, svg), tB = el('g', {}, svg);

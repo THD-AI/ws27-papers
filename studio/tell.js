@@ -83,7 +83,7 @@ function layout() {
   root.style.setProperty('--stage-h', stageH + 'px');
   root.style.setProperty('--stage-pad', (c === 'top' ? stageH : 0) + 'px');
 
-  const pitch = c === 'top' ? Math.max(0.30 * H, 170) : 0.35 * H;
+  const pitch = c === 'top' ? Math.max(0.30 * H, 170) : 0.26 * H;
   const FL = c === 'top' ? 0.40 * H : 0.35 * H;
   for (const run of runs) {
     for (const s of run.segs) for (const it of s.items) { it.el.style.paddingBottom = ''; if (it.kind === 'held') it.el.style.height = ''; }
