@@ -27,7 +27,7 @@ export const KIND = { flip: '#D4471A', phase: '#2E9C91' };
 // The figures' own emphasis, one role only: the decoder's side of the machine (the network, the decoder's
 // answer, the line it adds) is copper, like the cable in the opening drawing; its light field is copper too.
 // The page's indigo stays the page's (links, the sources), never a figure's.
-export const DECODER = { accent: '#A8612B', field: '#F2E4D7' };
+export const DECODER = { accent: '#8A5524', field: '#EFE4DA' };
 export function pal(ctx) {
   return { ...colors({
     css(name) {

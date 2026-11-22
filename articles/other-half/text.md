@@ -217,12 +217,12 @@ Each training was repeated from different random starting points, or seeds: eigh
 :::
 
 :::figure examples column
-Examples our network had seen when its error first went below plain matching's, one dot per seed (the first check below; the curves are checked at fixed points). Distance 3: 6.6 to 9.3 million. Distance 5: 210 to 250 million; after 66 million, no seed had got there yet. A noise level of 0.5%; our own runs.
+How many examples our network had seen when its error went below plain matching's, one bar per seed: the curves are checked only at fixed points, so each crossing lies somewhere between the last check above and the first below. Distance 3: between 4.6 and 9.3 million. Distance 5: between 148 and 250 million; after 66 million, no seed had got there. At distance 5 every crossing falls after the learning rate starts to fall, at 200 million, so the factor of about 15 to 55 belongs to our training schedule, not to the grid alone. A noise level of 0.5%; our own runs.
 :::
 
 At distance 3 the best answer for every pattern can simply be looked up. A table built from 200 million runs per noise level, a hundred times the test set, holds the more frequent answer for each pattern of fired checks. It failed in 1.47% of runs. {{OWN-D3}} Whether its runs overlap the test runs, and how it answers a pattern it never saw, our result files don't record. That table is our estimate of the best possible; since we can't say whether it saw the test runs, it may flatter itself slightly. The network's 1.48% is barely above it.
 
-:::figure noise wide
+:::figure noise wide fold Show the chart over eight noise levels
 Distance 5, network trained on about 250 million examples: the failures of each decoder divided by plain matching's at the same noise level, so plain matching is the line at 1. The network is pooled over five seeds, 10 million runs per noise level; its band is the range between the seeds. The rates themselves are in the table under "The numbers behind this". At 0.1% the network and correlated matching can't be told apart. From 0.2% the network is behind correlated matching, and from 0.8% it is behind plain matching too. Our own runs.
 :::
 

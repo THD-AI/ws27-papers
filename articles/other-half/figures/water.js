@@ -50,10 +50,10 @@ function build(el, ctx) {
     // the pattern: as much as is left, blurred by as much as is gone
     const id = `water-blur-${tall ? 't' : 'w'}-${k}-${Math.round(Math.random() * 1e6)}`;
     const flt = h('filter', { id, x: '-50%', y: '-50%', width: '200%', height: '200%' }, defs);
-    h('feGaussianBlur', { stdDeviation: ((1 - m.left) * 1.6).toFixed(2) }, flt);
+    h('feGaussianBlur', { stdDeviation: '0' }, flt);
     // the pattern spreads as it fades, as rings on water do; what is left of it is its opacity
-    const spread = (tall ? 1.15 : 1.05) * (1 + 0.45 * (1 - m.left));
-    const pat = g(grp, { transform: `translate(${cx} ${cy}) scale(${spread.toFixed(3)})`, filter: m.left < 0.999 ? `url(#${id})` : null, opacity: m.left.toFixed(3) });
+    const spread = (tall ? 1.05 : 0.9) * (1 + 0.18 * (1 - m.left));
+    const pat = g(grp, { transform: `translate(${cx} ${cy}) scale(${spread.toFixed(3)})`, filter: null, opacity: m.left.toFixed(3) });
     for (const dd of d.pen.pattern) path(pat, dd, { fill: C.ink, stroke: 'none', 'data-audit': 'skip' });
     text(grp, x, y + ph + 18, `${m.t} µs`, { family: 'mono', size: 13 });
     text(grp, x + pw, y + ph + 18, `${Math.round(m.left * 100)}% left`, { ...mono, anchor: 'end' });

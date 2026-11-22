@@ -58,7 +58,7 @@ function build(el, ctx) {
   };
   const c5 = Math.min(...[...a5.curves, ...b5.curves].map(crossing)), e5 = 10 ** Math.floor(Math.log10(c5));
   const X5 = Math.floor(c5 / e5) * e5, XT5 = [5e7, 1e8, 2.5e8].filter((v) => v > X5);
-  const HEAD = 'on a bigger grid, the network needs far more examples';
+  const HEAD = 'past plain matching, still behind correlated';
   const FOOT = 'ends and levels: 2 million test runs, intervals thinner than the lines · curves: 1 million fixed runs';
   const scales = (R, x0 = X0) => {
     const x = (v) => R.x + R.w * (Math.log10(v / x0) / Math.log10(X1 / x0));
@@ -68,7 +68,6 @@ function build(el, ctx) {
 
   function frame(parent, R, x0 = X0, xt = XT) {
     const { x, y } = scales(R, x0), grp = g(parent);
-    dotPlate(grp, R.x, R.y, R.w, R.h, 20, C);
     line(grp, R.x, R.y + R.h, R.x + R.w, R.y + R.h, { stroke: C.ink, 'stroke-width': 1.25 });
     line(grp, R.x, R.y, R.x, R.y + R.h, { stroke: C.ink, 'stroke-width': 0.8 });
     for (const v of xt) {
@@ -79,7 +78,7 @@ function build(el, ctx) {
       line(grp, R.x - 4, y(v), R.x, y(v), { stroke: C.ink, 'stroke-width': 1 });
       text(grp, R.x - 8, y(v) + 4, v === 0 ? '0' : `${+(v * 100).toFixed(1)}%`, { ...mono, anchor: 'end' });
     }
-    text(grp, R.x + R.w, R.y + R.h + 36, 'examples the network has seen, in millions', { family: 'sans', size: 12, fill: C.muted, anchor: 'end' });
+    text(grp, R.x + R.w, R.y + R.h + 36, 'examples the network has seen, in millions (log scale)', { family: 'sans', size: 12, fill: C.muted, anchor: 'end' });
     return grp;
   }
 
@@ -132,9 +131,9 @@ function build(el, ctx) {
     if (!inside) {
       const lx = R.x + R.w + 9, lw = W - lx - 6;
       text(grp, lx, close ? yp - 4 : yp + 4.5, 'plain matching', noteO);
-      const cl = text(grp, lx, close ? yc + 14 : yc + 4.5, 'correlated matching', noteO);
+      const cl = text(grp, lx, close ? yc + 14 : yc + 4.5, pn.distance === 3 ? 'correlated matching, here hurt by a library defect' : 'correlated matching', { ...noteO, width: lw });
       let yy = cl.bottom;
-      if (lv.table) yy = text(grp, lx, Math.max(y(lv.table.rate) + 14, yy + 14), `lookup table, our estimate of the best: [[${pct(lv.table.rate)}]]`, { ...noteO, width: lw }).bottom;
+      if (lv.table) yy = text(grp, lx, Math.max(y(lv.table.rate) + 14, yy + 22), `lookup table, our estimate of the best: [[${pct(lv.table.rate)}]]`, { ...noteO, width: lw }).bottom;
       text(grp, lx, yy + 26, needs, { ...noteO, size: 13, fill: C.muted, width: lw });
     } else if (close && tall) {
       // phone plate: the curves cross the level lines on the left half, so the
@@ -205,7 +204,7 @@ function build(el, ctx) {
   const R = tall ? { x: 42, y: 76, w: 304, h: 250 } : { x: 62, y: 60, w: 496, h: 296 };
   const fr = frame(svg, R), fr5 = frame(svg, R, X5, XT5);
   const tg = g(svg);
-  text(g(tg, { 'data-role': 'title' }), tall ? R.x : 16, 16, tall ? 'a bigger grid needs far more examples' : HEAD, { family: 'sans', size: 13, weight: 600 });
+  text(g(tg, { 'data-role': 'title' }), tall ? R.x : 16, 16, tall ? 'past plain matching, behind correlated' : HEAD, { family: 'sans', size: 13, weight: 600 });
   if (tall) text(tg, 14, 33, `${tagStr} · lower is better`, mono); else text(tg, W - 8, 16, tagStr, { ...mono, anchor: 'end' });
   if (!tall) {
     // rotated axis title, centred on the plate, its letters 10 units clear

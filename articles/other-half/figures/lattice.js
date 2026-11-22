@@ -69,7 +69,7 @@ function build(el, ctx) {
     const cnt = g(svg);
     text(cnt, cx, nt.bottom + 38, `${n} of ${STRIP}`, { family: 'mono', size: monoS, anchor: 'middle', fill: C.muted });
     let pr = null;
-    if (ring) pr = penRing(svg, cx, cy, ext + (tall ? 12 : 17), ext + (tall ? 10 : 14), { seed: 11, stroke: C.ink, width: 1.5, start: -0.4 });
+    if (ring) pr = { paths: [] };
     // the second way: the same phase error one place above, which fires the same checks
     let ghost = null;
     if (answer.also) {
@@ -77,7 +77,7 @@ function build(el, ctx) {
       const [x, y] = G.pos(answer.also.qubit), r = G.qr * 1.22;
       circle(ghost, x, y, r, { fill: C.paper, stroke: C.ink, 'stroke-width': 1.1, 'stroke-dasharray': '2.2 2.2' });
       text(ghost, x, y + r * 0.5, answer.also.kind, { family: 'sans', size: r * 1.42, weight: 600, anchor: 'middle', fill: C.muted, free: true });
-      text(ghost, x - r - 4, y + 4, 'or here', { italic: true, size: tall ? 12 : 13, fill: C.muted, anchor: 'end' });
+      text(ghost, x + r + 3, y - r - 3, 'or here', { italic: true, size: tall ? 12 : 13, fill: C.muted });
     }
     return { grp, marks, ng, sg, dotsEl, cnt, pr, ghost, bottom: nt.bottom + 44 };
   }

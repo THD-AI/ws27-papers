@@ -35,9 +35,9 @@ function build(el, ctx) {
 
   const head = g(svg);
   if (tall) {
-    text(head, 16, 18, 'below the threshold a bigger grid wins,', sans);
+    text(head, 16, 18, 'a bigger grid wins at every level we ran,', sans);
     text(head, 16, 35, 'by less as the noise rises', sans);
-  } else text(head, 16, 18, 'below the threshold a bigger grid wins, by less as the noise rises', sans);
+  } else text(head, 16, 18, 'a bigger grid wins at every level we ran, by less as the noise rises', sans);
   text(head, 16, tall ? 56 : 40, tall ? 'our runs · plain matching · distance 5 against 3, errors per round' : 'our runs · plain matching · distance 5 against 3 · errors per round', { ...mono, width: W - 30, lh: 15 });
 
   const axes = g(svg);
@@ -52,7 +52,7 @@ function build(el, ctx) {
   // the level line: no gain at all, the threshold
   const lvl = g(svg);
   line(lvl, P.l, y(1), P.r, y(1), { stroke: C.ink, 'stroke-width': 1.4 });
-  text(lvl, P.l + 6, y(1) - 8, 'no gain: the threshold', { italic: true, size: 13 });
+  text(lvl, P.l + 6, y(1) - 8, 'no gain: where it would cross is the threshold', { italic: true, size: 13 });
 
   const pts = g(svg);
   path(pts, `M${R.map((r) => `${x(r.p).toFixed(1)} ${y(r.d3_over_d5).toFixed(1)}`).join('L')}`, { stroke: C.ink, 'stroke-width': 2 });

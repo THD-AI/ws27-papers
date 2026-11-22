@@ -76,7 +76,10 @@ function build(el, ctx) {
   const cor = g(svg);
   path(cor, `M${rel.map((r) => `${lx(r.p).toFixed(1)} ${ly(r.cor).toFixed(1)}`).join('L')}`, { stroke: C.ink, 'stroke-width': 1.6, 'stroke-dasharray': '6 4' });
   // its 95% interval, so that "level" and "behind" can be read off the chart
-  for (const r of rel) line(cor, lx(r.p), ly(r.cHi), lx(r.p), ly(r.cLo), { stroke: C.ink, 'stroke-width': 1.2 });
+  for (const r of rel) {
+    line(cor, lx(r.p), ly(r.cHi), lx(r.p), ly(r.cLo), { stroke: C.ink, 'stroke-width': 1.2 });
+    for (const v of [r.cHi, r.cLo]) line(cor, lx(r.p) - 3.5, ly(v), lx(r.p) + 3.5, ly(v), { stroke: C.ink, 'stroke-width': 1.2 });
+  }
   for (const r of rel) circle(cor, lx(r.p), ly(r.cor), 3, { fill: C.paper, stroke: C.ink, 'stroke-width': 1.6 });
   if (!tall) text(cor, P.r + 6, ly(rel.at(-1).cor) + 4, 'correlated matching', { size: 13, fill: C.ink });
   if (tall) {
