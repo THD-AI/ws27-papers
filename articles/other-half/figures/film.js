@@ -1,152 +1,136 @@
-// film: what travels on the opening drawing's cable. One forge drawing (board
-// film-cable r1 c1: the hero's own lower refrigerator and servers, drawn in
-// the same hand, with the cable drawn as a strip of film), split into its line
-// and its field (art/film-line.png, art/film-field.png). Code adds only data:
-// in each drawn frame, the checks of one round that changed, lit in the accent.
-//   step 0  the frames' contents flow along the strip, from the refrigerator
-//           to the servers, faster and faster: about ninety thousand a blink
-//   step 1  everything but the strip dims: it is all that leaves
-//   step 2  one frame is lifted out and enlarged: where checks lit, which kind
-// Frames: data/film.json (tools/film-sim.py, a seeded Stim simulation),
-// consecutive rounds from the middle of the run; nothing is hand-picked.
-import { mountFigure, svgRoot, g, h, circle, path, pen, stage, clamp, ease } from '../../../lib/fig.js';
+// film: what leaves a quantum computer, drawn as the opening drawing's cable.
+// Two forge drawings in the hand of the hero, both split into layers:
+//   art/film-line.png, art/film-field.png  board film-cable r2 c1: the lower
+//     refrigerator and the two servers, whole, joined by a wide strip of film
+//     with five frames;
+//   art/film-frame.png  board film-frame r1 c1: one frame of that strip, alone.
+// Code adds only data: in each drawn frame, the checks of one round whose
+// answer changed since the round before, lit.
+//   step 0  the frames' contents advance frame by frame on a quickening beat
+//   step 1  the colour field fades: the strip is all that leaves
+//   step 2  one frame is held up, enlarged; its place in the strip goes empty
+// Frames: data/film.json (tools/film-sim.py, a seeded Stim simulation). The
+// rounds shown are chosen by a rule, below, not by eye.
+import { mountFigure, svgRoot, g, h, circle, stage, clamp, ease } from '../../../lib/fig.js';
 import { pal, text, floor } from './shared.js';
 
 export const steps = 3;
-export const durations = { large: [2.6, 1.6, 2.2] };
-const SIZE = { wide: [720, 470], tall: [360, 350] };
+export const durations = { large: [2.6, 1.4, 2.2] };
+const SIZE = { wide: [720, 488], tall: [360, 300] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
-const IMG = [1536, 672];
-// the part of the drawing shown (its own pixels): x, y, w, h
-const CROP = { wide: [60, 250, 1180, 420], tall: [110, 290, 900, 400] };
-// the drawn frames, in order from the refrigerator to the servers (centres,
-// read off the drawing's enclosed cells)
-const FR = [[279, 534], [333, 530], [386, 511], [439, 487], [496, 555], [560, 541], [631, 522], [704, 520], [770, 520]];
-const FW = 30, FH = 24;           // a frame's inner size along and across the strip
+const IMG = [1536, 1024];
+const CROP = [0, 230, 1536, 610];        // the drawing's part shown: x, y, w, h (its own pixels)
+// the five drawn frames: centre and inner size, read off the drawing's enclosed cells
+const FR = [[384, 690, 122, 77], [508, 676, 130, 97], [642, 658, 133, 91], [784, 650, 144, 79], [909, 655, 101, 71]];
+const BIG = { img: 1024, cx: 505, cy: 521, w: 690, h: 616 };   // the lifted frame's inner cell
 
 function build(el, ctx) {
   const print = !!ctx.print, tall = !print && ctx.layout === 'tall';
   floor(tall ? 13 : 0);
   const C = pal(ctx), d = ctx.data, run = d.runs[0];
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
-  const [cx0, cy0, cw, ch] = CROP[tall ? 'tall' : 'wide'];
-  const k = W / cw, oy = H - ch * k - 26;     // the drawing at the bottom, room for the lifted frame above
-  const X = (x) => (x - cx0) * k, Y = (y) => (y - cy0) * k + oy;
+  const k = W / CROP[2];
+  const bigS = tall ? 118 : 160;                     // the lifted frame's drawn size
+  const top = bigS + (tall ? 10 : 14);               // the drawing starts below it
+  const X = (x) => (x - CROP[0]) * k, Y = (y) => (y - CROP[1]) * k + top;
   const art = (n) => new URL(`../art/${n}`, import.meta.url).href;
   const svg = svgRoot(el, W, H,
-    `A refrigerator of a quantum computer and two ordinary servers, joined by a strip of film. Each frame is one round of the chip's ${d.checks_d7.value} checks; the few that changed are lit. About ninety thousand frames pass in one blink. One frame, enlarged, shows where checks lit and of which kind; nothing in it says which qubits were hit.`);
+    `A quantum computer's refrigerator and two ordinary servers, joined by a strip of film. Each frame is one round of the chip's ${d.checks_d7.value} checks, with the few whose answer changed lit. About ninety thousand frames pass in one blink. One frame, held up, shows where checks lit and of which kind; nothing in it says which qubits were hit.`);
   svg.style.color = C.ink;
   const st = stage();
-  const uid = `f${Math.random().toString(36).slice(2, 7)}`;
-  const defs = h('defs', {}, svg);
 
-  // the drawing, clipped to its crop; a mask keeps the strip in full ink
-  // while everything else dims in step 1
-  const clip = h('clipPath', { id: `${uid}c` }, defs);
-  h('rect', { x: 0, y: Y(cy0), width: W, height: ch * k }, clip);
-  const strip = h('mask', { id: `${uid}s`, maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: W, height: H }, defs);
-  const notStrip = h('mask', { id: `${uid}n`, maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: W, height: H }, defs);
-  h('rect', { x: 0, y: 0, width: W, height: H, fill: '#fff' }, notStrip);
-  for (const [fx, fy] of FR) {
-    h('circle', { cx: X(fx), cy: Y(fy), r: 34 * k, fill: '#fff' }, strip);
-    h('circle', { cx: X(fx), cy: Y(fy), r: 34 * k, fill: '#000' }, notStrip);
+  const field = h('image', { href: art('film-field.png'), x: X(0), y: Y(0), width: IMG[0] * k, height: IMG[1] * k }, svg);
+  h('image', { href: art('film-line.png'), x: X(0), y: Y(0), width: IMG[0] * k, height: IMG[1] * k }, svg);
+
+  // which rounds: the first stretch (after round 0) whose frames light about
+  // as many checks as the whole run does, so the strip shows a typical stretch
+  const mean = run.lit_per_frame_mean, need = FR.length + 10;
+  let START = 1;
+  for (let s = 1; s + need < run.frames.length; s++) {
+    const m = run.frames.slice(s, s + FR.length).reduce((a, f) => a + f.length, 0) / FR.length;
+    if (Math.abs(m - mean) <= 0.1 * mean) { START = s; break; }
   }
-  const draw = g(svg, { 'clip-path': `url(#${uid}c)` });
-  const field = h('image', { href: art('film-field.png'), x: X(0), y: Y(0), width: IMG[0] * k, height: IMG[1] * k }, draw);
-  const rest = g(draw, { mask: `url(#${uid}n)` });
-  h('image', { href: art('film-line.png'), x: X(0), y: Y(0), width: IMG[0] * k, height: IMG[1] * k }, rest);
-  const film = g(draw, { mask: `url(#${uid}s)` });
-  h('image', { href: art('film-line.png'), x: X(0), y: Y(0), width: IMG[0] * k, height: IMG[1] * k }, film);
-
-  // a frame's direction along the strip, from its neighbours
-  const ang = FR.map((_, i) => {
-    const a = FR[Math.max(0, i - 1)], b = FR[Math.min(FR.length - 1, i + 1)];
-    return Math.atan2(b[1] - a[1], b[0] - a[0]);
-  });
-  // a check's place inside a frame: Stim's x along the strip, y across it
+  // a check's place inside a frame: Stim's x across the frame, y down it
   const xs = run.checks.map((c) => c.x), ys = run.checks.map((c) => c.y);
   const mnx = Math.min(...xs), mxx = Math.max(...xs), mny = Math.min(...ys), mxy = Math.max(...ys);
-  const local = (c) => [((c.x - mnx) / (mxx - mnx) - 0.5) * FW, ((c.y - mny) / (mxy - mny) - 0.5) * FH];
-  const at = (pos) => {   // a point along the strip, pos in frames (0 = the first)
-    const i = clamp(Math.floor(pos), 0, FR.length - 2), f = clamp(pos - i, 0, 1);
-    const [ax, ay] = FR[i], [bx, by] = FR[i + 1];
-    let a0 = ang[i], a1 = ang[i + 1];
-    if (a1 - a0 > Math.PI) a1 -= 2 * Math.PI; else if (a0 - a1 > Math.PI) a1 += 2 * Math.PI;
-    return { x: ax + (bx - ax) * f, y: ay + (by - ay) * f, a: a0 + (a1 - a0) * f };
-  };
-  const mark = (parent, kind, x, y, r) => (kind === 'Z'
-    ? circle(parent, x, y, r, { fill: C.accent })
-    : circle(parent, x, y, r * 0.86, { fill: '#FBFBFC', stroke: C.accent, 'stroke-width': Math.max(1, r * 0.55) }));
-
-  // the contents of the frames: the rounds flow along the strip
-  const START = 10, FLOW = 14;           // rounds from the middle of the run; frames moved in step 0
-  const lit = g(svg);
-  const R = Math.max(1.6, 2.4 * k);
-  let shown = null;
-  const drawLit = (off) => {
-    const key = off.toFixed(3);
-    if (shown === key) return;
-    shown = key;
-    lit.replaceChildren();
-    const whole = Math.floor(off), frac = off - whole;
-    for (let j = -1; j < FR.length; j++) {
-      const pos = j + frac;
-      if (pos < 0 || pos > FR.length - 1) continue;
-      const round = START + whole - j;
-      const frame = run.frames[((round % run.frames.length) + run.frames.length) % run.frames.length];
-      const p = at(pos), cos = Math.cos(p.a), sin = Math.sin(p.a);
-      // entering at the refrigerator and leaving into the servers, a frame fades
-      const edge = Math.min(1, pos * 2, (FR.length - 1 - pos) * 2);
-      const grp = g(lit, edge < 1 ? { opacity: edge.toFixed(3) } : {});
-      for (const id of frame) {
-        const c = run.checks[id], [u, v] = local(c);
-        mark(grp, c.kind, X(p.x + u * cos - v * sin), Y(p.y + u * sin + v * cos), R);
-      }
+  const inCell = (c, cx, cy, w, hh) => [cx + ((c.x - mnx) / (mxx - mnx) - 0.5) * w * 0.74, cy + ((c.y - mny) / (mxy - mny) - 0.5) * hh * 0.7];
+  const colour = (kind) => (kind === 'Z' ? C.accent : C.ink);
+  const R = tall ? 2 : 3;
+  const dotsFor = (parent, round, cx, cy, w, hh, r) => {
+    const frame = run.frames[round % run.frames.length];
+    const placed = [];
+    for (const id of frame) {
+      const c = run.checks[id];
+      const [px, py] = inCell(c, cx, cy, w, hh);
+      if (placed.some(([qx, qy]) => Math.hypot(qx - px, qy - py) < r * 1.6)) continue;   // never two dots in one blob
+      placed.push([px, py]);
+      circle(parent, px, py, r, { fill: colour(c.kind) });
     }
   };
-  // step 0: slow, then faster and faster; ends on a whole frame
-  const offAt = (t) => FLOW * Math.pow(clamp(t), 2.4);
 
-  // the lettering: one line a step, Libre Franklin
-  const L = (str, x, y, anchor = 'start') => { const lg = g(svg); text(lg, x, y, str, { family: 'sans', size: tall ? 13 : 14, anchor }); return lg; };
-  const ly = H - (tall ? 8 : 10);
-  // the two machines, named once, small
-  const nameO = { family: 'sans', size: tall ? 12.5 : 13, fill: C.muted };
-  text(g(svg), X(tall ? 130 : 80), Y(cy0) - 7, 'a quantum computer', nameO);
-  text(g(svg), X(tall ? 990 : 1220), Y(cy0) - 7, 'an ordinary computer', { ...nameO, anchor: 'end' });
-  const l0 = L('about ninety thousand frames in one blink', tall ? 12 : 14, ly);
-  const l1 = L('all that leaves the quantum computer', tall ? 12 : W - 14, ly, tall ? 'start' : 'end');
+  // the beat: frames advance by whole frames, slowly first, then quicker, at
+  // most about six a second; nothing is ever drawn between two frames
+  const BEATS = [];
+  { let t = 0.06; for (let i = 0; i < 9; i++) { BEATS.push(t); t += 0.155 - (0.09 * i) / 8; } }
+  const beatsAt = (t) => BEATS.filter((b) => b <= t).length;
+  const cells = FR.map(() => g(svg));
+  let shown = -1;
+  const setBeat = (n) => {
+    if (n === shown) return;
+    shown = n;
+    FR.forEach(([fx, fy, fw, fh], i) => {
+      cells[i].replaceChildren();
+      dotsFor(cells[i], START + n + (FR.length - 1 - i), X(fx), Y(fy), fw * k, fh * k, R);
+    });
+  };
 
-  // step 2: one frame lifted out and enlarged, its border in the drawing's hand
-  const FROM = 2;
-  const big = tall ? { x: 14, y: 4, s: 132 } : { x: X(470), y: 6, s: 170 };
+  // the lettering: one line a step; the two machines named once, small
+  const L = (str, x, y, anchor = 'start', o = {}) => { const lg = g(svg); text(lg, x, y, str, { family: 'sans', size: tall ? 13 : 14, anchor, ...o }); return lg; };
+  const ly = H - (tall ? 6 : 8);
+  const nameO = { size: tall ? 12 : 13, fill: C.muted };
+  L('a quantum computer', X(60), Y(312), 'start', nameO);
+  L('an ordinary computer', X(1480), Y(318), 'end', nameO);
+  const l0 = L('about ninety thousand frames in one blink', tall ? 10 : 14, ly);
+  const l1 = L('all that leaves: each check’s answer, every round', tall ? 10 : 14, ly);
+
+  // step 2: one frame held up, enlarged, in the strip's own pen
+  const FROM = 1;
+  const bx = tall ? 10 : X(560), by = 2;
   const lift = g(svg);
-  const bw = big.s, bh = big.s * (FH / FW) * 1.05;
-  path(lift, pen([[big.x, big.y], [big.x + bw, big.y + 1], [big.x + bw - 1, big.y + bh], [big.x + 1, big.y + bh + 1], [big.x, big.y]], 7, 0.9), { stroke: '#2a2a2a', 'stroke-width': 1.5, fill: '#FBFBFC', 'stroke-linejoin': 'round' });
-  const bigAt = (c) => { const [u, v] = local(c); return [big.x + bw / 2 + (u / FW) * bw * 0.82, big.y + bh / 2 + (v / FH) * bh * 0.8]; };
-  for (const c of run.checks) { const [px, py] = bigAt(c); circle(lift, px, py, 1.6, { fill: C.muted, opacity: 0.5 }); }
-  const round = START + FLOW - FROM;
-  for (const id of run.frames[round % run.frames.length]) { const c = run.checks[id]; const [px, py] = bigAt(c); mark(lift, c.kind, px, py, tall ? 4.6 : 5); }
-  const note = g(lift);
-  text(note, big.x + bw + (tall ? 12 : 14), big.y + 22, 'one frame: the checks', { family: 'sans', size: tall ? 13 : 14 });
-  text(note, big.x + bw + (tall ? 12 : 14), big.y + 40, 'that changed are lit', { family: 'sans', size: tall ? 13 : 14 });
+  h('image', { href: art('film-frame.png'), x: bx, y: by, width: bigS, height: bigS }, lift);
+  const bk = bigS / BIG.img, bcx = bx + BIG.cx * bk, bcy = by + BIG.cy * bk;
+  const grid = g(lift);
+  for (const c of run.checks) { const [px, py] = inCell(c, bcx, bcy, BIG.w * bk, BIG.h * bk); circle(grid, px, py, 1.3, { fill: C.muted, opacity: 0.35 }); }
+  const liftDots = g(lift);
+  const note = g(svg);
+  const nx = bx + bigS + (tall ? 10 : 14), ns = tall ? 12.5 : 13.5;
+  text(note, nx, by + 22, 'one frame: the checks whose', { family: 'sans', size: ns });
+  text(note, nx, by + 22 + ns * 1.35, 'answer changed since', { family: 'sans', size: ns });
+  text(note, nx, by + 22 + ns * 2.7, 'the round before', { family: 'sans', size: ns });
+  circle(note, nx + 4, by + 22 + ns * 4.4 - 4, 3.6, { fill: C.accent });
+  text(note, nx + 13, by + 22 + ns * 4.4, 'a check on flips', { family: 'sans', size: ns });
+  circle(note, nx + 4, by + 22 + ns * 5.75 - 4, 3.6, { fill: C.ink });
+  text(note, nx + 13, by + 22 + ns * 5.75, 'a check on phase errors', { family: 'sans', size: ns });
 
+  let liftRound = -1;
   st.on((gg) => {
-    drawLit(gg >= 1 ? FLOW : offAt(gg));
-    // step 1: all but the strip dims
-    const p1 = ease(clamp(gg - 1)), dim = 1 - 0.6 * p1;
-    for (const e of [rest, field]) e.style.opacity = dim >= 0.999 ? '' : dim.toFixed(3);
-    // step 2: the frame comes up out of the strip and grows
-    const p2 = ease(clamp((gg - 2) / 0.75));
+    const n = gg >= 1 ? BEATS.length : beatsAt(gg);
+    setBeat(n);
+    // step 1: the colour field fades; the line stays in full ink
+    const p1 = ease(clamp(gg - 1)), fo = 1 - 0.75 * p1;
+    field.style.opacity = fo >= 0.999 ? '' : fo.toFixed(3);
+    // step 2: the frame is held up; its place in the strip goes empty
+    const p2 = ease(clamp((gg - 2) / 0.7));
+    const round = START + BEATS.length + (FR.length - 1 - FROM);
+    if (round !== liftRound) { liftRound = round; liftDots.replaceChildren(); dotsFor(liftDots, round, bcx, bcy, BIG.w * bk, BIG.h * bk, tall ? 4 : 5); }
     lift.style.display = p2 <= 0.001 ? 'none' : '';
-    const from = at(FROM), fx = X(from.x), fy = Y(from.y);
-    const z = (FW * k + (bw - FW * k) * p2) / bw;
-    const tx = fx + (big.x + bw / 2 - fx) * p2, ty = fy + (big.y + bh / 2 - fy) * p2;
-    lift.setAttribute('transform', p2 >= 0.999 ? '' : `translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${z.toFixed(4)}) translate(${(-(big.x + bw / 2)).toFixed(2)} ${(-(big.y + bh / 2)).toFixed(2)})`);
-    note.style.opacity = String(clamp((gg - 2.75) / 0.25));
+    lift.style.opacity = p2 >= 0.999 ? '' : p2.toFixed(3);
+    lift.setAttribute('transform', p2 >= 0.999 ? '' : `translate(0 ${(10 * (1 - p2)).toFixed(2)})`);
+    cells[FROM].style.opacity = p2 > 0.001 ? String(1 - p2) : '';
+    note.style.opacity = String(clamp((gg - 2.7) / 0.3));
   });
-  st.fade(l0, 0.12, 0.42, tall ? [1.05, 1.3] : undefined);
+  st.fade(l0, 0.12, 0.42, [1.05, 1.3]);
   st.fade(l1, 1.35, 1.75);
 
   return { set: (step, t) => st.set(step, t) };
