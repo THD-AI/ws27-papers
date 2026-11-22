@@ -98,9 +98,14 @@ function build(el, ctx) {
   // the box that reads the grid
   const bx = rail ? 166 : 174, by = 82 + dy, bw = 38, bh = 36;
   const gBox = g(svg);
-  rect(gBox, bx - 5, by + 7, bw + 12, bh + 6, { fill: C.field, 'data-audit': 'skip' });
   rect(gBox, bx, by, bw, bh, { fill: 'none', stroke: C.ink, 'stroke-width': 1.25 });
-  const join = line(svg, 0, by + bh / 2, bx, by + bh / 2, { stroke: C.ink, 'stroke-width': 1.25, 'stroke-linecap': 'round' });
+  // inside the box, what it reads: a frame of the film, two checks lit (section 4)
+  rect(gBox, bx + 9, by + 8, 9, 9, { fill: C.flip }); rect(gBox, bx + 20, by + 19, 9, 9, { fill: C.flip });
+  // the line from the grid to the box is the film itself: a dark strip with its perforations
+  const join = g(svg);
+  const joinA = line(join, 0, by + bh / 2, bx, by + bh / 2, { stroke: '#24211E', 'stroke-width': 7, 'stroke-linecap': 'butt' });
+  const joinB = line(join, 0, by + bh / 2 - 2.2, bx, by + bh / 2 - 2.2, { stroke: C.paper, 'stroke-width': 1.3, 'stroke-dasharray': '1.6 2.6', 'data-audit': 'skip' });
+  const joinC = line(join, 0, by + bh / 2 + 2.2, bx, by + bh / 2 + 2.2, { stroke: C.paper, 'stroke-width': 1.3, 'stroke-dasharray': '1.6 2.6', 'data-audit': 'skip' });
 
   // labels, one pair per state
   const labels = K.map((k) => {
@@ -143,8 +148,8 @@ function build(el, ctx) {
     show(gBox, boxP);
     const reach = cx + ((b.d - 1) / 2 + 0.5) * pitch + 5;
     if (show(join, a.box && b.box ? 1 : b.box ? clamp((u - 0.45) / 0.25) : 0)) {
-      join.setAttribute('x1', reach.toFixed(1));
-      join.setAttribute('x2', (a.box && b.box ? bx : lerp(reach, bx, ease(clamp((u - 0.45) / 0.4)))).toFixed(1));
+      const x2 = (a.box && b.box ? bx : lerp(reach, bx, ease(clamp((u - 0.45) / 0.4)))).toFixed(1);
+      for (const ln of [joinA, joinB, joinC]) { ln.setAttribute('x1', reach.toFixed(1)); ln.setAttribute('x2', x2); }
     }
     // labels: the old one leaves, the new one comes last
     labels.forEach((lb, i) => {
