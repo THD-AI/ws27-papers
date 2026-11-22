@@ -120,7 +120,7 @@ We went through every possible error on the smallest grid and compared two answe
 
 :::scene lattice
 
-@caption The smallest grid: 9 storing qubits and 8 checks; X is a flip, Z a phase error, Y both. On screen, one flip fires the two checks beside it; then a line of two flips fires only its upper end, as the lower end meets the edge (on paper, at the left). Then our example's three fired checks and two explanations; the dots count 30 times this pattern shows up. Plain matching's answer is right in 10, the other in 19, because it can happen in two ways: the phase error in the far corner or one place above it (5% error per storing qubit, checks never wrong; our own count).
+@caption The smallest grid; X is a flip, Z a phase error, Y both. Our example's three fired checks have two explanations: of 30 times the pattern turns up, plain matching's is right in 10, the other in 19, because it can happen in two ways. 5% error per storing qubit, checks never wrong; our own count.
 
 @step 0
 The standard decoder is called **matching**, and the smallest grid shows how it works: 9 storing qubits, never read directly, and 8 checks between them, each asking its neighbours one question.
@@ -203,7 +203,7 @@ Each training was repeated from different random starting points, or seeds: eigh
 
 :::scene learning
 
-@caption Our own runs, at a noise level of 0.5%. Share of simulated runs in which a decoder was wrong, against the number of examples the network had seen; one thin line per seed. The two level lines are plain and correlated matching, which need no examples. Distance 3: the network ends below both, but its lead over correlated matching is about what a library defect costs that decoder (see "A finding we didn't plan for"). Distance 5 after 66 million examples: above both. Distance 5 after 250 million: below plain matching, above correlated matching. Points along a curve are scored on 1 million runs, not the final test's 2 million, so the crossings are less sharp than the end values.
+@caption Our own runs at a noise level of 0.5%: the share of runs a decoder got wrong, against the examples the network had seen; one line per seed, the level lines are plain and correlated matching. Distance 3: the network ends below both. Distance 5: above both after 66 million examples, below plain matching after 250 million.
 
 @step 0
 **Distance 3.** Here the network beats plain matching, and early. After about 66 million examples it failed in 1.48% of runs, its eight seeds between 1.46% and 1.49%. Plain matching failed in 1.72% and correlated matching in 1.66%. The curves first dip below plain matching at 6.6 million examples in four seeds and at 9.3 million in the other four. By 13 million all eight were at or below correlated matching. {{OWN-D3}} That second win we don't count. In our library version correlated matching mishandles six single errors, and by a first-order estimate that costs it about the whole gap of 0.18 percentage points (see "A finding we didn't plan for").

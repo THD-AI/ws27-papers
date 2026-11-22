@@ -37,7 +37,7 @@ function build(el, ctx) {
   svg.style.color = C.ink;
   const st = stage();
   const noteO = { italic: true, size: tall ? 13 : 14 };
-  const mono = { family: 'mono', size: tall ? 11 : 12, fill: C.muted };
+  const mono = { family: 'mono', size: tall ? 11.6 : 12, fill: C.muted };
   const pen = (parent, dd) => path(parent, dd, { fill: C.ink, stroke: 'none', 'data-audit': 'skip' });
   const [wx0, wx1] = L.win, half = L.stripH / 2, s = L.pitch;
 
