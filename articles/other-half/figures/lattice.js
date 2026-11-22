@@ -77,7 +77,7 @@ function build(el, ctx) {
       const [x, y] = G.pos(answer.also.qubit), r = G.qr * 1.22;
       circle(ghost, x, y, r, { fill: C.paper, stroke: C.ink, 'stroke-width': 1.1, 'stroke-dasharray': '2.2 2.2' });
       text(ghost, x, y + r * 0.5, answer.also.kind, { family: 'sans', size: r * 1.42, weight: 600, anchor: 'middle', fill: C.muted, free: true });
-      text(ghost, x + r + 4, y - r - 2, 'or here', { italic: true, size: tall ? 12 : 13, fill: C.muted });
+      text(ghost, x - r - 4, y + 4, 'or here', { italic: true, size: tall ? 12 : 13, fill: C.muted, anchor: 'end' });
     }
     return { grp, marks, ng, sg, dotsEl, cnt, pr, ghost, bottom: nt.bottom + 44 };
   }

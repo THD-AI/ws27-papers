@@ -39,7 +39,16 @@ for (let step = 0; step < +n; step++) for (const [name, vp] of Object.entries(si
   if (name === 'phone') {
     const passage = (await page.$$(`.scene[data-scene="${id}"] .passage`))[step];
     if (passage) {
-      await page.evaluate((el) => { const r = el.getBoundingClientRect(); window.scrollBy(0, r.top - window.innerHeight * 0.56); }, passage);
+      // scroll down in small moves until this passage is the active one, then a little further
+      const all = await page.$$(`.scene[data-scene="${id}"] .passage`);
+      await page.evaluate((el) => { const r = el.getBoundingClientRect(); window.scrollBy(0, r.top - window.innerHeight * 1.0); }, passage);
+      for (let k = 0; k < 120; k++) {
+        const active = await page.evaluate((els) => els.findIndex((e) => e.classList.contains('is-active')), all);
+        if (active >= step) break;
+        await page.evaluate(() => window.scrollBy(0, 12));
+        await new Promise((r) => setTimeout(r, 40));
+      }
+      await page.evaluate(() => window.scrollBy(0, 60));
       await new Promise((r) => setTimeout(r, 2500));
       await page.screenshot({ path: join(out, `${id}-${step}-${name}.png`) });
       await page.close();
