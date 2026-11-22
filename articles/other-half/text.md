@@ -27,7 +27,7 @@ So we set ourselves three questions: what the program has to do, why a network c
 
 ## 1. A qubit doesn't hold still
 
-A qubit is the quantum version of a bit, and its weakness is that it doesn't keep its state. It behaves like a pattern drawn on the surface of water: it starts to smear as soon as it's made. On Google's 2024 chip the median qubit lifetime is 85 millionths of a second, about a thousandth of a blink. {{GQA-2024 OWN-ARITH}} The operations add errors of their own: each one has a small chance of going wrong.
+A qubit is the quantum version of a bit, and its weakness is that it doesn't keep its state. It behaves like a pattern drawn on the surface of water: it starts to smear as soon as it's made. On Google's 2024 chip, the qubits of its largest grid have a median lifetime of 85 millionths of a second, about a thousandth of a blink. {{GQA-2024 OWN-ARITH}} The operations add errors of their own: each one has a small chance of going wrong.
 
 That sounds harmless until it's set against a real job. A well-known estimate for breaking the encryption that protects much of the internet's traffic puts two numbers side by side. The hardware it assumes slips about once in every thousand basic operations. The calculation it plans needs between two and three billion steps of the costly kind, each built from many basic operations, and a single uncorrected slip can spoil the answer. {{GE-2021}} At one slip per thousand, that means millions of slips where one is enough. Unaided, such hardware cannot finish the calculation.
 
