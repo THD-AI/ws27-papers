@@ -54,19 +54,44 @@ function pool(dirs, file, distance) {
 const d3 = pool(['kaggle-d3', 'kaggle-d3-rerun'], 'neural_pilot_d3.json', 3);
 const d5 = pool(['kaggle-d5-250m', 'kaggle-d5-250m-rerun'], 'neural_pilot_d5.json', 5);
 if (d3.rounds !== 3 || d5.rounds !== 5) throw new Error('expected 3 and 5 rounds');
+// above 1%: the sweep of 22 November (04_threshold_sweep.py, same circuit, same noise, plain matching)
+const SWEEP = join(RESULTS, 'threshold-2026-11-22.json');
+const sweepFiles = [];
+if (existsSync(SWEEP)) {
+  const sw = JSON.parse(readFileSync(SWEEP, 'utf8'));
+  sweepFiles.push('threshold-2026-11-22.json');
+  for (const r of sw.rows) {
+    if (r.p <= 0.01) continue;                                // up to 1% the larger pooled runs stand
+    const pool = r.distance === 3 ? d3 : d5;
+    const P = r.rate;
+    pool.rows.push({ p: r.p, errors: r.errors, shots: r.shots, run_failure: P, per_round: perRound(P, r.rounds), per_round_ci95: r.ci95.map((v) => perRound(v, r.rounds)), from: 'sweep' });
+  }
+  for (const pool of [d3, d5]) pool.rows.sort((a, b) => a.p - b.p);
+  // the sweep repeats 0.8% and 1%: it must agree with the pooled runs there
+  for (const r of sw.rows.filter((q) => q.p <= 0.01)) {
+    const pool = r.distance === 3 ? d3 : d5, old = pool.rows.find((q) => q.p === r.p);
+    if (old && (r.ci95[1] < old.run_failure * 0.97 || r.ci95[0] > old.run_failure * 1.03)) throw new Error(`sweep disagrees with the pooled runs at d=${r.distance}, p=${r.p}`);
+  }
+}
 const ps = d3.rows.map((r) => r.p).filter((p) => d5.rows.some((q) => q.p === p));
 const ratio = ps.map((p) => {
   const a = d3.rows.find((r) => r.p === p), b = d5.rows.find((r) => r.p === p);
   return { p, d3_over_d5: a.per_round / b.per_round };
 });
 // what the figure says: distance 5 wins at every level we ran, and its lead shrinks as the noise rises
-if (!ratio.every((r) => r.d3_over_d5 > 1)) throw new Error('distance 5 should win at every level');
 for (let i = 1; i < ratio.length; i++) if (!(ratio[i].d3_over_d5 < ratio[i - 1].d3_over_d5)) throw new Error('the lead should shrink as the noise rises, at ' + ratio[i].p);
+// where the line meets 1 (no gain), by interpolation on log scales between the two points around it
+let crossing = null;
+for (let i = 1; i < ratio.length; i++) if (ratio[i - 1].d3_over_d5 > 1 && ratio[i].d3_over_d5 <= 1) {
+  const a = ratio[i - 1], b = ratio[i];
+  const t = Math.log(a.d3_over_d5) / (Math.log(a.d3_over_d5) - Math.log(b.d3_over_d5));
+  crossing = Math.exp(Math.log(a.p) + t * (Math.log(b.p) - Math.log(a.p)));
+}
 
 const out = {
   generated: new Date().toISOString().slice(0, 10),
   generated_by: 'tools/threshold-data.mjs',
-  inputs: [...d3.files, ...d5.files],
+  inputs: [...d3.files, ...d5.files, ...sweepFiles],
   source: 'OWN-D3 OWN-D5-250M',
   what: 'Plain matching on our simulated runs, as the chance of a logical error per round, at distance 3 and distance 5, at eight noise levels. Below the threshold the bigger grid wins; the lead shrinks as the noise approaches it.',
   conversion: 'per round e = (1 - (1 - 2P)^(1/r)) / 2 for a run of r rounds that fails with chance P',
@@ -74,6 +99,7 @@ const out = {
   d3: { rounds: 3, rows: d3.rows },
   d5: { rounds: 5, rows: d5.rows },
   ratio,
+  crossing_p: crossing,
 };
 writeFileSync(join(repo, 'articles', 'other-half', 'data', 'threshold.json'), JSON.stringify(out, null, 1) + '\n', 'utf8');
-console.log('wrote data/threshold.json:', ratio.map((r) => `${(r.p * 100).toFixed(1)}%: ${r.d3_over_d5.toFixed(2)}`).join(', '));
+console.log('wrote data/threshold.json:', ratio.map((r) => `${(r.p * 100).toFixed(1)}%: ${r.d3_over_d5.toFixed(2)}`).join(', '), crossing ? `crossing near ${(crossing * 100).toFixed(2)}%` : 'no crossing');

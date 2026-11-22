@@ -14,7 +14,8 @@
   "kaggle-d5-250m\\d5-seeds\\seed-2\\neural_pilot_d5.json",
   "kaggle-d5-250m-rerun\\d5-seeds\\seed-11\\neural_pilot_d5.json",
   "kaggle-d5-250m-rerun\\d5-seeds\\seed-12\\neural_pilot_d5.json",
-  "kaggle-d5-250m-rerun\\d5-seeds\\seed-13\\neural_pilot_d5.json"
+  "kaggle-d5-250m-rerun\\d5-seeds\\seed-13\\neural_pilot_d5.json",
+  "threshold-2026-11-22.json"
  ],
  "source": "OWN-D3 OWN-D5-250M",
  "what": "Plain matching on our simulated runs, as the chance of a logical error per round, at distance 3 and distance 5, at eight noise levels. Below the threshold the bigger grid wins; the lead shrinks as the noise approaches it.",
@@ -110,6 +111,66 @@
      0.02052700480407188,
      0.02061085661138584
     ]
+   },
+   {
+    "p": 0.012,
+    "errors": 81050,
+    "shots": 1000000,
+    "run_failure": 0.08105,
+    "per_round": 0.028624071206794832,
+    "per_round_ci95": [
+     0.02842414453096037,
+     0.02882537586735129
+    ],
+    "from": "sweep"
+   },
+   {
+    "p": 0.014,
+    "errors": 102945,
+    "shots": 1000000,
+    "run_failure": 0.102945,
+    "per_round": 0.03698304698784166,
+    "per_round_ci95": [
+     0.03675223215983581,
+     0.037215279168925086
+    ],
+    "from": "sweep"
+   },
+   {
+    "p": 0.016,
+    "errors": 126503,
+    "shots": 1000000,
+    "run_failure": 0.126503,
+    "per_round": 0.046327582723105554,
+    "per_round_ci95": [
+     0.04606451828342484,
+     0.04659211582983214
+    ],
+    "from": "sweep"
+   },
+   {
+    "p": 0.018,
+    "errors": 149394,
+    "shots": 1000000,
+    "run_failure": 0.149394,
+    "per_round": 0.05579192313809567,
+    "per_round_ci95": [
+     0.05549761180935281,
+     0.05608776413415145
+    ],
+    "from": "sweep"
+   },
+   {
+    "p": 0.02,
+    "errors": 172719,
+    "shots": 1000000,
+    "run_failure": 0.172719,
+    "per_round": 0.0658695310388483,
+    "per_round_ci95": [
+     0.06554274298270407,
+     0.06619792532489166
+    ],
+    "from": "sweep"
    }
   ]
  },
@@ -203,6 +264,66 @@
      0.0179685822619573,
      0.018048128560504306
     ]
+   },
+   {
+    "p": 0.012,
+    "errors": 125437,
+    "shots": 1000000,
+    "run_failure": 0.125437,
+    "per_round": 0.028066313335985638,
+    "per_round_ci95": [
+     0.027903200969989217,
+     0.028230377713944155
+    ],
+    "from": "sweep"
+   },
+   {
+    "p": 0.014,
+    "errors": 171092,
+    "shots": 1000000,
+    "run_failure": 0.171092,
+    "per_round": 0.040176787933497216,
+    "per_round_ci95": [
+     0.039970944302900824,
+     0.04038370866695212
+    ],
+    "from": "sweep"
+   },
+   {
+    "p": 0.016,
+    "errors": 218111,
+    "shots": 1000000,
+    "run_failure": 0.218111,
+    "per_round": 0.05414706565410293,
+    "per_round_ci95": [
+     0.05389165944028146,
+     0.05440374513949531
+    ],
+    "from": "sweep"
+   },
+   {
+    "p": 0.018,
+    "errors": 262941,
+    "shots": 1000000,
+    "run_failure": 0.262941,
+    "per_round": 0.06932734955589354,
+    "per_round_ci95": [
+     0.06901462119125046,
+     0.06964165262488914
+    ],
+    "from": "sweep"
+   },
+   {
+    "p": 0.02,
+    "errors": 304443,
+    "shots": 1000000,
+    "run_failure": 0.304443,
+    "per_round": 0.08558957058151723,
+    "per_round_ci95": [
+     0.0852083282688254,
+     0.08597286015085703
+    ],
+    "from": "sweep"
    }
   ]
  },
@@ -238,6 +359,27 @@
   {
    "p": 0.01,
    "d3_over_d5": 1.1421886117021247
+  },
+  {
+   "p": 0.012,
+   "d3_over_d5": 1.0198728584026053
+  },
+  {
+   "p": 0.014,
+   "d3_over_d5": 0.9205078078680156
+  },
+  {
+   "p": 0.016,
+   "d3_over_d5": 0.8555880575145282
+  },
+  {
+   "p": 0.018,
+   "d3_over_d5": 0.8047606535587337
+  },
+  {
+   "p": 0.02,
+   "d3_over_d5": 0.7695976342831727
   }
- ]
+ ],
+ "crossing_p": 0.01236040583946899
 }

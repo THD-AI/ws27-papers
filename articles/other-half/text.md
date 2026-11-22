@@ -46,7 +46,7 @@ The way around this is to store the information in the way several qubits relate
 In the scheme we studied, the surface code, the qubits sit on a square grid, and the size of the grid is called its **distance**. A bigger grid should protect better, but only if each qubit is good enough. Below a certain error rate, called the **threshold**, it does. Above it, a bigger grid is worse, since every added qubit is one more thing that smears. For years the hardware sat above it. {{GQA-2023 GQA-2024}}
 
 :::figure threshold column
-How many times fewer logical errors per round a grid of distance 5 makes than one of distance 3, at eight noise levels, both read by plain matching. The bigger grid wins at every level we ran, and by less as the noise rises: from about 9 times at 0.1% to 1.14 times at 1%. The threshold is where the line would reach no gain; at 1%, the highest level we ran, the bigger grid still wins, so for these two grids it lies higher. Our own runs, with the simulation of section 9.
+How many times fewer logical errors per round a grid of distance 5 makes than one of distance 3, at twelve noise levels, both read by plain matching. The bigger grid wins by about 9 times at 0.1%, by less as the noise rises, and from about 1.2% it makes more errors than the smaller one: in this simulation, that is the threshold. Our own runs, with the simulation of section 9; the levels above 1% from a second run of the same setup.
 :::
 
 ## 3. Asking without looking
