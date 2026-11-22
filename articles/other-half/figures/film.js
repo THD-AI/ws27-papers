@@ -50,7 +50,8 @@ function build(el, ctx) {
   const labA = tall ? [16, chipTop - 9] : [16, L.chipY - 8], labB = tall ? [16, L.stripY - half - 8] : [16, L.stripY - 8];
   text(main, labA[0], labA[1], 'on the chip', { size: tall ? 14 : 15 });
   text(main, labA[0] + (tall ? 92 : 0), labA[1] + (tall ? 0 : 19), 'nobody reads it directly', { size: 13, fill: C.muted, width: tall ? 240 : 112 });
-  text(main, labB[0], labB[1], 'what comes out', { size: tall ? 14 : 15 });
+  text(main, labB[0], labB[1], tall ? 'what comes out, a frame a round' : 'what comes out', { size: tall ? 14 : 15 });
+  if (!tall) text(main, labB[0], labB[1] + 19, 'a frame a round', { size: 13, fill: C.muted });
 
   // ---- the window both rows move in ---------------------------------------------
   const clipId = `film-clip-${tall ? 't' : 'w'}-${Math.round(Math.random() * 1e6)}`;
@@ -147,7 +148,7 @@ function build(el, ctx) {
   // ---- notes on the frames ---------------------------------------------------------
   // the mark sits on its frame; on a phone the words go in one place, beside the arrow
   const xOf = (round, gg) => wx0 + (round - 1 - offAt(gg)) * L.fw + L.fw / 2;
-  const nY = L.notesY, nX = (x) => (tall ? 56 : x), nA = tall ? 'start' : 'middle', nW = tall ? 288 : 210;
+  const nY = L.notesY, nX = (x) => (tall ? 56 : x), nA = tall ? 'start' : 'middle', nW = tall ? 288 : 250;
   const note = (lines, a, b, out, mark) => {
     const grp = g(main);
     if (mark) mark(grp);
@@ -173,13 +174,16 @@ function build(el, ctx) {
   }
 
   // ---- step 5: the chip is hidden, only the film is left ---------------------------
-  st.on((gg) => { const o = 1 - 0.88 * Math.min(1, Math.max(0, (gg - 5) / 0.35)); const v = o >= 0.999 ? '' : o.toFixed(3); for (const e of [chipRow, chipLine]) if (e.style.opacity !== v) e.style.opacity = v; });
+  st.on((gg) => {
+    const k = Math.min(1, Math.max(0, (gg - 5) / 0.35));
+    for (const [e, o] of [[chipRow, 1 - k], [chipLine, 1 - 0.6 * k]]) { const v = o >= 0.999 ? '' : o.toFixed(3); if (e.style.opacity !== v) e.style.opacity = v; }
+  });
   const hidden = g(main);
   text(hidden, (wx0 + wx1) / 2, L.chipY + 6, 'hidden from the decoder', { size: tall ? 16 : 18, anchor: 'middle' });
   st.fade(hidden, 5.15, 5.4);
 
   // ---- steps 6 and 7: one frame, its stories, and the bet ---------------------------
-  st.on((gg) => { const o = gg >= 6 ? 1 - 0.97 * Math.min(1, (gg - 6) / 0.3) : 1; const v = o >= 0.999 ? '' : o.toFixed(3); if (main.style.opacity !== v) main.style.opacity = v; });
+  st.on((gg) => { const o = gg >= 6 ? 1 - Math.min(1, (gg - 6) / 0.3) : 1; const v = o >= 0.999 ? '' : o.toFixed(3); if (main.style.opacity !== v) main.style.opacity = v; });
   const six = g(svg), seven = g(svg);
   const S6 = tall
     ? { seen: [180, 92], sz: 22, both: [180, 238], stories: [[95, 304], [265, 304]], ssz: 19, labY: 358, bet: [180, 392], w: 330 }
@@ -190,18 +194,23 @@ function build(el, ctx) {
   text(six, S6.seen[0], S6.seen[1] + fr * 0.95 + 20, 'round 2, as the decoder gets it', { ...noteO, anchor: 'middle' });
   pen(six, P.storyArrow); for (const dd of P.storyArrowHead) pen(six, dd); pen(six, P.storyBracket);
   text(six, S6.both[0], S6.both[1], 'both fit the same two lights', { ...noteO, anchor: 'middle' });
-  const labs = tall ? ['one flip', 'or a pair of flips'] : ['one flip, in the middle', 'or a pair, one of four'];
+  const labs = tall ? ['one flip', 'or one of four pairs'] : ['one flip, in the middle', 'or one of four pairs'];
   [d.stories.one, d.stories.two].forEach((qs, k) => {
     const [x, y] = S6.stories[k];
     frame(six, x, y, S6.ssz, { lit: d.stories.lights, errors: qs.map((q) => ({ qubit: q, kind: 'X' })) });
     text(six, x, S6.labY, labs[k], { size: 14, anchor: 'middle', width: 150 });
   });
   st.fade(six, 6, 6.35);
-  const oneIn = Math.round(1 / bet.p).toLocaleString('en');
-  text(seven, S6.bet[0], S6.bet[1], tall
-    ? `They leave the stored value opposite ways round. At one slip in ${oneIn}, the single flip is roughly ${bet.times_likelier} times likelier than all ${nPairs} pairs: the decoder bets on it.`
-    : `They leave the stored value opposite ways round. If each qubit slips once in ${oneIn} rounds, independently, the single flip is roughly ${bet.times_likelier} times likelier than all ${nPairs} pairs together, so the decoder bets on it.`,
-  { ...noteO, anchor: 'middle', width: S6.w });
+  // the bet, counted: one dot for each time the single flip happens, against one for all four pairs together
+  const n = bet.times_likelier;
+  const B7 = tall ? { lx: 16, gx: 112, gy: 378, cols: 25, p: 4.3, r: 1.45, row2: 432, tx: 230 } : { lx: 290, gx: 302, gy: 356, cols: 50, p: 5, r: 1.6, row2: 412, tx: 560 };
+  const lab = { size: tall ? 13 : 14, anchor: tall ? 'start' : 'end' };
+  text(seven, B7.lx, B7.gy + (tall ? 20 : 14), 'one flip', lab);
+  for (let i = 0; i < n; i++) circle(seven, B7.gx + (i % B7.cols) * B7.p, B7.gy + Math.floor(i / B7.cols) * B7.p, B7.r, { fill: C.ink });
+  text(seven, B7.lx, B7.row2 + 4, 'all four pairs', lab);
+  circle(seven, B7.gx, B7.row2, B7.r, { fill: C.ink });
+  text(seven, B7.tx, B7.gy + (tall ? 20 : 14), `${n} : 1`, { family: 'mono', size: 13 });
+  text(seven, tall ? B7.gx + 14 : B7.tx, B7.row2 + 4, tall ? 'so the decoder bets on the flip' : 'so the decoder bets on the single flip', { ...noteO, width: tall ? 220 : 170 });
   st.fade(seven, 7, 7.3);
 
   return { set: (stp, t) => st.set(stp, t) };

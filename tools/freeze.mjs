@@ -43,7 +43,7 @@ for (let step = 0; step < +n; step++) for (const [name, vp] of Object.entries(si
       const all = await page.$$(`.scene[data-scene="${id}"] .passage`);
       await page.evaluate((el) => { const r = el.getBoundingClientRect(); window.scrollBy(0, r.top - window.innerHeight * 1.0); }, passage);
       for (let k = 0; k < 120; k++) {
-        const active = await page.evaluate((els) => els.findIndex((e) => e.classList.contains('is-active')), all);
+        const active = await page.evaluate((sel) => [...document.querySelectorAll(sel)].findIndex((e) => e.classList.contains("is-active")), `.scene[data-scene="${id}"] .passage`);
         if (active >= step) break;
         await page.evaluate(() => window.scrollBy(0, 12));
         await new Promise((r) => setTimeout(r, 40));

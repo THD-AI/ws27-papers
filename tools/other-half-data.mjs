@@ -308,6 +308,8 @@ write('lattice.json', {
       const other = +zq === 8 ? 5 : null;
       const phaseFired = (q) => c3.x.filter((c) => c.qubits.includes(q)).map((c) => c.qubits.join()).join('|');
       if (other === null || phaseFired(8) !== phaseFired(5)) throw new Error('the second way should be Z on qubit 5, firing what Z on 8 fires');
+      // and the two differ by a check (qubits 5 and 8 together), so they leave the stored value the same way round
+      if (!c3.z.some((c) => c.qubits.length === 2 && c.qubits.includes(5) && c.qubits.includes(8))) throw new Error('qubits 5 and 8 should share a flip-check of their own');
       return { qubit: other, kind: 'Z', instead_of: 8 };
     })(),
     rest: 1 - ex.pMatch - ex.pMl,

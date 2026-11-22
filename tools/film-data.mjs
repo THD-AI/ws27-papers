@@ -126,7 +126,7 @@ function strokes(L, tall) {
   // the chip: one stroke around the upper row, started at the top left and closed with a small overlap
   const cT = L.chipY - (tall ? 52 : 58), cB = L.chipY + (tall ? 46 : 58), cl = x0 - 8, cr2 = x1 + 8;
   S.chip = pen([[cl + 14, cT + 0.5], [(cl + cr2) / 2, cT - 1], [cr2 - 3, cT + 0.8], [cr2 + 0.5, cT + 10], [cr2 + 1.2, (cT + cB) / 2], [cr2 - 0.5, cB - 6],
-    [cr2 - 9, cB + 0.6], [(cl + cr2) / 2, cB + 1.4], [cl + 6, cB - 0.4], [cl - 0.8, cB - 9], [cl + 0.6, (cT + cB) / 2], [cl - 0.4, cT + 9], [cl + 10, cT - 0.2], [cl + 30, cT + 0.6]], 2.2, { thin: 0.55, t0: 3, t1: 6, n: 10 });
+    [cr2 - 9, cB + 0.6], [(cl + cr2) / 2, cB + 1.4], [cl + 6, cB - 0.4], [cl - 0.8, cB - 9], [cl + 0.6, (cT + cB) / 2], [cl - 0.4, cT + 9], [cl + 10, cT - 0.2], [cl + 30, cT + 0.6]], 1.6, { thin: 0.55, t0: 3, t1: 6, n: 10 });
   if (tall) {
     // the decoder below the strip: one stroke around it; an arrow comes down the left side and turns into it
     S.box = [pen([[bx0 + 12, by0 - 0.4], [bx0 + 120, by0 - 1.4], [bx1 - 6, by0 + 0.4], [bx1 + 1, by0 + 7], [bx1 + 1.6, m], [bx1 - 1, by1 - 5],
@@ -140,7 +140,7 @@ function strokes(L, tall) {
   }
   // notes: a tick under "no change", a bracket under the two misreport frames (placed by the figure)
   S.tick = pen([[0, 10], [2, 0], [-1, -12]], 2.2, { thin: 0.7, t0: 1, t1: 4 });
-  S.bracket = pen([[-L.fw * 0.86, -6], [-L.fw * 0.8, 3], [0, 2.2], [L.fw * 0.8, 3.4], [L.fw * 0.86, -5]], 2.4, { thin: 0.4, t0: 2, t1: 3 });
+  S.bracket = pen([[-L.fw * 0.88, -4], [-L.fw * 0.82, 2.6], [-L.fw * 0.3, 3.4], [0, 2.4], [L.fw * 0.76, 3.6], [L.fw * 0.84, -7.5]], 2.4, { thin: 0.4, t0: 2, t1: 5 });
   return S;
 }
 const pens = { wide: strokes(LAYOUT.wide, false), tall: strokes(LAYOUT.tall, true) };
