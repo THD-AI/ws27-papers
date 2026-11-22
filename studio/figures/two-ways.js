@@ -71,12 +71,18 @@ export default {
     labB.textContent = 'the other answer, two ways';
     const tA = el('g', {}, svg), tB = el('g', {}, svg);
     const bx = (mini.xs[1] + mini.xs[2]) / 2;
-    tally(tA, C, mini.xs[0] - tw / 2, tTop, 30, 10, tsz);
-    tally(tB, C, bx - tw / 2, tTop, 30, 19, tsz);
-    const tAl = el('text', { x: mini.xs[0], y: tLab, 'text-anchor': 'middle', fill: C.muted, ...font(fs - 1) }, svg);
+    // the payoff in type, at a size that reads: no waffle
+    const tAl = el('text', { x: mini.xs[0], y: tLab - 6, 'text-anchor': 'middle', fill: C.accent, ...font(wide ? 24 : 20) }, svg);
     tAl.textContent = 'right 10 in 30';
-    const tBl = el('text', { x: bx, y: tLab, 'text-anchor': 'middle', fill: C.muted, ...font(fs - 1) }, svg);
+    const tBl = el('text', { x: bx, y: tLab - 6, 'text-anchor': 'middle', fill: C.accent, ...font(wide ? 24 : 20) }, svg);
     tBl.textContent = 'right 19 in 30';
+    // the key: what a square and a diamond are (shapes, never colour)
+    const key = el('g', {}, svg);
+    const kx = 8, ky = VH - (wide ? 34 : 30), km = wide ? 6 : 5;
+    el('path', { d: `M${kx},${ky - km} h${2 * km} v${2 * km} h${-2 * km} Z`, fill: C.paper, stroke: C.ink, 'stroke-width': 1.3 }, key);
+    const k1 = el('text', { x: kx + 2 * km + 6, y: ky + 5, fill: C.muted, 'font-family': 'Libre Franklin, sans-serif', 'font-size': 14 }, key); k1.textContent = 'asks about flips';
+    el('path', { d: `M${kx + km},${ky + 18 - km * 1.3} l${km * 1.3},${km * 1.3} l${-km * 1.3},${km * 1.3} l${-km * 1.3},${-km * 1.3} Z`, fill: C.paper, stroke: C.ink, 'stroke-width': 1.3 }, key);
+    const k2 = el('text', { x: kx + 2 * km + 6, y: ky + 23, fill: C.muted, 'font-family': 'Libre Franklin, sans-serif', 'font-size': 14 }, key); k2.textContent = 'asks about phase errors';
     const tag = el('text', { x: VW - 6, y: VH - 8, 'text-anchor': 'end', fill: C.muted, ...mono(fs - 1) }, svg);
     tag.textContent = '5% per qubit · our own count';
 
@@ -101,6 +107,7 @@ export default {
       if (pos > 2 && at(pos, 3, 2) > 0) lit = ['z0'];
       if (pos > 3 && at(pos, 4, 1) > 0) lit = ['z2', 'x0', 'x1'];
       big.setLit(lit);
+      settle(key, pos > 0 && pos <= 4 ? 1 : 0);
       const cam = ease(at(pos, 5, 0));
       pairs.forEach((p) => { draw(p, at(pos, 4, 2)); p.style.opacity = at(pos, 4, 2) > 0 ? 1 - cam : 0; });
       Gw.setAttribute('transform', camTo(cam));

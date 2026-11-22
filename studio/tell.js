@@ -60,6 +60,7 @@ const runs = [...document.querySelectorAll('.run')].map((runEl) => {
 });
 
 const mods = new Map();
+const ready = new Map();   // id -> module, filled before the loop starts
 const load = (id) => { if (!mods.has(id)) mods.set(id, import(`./figures/${id}.js`).then((m) => m.default)); return mods.get(id); };
 
 function ctxFor(w, h) {
@@ -115,9 +116,9 @@ function lines() {
 }
 
 // --------------------------------------------------------------- stage
-async function mountSeg(run, seg, pos) {
+function mountSeg(run, seg, pos) {
   const id = seg.kind === 'ghost' ? seg.of.fig : seg.fig;
-  const mod = await load(id);
+  const mod = ready.get(id);
   const layer = document.createElement('div');
   layer.className = 'layer';
   const r = run.stage.getBoundingClientRect();
@@ -154,7 +155,7 @@ function setTo(run, pos, dur = reduced.matches ? 0.15 : 0.3) {
   cur.api.render(pos);
   cur.pos = pos;
   cur.layer.style.transition = 'none';
-  const base = cur.seg.kind === 'ghost' ? 0.4 : 1;
+  const base = cur.seg.kind === 'ghost' || cur.figSeg ? (cur.seg.kind === 'ghost' ? 0.4 : 1) : 1;
   cur.layer.style.opacity = 0;
   requestAnimationFrame(() => {
     cur.layer.style.transition = `opacity ${dur}s linear`;
@@ -228,7 +229,7 @@ function markParagraphs(run) {
 }
 
 let last = now();
-async function frame() {
+function frame() {
   const t = now(), dt = Math.min(0.1, (t - last) / 1000);
   last = t;
   T.line = lines().L;
@@ -236,26 +237,42 @@ async function frame() {
     const { L, back } = lines();
     for (const run of runs) {
       const a = activeSeg(run, L, back);
-      if (run.switching) continue;
+      // a handover runs as states inside the loop: the old figure fades out,
+      // then whatever segment is active *now* is mounted (a flick never plays
+      // the figures it passed through), and nothing in the loop ever waits
+      if (run.phase === 'out') { if (t < run.outUntil) continue; run.phase = null; }
       if (a !== run.active) {
         const forward = a > run.active;
-        run.switching = true;
-        if (run.cur) { fadeOut(run); await new Promise((r) => setTimeout(r, Math.max(0, run.busyUntil - now()))); }
+        const seg = a >= 0 ? run.segs[a] : null;
+        const d = reduced.matches ? 0.15 : 0.3;
+        // into a ghost rest of the figure on stage, or back out of it: the same
+        // layer settles between 1 and 0.4 (the stage is never empty paper)
+        if (run.cur && seg && seg.kind === 'ghost' && seg.of === run.cur.seg) {
+          run.cur.figSeg = run.cur.seg; run.cur.seg = seg; run.active = a;
+          setTo(run, run.cur.api.alone ?? run.cur.total, d);
+          run.cur.layer.style.transition = `opacity ${d}s linear`; requestAnimationFrame(() => { if (run.cur) run.cur.layer.style.opacity = 0.4; });
+          continue;
+        }
+        if (run.cur && seg && run.cur.seg.kind === 'ghost' && run.cur.figSeg === seg) {
+          run.cur.seg = seg; run.active = a;
+          run.cur.layer.style.transition = `opacity ${d}s linear`; run.cur.layer.style.opacity = 1;
+          run.busyUntil = t + d * 1000; T.lastMotion = t + d * 1000;
+          continue;
+        }
+        if (run.cur) { fadeOut(run, d); run.phase = 'out'; run.outUntil = run.busyUntil; continue; }
         run.active = a;
-        if (a >= 0) {
-          const seg = run.segs[a];
+        if (seg) {
           const g = seg.kind === 'fig' ? goalOf(run, seg, L, back).g : 0;
-          run.cur = await mountSeg(run, seg, forward ? 0 : g);
+          run.cur = mountSeg(run, seg, forward ? 0 : g);
           // backwards, or a ghost: the figure is set (faded in) at its state;
           // forwards it starts empty and its first step plays
           if (!forward || seg.kind === 'ghost') {
-            const L2 = run.cur.layer, base = seg.kind === 'ghost' ? 0.4 : 1, d = reduced.matches ? 0.15 : 0.3;
+            const L2 = run.cur.layer, base = seg.kind === 'ghost' ? 0.4 : 1;
             L2.style.opacity = 0;
             requestAnimationFrame(() => { L2.style.transition = `opacity ${d}s linear`; L2.style.opacity = base; });
-            run.busyUntil = now() + d * 1000; T.lastMotion = now() + d * 1000;
+            run.busyUntil = t + d * 1000; T.lastMotion = t + d * 1000;
           }
         }
-        run.switching = false;
         continue;
       }
       const cur = run.cur;
@@ -328,11 +345,17 @@ async function buildStills() {
     for (const it of s.items) {
       if (it.kind === 'rest') continue;
       if (it.el.nextElementSibling?.matches('.still, .strip')) continue;   // prerendered into the HTML
+      // each still in two versions, wide and tall (phones), swapped by CSS
       const mk = (pos, parent) => {
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        parent.appendChild(svg);
-        const api = mod.mount(svg, { layout: 'wide', k: 1, reduced: true, still: true });
-        api.render(pos);
+        let api;
+        for (const layout of ['wide', 'tall']) {
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('class', 'v-' + layout);
+          parent.appendChild(svg);
+          const a = mod.mount(svg, { layout, k: 1, reduced: true, still: true });
+          a.render(pos);
+          if (layout === 'wide') api = a;
+        }
         return api;
       };
       if (it.kind === 'held') {
@@ -366,7 +389,8 @@ addEventListener('resize', () => {
     const oldW = W, oldCls = cls;
     readProbe();
     const nextCls = classify();
-    if (innerWidth === oldW && nextCls === oldCls) return;       // toolbars: nothing moves
+    const touch = matchMedia('(pointer: coarse)').matches;
+    if (innerWidth === oldW && nextCls === oldCls && touch) return;   // phone toolbars: nothing moves
     const a = anchorEl(), before = a?.getBoundingClientRect().top;
     layout();
     // the reader's paragraph goes to the new layout's reading line (or stays
@@ -395,6 +419,8 @@ addEventListener('resize', () => {
   }
   try {
     layout();
+    const ids = new Set(runs.flatMap((r) => r.segs.filter((s2) => s2.kind === 'fig').map((s2) => s2.fig)));
+    for (const id of ids) ready.set(id, await load(id));
     await buildStills();
     layout();
     requestAnimationFrame(frame);

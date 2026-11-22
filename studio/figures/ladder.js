@@ -49,18 +49,19 @@ export default {
     // piles: stacked frames, height in proportion; solid = best matching, open = the network
     const k = L.hmax / MATCH[0], slice = wide ? 9 : 7;
     const pile = (x, v, solid) => {
-      const g = el('g', {}, svg), h = v * k, n = Math.max(1, Math.round(h / slice));
-      for (let i = 0; i < n; i++) el('rect', { x, y: L.base - (i + 1) * (h / n), width: L.pw, height: h / n - 1.2, fill: solid ? C.accent : C.paper, stroke: C.accent, 'stroke-width': 1 }, g);
+      // one plain pile, drawn as a pen outline (solid for matching, open for the network)
+      const g = el('g', {}, svg), h = v * k;
+      el('path', { d: penPath([[x, L.base], [x, L.base - h], [x + L.pw, L.base - h], [x + L.pw, L.base]]), fill: solid ? C.accent : 'none', stroke: C.accent, 'stroke-width': 1.6, 'stroke-linejoin': 'round' }, g);
       return g;
     };
     const pm = MATCH.map((v, i) => pile(L.xs[i] - L.pw - 2, v, true));
     const pn = NET.map((v, i) => pile(L.xs[i] + 2, v, false));
     const axis = el('path', { d: penPath([[L.xs[0] - 40, L.base + 1], [L.xs[2] + 40, L.base + 1]]), stroke: C.muted, 'stroke-width': 1, fill: 'none' }, svg);
-    const vM = el('text', { x: L.xs[2] - L.pw / 2 - 2, y: L.base - MATCH[2] * k - 8, 'text-anchor': 'end', fill: C.ink, ...mono(fs - 1) }, svg); vM.textContent = '171';
-    const vN = el('text', { x: L.xs[2] + L.pw + 6, y: L.base - NET[2] * k - 8, fill: C.ink, ...mono(fs - 1) }, svg); vN.textContent = '143';
+    const vM = el('text', { x: L.xs[2] - L.pw - 6, y: L.base - MATCH[2] * k - 6, 'text-anchor': 'end', fill: C.ink, ...mono(fs - 1) }, svg); vM.textContent = wide ? 'matching 171' : '171';
+    const vN = el('text', { x: L.xs[2] + L.pw + 6, y: L.base - NET[2] * k - 6, fill: C.ink, ...mono(fs - 1) }, svg); vN.textContent = wide ? '143 network' : '143';
     const legY = wide ? L.base - L.hmax * 0.95 : L.base - 2 * fs - 14;
-    const legM = el('text', { x: L.xs[3] - (wide ? 60 : 44), y: legY, fill: C.ink, ...font(fs - 1) }, svg); legM.textContent = wide ? '■ best matching' : '■ matching';
-    const legN = el('text', { x: L.xs[3] - (wide ? 60 : 44), y: legY + fs + 6, fill: C.ink, ...font(fs - 1) }, svg); legN.textContent = '□ network';
+    const legM = el('text', { x: L.xs[3] - (wide ? 60 : 44), y: legY, fill: C.ink, ...font(fs - 1) }, svg); legM.textContent = wide ? 'solid: best matching' : 'solid: matching';
+    const legN = el('text', { x: L.xs[3] - (wide ? 60 : 44), y: legY + fs + 6, fill: C.ink, ...font(fs - 1) }, svg); legN.textContent = 'open: network';
     [legM, legN].forEach((t) => t.setAttribute('fill', C.accent));
     const unit = el('text', { x: L.xs[0] - 40, y: L.base + (wide ? 24 : 20), fill: C.muted, ...font(fs - 1) }, svg);
     unit.textContent = 'wrong answers per 100,000 rounds';

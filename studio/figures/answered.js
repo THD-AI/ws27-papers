@@ -37,7 +37,7 @@ export default {
     // two short verdicts under our reader; the paragraph says the rest
     const vx = gx + gw / 2, vy = oy + gw * 0.36 + 18 + fs + 6;
     const v1 = el('text', { x: vx, y: vy, 'text-anchor': 'middle', fill: C.ink, ...font(fs - 1) }, svg);
-    v1.textContent = 'cost of learning: measured';
+    v1.textContent = 'examples: measured · laptop time: estimated';
     const v2 = el('text', { x: vx, y: vy + fs + 5, 'text-anchor': 'middle', fill: C.muted, ...font(fs - 1) }, svg);
     v2.textContent = 'real recordings: not yet';
     const notes = el('g', {}, svg); notes.appendChild(v1); notes.appendChild(v2);

@@ -39,9 +39,12 @@ html.js .chapter p[data-k].is-read { color: var(--muted); }
 
 /* stills (and no JavaScript): no stage, a still after each step */
 html:not(.js) .stage, html.tell-stills .stage, html.js-failed .stage { display: none; }
-.still { margin: 0.4em 0 1.4em; aspect-ratio: var(--still-aspect, 1.6); max-height: 70vh; }
-.still svg { width: 100%; height: 100%; display: block; }
+.still { margin: 0.4em 0 1.4em; }
+.still svg { width: 100%; height: auto; display: block; max-height: 70vh; }
+.still svg.v-tall { display: none; }
+@media (max-width: 599.98px) { .still svg.v-wide { display: none; } .still svg.v-tall { display: block; } }
 .strip { display: grid; grid-template-columns: repeat(var(--n, 6), 1fr); gap: 4px; margin: 0.4em 0 1.4em; }
+@media (max-width: 599.98px) { .strip { grid-template-columns: repeat(3, 1fr); } }
 html.tell-top .still, html.tell-top .strip, html.tell-beside .still, html.tell-beside .strip { display: none; }
 /* the script failed or is slow: the prerendered stills, whatever the class */
 html.js-failed .still { display: block !important; }

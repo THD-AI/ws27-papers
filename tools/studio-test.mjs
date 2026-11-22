@@ -76,7 +76,8 @@ async function runDevice(browser, base, [name, w, h, mobile], outDir) {
   await wait(600);
   const res = { device: name, size: `${w}x${h}`, errors, checks: {} };
 
-  // 1. slow read, with contact sheets every 0.6 screen
+  // 1. slow read, with contact sheets every 0.6 screen (old sheets cleared first)
+  for (const f of (await import('node:fs')).readdirSync(outDir)) if (f.startsWith('sheet-')) (await import('node:fs')).rmSync(join(outDir, f));
   let rec = null;
   if (video) rec = await p.screencast({ path: join(outDir, 'slow.webm') });
   const total = await p.evaluate(() => document.documentElement.scrollHeight - innerHeight);

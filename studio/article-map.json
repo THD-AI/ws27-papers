@@ -65,8 +65,8 @@
      "fig": "grid",
      "name": "All that leaves a quantum chip is a film of lights, and many different errors make the same lights.",
      "kinds": [
-      "step",
       "held:6",
+      "step",
       "step"
      ]
     }

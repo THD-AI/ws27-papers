@@ -23,17 +23,19 @@ const CHECKS = {
   x0: { kind: 'x', sq: [0, 0] }, x1: { kind: 'x', sq: [1, 1] }, x2: { kind: 'x', half: 'top', q: [1, 2] }, x3: { kind: 'x', half: 'bottom', q: [6, 7] },
   z0: { kind: 'z', sq: [0, 1] }, z1: { kind: 'z', sq: [1, 0] }, z2: { kind: 'z', half: 'left', q: [0, 3] }, z3: { kind: 'z', half: 'right', q: [5, 8] },
 };
+// picked rounds, each with a light (the paragraph: "a few points light up in
+// every frame"); steps 7 and 9 show rounds 5 and 6 (the lie) before them
 const HELD = [
-  { round: 1, lit: [] },
-  { round: 2, lit: ['z0', 'z1'] },        // a flip on the centre qubit
-  { round: 19, lit: [] },
+  { round: 19, lit: ['z0', 'z1'] },       // a flip on the centre qubit
   { round: 37, lit: ['x0', 'x1'] },       // a phase error on the centre qubit
-  { round: 58, lit: [] },
-  { round: 81, lit: ['z1', 'z2'] },       // a flip on qubit 3, at the side edge: one full and one half check
+  { round: 58, lit: ['z1', 'z2'] },       // a flip on qubit 3, at the side edge: one full and one half check
+  { round: 81, lit: ['z3'] },             // one check reports wrongly ...
+  { round: 82, lit: ['z3'] },             // ... and fires again when the right answer returns
+  { round: 95, lit: ['x0', 'x2'] },       // a phase error on qubit 1, at the top edge
 ];
 
 export default {
-  steps: [{}, {}, {}, {}, {}, {}, {}, {}, { held: 6 }, {}],
+  steps: [{}, {}, {}, {}, {}, {}, {}, { held: 6 }, {}, {}],
   mount(svg, ctx) {
     const lay = ctx.layout, wide = lay === 'wide';
     const [VW, VH] = DESIGN[lay];
@@ -134,7 +136,7 @@ export default {
       return t;
     });
     const every = el('text', { x: VW / 2, y: fy - 1.6 * cell * fsc - 16, 'text-anchor': 'middle', fill: C.muted, ...font() }, svg);
-    every.textContent = 'one frame every 1.1 millionths of a second';
+    every.textContent = 'a few points light up in every frame';
     // the held step's film: a strip under the big frame that grows by one
     // frame per stretch of scroll; the current frame is outlined
     const hs = { tall: { y: 350, sc: 0.21 }, mid: { y: 284, sc: 0.18 }, wide: { y: 398, sc: 0.24 } }[lay];
@@ -149,6 +151,13 @@ export default {
       return { g, layer, cur };
     });
     const heldLab = el('text', { x: VW / 2, y: wide ? 28 : 26, 'text-anchor': 'middle', fill: C.muted, ...mono }, svg);
+    // the key: what a square and a diamond are (shapes, never colour)
+    const key = el('g', {}, svg);
+    const kx = 8, ky = VH - (wide ? 34 : 30), km = wide ? 6 : 5;
+    el('path', { d: `M${kx},${ky - km} h${2 * km} v${2 * km} h${-2 * km} Z`, fill: C.paper, stroke: C.ink, 'stroke-width': 1.3 }, key);
+    const k1 = el('text', { x: kx + 2 * km + 6, y: ky + 5, fill: C.muted, 'font-family': 'Libre Franklin, sans-serif', 'font-size': 14 }, key); k1.textContent = 'asks about flips';
+    el('path', { d: `M${kx + km},${ky + 18 - km * 1.3} l${km * 1.3},${km * 1.3} l${-km * 1.3},${km * 1.3} l${-km * 1.3},${-km * 1.3} Z`, fill: C.paper, stroke: C.ink, 'stroke-width': 1.3 }, key);
+    const k2 = el('text', { x: kx + 2 * km + 6, y: ky + 23, fill: C.muted, 'font-family': 'Libre Franklin, sans-serif', 'font-size': 14 }, key); k2.textContent = 'asks about phase errors';
     const tag = el('text', { x: VW - 6, y: VH - 8, 'text-anchor': 'end', fill: C.muted, ...font(fs - 1, 'JetBrains Mono, monospace') }, svg);
     tag.textContent = 'simplified: errors between rounds';
 
@@ -161,8 +170,8 @@ export default {
       plan([{ at: 0, dur: 0.25 }, { at: 0.45, dur: 0.3 }, { at: 0.6, dur: 0 }, { at: 0.65, dur: 0.3 }]), // 5
       plan([{ at: 0, dur: 0.25 }, { at: 0.3, dur: 0.25 }, { at: 0.6, dur: 0.3 }, { at: 0.75, dur: 0 }, { at: 0.8, dur: 0.3 }]), // 6
       plan([{ at: 0, dur: 0.8 }, { at: 0.85, dur: 0.5 }, { at: 1.3, dur: 0.25 }]),         // 7: camera, frame 2, words
-      plan([{ at: 0, dur: 1.0 }, { at: 0.9, dur: 0.25 }]),                                 // 8: the strip runs (tick)
-      null,                                                                                // 9: held
+      null,                                                                                // 8: held (the scale paragraph: the scroll is time)
+      plan([{ at: 0, dur: 1.0 }, { at: 0.9, dur: 0.25 }]),                                 // 9: the film: the strip of picked rounds runs (tick)
       plan([{ at: 0, dur: 0.6 }, { at: 0.5, dur: 0.3 }, { at: 0.75, dur: 0.5 }, { at: 1.2, dur: 0.25 }]), // 10
     ];
     const at = (pos, k, i) => (pos >= k ? 1 : pos <= k - 1 ? 0 : span(pos - (k - 1), ...P[k - 1].w(i)));
@@ -198,38 +207,44 @@ export default {
       if (zg > 0) errZ.style.opacity = (1 - 0.6 * zg) * (1 - gone6);
       draw(rhythm, zg * (1 - gone6));
       if (pos > 5 && at(pos, 6, 3) >= 1 && pos <= 6) lit = ['x0', 'x1'];
-      // 7–8: the grid becomes frame 1 (camera, alone), the others draw beside it
-      const cam = pos > 6 && pos <= 9 ? ease(pos >= 7 ? 1 : at(pos, 7, 0)) : 0;
-            const frameMode = pos > 6 && pos <= 9;
-      G.setAttribute('transform', frameAt(0, pos > 9 ? 0 : cam));
-      const qOpacity = pos > 8 && pos <= 9 ? 0 : pos > 9 ? 0.4 * at(pos, 10, 1) : 1 - 0.75 * cam;
+      // 7: the grid becomes frame 1 (camera, alone), round 6 draws beside it (the lie)
+      // 8: held, picked rounds, cuts, the big frame over a growing strip
+      // 9: the film: the strip of picked rounds runs
+      const held = pos > 7 && pos <= 8, filmView = pos > 8 && pos <= 9, frameMode = (pos > 6 && pos <= 7) || filmView;
+      const cam = frameMode ? ease(pos >= 7 ? 1 : at(pos, 7, 0)) : 0;
+      G.setAttribute('transform', frameAt(0, cam));
+      const qOpacity = held ? 0 : pos > 9 ? 0.4 * at(pos, 10, 1) : 1 - 0.75 * cam;
       lines.style.opacity = qOpacity; Qg.style.opacity = qOpacity;
-      const f2 = pos > 6 && pos <= 8 ? at(pos, 7, 1) : 0;
-      const run = pos > 7 && pos <= 8 ? at(pos, 8, 0) : pos > 8 ? 0 : 0;
+      const f2 = pos > 6 && pos <= 7 ? at(pos, 7, 1) : filmView ? 1 : 0;
+      const run = filmView ? at(pos, 9, 0) : 0;
       frames.forEach((f, k) => {
-        const show = k === 0 ? f2 : run >= k / (nF - 1) ? 1 : 0;   // frame 2 by drawing; the rest by the strip running
-        f.g.style.opacity = frameMode && pos <= 8 ? (k === 0 ? f2 : show) : 0;
-        setLit(f.layer, k === 0 ? ['z1'] : k === 2 ? ['x3'] : []);
+        const show = k === 0 ? f2 : filmView && run >= k / (nF - 1) ? 1 : 0;
+        f.g.style.opacity = frameMode ? show : 0;
+        setLit(f.layer, filmView ? HELD[(k + 1) % HELD.length].lit : ['z1']);
       });
-      rounds.forEach((r, k) => label(r, pos > 6 && pos <= 8 ? (k < 2 ? at(pos, 7, 2) : run >= k / (nF - 1) ? 1 : 0) : 0));
-      label(every, pos > 7 && pos <= 8 ? at(pos, 8, 1) : 0);
-      if (pos > 6 && pos <= 8) lit = ['z1'];
-      // 9: held frames, cuts
-      if (pos > 8 && pos <= 9) {
-        const f = Math.max(1, Math.round((pos - 8) * 6));
+      rounds.forEach((r, k) => {
+        r.textContent = filmView ? `round ${HELD[k % HELD.length].round}` : `round ${k + 5}`;
+        label(r, pos > 6 && pos <= 7 ? (k < 2 ? at(pos, 7, 2) : 0) : filmView ? (k === 0 || run >= k / (nF - 1) ? 1 : 0) : 0);
+      });
+      label(every, filmView ? at(pos, 9, 1) : 0);
+      if (pos > 6 && pos <= 7) lit = ['z1'];
+      if (filmView) lit = HELD[0].lit;
+      if (held) {
+        const f = Math.max(1, Math.round((pos - 7) * 6));
         lit = HELD[f - 1].lit;
         heldLab.textContent = `picked round ${HELD[f - 1].round} · ${(HELD[f - 1].round * 1.1).toFixed(1)} µs`;
         heldLab.style.opacity = 1;
         G.setAttribute('transform', `translate(0 ${-0.12 * cell}) scale(1)`);
         heldStrip.style.opacity = 1;
         heldFrames.forEach((fr, k) => { fr.g.style.opacity = k < f ? 1 : 0; fr.cur.style.opacity = k === f - 1 ? 1 : 0; setLit(fr.layer, HELD[k].lit); });
-      } else { heldLab.style.opacity = 0; heldStrip.style.opacity = 0; }
-      // 10: round 2 again, with its explanations
-      if (pos > 9) { lit = ['z0', 'z1']; G.setAttribute('transform', ''); }
+      } else { heldStrip.style.opacity = 0; heldLab.style.opacity = pos > 9 ? at(pos, 10, 3) : 0; if (pos > 9) heldLab.textContent = `round ${HELD[0].round} again`; }
+      // 10: round 19 again, with its explanations
+      if (pos > 9) { lit = HELD[0].lit; G.setAttribute('transform', ''); }
       const e = pos > 9 ? at(pos, 10, 2) : 0;
       xs.forEach((t, i) => settle(t, i === 0 ? e : e * (i ? 0.55 : 1)));
       label(pairNote, pos > 9 ? at(pos, 10, 3) : 0);
       label(tag, pos > 9 ? at(pos, 10, 3) : 0);
+      settle(key, pos > 2 && pos <= 6 ? 1 : 0);
       setLit(checks, lit);
     }
     const durs = P.map((p) => (p ? p.total : 0));
@@ -245,9 +260,9 @@ export default {
         'A flip hits the centre qubit. The chip never sees it, only the two squares beside it light up.',
         'A phase error lights the diamonds instead.',
         'The grid becomes one frame of a film; in the next frame the same square is lit again: a check that lied.',
-        'The frames run, one every 1.1 millionths of a second.',
-        'Six picked rounds: nothing, a flip, nothing, a phase error, nothing, a flip at the edge.',
-        'Round 2 again: one flip in the centre explains it, or one flip above and one below.',
+        'Picked rounds as the scroll runs: a flip, a phase error, a flip at the edge, a check reporting wrongly twice, a phase error at the top.',
+        'The film: in every frame a few points light up.',
+        'Round 19 again: one flip in the centre explains it, or one flip above and one below.',
       ][k - 1],
     };
   },
