@@ -17,11 +17,11 @@ const SIZE = { wide: [720, 430], tall: [360, 350] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 // the part of the hero shown (in the hero's own pixels, 1536 × 1024)
-const CROP = { wide: [150, 330, 1300, 694], tall: [300, 640, 640, 340] };   // x, y, w, h
+const CROP = { wide: [150, 330, 1300, 694], tall: [190, 430, 1170, 560] };   // x, y, w, h
 const SPLIT = 560;      // the hero's x where the ordinary computer's half begins
 // where the frames sit on the cable (hero pixels): its straighter stretches
 const SLOTS = [[395, 888], [450, 876], [620, 880], [672, 868], [790, 908], [842, 902]];
-const FRAME = 46;       // a frame's side, hero pixels
+const FRAME = 46;       // a frame's side, hero pixels (on a phone a little larger, to stay readable)
 const INK = '#2a2a2a';  // the hero's line, measured: near-black, about 2.2 hero px
 
 function build(el, ctx) {
@@ -61,12 +61,13 @@ function build(el, ctx) {
   const place = (c, x, y, s) => [x + 0.14 * s + ((c.x - mnx) / (mxx - mnx)) * 0.72 * s, y + 0.14 * s + ((c.y - mny) / (mxy - mny)) * 0.72 * s];
   const mark = (parent, kind, x, y, r) => (kind === 'Z'
     ? circle(parent, x, y, r, { fill: C.accent })
-    : circle(parent, x, y, r * 0.86, { fill: 'none', stroke: C.accent, 'stroke-width': Math.max(1, r * 0.55) }));
+    : circle(parent, x, y, r * 0.86, { fill: '#FBFBFC', stroke: C.accent, 'stroke-width': Math.max(1, r * 0.55) }));
 
   // the frames on the cable: fixed places, their contents tick along
   const START = 10;                         // the first round shown, from the middle of the run
-  const s = FRAME * k;
-  const slots = SLOTS.map(([hx, hy], i) => {
+  const s = FRAME * k * (tall ? 1.6 : 1);
+  // on a phone every other place, so the larger frames don't overlap
+  const slots = (tall ? SLOTS.filter((_, j) => j % 2 === 0) : SLOTS).map(([hx, hy], i) => {
     const x = X(hx) - s / 2, y = Y(hy) - s / 2;
     const grp = g(svg);
     rect(grp, x, y, s, s, { fill: '#FBFBFC', stroke: INK, 'stroke-width': 1.1, rx: 1.5 });
@@ -92,7 +93,7 @@ function build(el, ctx) {
   const l1 = L('all that comes out of it', tall ? 12 : X(1290), tall ? H - 10 : Y(1000) + 2, tall ? 'start' : 'end');
 
   // the lifted frame: the same frame as the one on the cable it comes from
-  const from = slots[1];
+  const from = slots[tall ? 0 : 1];
   const big = tall ? { x: 16, y: 6, s: 118 } : { x: X(700), y: Y(345), s: 250 * k * 1.15 };
   const lift = g(svg);
   rect(lift, big.x, big.y, big.s, big.s, { fill: '#FBFBFC', stroke: INK, 'stroke-width': 1.3, rx: 2 });
