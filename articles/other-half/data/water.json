@@ -6,7 +6,7 @@
     "where": "Section II, the distance-7 lifetime paragraph",
     "quote": "constituent physical qubits (median 85±7 µs, best 119±13 µs)",
     "meaning": "Effective lifetime 1/Γ averaged over states, the median over the qubits of the distance-7 grid. Not T1 (the chip's mean T1 is 68 µs).",
-    "say": "85 µs is the median lifetime of the qubits in Google's largest grid, 2024"
+    "say": "85 µs is the median lifetime, averaged over every state a qubit can hold, of the qubits in Google's largest grid in 2024"
   },
   "stages": [
     {
@@ -18,14 +18,14 @@
     {
       "t_us": 85,
       "source": "OWN-ARITH",
-      "say": "about a thousandth of a blink",
+      "say": "less than a thousandth of a blink",
       "mono": "85 µs",
       "check": "85e-6 s / 0.1 s = 0.00085, about a thousandth"
     },
     {
       "t_us": 170,
       "source": "OWN-ARITH",
-      "say": "two thousandths",
+      "say": "under two thousandths",
       "mono": "170 µs",
       "check": "2 × 85 = 170; 170e-6 / 0.1 = 0.0017, about two thousandths"
     }
@@ -47,10 +47,10 @@
   "ink_left": {
     "value": [
       1,
-      0.36,
+      0.37,
       0.14
     ],
     "source": "OWN-MODEL",
-    "meaning": "How much of the loop's ink each stage keeps (sum of opacity × stroke width over the crisp loop's), set to the decay of the median qubit, exp(-t/85 µs): 37% at 85 µs, 14% at 170 µs; with the chip means in the paper's Eq. 8 (1/Γ about 81 µs) it is 35% and 13%. Drawn, never printed."
+    "meaning": "What the drawn stages aim at, not measured from the drawing: exp(-t/85 µs) for the median qubit, 37% at 85 µs and 14% at 170 µs (with the chip means in the paper's Eq. 8, 35% and 13%). The forge was asked for 'about a third left' and 'a faint ghost'. Never printed."
   }
 }
