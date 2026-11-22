@@ -246,10 +246,16 @@ for (const [k, classes] of prob) {
   const tie = a.flips.size > 1 || b.flips.size > 1;
   const matchCls = tie ? null : [...a.flips][0] + '' + [...b.flips][0];
   cells.push({ sx, sz, total, tie, matchCls, ml, pMatch: tie ? null : classes.get(matchCls) / total, pMl: classes.get(ml) / total,
-    correction: letters(a.b, b.b), state: tie ? 'tie' : matchCls === ml ? 'same' : 'differs' });
+    // Compare with a tolerance: under this model a Y costs the same as an X, so two classes are often exactly
+    // equally likely, and a strict comparison of floating-point sums would let rounding call one of them "the most
+    // likely". Such a pattern is a tie: no decoder can do better than matching on it.
+    correction: letters(a.b, b.b),
+    state: tie ? 'tie' : classes.get(matchCls) >= classes.get(ml) * (1 - 1e-9) ? (matchCls === ml ? 'same' : 'tie-best') : 'differs' });
 }
 const differs = cells.filter(c => c.state === 'differs').sort((a, b) => (+b.total.toPrecision(10)) - (+a.total.toPrecision(10)) || (a.sx < b.sx ? 1 : a.sx > b.sx ? -1 : 0) || (a.sz < b.sz ? 1 : -1));
 const nTie = cells.filter(c => c.state === 'tie').length;
+const nTieBest = cells.filter(c => c.state === 'tie-best').length;
+if (differs.length !== 24) throw new Error('expected 24 patterns where matching is strictly less likely, got ' + differs.length);
 if (cells.length !== 256) throw new Error('expected 256 patterns, got ' + cells.length);
 // The proposal's Figure 1 shows the pattern z2 + x0 + x1. Several differing patterns are equally frequent
 // (mirror images of each other); which of them a sort lists first is decided by rounding, so it is named here
@@ -266,7 +272,7 @@ write('syndromes.json', {
   ...head(['port of docs/proposal/paper/data/find_example.py']), source: 'OWN-ENUM',
   what: 'All 256 patterns of the eight checks at distance 3. For each: does the correction of smallest weight per kind of check (plain matching) belong to the most likely kind of correction?',
   conditions: { error_per_storing_qubit: P_ENUM, error_kinds: 'X, Z or Y, each with a third of that chance', checks: 'perfect, one round' },
-  counts: { patterns: cells.length, differs: differs.length, same: cells.filter(c => c.state === 'same').length, tie: nTie },
+  counts: { patterns: cells.length, differs: differs.length, same: cells.filter(c => c.state === 'same').length, tie: nTie, tied_with_the_likeliest: nTieBest },
   share_of_all_cases_with_a_differing_pattern: differs.reduce((s, c) => s + c.total, 0),
   share_of_all_cases_with_no_check_fired: cells.find(c => c.sx === '0000' && c.sz === '0000').total,
   grid: { rows: 'flip-check pattern (z0 z1 z2 z3)', columns: 'phase-check pattern (x0 x1 x2 x3)', order: order16,
@@ -356,7 +362,7 @@ const summary = {
     pairs_d5: cc.fault_pairs_d5 },
   timing: { source: 'OWN-TIME', machine: tm.machine.cpu, emulated: tm.machine.python_build_is_x64_on_arm64, decoding_at_noise_0_005: dec, decoding_all: decAll, notes: tm.notes, python: tm.machine.python,
     training_step_ms: tm.training.filter(r => r.d === r.rounds).map(r => ({ distance: r.d, ms_per_step: r.ms_per_step_mean })) },
-  enumeration: { source: 'OWN-ENUM', patterns: 256, differs: differs.length, ties: nTie, example_matching: ex.pMatch, example_likeliest: ex.pMl },
+  enumeration: { source: 'OWN-ENUM', patterns: 256, differs: differs.length, ties: nTie, tied_with_the_likeliest: nTieBest, example_matching: ex.pMatch, example_likeliest: ex.pMl },
 };
 write('results-summary.json', summary);
 

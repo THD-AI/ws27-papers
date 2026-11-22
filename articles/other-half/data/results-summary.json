@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-16",
+ "generated": "2026-11-22",
  "generated_by": "tools/other-half-data.mjs",
  "inputs": [
   "kaggle-d3",
@@ -1554,8 +1554,9 @@
  "enumeration": {
   "source": "OWN-ENUM",
   "patterns": 256,
-  "differs": 103,
+  "differs": 24,
   "ties": 0,
+  "tied_with_the_likeliest": 79,
   "example_matching": 0.33299441259676155,
   "example_likeliest": 0.6221838324894758
  }
