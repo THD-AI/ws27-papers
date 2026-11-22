@@ -59,11 +59,20 @@ A check can also just report wrongly. Then it fires twice in a row, once when th
 
 ## 4. A film of hints
 
+:::scene film
+
+@caption What leaves the chip is a film. The cable of the opening drawing, seen close: each frame is one round of the 48 checks of a distance-7 grid, and a lit point is a check whose answer changed since the round before. Simulated: distance 7, a 0.5% chance of error per operation, which lights about 9% of the checks in a round, close to the 8.7% Google reports for its chip. Shown far slower than real time: on the chip, six frames take under 7 millionths of a second.
+
+@step 0
 One round of checks takes 1.1 millionths of a second, and a grid of distance 7 has 48 checks. In the time of one blink the chip gets through about ninety thousand rounds and puts out about four million check results, for a single logical qubit. {{GQA-2024 OWN-ARITH}}
 
+@step 1
 While the computer runs, that stream is all that comes out of it. We ended up thinking of it as a film in which a few points light up in every frame.
 
+@step 2
 The fired checks say roughly where something happened and which kind of error it was. They don't say which qubits were hit. Many sets of errors light up the same points.
+
+:::
 
 :::margin qubits 4
 
