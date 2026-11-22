@@ -15,8 +15,6 @@ seo_title: The other half of a quantum computer: neural-network decoders
 
 Drawing: made with an image model from Alexander Rudaev's own line reference and reference photographs; the cryostat after a photograph by Lars Ploughman, CC BY-SA 2.0.
 
-:::margin qubits 0
-
 ## What we wanted to know
 
 A quantum chip can be excellent and the computer can still fail. The cause sits beside the chip: a program running on an ordinary computer.
@@ -28,6 +26,10 @@ So we set ourselves three questions: what the program has to do, why a network c
 ## 1. A qubit doesn't hold still
 
 A qubit is the quantum version of a bit, and its weakness is that it doesn't keep its state. It behaves like a pattern drawn on the surface of water: it starts to smear as soon as it's made. On Google's 2024 chip the median qubit lifetime is 85 millionths of a second, about a thousandth of a blink. {{GQA-2024 OWN-ARITH}} The operations add errors of their own: each one has a small chance of going wrong.
+
+:::figure water wide
+A qubit holds its state like a pattern drawn on water. The same loop on the same water, just drawn, after 85 millionths of a second and after 170: it loosens, breaks and fades. 85 µs is the median lifetime of the qubits in Google's largest grid in 2024; a blink is taken as a tenth of a second. Drawing: an image model, from our own line reference, with the loop of the opening drawing.
+:::
 
 That sounds harmless until it's set against a real job. A well-known estimate for breaking the encryption that protects much of the internet's traffic puts two numbers side by side. The hardware it assumes slips about once in every thousand basic operations. The calculation it plans needs between two and three billion steps of the costly kind, each built from many basic operations, and a single uncorrected slip can spoil the answer. {{GE-2021}} At one slip per thousand, that means millions of slips where one is enough. Unaided, such hardware cannot finish the calculation.
 
