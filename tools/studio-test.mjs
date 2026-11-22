@@ -136,7 +136,8 @@ async function runDevice(browser, base, [name, w, h, mobile], outDir) {
   await p.setViewport({ width: w, height: Math.round(h * 0.9), isMobile: mobile, hasTouch: mobile });
   await wait(600);
   const a1 = await anchorTop();
-  res.checks.toolbarStill = !!(a0 && a1 && a0[0] === a1[0] && Math.abs(a0[1] - a1[1]) <= 2);
+  // toolbars exist only on touch devices; a desktop window's height change relays out on purpose
+  if (mobile) res.checks.toolbarStill = !!(a0 && a1 && a0[0] === a1[0] && Math.abs(a0[1] - a1[1]) <= 2);
   await p.setViewport({ width: w, height: h, isMobile: mobile, hasTouch: mobile });
   await wait(600);
 
