@@ -58,7 +58,7 @@ function build(el, ctx) {
   };
   const c5 = Math.min(...[...a5.curves, ...b5.curves].map(crossing)), e5 = 10 ** Math.floor(Math.log10(c5));
   const X5 = Math.floor(c5 / e5) * e5, XT5 = [5e7, 1e8, 2.5e8].filter((v) => v > X5);
-  const HEAD = 'how often the decoder was wrong';
+  const HEAD = 'past plain matching, still behind correlated';
   const FOOT = 'ends and levels: 2 million test runs, intervals thinner than the lines · curves: 1 million fixed runs';
   const scales = (R, x0 = X0) => {
     const x = (v) => R.x + R.w * (Math.log10(v / x0) / Math.log10(X1 / x0));
@@ -68,7 +68,6 @@ function build(el, ctx) {
 
   function frame(parent, R, x0 = X0, xt = XT) {
     const { x, y } = scales(R, x0), grp = g(parent);
-    dotPlate(grp, R.x, R.y, R.w, R.h, 20, C);
     line(grp, R.x, R.y + R.h, R.x + R.w, R.y + R.h, { stroke: C.ink, 'stroke-width': 1.25 });
     line(grp, R.x, R.y, R.x, R.y + R.h, { stroke: C.ink, 'stroke-width': 0.8 });
     for (const v of xt) {
@@ -79,7 +78,7 @@ function build(el, ctx) {
       line(grp, R.x - 4, y(v), R.x, y(v), { stroke: C.ink, 'stroke-width': 1 });
       text(grp, R.x - 8, y(v) + 4, v === 0 ? '0' : `${+(v * 100).toFixed(1)}%`, { ...mono, anchor: 'end' });
     }
-    text(grp, R.x + R.w, R.y + R.h + 36, 'examples the network has seen, in millions', { family: 'sans', size: 12, fill: C.muted, anchor: 'end' });
+    text(grp, R.x + R.w, R.y + R.h + 36, 'examples the network has seen, in millions (log scale)', { family: 'sans', size: 12, fill: C.muted, anchor: 'end' });
     return grp;
   }
 
@@ -132,9 +131,9 @@ function build(el, ctx) {
     if (!inside) {
       const lx = R.x + R.w + 9, lw = W - lx - 6;
       text(grp, lx, close ? yp - 4 : yp + 4.5, 'plain matching', noteO);
-      const cl = text(grp, lx, close ? yc + 14 : yc + 4.5, 'correlated matching', noteO);
+      const cl = text(grp, lx, close ? yc + 14 : yc + 4.5, pn.distance === 3 ? 'correlated matching, here hurt by a library defect' : 'correlated matching', { ...noteO, width: lw });
       let yy = cl.bottom;
-      if (lv.table) yy = text(grp, lx, Math.max(y(lv.table.rate) + 14, yy + 14), `lookup table, our estimate of the best: [[${pct(lv.table.rate)}]]`, { ...noteO, width: lw }).bottom;
+      if (lv.table) yy = text(grp, lx, Math.max(y(lv.table.rate) + 14, yy + 22), `lookup table, our estimate of the best: [[${pct(lv.table.rate)}]]`, { ...noteO, width: lw }).bottom;
       text(grp, lx, yy + 26, needs, { ...noteO, size: 13, fill: C.muted, width: lw });
     } else if (close && tall) {
       // phone plate: the curves cross the level lines on the left half, so the
@@ -168,7 +167,7 @@ function build(el, ctx) {
     const grp = g(parent), yp = pl.y(pl.pn.levels.plain.rate);
     const xa = pl.x(vals[0]), xb = pl.x(vals[vals.length - 1]), xm = (xa + xb) / 2;
     const ny = pl.y(tall ? 0.0088 : 0.0098);
-    const nt = text(grp, inside ? pl.R.x + 44 : xm - 60, ny, `the lines first dip below plain matching at [[${vals.map((v) => M(v)).join(']] or [[')}]] million examples`, { ...noteO, width: inside ? 170 : 250, lh: inside ? 15 : 18 });
+    const nt = text(grp, inside ? pl.R.x + 44 : xm - 60, ny, 'the lines go below plain matching between [[4.6]] and [[9.3]] million examples', { ...noteO, width: inside ? 170 : 250, lh: inside ? 15 : 18 });
     leader(grp, xm, nt.y - 4, xm, yp + (inside ? 50 : 32), { stroke: C.muted, dot: false });
     return grp;
   }
@@ -205,13 +204,16 @@ function build(el, ctx) {
   const R = tall ? { x: 42, y: 76, w: 304, h: 250 } : { x: 62, y: 60, w: 496, h: 296 };
   const fr = frame(svg, R), fr5 = frame(svg, R, X5, XT5);
   const tg = g(svg);
-  text(g(tg, { 'data-role': 'title' }), tall ? R.x : 16, 16, tall ? 'how often the decoder was wrong' : HEAD, { family: 'sans', size: 13, weight: 600 });
-  if (tall) text(tg, 14, 33, tagStr, mono); else text(tg, W - 8, 16, tagStr, { ...mono, anchor: 'end' });
+  const head3 = g(tg, { 'data-role': 'title' }), head5 = g(tg);
+  text(head3, tall ? R.x : 16, 16, tall ? 'distance 3: ahead of both' : 'distance 3: ahead of both, one of them hurt by a defect', { family: 'sans', size: 13, weight: 600 });
+  text(head5, tall ? R.x : 16, 16, tall ? 'past plain matching, behind correlated' : HEAD, { family: 'sans', size: 13, weight: 600 });
+  st.fade(head3, -1, 0, [1.02, 1.15]).fade(head5, 1.15, 1.3);
+  if (tall) text(tg, 14, 33, `${tagStr} · lower is better`, mono); else text(tg, W - 8, 16, tagStr, { ...mono, anchor: 'end' });
   if (!tall) {
     // rotated axis title, centred on the plate, its letters 10 units clear
     // of the drawing's left edge so that no frame crops it
     const rot = g(tg, { transform: `translate(21 ${R.y + R.h / 2}) rotate(-90)`, 'data-audit': 'skip' });
-    text(rot, 0, 0, 'share of runs in which the decoder was wrong', { family: 'sans', size: 12, fill: C.muted, anchor: 'middle' });
+    text(rot, 0, 0, 'share of runs the decoder got wrong · lower is better', { family: 'sans', size: 12, fill: C.muted, anchor: 'middle' });
   }
   st.fade(fr, 0, 0.12, [1.14, 1.2]).fade(fr5, 1.18, 1.26).fade(tg, 0, 0.12);
 
@@ -239,20 +241,7 @@ function build(el, ctx) {
   const p3rVE = [...p3.root.querySelectorAll('path, circle, line')];
   let p3rVe = false;
   const p3rKeep = (on) => { if (on === p3rVe) return; p3rVe = on; p3rVE.forEach((n) => (on ? n.setAttribute('vector-effect', 'non-scaling-stroke') : n.removeAttribute('vector-effect'))); };
-  const I = tall ? { x: R.x + 12, y: R.y + R.h - 84, w: 104, h: 50 } : { x: R.x + 22, y: R.y + R.h - 98, w: 150, h: 62 };
-  const ig = g(svg);
-  rect(ig, I.x, I.y, I.w, I.h, { fill: 'none', stroke: C.hairline, 'stroke-width': 1 });
-  text(ig, I.x, I.y - 6, tall ? `distance ${d3.distance}: ends below both` : `distance ${d3.distance}: the network ends below both`, mono);
-  st.fade(ig, 1.3, 1.45);
-  st.on((gg) => {
-    const m = ease(span(gg, 1.02, 1.4));
-    p3rKeep(m > 0);
-    if (m <= 0) { p3.root.removeAttribute('transform'); p3.root.style.opacity = ''; return; }
-    const kx = lerp(1, I.w / R.w, m), ky = lerp(1, I.h / R.h, m);
-    const tx = lerp(R.x, I.x, m), ty = lerp(R.y, I.y, m);
-    p3.root.setAttribute('transform', `translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${kx.toFixed(4)} ${ky.toFixed(4)}) translate(${-R.x} ${-R.y})`);
-    p3.root.style.opacity = lerp(1, 0.5, m).toFixed(3);
-  });
+  st.on((gg) => { p3rKeep(false); const m = ease(span(gg, 1.02, 1.3)); const v = m <= 0 ? '' : (1 - m).toFixed(3); if (p3.root.style.opacity !== v) p3.root.style.opacity = v; p3.root.style.display = m >= 0.999 ? 'none' : ''; });
   drawPanel(pa, 1.3, 1.9);
   st.fade(ta, 1.2, 1.34, [2.04, 2.14]).fade(la, 1.42, 1.6, [2.04, 2.14]);
   const na = g(svg);
@@ -269,8 +258,6 @@ function build(el, ctx) {
   st.fade(tb, 2.12, 2.28).fade(lb, 2.26, 2.42);
   const ys = b5.final_network.per_seed.map((s) => pb.y(s.rate));
   const ry = (Math.min(...ys) + Math.max(...ys)) / 2;
-  const pr = penRing(svg, pb.xe, ry, 8, (Math.max(...ys) - Math.min(...ys)) / 2 + 8, { seed: 4, stroke: C.accent, width: 1.5 });
-  pr.paths.forEach((pp, k) => st.draw(pp, 2.84 + k * 0.03, 2.97 + k * 0.02));
   const nb = g(svg);
   if (tall) {
     text(nb, R.x + R.w * 0.44, R.y + R.h - 62, 'below plain matching, above correlated matching', { ...noteO, size: 13, width: 168, lh: 15 });

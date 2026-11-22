@@ -20,14 +20,22 @@ export function text(parent, x, y, str, opts = {}) {
   return figText(parent, x, y, str, o);
 }
 
+// The two kinds of check keep their own colour wherever they fire, in every
+// figure: orange for a check that watches for flips, green for one that
+// watches for phase errors (the film in section 4 sets them).
+export const KIND = { flip: '#D4471A', phase: '#2E9C91' };
+// The figures' own emphasis, one role only: the decoder's side of the machine (the network, the decoder's
+// answer, the line it adds) is copper, like the cable in the opening drawing; its light field is copper too.
+// The page's indigo stays the page's (links, the sources), never a figure's.
+export const DECODER = { accent: '#8A5524', field: '#EFE4DA' };
 export function pal(ctx) {
-  return colors({
+  return { ...colors({
     css(name) {
       let v = '';
       try { v = ctx && ctx.css ? ctx.css(name) : ''; } catch { v = ''; }
       return String(v || '').trim() || OWN[name] || '';
     },
-  });
+  }), flip: KIND.flip, phase: KIND.phase, accent: DECODER.accent, field: DECODER.field };
 }
 
 // "1.48%" from 0.0148; digits after the point as asked.
@@ -97,9 +105,10 @@ export function grid(parent, o) {
       fill: flips ? C.ink : 'none', 'fill-opacity': flips ? 0.075 : null,
       stroke: C.muted, 'stroke-width': flips ? 0.7 : 1.25, 'stroke-opacity': flips ? 0.75 : 0.6, 'stroke-linejoin': 'round',
     });
-    const field = path(gF, t.d, { fill: C.field, stroke: C.accent, 'stroke-width': 1, 'stroke-linejoin': 'round', 'data-audit': 'skip' });
+    const kc = flips ? C.flip : C.phase;
+    const field = path(gF, t.d, { fill: kc, 'fill-opacity': 0.3, stroke: kc, 'stroke-width': 1.2, 'stroke-linejoin': 'round', 'data-audit': 'skip' });
     const helper = hr ? circle(gH, t.c[0], t.c[1], hr, { fill: C.ink }) : null;
-    const dot = circle(gH, t.c[0], t.c[1], Math.max(hr * 2.1, pitch * 0.1), { fill: C.accent });
+    const dot = circle(gH, t.c[0], t.c[1], Math.max(hr * 2.1, pitch * 0.1), { fill: kc });
     field.style.display = 'none'; dot.style.display = 'none';
     tiles[ch.id || i] = {
       check: ch, c: t.c, geom: t, base, field, dot, helper,

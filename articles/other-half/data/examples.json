@@ -1,0 +1,85 @@
+{
+ "generated": "2026-11-22",
+ "generated_by": "tools/examples-data.mjs",
+ "inputs": [
+  "data/learning.json"
+ ],
+ "source": "OWN-D3 OWN-D5-250M",
+ "what": "For each seed, the examples seen at the last check above plain matching and at the first check below it, at a noise level of 0.5%: the crossing lies between. The curves are checked at fixed points only.",
+ "noise_level": 0.005,
+ "rows": [
+  {
+   "distance": 3,
+   "seeds": [
+    {
+     "above": 4632576,
+     "below": 6553600
+    },
+    {
+     "above": 6553600,
+     "below": 9269248
+    },
+    {
+     "above": 4632576,
+     "below": 6553600
+    },
+    {
+     "above": 6553600,
+     "below": 9269248
+    },
+    {
+     "above": 4632576,
+     "below": 6553600
+    },
+    {
+     "above": 6553600,
+     "below": 9269248
+    },
+    {
+     "above": 6553600,
+     "below": 9269248
+    },
+    {
+     "above": 4632576,
+     "below": 6553600
+    }
+   ],
+   "lo": 4632576,
+   "hi": 9269248,
+   "learning_rate_falls_from": 52428800
+  },
+  {
+   "distance": 5,
+   "seeds": [
+    {
+     "above": 148291584,
+     "below": 209715200
+    },
+    {
+     "above": 209715200,
+     "below": 249856000
+    },
+    {
+     "above": 209715200,
+     "below": 249856000
+    },
+    {
+     "above": 148291584,
+     "below": 209715200
+    },
+    {
+     "above": 209715200,
+     "below": 249856000
+    }
+   ],
+   "lo": 148291584,
+   "hi": 249856000,
+   "learning_rate_falls_from": 199884800,
+   "not_by": 65536000
+  }
+ ],
+ "ratio": {
+  "min": 15.998232434821034,
+  "max": 53.93457117595049
+ }
+}

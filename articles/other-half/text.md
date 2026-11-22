@@ -29,17 +29,25 @@ So we set ourselves three questions: what the program has to do, why a network c
 
 A qubit is the quantum version of a bit, and its weakness is that it doesn't keep its state. It behaves like a pattern drawn on the surface of water: it starts to smear as soon as it's made. On Google's 2024 chip the median qubit lifetime is 85 millionths of a second, about a thousandth of a blink. {{GQA-2024 OWN-ARITH}} The operations add errors of their own: each one has a small chance of going wrong.
 
+:::figure water column
+A pattern drawn on water, one lifetime apart. What is left of a qubit's state fades as e^(−t / 85 µs), with 85 millionths of a second the median qubit lifetime on Google's 2024 chip: about a third after one lifetime, a twentieth after three. A lifetime is a rate of fading, not a deadline. Drawn by us; the numbers are Google's.
+:::
+
 That sounds harmless until it's set against a real job. A well-known estimate for breaking the encryption that protects much of the internet's traffic puts two numbers side by side. The hardware it assumes slips about once in every thousand basic operations. The calculation it plans needs between two and three billion steps of the costly kind, each built from many basic operations, and a single uncorrected slip can spoil the answer. {{GE-2021}} At one slip per thousand, that means millions of slips where one is enough. Unaided, such hardware cannot finish the calculation.
 
 ## 2. The cure costs what it protects
 
 Ordinary computers protect a bit by storing it three times and taking a vote. That doesn't work for qubits. A quantum state can't be copied, and it can't be looked at to see whether it's still right, because looking destroys it.
 
-The way around this is to store the information in the way several qubits relate to each other, and in none of them alone. The simplest version uses three qubits that are only ever all-0 or all-1 together. No single one holds the information, and no copy of it exists anywhere. Many real qubits working together like this are called a **logical qubit**.
+The way around this is to store the information in the way several qubits relate to each other, and in none of them alone. The simplest version uses three qubits that are only ever all-0 or all-1 together. Each one alone still reads 0 or 1; what none of them holds alone is the stored state, and no copy of it exists anywhere. Many real qubits working together like this are called a **logical qubit**.
 
 :::margin qubits 1
 
 In the scheme we studied, the surface code, the qubits sit on a square grid, and the size of the grid is called its **distance**. A bigger grid should protect better, but only if each qubit is good enough. Below a certain error rate, called the **threshold**, it does. Above it, a bigger grid is worse, since every added qubit is one more thing that smears. For years the hardware sat above it. {{GQA-2023 GQA-2024}}
+
+:::figure threshold column
+How many times fewer logical errors per round a grid of distance 5 makes than one of distance 3, at twelve noise levels, both read by plain matching. The bigger grid wins by about 9 times at 0.1%, by less as the noise rises, and from about 1.2% it makes more errors than the smaller one: in this simulation, that is the threshold. Our own runs, with the simulation of section 9; the levels above 1% from a second run of the same setup.
+:::
 
 ## 3. Asking without looking
 
@@ -61,9 +69,34 @@ A check can also just report wrongly. Then it fires twice in a row, once when th
 
 One round of checks takes 1.1 millionths of a second, and a grid of distance 7 has 48 checks. In the time of one blink the chip gets through about ninety thousand rounds and puts out about four million check results, for a single logical qubit. {{GQA-2024 OWN-ARITH}}
 
-While the computer runs, that stream is all that comes out of it. We ended up thinking of it as a film in which a few points light up in every frame.
+:::scene film
 
-The fired checks say roughly where something happened and which kind of error it was. They don't say which qubits were hit. Many sets of errors light up the same points.
+@caption What the decoder gets: one frame per round, in which a check lights when its answer changes. An example we constructed on the smallest grid; X is a flip, Z a phase error.
+
+@step 0
+We ended up thinking of that stream as a film. Above, the smallest grid as it is on the chip: nobody can read its qubits directly without destroying what they store, and only the checks ask them anything. Below, what comes out of the chip, one frame for every round of checks.
+
+@step 1
+A flip hits the qubit in the middle. Nobody sees the flip itself, not even the chip. What comes out, in that round's frame, is two lit checks: the two that watch that qubit for flips.
+
+@step 2
+One round later the flip is still there, and the frame is dark. A check lights only when its answer changes, so a qubit error shows only once, in the first round after it happens. The decoder has to remember it.
+
+@step 3
+A phase error lights the other kind of check. In the bottom right corner only one such check touches the qubit, so a single light comes on.
+
+@step 4
+In the next two rounds no storing qubit is hit, and yet one check lights twice. The check gave one wrong answer, as in section 3: going wrong is one change, and coming right again is a second.
+
+@step 5
+That stream is all that comes out while the computer runs, and all the decoder gets. It says roughly where something happened and which kind of error it was, but not which qubits were hit.
+
+@step 6
+And many sets of errors light the same checks. The two lights of round 2 also come from a pair of flips, one above the middle and one below, and there are four such pairs. Each leaves the stored value the opposite way round from the single flip. The decoder can't tell them apart.
+
+@step 7
+So it bets on the likelier story. If each qubit slips about once in a thousand rounds, independently, the single flip is roughly 250 times likelier than all four pairs together. Most of the time the bet is right. The next section is about the time it isn't.
+:::
 
 :::margin qubits 4
 
@@ -83,15 +116,11 @@ A grid of distance 5, showing flips and the checks that notice them. Three real 
 
 ## 6. Where the standard method goes wrong
 
-We went through every possible error on the smallest grid and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 possible patterns on the smallest grid, 103 get an answer from the standard decoder that isn't the most likely one. {{OWN-ENUM}} That sounds like a lot, but these patterns are rare: together they turn up in fewer than 2 cases in 100.
-
-:::figure syndromes wide
-All 256 patterns of the eight checks at distance 3, one mark each, ordered by how many checks fire. Filled: the 103 patterns where the standard decoder's answer isn't the most likely one. These are the rarer patterns: with a 5% chance of an error per storing qubit they turn up in about 1.6% of cases, and in 63% of cases no check fires at all. Our own count.
-:::
+We went through every possible error on the smallest grid and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 possible patterns on the smallest grid, 24 get an answer from the standard decoder that is less likely than another. {{OWN-ENUM}} They are rare: with a 5% chance of an error per storing qubit, together they turn up in fewer than 1 case in 100, while in 63 cases in 100 no check fires at all. On 144 more patterns, two answers are exactly as likely, and no decoder can do better than matching there. {{OWN-ENUM}}
 
 :::scene lattice
 
-@caption The smallest grid: 9 storing qubits and 8 checks; X is a flip, Z a phase error, Y both. On screen, one flip fires the two checks beside it; then a line of two flips fires only its upper end, as the lower end meets the edge (on paper, at the left). Then our example's three fired checks and two explanations; the dots count 30 times this pattern shows up. Plain matching's answer is right in 10, the other in 19, because it can happen in two ways: the phase error in the far corner or one place above it (5% error per storing qubit, checks never wrong; our own count).
+@caption The smallest grid; X is a flip, Z a phase error, Y both. Our example's three fired checks have two explanations: of 30 times the pattern turns up, plain matching's is right in 10, the other in 19, because it can happen in two ways. 5% error per storing qubit, checks never wrong; our own count.
 
 @step 0
 The standard decoder is called **matching**, and the smallest grid shows how it works: 9 storing qubits, never read directly, and 8 checks between them, each asking its neighbours one question.
@@ -108,7 +137,7 @@ Decoding then becomes a pairing puzzle: join every fired check to another fired 
 Plain matching solves the puzzle separately for flip-checks and phase-checks, so an error that is both at once (section 3) counts as two. And it seeks the single likeliest explanation, though explanations that differ only in a way the code doesn't care about (section 5) add up.
 
 @step 4
-The first of our 103 patterns shows it. Three checks fire. Plain matching explains them with two errors: a flip in one corner and a phase error in the centre. It fits the checks, and it is right one time in three. {{OWN-ENUM}} But when the truth is the other answer, matching's correction and the real errors together cross the grid: a silent logical error, about two times in three. Two cautions: we gave every storing qubit a 5% chance of an error, far more than a real chip has, so the effect is easy to count, and we assumed the checks never report wrongly. {{OWN-ENUM}}
+One of those 24 patterns shows it. Three checks fire. Plain matching explains them with two errors: a flip in one corner and a phase error in the centre. It fits the checks, and it is right one time in three. {{OWN-ENUM}} But when the truth is the other answer, matching's correction and the real errors together cross the grid: a silent logical error, about two times in three. Two cautions: we gave every storing qubit a 5% chance of an error, far more than a real chip has, so the effect is easy to count, and we assumed the checks never report wrongly. {{OWN-ENUM}}
 
 @step 5
 The same checks also fit a combined error in that corner, a flip and a phase error at once, which the figure marks Y, plus one phase error on the right. Counting Y as one error, this answer also has two, and on its own it is exactly as likely as plain matching's. What tips the balance is that it can happen in two ways. The phase error can sit in the far corner. Or it can sit one place above it, and the checks fire just the same. Together, the two ways are right about six times in ten. {{OWN-ENUM}} The rest are rarer explanations.
@@ -141,7 +170,7 @@ Nobody writes a neural decoder's rules; it learns them. It's trained first on a 
 
 :::scene clock
 
-@caption One time line in millionths of a second. The chip finishes a round of checks every 1.1. The 2024 network needs 24 for each round, so its backlog grows without end. The matching decoder that ran live keeps pace: its answer comes about 63 after the last round of a run, for runs of up to a million rounds. A preprint of December 2025 claims a network under 1 per round on accelerator chips; it is drawn as a claim.
+@caption One time line in millionths of a second. The chip finishes a round of checks every 1.1. One copy of the 2024 network needs 24 for each round, so its backlog grows without end. The matching decoder that ran live keeps pace: its answer comes about 63 after the last round of a run, for runs of up to a million rounds. A preprint of December 2025 claims a faster, slightly less accurate network under 1 per round on accelerator chips; it is drawn as a claim.
 
 @step 0
 The clock is where it struggles. The chip asks its checks once every 1.1 millionths of a second, about 900,000 times a second. {{GQA-2024 OWN-ARITH}} A live decoder has to handle each round in that time.
@@ -150,13 +179,13 @@ The clock is where it struggles. The chip asks its checks once every 1.1 million
 Google's paper quotes 24 millionths of a second per round for its network, from earlier work. {{GQA-2024 AQ-2024}} In that time the chip finishes about 22 more rounds. The network is accurate, but each answer comes late.
 
 @step 2
-By the time the network has answered round 3, at 72 millionths of a second, the chip is at round 65. An interpreter who needs twenty-two seconds for every second of speech is more than twenty minutes behind after one minute. {{OWN-ARITH}} And the gap keeps growing.
+By the time the network has answered round 3, at 72 millionths of a second, the chip is at round 65. An interpreter who needs twenty-two seconds for every second of speech is more than twenty minutes behind after one minute. {{OWN-ARITH}} For one copy of the network, working round after round, the gap keeps growing. Copies working side by side could keep up with the rounds, but each answer would still come late.
 
 @step 3
-So the network's results were worked out afterwards, on recorded data. The decoder that ran live was a fast, plain version of matching, and it kept pace. On a smaller chip, at distance 5 and on the same data, live matching's logical error rate was 350 per 100,000 rounds and the network's, afterwards, 269. {{GQA-2024}} Part of that gap is live against offline, not only matching against network.
+So the network's results were worked out afterwards, on recorded data. The decoder that ran live was a fast, parallel version of matching that also links the two kinds of check a little, and it kept pace. On a smaller chip of 72 qubits, at distance 5 and on the same data, live matching's logical error rate was 350 per 100,000 rounds and the network's, afterwards, 269. {{GQA-2024}} Part of that gap is live against offline, not only matching against network.
 
 @step 4
-A preprint from December 2025 reports a network that keeps pace: under one millionth of a second per round, on the kind of accelerator chips that can simply be bought, for grids up to distance 11. {{AQ2-2025}} As far as we know other researchers haven't reviewed it yet, and we can't test it ourselves. Until then it stays a claim.
+A preprint from December 2025 reports a faster variant of the network, a little less accurate, that keeps pace: under one millionth of a second per round, on the kind of accelerator chips that can simply be bought, for grids up to distance 11. {{AQ2-2025}} As far as we know other researchers haven't reviewed it yet, and we can't test it ourselves. Until then it stays a claim.
 
 :::
 
@@ -174,7 +203,7 @@ Each training was repeated from different random starting points, or seeds: eigh
 
 :::scene learning
 
-@caption Our own runs, at a noise level of 0.5%. Share of simulated runs in which a decoder was wrong, against the number of examples the network had seen; one thin line per seed. The two level lines are plain and correlated matching, which need no examples. Distance 3: the network ends below both, but its lead over correlated matching is about what a library defect costs that decoder (see "A finding we didn't plan for"). Distance 5 after 66 million examples: above both. Distance 5 after 250 million: below plain matching, above correlated matching. Points along a curve are scored on 1 million runs, not the final test's 2 million, so the crossings are less sharp than the end values.
+@caption Our own runs at a noise level of 0.5%: the share of runs a decoder got wrong, against the examples the network had seen; one line per seed, the level lines are plain and correlated matching. Distance 3: the network ends below both. Distance 5: above both after 66 million examples, below plain matching after 250 million.
 
 @step 0
 **Distance 3.** Here the network beats plain matching, and early. After about 66 million examples it failed in 1.48% of runs, its eight seeds between 1.46% and 1.49%. Plain matching failed in 1.72% and correlated matching in 1.66%. The curves first dip below plain matching at 6.6 million examples in four seeds and at 9.3 million in the other four. By 13 million all eight were at or below correlated matching. {{OWN-D3}} That second win we don't count. In our library version correlated matching mishandles six single errors, and by a first-order estimate that costs it about the whole gap of 0.18 percentage points (see "A finding we didn't plan for").
@@ -187,10 +216,14 @@ Each training was repeated from different random starting points, or seeds: eigh
 
 :::
 
+:::figure examples column
+How many examples our network had seen when its error went below plain matching's, one bar per seed: the curves are checked only at fixed points, so each crossing lies somewhere between the last check above and the first below. Distance 3: between 4.6 and 9.3 million. Distance 5: between 148 and 250 million; after 66 million, no seed had got there. At distance 5 every crossing falls after the learning rate starts to fall, at 200 million, so the factor of about 15 to 55 belongs to our training schedule, not to the grid alone. A noise level of 0.5%; our own runs.
+:::
+
 At distance 3 the best answer for every pattern can simply be looked up. A table built from 200 million runs per noise level, a hundred times the test set, holds the more frequent answer for each pattern of fired checks. It failed in 1.47% of runs. {{OWN-D3}} Whether its runs overlap the test runs, and how it answers a pattern it never saw, our result files don't record. That table is our estimate of the best possible; since we can't say whether it saw the test runs, it may flatter itself slightly. The network's 1.48% is barely above it.
 
-:::figure noise wide
-Distance 5, network trained on about 250 million examples: share of runs in which each decoder was wrong, at eight noise levels, with 95% intervals. Five seeds together, 10 million runs per noise level. At 0.1% the network and correlated matching can't be told apart. From 0.2% the network is behind correlated matching, and from 0.8% it is behind plain matching too. Our own runs.
+:::figure noise wide fold Show the chart over eight noise levels
+Distance 5, network trained on about 250 million examples: the failures of each decoder divided by plain matching's at the same noise level, so plain matching is the line at 1. The network is pooled over five seeds, 10 million runs per noise level; its band is the range between the seeds. The rates themselves are in the table under "The numbers behind this". At 0.1% the network and correlated matching can't be told apart. From 0.2% the network is behind correlated matching, and from 0.8% it is behind plain matching too. Our own runs.
 :::
 
 **A finding we didn't plan for.** We had expected correlated matching to be at least as good as plain matching everywhere. At distance 5 it was, at every noise level we tried. At distance 3 and low noise it was worse. On 4 million runs at a noise level of 0.1%, with both decoders reading the same runs, plain matching failed in 0.075% (0.073% to 0.078%). Correlated matching failed in 0.113% (0.109% to 0.116%), about one and a half times as many failures. At 0.3% it was still worse, 0.705% against 0.659%. From 0.4% upwards it was the better one. When we stored the other kind of value, it was again worse at 0.1%: 0.0986% against 0.0856%. {{OWN-CORR OWN-D3}}

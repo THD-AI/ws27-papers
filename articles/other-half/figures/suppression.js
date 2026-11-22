@@ -35,8 +35,8 @@ function build(el, ctx) {
   const noteO = { italic: true, size: tall ? 13 : 14 };
 
   const tag = g(svg);
-  text(tag, X[0], 18, `Google’s chip: logical errors in ${fmt(ROUNDS)} rounds`, { family: 'sans', size: 13, weight: 600 });
-  const tg = text(tag, X[0], 37, 'Google Quantum AI, 2024 · each recording read by two decoders, both run afterwards', { ...mono, fill: C.muted, width: W - X[0] - 12, lh: 15 });
+  const t0 = text(tag, X[0], 18, 'same data, a different reader: one in six fewer errors', { family: 'sans', size: 13, weight: 600, width: W - X[0] - 12, lh: 17 });
+  const tg = text(tag, X[0], t0.bottom + 15, `Google Quantum AI, 2024 · logical errors in ${fmt(ROUNDS)} rounds · each recording read by two decoders, both run afterwards`, { ...mono, fill: C.muted, width: W - X[0] - 12, lh: 15 });
   st.fade(tag, 0, 0.1);
 
   const rows = m.points.map((pt, i) => Math.max(...d.decoders.map((dc) => Math.ceil(Math.round(dc.points[i].per_100000_rounds / PER) / COLS))));
@@ -82,7 +82,7 @@ function build(el, ctx) {
   const ng = g(svg);
   text(ng, X[1], yEnd + 34, `[[${lastM.per_100000_rounds} → ${lastN.per_100000_rounds}]]: about ${WORDS[1]} in ${WORDS[fewer] || fewer} fewer, read from the same data`, { ...noteO, width: tall ? 156 : 220 });
   st.fade(ng, 0.84, 0.94);
-  const pr = penRing(svg, ringAt.cx, ringAt.cy - 0.5, ringAt.w / 2 + 9, 12.5, { seed: 9, stroke: C.accent, width: 1.5 });
+    const pr = { paths: [] };
   pr.paths.forEach((pp, k) => st.draw(pp, 0.86 + k * 0.03, 0.97 + k * 0.02));
   const fg = g(svg);
   const fit = text(fg, X[0], yEnd + (tall ? 92 : 80), `fitted over all three: [[÷ ${nn.lambda.toFixed(2)}]] (network), [[÷ ${m.lambda.toFixed(2)}]] (matching)`, { size: tall ? 13 : 14, width: W - X[0] - 16 });
