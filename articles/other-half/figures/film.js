@@ -102,9 +102,12 @@ function build(el, ctx) {
   // the lettering: one line a step; the two machines named once, small
   const L = (str, x, y, anchor = 'start', o = {}) => { const lg = g(svg); text(lg, x, y, str, { family: 'sans', size: tall ? 13 : 14, anchor, ...o }); return lg; };
   const ly = H - (tall ? 6 : 8);
-  const nameO = { size: tall ? 12 : 13, fill: C.muted };
-  L('a quantum computer', X(60), Y(312), 'start', nameO);
-  L('an ordinary computer', X(1480), Y(318), 'end', nameO);
+  // the two machines are named by hand, in Virgil (Excalidraw's hand font, OFL)
+  h('style', {}, svg).textContent = `@font-face { font-family: 'Virgil'; src: url('${art('film-virgil.woff2')}') format('woff2'); font-display: swap; }`;
+  const nameO = { size: tall ? 13 : 15, fill: C.ink };
+  for (const lg of [L('a quantum computer', X(60), Y(312), 'start', nameO), L('an ordinary computer', X(1480), Y(318), 'end', nameO)]) {
+    for (const t of lg.querySelectorAll('text, tspan')) t.setAttribute('font-family', "'Virgil', 'Libre Franklin', sans-serif");
+  }
   const l0 = L('about ninety thousand frames in one blink', tall ? 10 : 14, ly);
   const l1 = L(tall ? 'all that leaves: each check’s answer, every\nround, drawn where it changed' : 'all that leaves: each check’s answer, every round, drawn where it changed', tall ? 10 : 14, tall ? ly - 15 : ly, 'start', tall ? { lh: 15 } : {});
 
@@ -143,14 +146,14 @@ function build(el, ctx) {
     // the film keeps running through step 1 and stops when a frame is held up
     atRest = gg >= 1 && gg < 2;
     if (gg < 1) extra = 0;
-    const n = gg >= 1 ? BEATS.length + extra : beatsAt(gg);
+    const n = gg >= 2 ? BEATS.length : gg >= 1 ? BEATS.length + extra : beatsAt(gg);
     setBeat(n);
     // step 1: the colour field fades; the line stays in full ink
     const p1 = ease(clamp(gg - 1)), fo = 1 - 0.75 * p1;
     field.style.opacity = fo >= 0.999 ? '' : fo.toFixed(3);
     // step 2: the frame is held up; its place in the strip goes empty
     const p2 = ease(clamp((gg - 2) / 0.7));
-    const round = START + BEATS.length + extra + (FR.length - 1 - FROM);
+    const round = START + BEATS.length + (FR.length - 1 - FROM);   // the rule's frame: both kinds, never empty
     if (round !== liftRound) { liftRound = round; liftDots.replaceChildren(); dotsFor(liftDots, round, bcx, bcy, BIG.w * bk, BIG.h * bk, tall ? 4 : 5, true); }
     // one object: the frame leaves its slot and grows into the band
     lift.style.display = p2 <= 0.001 ? 'none' : '';
