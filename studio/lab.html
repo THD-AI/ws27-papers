@@ -27,7 +27,7 @@ for (const pos of (q.get('pos') || '1').split(',').map(Number)) {
   const box = document.createElement('div'); box.style.width = w + 'px'; box.style.height = h + 'px';
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   box.appendChild(svg); cell.appendChild(box); document.body.appendChild(cell);
-  const api = mod.mount(svg, { layout: w / h < 1.05 ? 'tall' : w / h < 1.45 ? 'mid' : 'wide', k: 1, reduced: true });
+  const api = mod.mount(svg, { layout: w >= 600 ? 'wide' : w / h < 1.05 ? 'tall' : w / h < 1.45 ? 'mid' : 'wide', k: 1, reduced: true });
   api.render(pos);
 }
 document.documentElement.classList.add('lab-ready');

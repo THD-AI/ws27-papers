@@ -26,7 +26,7 @@ export default {
 
     // the ripple: rings on water, drawn in pen (wobbly, like his line)
     const cx = VW / 2, cy = lay === 'mid' ? 84 : tall ? 120 : 150, R = lay === 'mid' ? 150 : tall ? 120 : 190;
-    const ripple = el('g', { filter: `url(#smear${uid})` }, svg);
+    const ripple = el('g', {}, svg);
     const rings = [0.28, 0.52, 0.76, 1].map((f, i) => {
       const pts = [];
       for (let a = 0; a <= 64; a++) {
@@ -50,14 +50,17 @@ export default {
     // step 2: the job's line of operations, with rare slips
     const jy = lay === 'mid' ? 262 : tall ? 330 : 380, jx0 = tx0, jx1 = tx1;
     const job = el('path', { d: penPath([[jx0, jy], [jx1, jy]]), stroke: C.ink, 'stroke-width': 1.4, fill: 'none' }, svg);
-    const ticks = el('path', {
-      d: Array.from({ length: Math.round((jx1 - jx0) / 3) }, (_, i) => `M${jx0 + i * 3},${jy - 4} V${jy + 4}`).join(' '),
-      stroke: C.hair, 'stroke-width': 1,
-    }, svg);
-    const slipsAt = [0.09, 0.38, 0.47, 0.83];
-    const slips = slipsAt.map((u) => el('path', { d: `M${jx0 + u * (jx1 - jx0)},${jy - 10} V${jy + 10}`, stroke: C.accent, 'stroke-width': 3, 'stroke-linecap': 'round' }, svg));
+    const ticks = el('path', { d: '', stroke: 'none' }, svg);
+    const slipsAt = [0.12, 0.41, 0.68, 0.95];
+    const bx0 = jx0 + slipsAt[0] * (jx1 - jx0), bx1 = jx0 + slipsAt[1] * (jx1 - jx0);
+    const brace = el('path', { d: `M${bx0},${jy + 14} v6 H${bx1} v-6`, stroke: C.muted, 'stroke-width': 1.1, fill: 'none' }, svg);
+    const braceLab = el('text', { x: (bx0 + bx1) / 2, y: jy + 38, 'text-anchor': 'middle', fill: C.muted, ...font(tall ? 14 : 15) }, svg);
+    braceLab.textContent = 'about 1,000 operations';
+    const slips = slipsAt.map((u) => el('path', { d: `M${jx0 + u * (jx1 - jx0)},${jy - 10} V${jy + 10}`, stroke: C.ink, 'stroke-width': 2.4, 'stroke-linecap': 'round' }, svg));
     const jobLab = el('text', { x: jx0, y: jy - 18, fill: C.muted, ...font(tall ? 14 : 15) }, svg);
-    jobLab.textContent = 'basic operations; about one in a thousand slips';
+    jobLab.textContent = 'the job: billions of basic operations';
+    const tag2 = el('text', { x: 6, y: 18, fill: C.muted, ...font(14, 'JetBrains Mono, monospace') }, svg);
+    tag2.textContent = 'slip rate: Gidney & Ekerå, 2021';
     const tag = el('text', { x: VW - 6, y: VH - 8, 'text-anchor': 'end', fill: C.muted, ...font(14, 'JetBrains Mono, monospace') }, svg);
     tag.textContent = 'Google, 2024';
 
@@ -80,8 +83,14 @@ export default {
       draw(axis, at(pos, 1, P1.w(i++)));
       const u = at(pos, 1, P1.w(i++));                      // fraction of 85 µs elapsed
       const left = Math.exp(-u);                              // what is left of the pattern
-      ripple.style.opacity = u > 0 ? 0.3 + 0.7 * left : 1;
-      blur.setAttribute('stdDeviation', (1 - left) * (tall ? 3.5 : 5));
+      // the smear: the pen line loses its edge (breaks into ever shorter
+      // pieces) and thins as the pattern decays; no blur filter
+      if (u > 0) rings.forEach((r) => {
+        r.style.strokeDasharray = `${(left * 0.06).toFixed(4)} ${((1 - left) * 0.02 + 0.0001).toFixed(4)}`;
+        r.style.strokeDashoffset = '0';
+        r.style.opacity = 0.35 + 0.65 * left;
+        r.setAttribute('stroke-width', (1.6 * (0.6 + 0.4 * left)).toFixed(2));
+      });
       runner.setAttribute('d', penPath([[tx0, ty], [tx0 + u * (tx1 - tx0), ty]]));
       runner.style.opacity = u > 0 ? 1 : 0;
       const w = at(pos, 1, P1.w(i++));
@@ -91,6 +100,8 @@ export default {
       draw(job, d); settle(ticks, d);
       const run = at(pos, 2, P2.w(j++));
       slips.forEach((s, k) => { s.style.opacity = run >= slipsAt[k] ? 1 : 0; });   // fire: a cut
+      settle(brace, run >= slipsAt[1] ? 1 : 0); label(braceLab, run >= slipsAt[1] ? 1 : 0);
+      label(tag2, at(pos, 2, P2.w(2)));
       label(jobLab, at(pos, 2, P2.w(j++)));
     }
     return {
@@ -99,7 +110,7 @@ export default {
       alone: 1,
       desc: (k) => (k === 1
         ? 'A ripple on water smears as a time line runs to 85 millionths of a second, about a thousandth of a blink.'
-        : 'A long line of basic operations; about one in a thousand slips.'),
+        : 'The job is a line of billions of basic operations; about one in every thousand slips.'),
     };
   },
 };

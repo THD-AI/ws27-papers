@@ -46,7 +46,7 @@ export default {
     const wrong = el('text', { x: L.barX, y: L.laneA - (tall ? 14 : 18), fill: C.muted, ...font(tall ? 14 : 15) }, svg);
     wrong.textContent = 'wrong answers';
     const labA = el('text', { x: L.gateX, y: L.laneA - 40 * L.gateW / 120 - 8, fill: C.ink, ...font(tall ? 14 : 15) }, svg);
-    labA.textContent = 'the standard program';
+    labA.textContent = "Google's best matching";
     const labB = el('text', { x: L.gateX, y: L.laneB + (tall ? 34 : 44), fill: C.ink, ...font(tall ? 14 : 15) }, svg);
     labB.textContent = 'a neural network';
     const same = el('text', { x: bx + L.fh / 2 + 8, y: (L.laneA + L.laneB) / 2 + 4, fill: C.muted, ...font(tall ? 14 : 15) }, svg);

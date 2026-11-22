@@ -64,7 +64,7 @@ const load = (id) => { if (!mods.has(id)) mods.set(id, import(`./figures/${id}.j
 
 function ctxFor(w, h) {
   const r = w / Math.max(1, h);
-  return { layout: r < 1.05 ? 'tall' : r < 1.45 ? 'mid' : 'wide', k, reduced: reduced.matches };
+  return { layout: w >= 600 ? 'wide' : r < 1.05 ? 'tall' : r < 1.45 ? 'mid' : 'wide', k, reduced: reduced.matches };
 }
 
 // ------------------------------------------------------------- layout
@@ -311,12 +311,23 @@ async function frame() {
 }
 
 // ------------------------------------------------- stills and descriptions
+async function mountProbe(mod) {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  const api = mod.mount(svg, { layout: 'wide', k: 1, reduced: true, still: true });
+  return api;
+}
 async function buildStills() {
   for (const run of runs) for (const s of run.segs) {
     if (s.kind !== 'fig') continue;
     const mod = await load(s.fig);
+    // print keeps at most four panels a figure: the first step, the alone
+    // frame, the last, and one between (held strips always)
+    const n = s.total, keep = new Set([1, n, Math.ceil(n / 2)]);
+    try { const a = (await mountProbe(mod)).alone; if (a) keep.add(Math.round(a)); } catch { /* none */ }
+    while (keep.size > 4) keep.delete([...keep].sort((x, y) => x - y)[1]);
     for (const it of s.items) {
       if (it.kind === 'rest') continue;
+      if (it.el.nextElementSibling?.matches('.still, .strip')) continue;   // prerendered into the HTML
       const mk = (pos, parent) => {
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         parent.appendChild(svg);
@@ -330,7 +341,7 @@ async function buildStills() {
         for (let f = 1; f <= it.frames; f++) { const c = document.createElement('div'); c.className = 'still'; strip.appendChild(c); mk(it.step - 1 + f / it.frames, c); }
         it.el.after(strip);
       } else {
-        const c = document.createElement('div'); c.className = 'still';
+        const c = document.createElement('div'); c.className = 'still' + (keep.has(it.step) ? ' print-keep' : '');
         it.el.after(c);
         const api = mk(it.step, c);
         if (api.desc) { const d = document.createElement('span'); d.className = 'sr-only step-desc'; d.textContent = api.desc(it.step); it.el.appendChild(d); }
@@ -376,6 +387,12 @@ addEventListener('resize', () => {
 
 // ---------------------------------------------------------------- start
 (async () => {
+  if (new URLSearchParams(location.search).has('prerender')) {
+    // build time: only the stills (and step descriptions), for no-JS readers and print
+    await buildStills();
+    root.classList.add('prerender-done');
+    return;
+  }
   try {
     layout();
     await buildStills();

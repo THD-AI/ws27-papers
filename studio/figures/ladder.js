@@ -25,7 +25,7 @@ export default {
     const mono = (size = fs) => ({ 'font-family': 'JetBrains Mono, monospace', 'font-size': size });
 
     const L = {
-      tall: { xs: [52, 136, 232, 322], gy: 74, span: [40, 56, 70, 80], base: 352, hmax: 170, pw: 13 },
+      tall: { xs: [46, 126, 216, 304], gy: 74, span: [40, 56, 70, 80], base: 352, hmax: 170, pw: 13 },
       mid: { xs: [56, 146, 246, 344], gy: 64, span: [36, 50, 62, 72], base: 276, hmax: 132, pw: 12 },
       wide: { xs: [120, 270, 440, 610], gy: 82, span: [56, 80, 100, 116], base: 396, hmax: 200, pw: 20 },
     }[lay];
@@ -58,7 +58,7 @@ export default {
     const axis = el('path', { d: penPath([[L.xs[0] - 40, L.base + 1], [L.xs[2] + 40, L.base + 1]]), stroke: C.muted, 'stroke-width': 1, fill: 'none' }, svg);
     const vM = el('text', { x: L.xs[2] - L.pw / 2 - 2, y: L.base - MATCH[2] * k - 8, 'text-anchor': 'end', fill: C.ink, ...mono(fs - 1) }, svg); vM.textContent = '171';
     const vN = el('text', { x: L.xs[2] + L.pw + 6, y: L.base - NET[2] * k - 8, fill: C.ink, ...mono(fs - 1) }, svg); vN.textContent = '143';
-    const legY = L.base - L.hmax * (wide ? 0.95 : 0.98);
+    const legY = wide ? L.base - L.hmax * 0.95 : L.base - 2 * fs - 14;
     const legM = el('text', { x: L.xs[3] - (wide ? 60 : 44), y: legY, fill: C.ink, ...font(fs - 1) }, svg); legM.textContent = wide ? '■ best matching' : '■ matching';
     const legN = el('text', { x: L.xs[3] - (wide ? 60 : 44), y: legY + fs + 6, fill: C.ink, ...font(fs - 1) }, svg); legN.textContent = '□ network';
     [legM, legN].forEach((t) => t.setAttribute('fill', C.accent));

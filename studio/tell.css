@@ -43,6 +43,9 @@ html:not(.js) .stage, html.tell-stills .stage, html.js-failed .stage { display: 
 .still svg { width: 100%; height: 100%; display: block; }
 .strip { display: grid; grid-template-columns: repeat(var(--n, 6), 1fr); gap: 4px; margin: 0.4em 0 1.4em; }
 html.tell-top .still, html.tell-top .strip, html.tell-beside .still, html.tell-beside .strip { display: none; }
+/* the script failed or is slow: the prerendered stills, whatever the class */
+html.js-failed .still { display: block !important; }
+html.js-failed .strip { display: grid !important; }
 
 /* ------------------------------------------------------------ top class */
 html.tell-top .run { position: relative; }
@@ -82,10 +85,17 @@ html.tell-top .held > p, html.tell-beside .held > p { position: sticky; top: var
 
 /* --------------------------------------------------------------- print */
 @media print {
+  /* one plain column on paper: no page grid, no pitch padding, no read-grey */
+  html.tell-beside main.tell, html.tell-beside main.tell > .run { display: block !important; }
+  main.tell > *, .run .flow { max-width: 40em !important; margin-left: auto !important; margin-right: auto !important; }
+  .chapter p[data-k], .gap p { padding-bottom: 0 !important; }
+  .chapter p.is-read { color: var(--ink) !important; }
   .stage { display: none !important; }
   .still, .strip { display: block !important; }
   .strip { display: grid !important; }
   .still, .strip { break-inside: avoid; }
+  .still:not(.print-keep) { display: none !important; }
+  .still.print-keep { max-height: 9cm; }
   .held { height: auto !important; }
   .held > p { position: static !important; }
   .step-desc { position: static; width: auto; height: auto; clip: auto; clip-path: none; white-space: normal; font-size: 0.85em; color: var(--muted); }

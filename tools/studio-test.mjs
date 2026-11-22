@@ -55,6 +55,20 @@ async function measure(p) {
 async function runDevice(browser, base, [name, w, h, mobile], outDir) {
   const p = await browser.newPage();
   await p.setViewport({ width: w, height: h, isMobile: mobile, hasTouch: mobile, deviceScaleFactor: 1 });
+  // an independent sampler, outside the engine: every frame, how many figures
+  // are visible on any stage (a set's fading overlay excluded)
+  await p.evaluateOnNewDocument(() => {
+    window.__sample = { max: 0, twoFrames: 0 };
+    const tick = () => {
+      for (const st of document.querySelectorAll('.stage')) {
+        const n = [...st.children].filter((l) => l.classList.contains('layer') && !l.classList.contains('ghost-out') && +getComputedStyle(l).opacity > 0.02).length;
+        if (n > window.__sample.max) window.__sample.max = n;
+        if (n > 1) window.__sample.twoFrames++;
+      }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
   const errors = [];
   p.on('pageerror', (e) => errors.push(e.message));
   p.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
@@ -85,7 +99,9 @@ async function runDevice(browser, base, [name, w, h, mobile], outDir) {
   await wait(2600);
   const m1 = await measure(p);
   res.cls = m1.cls;
-  res.checks.twoFigures = m1.violations === 0;
+  const smp = await p.evaluate(() => window.__sample);
+  res.sampled = smp;
+  res.checks.twoFigures = m1.violations === 0 && smp.twoFrames === 0;
   res.checks.stillAfter2500 = m1.lastMotion <= stopAt + 2500;
   const played = m1.steps.filter((s) => s.end && s.dir > 0);
   const durs = played.map((s) => (s.end - s.start) / 1000);
@@ -104,10 +120,13 @@ async function runDevice(browser, base, [name, w, h, mobile], outDir) {
   const firstStep = await p.evaluate(() => { const e = document.querySelector('.chapter p[data-k="step"]'); return e.getBoundingClientRect().top + scrollY; });
   await p.evaluate((y) => window.scrollTo(0, y - innerHeight * 0.5), firstStep); await wait(1500);
   const v0 = (await measure(p)).violations;
-  await p.evaluate(() => window.scrollBy(0, innerHeight * 3)); await wait(2500);
-  await p.evaluate(() => window.scrollBy(0, -innerHeight * 3)); await wait(2500);
+  // a momentum flick: wheel events that decay, about three screens down, then back
+  const flick = async (dir) => { for (let i = 0; i < 24; i++) { await p.mouse.wheel({ deltaY: dir * Math.round(h * 0.28 * Math.pow(0.88, i)) }); await wait(16); } };
+  await p.mouse.move(w / 2, h * 0.7);
+  await flick(1); await wait(2500);
+  await flick(-1); await wait(2500);
   const m2 = await measure(p);
-  res.checks.flickNoTwoFigures = m2.violations === v0;
+  res.checks.flickNoTwoFigures = m2.violations === v0 && (await p.evaluate(() => window.__sample.twoFrames)) === 0;
   await p.screenshot({ path: join(outDir, 'after-flick-back.png') });
 
   // 3. "toolbar": the height changes by 10%, the width doesn't. Nothing may move.
@@ -135,7 +154,9 @@ async function runDevice(browser, base, [name, w, h, mobile], outDir) {
   // 5. anchor jump: the figure is set, never replayed from the start
   await p.evaluate(() => window.scrollTo(0, 0)); await wait(800);
   const before = (await measure(p)).steps.length;
-  await p.evaluate(() => { location.hash = '#second'; }); await wait(1800);
+  const target = await p.evaluate(() => { const hs = [...document.querySelectorAll('.run h2[id]')]; return (hs[2] || hs[1] || hs[0])?.id || 'second'; });
+  res.anchor = target;
+  await p.evaluate((t) => { location.hash = '#' + t; }, target); await wait(1800);
   const m5 = await measure(p);
   res.checks.anchorNoReplay = m5.steps.length - before <= 1;
   await p.screenshot({ path: join(outDir, 'anchor.png') });

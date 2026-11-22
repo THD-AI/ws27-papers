@@ -43,7 +43,7 @@ const TITLES = {
 const q = new URLSearchParams(location.search);
 const id = q.get('fig');
 const mod = (await import(`./figures/${id}.js`)).default;
-const layoutOf = (w, h) => (w / h < 1.05 ? 'tall' : w / h < 1.45 ? 'mid' : 'wide');
+const layoutOf = (w, h) => (w >= 600 ? 'wide' : w / h < 1.05 ? 'tall' : w / h < 1.45 ? 'mid' : 'wide');
 // the stage this screen would give the figure (as in tell.js)
 const W = innerWidth - 32, H = innerHeight;
 const beside = innerWidth >= 1000 && H >= 560 && innerWidth > H;

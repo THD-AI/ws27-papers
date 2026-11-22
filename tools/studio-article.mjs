@@ -53,7 +53,8 @@ for (const sec of map.sections) {
   const paras = sections.get(sec.h);
   if (!paras) throw new Error('no section: ' + sec.h);
   let i = 0;
-  const heading = `<h2>${inline(sec.h)}</h2>`;
+  const slug = sec.h.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const heading = `<h2 id="${slug}">${inline(sec.h)}</h2>`;
   const firstBlock = sec.blocks?.[0];
   if (firstBlock && (firstBlock.fig && built.has(firstBlock.fig) || firstBlock.gap)) { openRun(); out.push('      ' + heading); }
   else { closeRun(); out.push('  ' + heading); }
@@ -98,3 +99,20 @@ ${out.join('\n')}
 </html>
 `);
 console.log('studio/article.html:', map.sections.length, 'sections');
+
+// prerender the stills into the file, so readers without JavaScript (or with a
+// failed or slow script) and print get every figure
+const puppeteer = (await import('puppeteer-core')).default;
+const { startServer } = await import('./serve.mjs');
+const { server, port } = await startServer(join(ROOT, 'studio'), 0);
+const browser = await puppeteer.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: 'new' });
+const page = await browser.newPage();
+await page.setViewport({ width: 900, height: 900 });
+await page.goto(`http://127.0.0.1:${port}/article.html?prerender`, { waitUntil: 'networkidle0' });
+await page.waitForSelector('html.prerender-done', { timeout: 20000 });
+const main = await page.evaluate(() => document.querySelector('main.tell').outerHTML);
+await browser.close(); server.close();
+const file = join(ROOT, 'studio/article.html');
+const html = await readFile(file, 'utf8');
+await writeFile(file, html.replace(/<main class="tell">[\s\S]*<\/main>/, main));
+console.log('stills prerendered');

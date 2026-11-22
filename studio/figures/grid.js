@@ -137,7 +137,7 @@ export default {
     every.textContent = 'one frame every 1.1 millionths of a second';
     const heldLab = el('text', { x: VW / 2, y: wide ? 28 : 26, 'text-anchor': 'middle', fill: C.muted, ...mono }, svg);
     const tag = el('text', { x: VW - 6, y: VH - 8, 'text-anchor': 'end', fill: C.muted, ...font(fs - 1, 'JetBrains Mono, monospace') }, svg);
-    tag.textContent = '1 in 1,000 per qubit';
+    tag.textContent = 'simplified: errors between rounds';
 
     // ---- plans (seconds; a step lasts the sum of its parts)
     const P = [
@@ -205,7 +205,7 @@ export default {
       if (pos > 8 && pos <= 9) {
         const f = Math.max(1, Math.round((pos - 8) * 6));
         lit = HELD[f - 1].lit;
-        heldLab.textContent = `round ${HELD[f - 1].round} · ${(HELD[f - 1].round * 1.1).toFixed(1)} µs`;
+        heldLab.textContent = `picked round ${HELD[f - 1].round} · ${(HELD[f - 1].round * 1.1).toFixed(1)} µs`;
         heldLab.style.opacity = 1;
         G.setAttribute('transform', '');
       } else heldLab.style.opacity = 0;

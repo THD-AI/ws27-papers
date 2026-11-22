@@ -47,8 +47,8 @@ export default {
       // the two matchings as level marks; names above, staggered so close ones don't collide
       const lev = [['plain', p.plain, 0], ['correlated', p.correlated, 1]].map(([name, r, row]) => {
         const x = X(r);
-        const tick = el('path', { d: penPath([[x, y - 14 - row * 14], [x, y + 18]]), stroke: C.ink, 'stroke-width': 1.6, fill: 'none' }, svg);
-        const t = el('text', { x, y: y - 20 - row * 14, 'text-anchor': 'middle', fill: C.ink, ...font(fs - 1) }, svg);
+        const tick = el('path', { d: penPath([[x, y - 14 - row * (fs + 5)], [x, y + 18]]), stroke: C.ink, 'stroke-width': 1.6, fill: 'none' }, svg);
+        const t = el('text', { x, y: y - 20 - row * (fs + 5), 'text-anchor': 'middle', fill: C.ink, ...font(fs - 1) }, svg);
         t.textContent = name;
         return { tick, t };
       });
@@ -69,8 +69,8 @@ export default {
     const r3 = reel(0, P3.examples), r66 = reel(1, P66.examples), r250 = reel(1, P250.examples);
     const cap = (i, txt) => { const t = el('text', { x: rows[i].R.inAt[0], y: rows[i].y + (wide ? 30 : 26), 'text-anchor': 'end', fill: C.muted, ...font(fs - 1) }, svg); t.textContent = txt; return t; };
     const c3 = cap(0, '66 million examples'), c66 = cap(1, '66 million'), c250 = cap(1, lay === 'tall' ? 'about 250 million' : 'about 250 million examples');
-    const flag = el('text', { x: G.ax[0], y: rows[0].y + (wide ? 50 : 46), fill: C.muted, ...font(fs - 1) }, svg);
-    flag.textContent = wide ? 'the win over correlated: not counted (see below)' : 'not counted (see below)';
+    const flag = el('text', { x: VW - 6, y: rows[0].y + (wide ? 50 : 48), 'text-anchor': 'end', fill: C.muted, ...font(fs - 1) }, svg);
+    flag.textContent = 'not counted: see below';
     const ours = el('text', { x: G.end + G.gw / 2, y: rows[0].y - 40 * G.gw / 120 - 8, 'text-anchor': 'middle', fill: C.ink, ...font(fs - 1) }, svg);
     ours.textContent = 'our network';
     const tag = el('text', { x: VW - 6, y: VH - 6, 'text-anchor': 'end', fill: C.muted, ...mono(fs - 1) }, svg);

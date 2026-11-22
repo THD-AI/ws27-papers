@@ -26,29 +26,21 @@ export default {
     for (const t of inner.querySelectorAll('text')) t.remove();
 
     // ours: a smaller reader with its long reel, under the two
-    const oy = { tall: 250, mid: 238, wide: 360 }[lay];
-    const gw = wide ? 84 : 60, gx = { tall: 200, mid: 140, wide: 250 }[lay];
+    const oy = { tall: 262, mid: 214, wide: 340 }[lay];
+    const gw = wide ? 84 : 60, gx = { tall: 180, mid: 220, wide: 380 }[lay];
     const g = el('g', {}, svg);
     const ours = gate(g, C, gx, oy - 40 * gw / 120, gw);
     const reel = strip(svg, C, [[gx - (wide ? 210 : 150), oy], ours.inAt], wide ? 12 : 9, wide ? 12 : 9, (k) => (k % 6 === 3 ? [1] : []));
     const lab = el('text', { x: gx + gw / 2, y: oy + gw * 0.36 + 18, 'text-anchor': 'middle', fill: C.ink, ...font(fs - 1) }, svg);
     lab.textContent = 'our network';
 
-    // the two notes
-    const nx = { tall: 20, mid: 258, wide: 470 }[lay], ny = { tall: 318, mid: 36, wide: 70 }[lay];
-    const lines = wide || lay === 'mid'
-      ? [['Learning to read: affordable on a laptop.', C.ink], ['One grid bigger, it passed plain matching', C.ink], ['only at the end of a run nearly four times longer,', C.ink], ['still behind correlated matching.', C.ink], ['', C.ink], ['On real recordings: not tested yet.', C.muted]]
-      : [['Learning to read: affordable on a laptop;', C.ink], ['one grid bigger, a run nearly four times longer.', C.ink], ['Real recordings: not tested yet.', C.muted]];
-    const wrap = lay === 'mid' ? 24 : wide ? 32 : 46;
-    const notes = el('text', { x: nx, y: ny, fill: C.ink, ...font(fs - 1) }, svg);
-    let dy = 0;
-    for (const [t, col] of lines) {
-      const words = t.split(' '); let line = '';
-      const flush = () => { const s = el('tspan', { x: nx, dy: dy ? fs + 4 : 0, fill: col }, notes); s.textContent = line.trim(); dy = 1; line = ''; };
-      for (const w of words) { if ((line + w).length > wrap) flush(); line += w + ' '; }
-      flush();
-    }
-
+    // two short verdicts under our reader; the paragraph says the rest
+    const vx = gx + gw / 2, vy = oy + gw * 0.36 + 18 + fs + 6;
+    const v1 = el('text', { x: vx, y: vy, 'text-anchor': 'middle', fill: C.ink, ...font(fs - 1) }, svg);
+    v1.textContent = 'cost of learning: measured';
+    const v2 = el('text', { x: vx, y: vy + fs + 5, 'text-anchor': 'middle', fill: C.muted, ...font(fs - 1) }, svg);
+    v2.textContent = 'real recordings: not yet';
+    const notes = el('g', {}, svg); notes.appendChild(v1); notes.appendChild(v2);
     const P = plan([{ at: 0, dur: 0.3 }, { at: 0.2, dur: 0.7 }, { at: 0.5, dur: 0.4 }, { at: 0.9, dur: 0.3 }, { at: 1.1, dur: 0.3 }]);
     const at = (pos, i) => (pos >= 1 ? 1 : pos <= 0 ? 0 : span(pos, ...P.w(i)));
     return {
