@@ -41,6 +41,10 @@ The way around this is to store the information in the way several qubits relate
 
 In the scheme we studied, the surface code, the qubits sit on a square grid, and the size of the grid is called its **distance**. A bigger grid should protect better, but only if each qubit is good enough. Below a certain error rate, called the **threshold**, it does. Above it, a bigger grid is worse, since every added qubit is one more thing that smears. For years the hardware sat above it. {{GQA-2023 GQA-2024}}
 
+:::figure threshold column
+How many times fewer logical errors per round a grid of distance 5 makes than one of distance 3, at eight noise levels, both read by plain matching. The bigger grid wins at every level we ran, and by less as the noise rises: from about 9 times at 0.1% to 1.14 times at 1%. The threshold is where the line would reach no gain; in this simulation it lies above 1%. Our own runs, with the simulation of section 9.
+:::
+
 ## 3. Asking without looking
 
 Only about half of the qubits store anything. The rest are helpers, each sitting between two or four storing qubits. The smallest grid, distance 3, has 9 storing qubits and 8 helpers, 17 in all. Distance 5 has 49 qubits, and distance 7 has 97. {{OWN-ARITH GQA-2024}}
