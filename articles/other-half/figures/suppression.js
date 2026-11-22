@@ -35,8 +35,8 @@ function build(el, ctx) {
   const noteO = { italic: true, size: tall ? 13 : 14 };
 
   const tag = g(svg);
-  text(tag, X[0], 18, `Google’s chip: logical errors in ${fmt(ROUNDS)} rounds`, { family: 'sans', size: 13, weight: 600 });
-  const tg = text(tag, X[0], 37, 'Google Quantum AI, 2024 · each recording read by two decoders, both run afterwards', { ...mono, fill: C.muted, width: W - X[0] - 12, lh: 15 });
+  const t0 = text(tag, X[0], 18, 'same data, a different reader: one in six fewer errors', { family: 'sans', size: 13, weight: 600, width: W - X[0] - 12, lh: 17 });
+  const tg = text(tag, X[0], t0.bottom + 15, `Google Quantum AI, 2024 · logical errors in ${fmt(ROUNDS)} rounds · each recording read by two decoders, both run afterwards`, { ...mono, fill: C.muted, width: W - X[0] - 12, lh: 15 });
   st.fade(tag, 0, 0.1);
 
   const rows = m.points.map((pt, i) => Math.max(...d.decoders.map((dc) => Math.ceil(Math.round(dc.points[i].per_100000_rounds / PER) / COLS))));

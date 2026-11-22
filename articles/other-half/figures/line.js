@@ -23,7 +23,7 @@ function build(el, ctx) {
     `${nReal} real flips in one column of a grid of distance ${d.distance} fire ${d.fired_by_real_errors.length} check. `
     + `The decoder's shortest explanation adds ${nAdd} more flips below it. Errors and correction together cross the grid from the ${d.crosses_from} to the ${d.crosses_to}: the stored value has changed and no check fires.`);
   svg0.style.color = C.ink;
-  text(svg0, tall ? 16 : 20, 18, tall ? 'the one mistake that matters' : `the one mistake that matters, on a grid of distance ${d.distance}`, { family: 'sans', size: 13, weight: 600 });
+  text(svg0, tall ? 16 : 20, 18, tall ? 'an error nobody sees' : `an error nobody sees, on a grid of distance ${d.distance}`, { family: 'sans', size: 13, weight: 600 });
   text(svg0, tall ? 16 : 20, H - 14, 'a full line of flips fires no check: an error nobody sees', { size: tall ? 13.5 : 14.5 });
   const svg = g(svg0, { transform: 'translate(0 26)' });
   const st = stage();
