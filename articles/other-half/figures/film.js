@@ -11,12 +11,12 @@
 //   step 2  one frame is held up, enlarged; its place in the strip goes empty
 // Frames: data/film.json (tools/film-sim.py, a seeded Stim simulation). The
 // rounds shown are chosen by a rule, below, not by eye.
-import { mountFigure, svgRoot, g, h, circle, stage, clamp, ease } from '../../../lib/fig.js';
+import { mountFigure, svgRoot, g, h, circle, stage, clamp, ease, idle } from '../../../lib/fig.js';
 import { pal, text, floor } from './shared.js';
 
 export const steps = 3;
 export const durations = { large: [2.6, 1.4, 2.2] };
-const SIZE = { wide: [720, 488], tall: [360, 300] };
+const SIZE = { wide: [720, 486], tall: [360, 286] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 const IMG = [1536, 1024];
@@ -31,8 +31,9 @@ function build(el, ctx) {
   const C = pal(ctx), d = ctx.data, run = d.runs[0];
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
   const k = W / CROP[2];
-  const bigS = tall ? 118 : 160;                     // the lifted frame's drawn size
-  const top = bigS + (tall ? 10 : 14);               // the drawing starts below it
+  const bigS = tall ? 104 : 160;                     // the lifted frame's drawn size
+  // the drawing starts below a band that holds the lifted frame and its key
+  const top = bigS + (tall ? 12 : 14);
   const X = (x) => (x - CROP[0]) * k, Y = (y) => (y - CROP[1]) * k + top;
   const art = (n) => new URL(`../art/${n}`, import.meta.url).href;
   const svg = svgRoot(el, W, H,
@@ -56,7 +57,7 @@ function build(el, ctx) {
   const mnx = Math.min(...xs), mxx = Math.max(...xs), mny = Math.min(...ys), mxy = Math.max(...ys);
   const inCell = (c, cx, cy, w, hh) => [cx + ((c.x - mnx) / (mxx - mnx) - 0.5) * w * 0.74, cy + ((c.y - mny) / (mxy - mny) - 0.5) * hh * 0.7];
   const colour = (kind) => (kind === 'Z' ? C.accent : C.ink);
-  const R = tall ? 2 : 3;
+  const R = tall ? 2.6 : 3.2;
   const dotsFor = (parent, round, cx, cy, w, hh, r) => {
     const frame = run.frames[round % run.frames.length];
     const placed = [];
@@ -65,7 +66,7 @@ function build(el, ctx) {
       const [px, py] = inCell(c, cx, cy, w, hh);
       if (placed.some(([qx, qy]) => Math.hypot(qx - px, qy - py) < r * 1.6)) continue;   // never two dots in one blob
       placed.push([px, py]);
-      circle(parent, px, py, r, { fill: colour(c.kind) });
+      circle(parent, px, py, r, { fill: colour(c.kind), stroke: '#FBFBFC', 'stroke-width': Math.max(0.8, r * 0.3) });
     }
   };
 
@@ -96,26 +97,40 @@ function build(el, ctx) {
 
   // step 2: one frame held up, enlarged, in the strip's own pen
   const FROM = 1;
-  const bx = tall ? 10 : X(560), by = 2;
+  const bx = tall ? 8 : X(560), by = tall ? 2 : 4;
   const lift = g(svg);
+  const pk = bigS / BIG.img;
+  h('rect', { x: bx + (BIG.cx - BIG.w / 2) * pk, y: by + (BIG.cy - BIG.h / 2) * pk, width: BIG.w * pk, height: BIG.h * pk, fill: '#FBFBFC' }, lift);
   h('image', { href: art('film-frame.png'), x: bx, y: by, width: bigS, height: bigS }, lift);
   const bk = bigS / BIG.img, bcx = bx + BIG.cx * bk, bcy = by + BIG.cy * bk;
   const grid = g(lift);
   for (const c of run.checks) { const [px, py] = inCell(c, bcx, bcy, BIG.w * bk, BIG.h * bk); circle(grid, px, py, 1.3, { fill: C.muted, opacity: 0.35 }); }
   const liftDots = g(lift);
   const note = g(svg);
-  const nx = bx + bigS + (tall ? 10 : 14), ns = tall ? 12.5 : 13.5;
-  text(note, nx, by + 22, 'one frame: the checks whose', { family: 'sans', size: ns });
-  text(note, nx, by + 22 + ns * 1.35, 'answer changed since', { family: 'sans', size: ns });
+  const nx = bx + bigS + (tall ? 8 : 14), ns = tall ? 11.5 : 13.5;
+  text(note, nx, by + 22, 'one frame: the checks', { family: 'sans', size: ns });
+  text(note, nx, by + 22 + ns * 1.35, 'that changed since', { family: 'sans', size: ns });
   text(note, nx, by + 22 + ns * 2.7, 'the round before', { family: 'sans', size: ns });
   circle(note, nx + 4, by + 22 + ns * 4.4 - 4, 3.6, { fill: C.accent });
   text(note, nx + 13, by + 22 + ns * 4.4, 'a check on flips', { family: 'sans', size: ns });
   circle(note, nx + 4, by + 22 + ns * 5.75 - 4, 3.6, { fill: C.ink });
   text(note, nx + 13, by + 22 + ns * 5.75, 'a check on phase errors', { family: 'sans', size: ns });
 
+  // While step 0 is complete and the next has not begun, the film keeps
+  // running on screen, about five frames a second (idle motion: it changes
+  // which rounds are shown, never what is true).
+  let atRest = false, extra = 0, since = null;
+  const run0 = idle(svg, ctx, (secs) => {
+    if (!atRest) { since = null; return; }
+    if (since === null) since = secs;
+    const e = Math.floor((secs - since) * 5);
+    if (e !== extra) { extra = e; setBeat(BEATS.length + extra); }
+  });
   let liftRound = -1;
   st.on((gg) => {
-    const n = gg >= 1 ? BEATS.length : beatsAt(gg);
+    atRest = Math.abs(gg - 1) < 1e-6;
+    const n = gg >= 1 ? BEATS.length + (atRest ? extra : 0) : beatsAt(gg);
+    if (!atRest) extra = 0;
     setBeat(n);
     // step 1: the colour field fades; the line stays in full ink
     const p1 = ease(clamp(gg - 1)), fo = 1 - 0.75 * p1;
@@ -133,7 +148,7 @@ function build(el, ctx) {
   st.fade(l0, 0.12, 0.42, [1.05, 1.3]);
   st.fade(l1, 1.35, 1.75);
 
-  return { set: (step, t) => st.set(step, t) };
+  return { set: (step, t) => st.set(step, t), destroy() { run0.stop(); } };
 }
 
 export default function mount(el, ctx) { return mountFigure(el, (root) => build(root, ctx)); }
