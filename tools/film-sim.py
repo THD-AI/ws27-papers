@@ -32,7 +32,7 @@ def run(p):
     dset = set(data)
     def weight(x, y):
         return sum((x + dx, y + dy) in dset for dx in (-1, 1) for dy in (-1, 1))
-    later = [k for k, v in coords.items() if v[2] >= 1]
+    later = [k for k, v in coords.items() if 1 <= v[2] < ROUNDS]   # rounds 1 to ROUNDS-1: not the first round, not the final data readout
     inner = [k for k in later if weight(coords[k][0], coords[k][1]) == 4]
     rate_all = float(many[:, later].mean())
     rate_inner = float(many[:, inner].mean())
@@ -42,8 +42,8 @@ def run(p):
         'qubits': [{'x': x, 'y': y} for x, y in data],
         'frames': [sorted(f) for f in frames[:ROUNDS]],
         'lit_per_frame_mean': round(sum(len(f) for f in frames[:ROUNDS]) / ROUNDS, 2),
-        'fire_rate_all': {'value': round(rate_all, 4), 'meaning': 'share of checks that fire per round, rounds 1 on, mean over 20,000 runs'},
-        'fire_rate_inner': {'value': round(rate_inner, 4), 'meaning': 'the same for the inner (weight-4) checks only, comparable to the 8.7% Google reports at distance 7', 'compare': {'value': 0.087, 'source': 'GQA-2024'}},
+        'fire_rate_all': {'value': round(rate_all, 4), 'meaning': 'share of checks that fire per round, rounds 1 to 39 (not round 0, not the final readout), mean over 20,000 runs'},
+        'fire_rate_inner': {'value': round(rate_inner, 4), 'meaning': 'the same for the inner (weight-4) checks only, comparable to the 8.7% Google reports at distance 7', 'compare': {'value': 0.087, 'source': 'GQA-2024', 'where': 'Section II', 'quote': 'The surface code detection probabilities are pdet=(7.7%,8.5%,8.7%) for d=(3,5,7).'}},
     }
 
 out = {
