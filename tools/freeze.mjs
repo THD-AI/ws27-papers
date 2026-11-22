@@ -55,7 +55,7 @@ for (let step = 0; step < +n; step++) for (const [name, vp] of Object.entries(si
       continue;
     }
   }
-  if (frame) { try { await frame.scrollIntoView(); await new Promise((r) => setTimeout(r, 700)); await frame.screenshot({ path: join(out, `${id}-${step}-${name}.png`) }); } catch (e) { errors.push(`${name} ${step}: ${e.message}`); } }
+  if (frame) { try { await frame.scrollIntoView(); await new Promise((r) => setTimeout(r, 2600)); await frame.screenshot({ path: join(out, `${id}-${step}-${name}.png`) }); } catch (e) { errors.push(`${name} ${step}: ${e.message}`); } }
   else errors.push(`${name} ${step}: no frame for ${id}`);
   await page.close();
 }
