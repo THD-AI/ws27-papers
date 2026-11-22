@@ -15,7 +15,7 @@ import { pal, text, floor } from './shared.js';
 export const steps = 1;
 export const playLine = 0.6;         // plays once its centre is at 60% of the window, where the eyes are
 export const durations = { medium: [2.4] };
-const SIZE = { wide: [520, 226], tall: [360, 210] };
+const SIZE = { wide: [520, 226], tall: [360, 196] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 // the loops image, 1536 × 512: the three loops' centres and their band
 const IMG = [1536, 512], CX = [256, 759, 1268], BAND = [84, 424];
@@ -35,7 +35,7 @@ function build(el, ctx) {
 
   // the drawing, scaled to the figure's width (on a phone a little wider
   // than the screen column, its empty ends cut off)
-  const over = tall ? 40 : 0;
+  const over = 0;                    // every loop and label inside the column at every width
   const k = (W + 2 * over) / IMG[0];
   const ox = -over, oy = tall ? 4 : 8;
   const X = (x) => ox + x * k, Y = (y) => oy + y * k;
@@ -45,7 +45,9 @@ function build(el, ctx) {
     const cp = h('clipPath', { id: `${uid}c${i}` }, defs);
     h('rect', { x: X(i * 512), y: Y(0), width: 512 * k, height: IMG[1] * k }, cp);
     const grp = g(svg, { 'clip-path': `url(#${uid}c${i})` });
-    h('image', { href: art('water-loops.png'), x: X(0), y: Y(0), width: IMG[0] * k, height: IMG[1] * k }, grp);
+    // the ghost is drawn very light; layered three times it keeps about the
+    // ink the data asks for (ink_left), so it reads as a trace, not as gone
+    for (let n = 0; n < (i === 2 ? 3 : 1); n++) h('image', { href: art('water-loops.png'), x: X(0), y: Y(0), width: IMG[0] * k, height: IMG[1] * k }, grp);
     return grp;
   });
   const cxs = CX.map(X);
