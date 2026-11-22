@@ -12,7 +12,7 @@ import {
 import { pal, text, floor } from './shared.js';
 
 export const steps = 1;
-export const playAt = 0.75;          // play where the reader is looking
+export const playLine = 0.6;         // plays once its centre is at 60% of the window, where the eyes are
 export const durations = { medium: [2.4] };
 const SIZE = { wide: [520, 176], tall: [360, 168] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
@@ -57,6 +57,13 @@ function build(el, ctx) {
     [{ amp: 2.4, dx: 1.5, dy: -1, w: 1.6, seed: 23 }, { amp: 3.2, dx: 4, dy: 1.5, w: 1.6, seed: 37 }],
     [{ amp: 4.5, dx: 3, dy: -2, w: 2.2, seed: 41 }, { amp: 6, dx: 9, dy: 2.5, w: 2.2, seed: 59 }],
   ];
+  // every panel starts with the crisp loop; panels 2 and 3 loosen in place
+  const crisp = [1, 2].map((k) => {
+    const grp = g(svg);
+    const c = STAGES[0][0];
+    path(grp, pen(loopPts(cxs[k], c.dx, c.dy), c.seed, c.amp), { stroke: C.ink, 'stroke-width': c.w, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+    return grp;
+  });
   const loops = STAGES.map((copies, k) => {
     const grp = g(svg);
     const op = (share[k] * CRISP) / copies.reduce((a, c) => a + c.w, 0);
@@ -88,19 +95,22 @@ function build(el, ctx) {
   // 2.4 s: the first loop and its words stand; the line draws to the first
   // mark; the loosened loop settles in, then its words; the line on; the
   // ghost; its words. One thing moves at a time.
-  const settle = (grp, a, b) => st.on((gg) => {
-    const p = clamp((gg - a) / (b - a));
-    grp.style.display = p <= 0.001 ? 'none' : '';
-    grp.style.opacity = p >= 0.999 ? '' : easeOut(p).toFixed(3);
-    grp.setAttribute('transform', p >= 0.999 ? '' : `translate(0 ${(3 * (1 - easeOut(p))).toFixed(2)})`);
-  });
+  // the crisp loop of a panel gives way to its loosened copies, in place
+  const loosen = (k, a, b) => {
+    st.fade(crisp[k - 1], -1, -0.5, [a, b]);
+    st.on((gg) => {
+      const p = clamp((gg - a) / (b - a)), grp = loops[k];
+      grp.style.display = p <= 0.001 ? 'none' : '';
+      grp.style.opacity = p >= 0.999 ? '' : easeOut(p).toFixed(3);
+    });
+  };
   st.fade(ticks[0], 0, 0.04);
   st.draw(line1, 0, 0.36).fade(ticks[1], 0.34, 0.4);
-  settle(loops[1], 0.33, 0.48);
-  st.fade(labels[1], 0.46, 0.56);
-  st.draw(line2, 0.5, 0.79).fade(ticks[2], 0.77, 0.83);
-  settle(loops[2], 0.75, 0.9);
-  st.fade(labels[2], 0.92, 1);
+  loosen(1, 0.33, 0.55);
+  st.fade(labels[1], 0.48, 0.58);
+  st.draw(line2, 0.55, 0.8).fade(ticks[2], 0.78, 0.84);
+  loosen(2, 0.76, 0.96);
+  st.fade(labels[2], 0.9, 1);
   void water; void loops[0]; void labels[0];
 
   return { set: (s, t) => st.set(s, t) };
