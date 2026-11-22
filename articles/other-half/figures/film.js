@@ -14,12 +14,12 @@ import { pal, text, floor } from './shared.js';
 
 export const steps = 3;
 export const durations = { large: [2.6, 1.6, 2.2] };
-const SIZE = { wide: [720, 400], tall: [360, 330] };
+const SIZE = { wide: [720, 470], tall: [360, 350] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 const IMG = [1536, 672];
 // the part of the drawing shown (its own pixels): x, y, w, h
-const CROP = { wide: [120, 300, 1000, 372], tall: [170, 330, 740, 342] };
+const CROP = { wide: [60, 250, 1180, 420], tall: [110, 290, 900, 400] };
 // the drawn frames, in order from the refrigerator to the servers (centres,
 // read off the drawing's enclosed cells)
 const FR = [[279, 534], [333, 530], [386, 511], [439, 487], [496, 555], [560, 541], [631, 522], [704, 520], [770, 520]];
@@ -31,7 +31,7 @@ function build(el, ctx) {
   const C = pal(ctx), d = ctx.data, run = d.runs[0];
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
   const [cx0, cy0, cw, ch] = CROP[tall ? 'tall' : 'wide'];
-  const k = W / cw, oy = tall ? H - ch * k - 26 : 0;
+  const k = W / cw, oy = H - ch * k - 26;     // the drawing at the bottom, room for the lifted frame above
   const X = (x) => (x - cx0) * k, Y = (y) => (y - cy0) * k + oy;
   const art = (n) => new URL(`../art/${n}`, import.meta.url).href;
   const svg = svgRoot(el, W, H,
@@ -111,12 +111,16 @@ function build(el, ctx) {
   // the lettering: one line a step, Libre Franklin
   const L = (str, x, y, anchor = 'start') => { const lg = g(svg); text(lg, x, y, str, { family: 'sans', size: tall ? 13 : 14, anchor }); return lg; };
   const ly = H - (tall ? 8 : 10);
+  // the two machines, named once, small
+  const nameO = { family: 'sans', size: tall ? 12.5 : 13, fill: C.muted };
+  text(g(svg), X(tall ? 130 : 80), Y(cy0) - 7, 'a quantum computer', nameO);
+  text(g(svg), X(tall ? 990 : 1220), Y(cy0) - 7, 'an ordinary computer', { ...nameO, anchor: 'end' });
   const l0 = L('about ninety thousand frames in one blink', tall ? 12 : 14, ly);
   const l1 = L('all that leaves the quantum computer', tall ? 12 : W - 14, ly, tall ? 'start' : 'end');
 
   // step 2: one frame lifted out and enlarged, its border in the drawing's hand
   const FROM = 2;
-  const big = tall ? { x: 14, y: 4, s: 132 } : { x: X(560), y: Y(cy0) + 10, s: 150 };
+  const big = tall ? { x: 14, y: 4, s: 132 } : { x: X(470), y: 6, s: 170 };
   const lift = g(svg);
   const bw = big.s, bh = big.s * (FH / FW) * 1.05;
   path(lift, pen([[big.x, big.y], [big.x + bw, big.y + 1], [big.x + bw - 1, big.y + bh], [big.x + 1, big.y + bh + 1], [big.x, big.y]], 7, 0.9), { stroke: '#2a2a2a', 'stroke-width': 1.5, fill: '#FBFBFC', 'stroke-linejoin': 'round' });
