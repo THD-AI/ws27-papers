@@ -24,6 +24,10 @@ export function text(parent, x, y, str, opts = {}) {
 // figure: orange for a check that watches for flips, green for one that
 // watches for phase errors (the film in section 4 sets them).
 export const KIND = { flip: '#D4471A', phase: '#2E9C91' };
+// The figures' own emphasis, one role only: the decoder's side of the machine (the network, the decoder's
+// answer, the line it adds) is copper, like the cable in the opening drawing; its light field is copper too.
+// The page's indigo stays the page's (links, the sources), never a figure's.
+export const DECODER = { accent: '#A8612B', field: '#F2E4D7' };
 export function pal(ctx) {
   return { ...colors({
     css(name) {
@@ -31,7 +35,7 @@ export function pal(ctx) {
       try { v = ctx && ctx.css ? ctx.css(name) : ''; } catch { v = ''; }
       return String(v || '').trim() || OWN[name] || '';
     },
-  }), flip: KIND.flip, phase: KIND.phase };
+  }), flip: KIND.flip, phase: KIND.phase, accent: DECODER.accent, field: DECODER.field };
 }
 
 // "1.48%" from 0.0148; digits after the point as asked.

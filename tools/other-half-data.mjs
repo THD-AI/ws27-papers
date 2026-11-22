@@ -250,12 +250,15 @@ for (const [k, classes] of prob) {
     // equally likely, and a strict comparison of floating-point sums would let rounding call one of them "the most
     // likely". Such a pattern is a tie: no decoder can do better than matching on it.
     correction: letters(a.b, b.b),
-    state: tie ? 'tie' : classes.get(matchCls) >= classes.get(ml) * (1 - 1e-9) ? (matchCls === ml ? 'same' : 'tie-best') : 'differs' });
+    // tie-best: matching's answer is as likely as the likeliest, and another answer is exactly as likely too
+    state: tie ? 'tie' : classes.get(matchCls) < classes.get(ml) * (1 - 1e-9) ? 'differs'
+      : [...classes].filter(([c, v]) => c !== matchCls && v >= classes.get(ml) * (1 - 1e-9)).length ? 'tie-best' : 'same' });
 }
 const differs = cells.filter(c => c.state === 'differs').sort((a, b) => (+b.total.toPrecision(10)) - (+a.total.toPrecision(10)) || (a.sx < b.sx ? 1 : a.sx > b.sx ? -1 : 0) || (a.sz < b.sz ? 1 : -1));
 const nTie = cells.filter(c => c.state === 'tie').length;
 const nTieBest = cells.filter(c => c.state === 'tie-best').length;
 if (differs.length !== 24) throw new Error('expected 24 patterns where matching is strictly less likely, got ' + differs.length);
+if (nTieBest !== 144) throw new Error('expected 144 patterns where two answers are exactly as likely, got ' + nTieBest);
 if (cells.length !== 256) throw new Error('expected 256 patterns, got ' + cells.length);
 // The proposal's Figure 1 shows the pattern z2 + x0 + x1. Several differing patterns are equally frequent
 // (mirror images of each other); which of them a sort lists first is decided by rounding, so it is named here

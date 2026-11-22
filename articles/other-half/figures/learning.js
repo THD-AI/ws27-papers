@@ -206,14 +206,13 @@ function build(el, ctx) {
   const fr = frame(svg, R), fr5 = frame(svg, R, X5, XT5);
   const tg = g(svg);
   text(g(tg, { 'data-role': 'title' }), tall ? R.x : 16, 16, tall ? 'a bigger grid needs far more examples' : HEAD, { family: 'sans', size: 13, weight: 600 });
-  if (tall) text(tg, 14, 33, tagStr, mono); else text(tg, W - 8, 16, tagStr, { ...mono, anchor: 'end' });
+  if (tall) text(tg, 14, 33, `${tagStr} · lower is better`, mono); else text(tg, W - 8, 16, tagStr, { ...mono, anchor: 'end' });
   if (!tall) {
     // rotated axis title, centred on the plate, its letters 10 units clear
     // of the drawing's left edge so that no frame crops it
     const rot = g(tg, { transform: `translate(21 ${R.y + R.h / 2}) rotate(-90)`, 'data-audit': 'skip' });
-    text(rot, 0, 0, 'share of runs in which the decoder was wrong', { family: 'sans', size: 12, fill: C.muted, anchor: 'middle' });
+    text(rot, 0, 0, 'share of runs the decoder got wrong · lower is better', { family: 'sans', size: 12, fill: C.muted, anchor: 'middle' });
   }
-  text(tg, R.x + 8, R.y + R.h - 10, 'lower is better', { italic: true, size: 13, fill: C.muted });
   st.fade(fr, 0, 0.12, [1.14, 1.2]).fade(fr5, 1.18, 1.26).fade(tg, 0, 0.12);
 
   const p3 = panel(svg, d3, R), pa = panel(svg, a5, R, { x0: X5 }), pb = panel(svg, b5, R, { x0: X5 });

@@ -20,7 +20,7 @@
  "decoders": [
   {
    "id": "network-2024",
-   "label": "neural network, 2024",
+   "label": "neural network, 2024, one copy",
    "quantity": "time needed per round",
    "value": 24,
    "kind": "quoted",
@@ -45,7 +45,7 @@
   },
   {
    "id": "network-2025-claim",
-   "label": "neural network, preprint of December 2025",
+   "label": "faster network, slightly less accurate: preprint of December 2025",
    "quantity": "time needed per round",
    "below": 1,
    "kind": "claimed in a preprint that has not been peer-reviewed: faster than 1 per round on commercial accelerators, surface code up to distance 11 (abstract)",

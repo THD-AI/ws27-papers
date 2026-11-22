@@ -151,7 +151,7 @@ function build(el, ctx) {
     st.fade(bn, 2.76, 2.9);
     let pr = null;
     if (ringAt) {
-      pr = penRing(root, ringAt.cx, ringAt.cy, ringAt.w / 2 + 6.5, 10.5, { seed: 6, stroke: C.accent, width: 1.5 });
+      pr = { paths: [] };
       pr.paths.forEach((pp, k) => st.draw(pp, 2.84 + k * 0.03, 2.95 + k * 0.02));
     }
     // the axis
@@ -188,7 +188,7 @@ function build(el, ctx) {
     const base = g(root), l3 = g(root), n3 = g(root), l4 = g(root);
     const small = { family: 'sans', size: 12.5, weight: 600 };
     // the headline and the trade in two counted results
-    text(base, B.x, 20, 'accurate, or in time', sans);
+    text(base, B.x, 20, 'accurate, but late', sans);
     const trade = text(base, B.x, 40,
       `network: [[${acc.network_afterwards.per_100000_rounds}]] errors per [[100,000]] rounds, answers late · live matching: [[${acc.live_matching.per_100000_rounds}]], answers in time`,
       { size: narrow ? 13 : 14, width: B.w, lh: 17 });
@@ -237,7 +237,7 @@ function build(el, ctx) {
       ? text(bg, xLast + 8, lab.bottom + 22, us(live.value), { family: 'mono', size: 15, weight: 500 })
       : text(bg, lab.right + 18, y3 + 35.5, us(live.value), { family: 'mono', size: 15, weight: 500 });
     const same = text(n3, narrow ? big.right + 22 : xLast, narrow ? big.y + big.h - 4 : big.bottom + 17, narrow ? 'for runs of up to\na million rounds' : 'the same for runs of up to a million rounds', { ...noteO, lh: 15, fill: C.muted });
-    const pr = penRing(root, big.cx, big.cy, big.w / 2 + 8, 12, { seed: 8, stroke: C.accent, width: 1.5 });
+    const pr = { paths: [] };
     // lane 4: the claim
     y = Math.max(big.bottom, same.bottom) + (narrow ? 20 : 28);
     // in reading order (step 4): the lane and its blocks, the note on

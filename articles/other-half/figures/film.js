@@ -153,7 +153,7 @@ function build(el, ctx) {
   // ---- notes on the frames ---------------------------------------------------------
   // the mark sits on its frame; on a phone the words go in one place, beside the arrow
   const xOf = (round, gg) => wx0 + (round - 1 - offAt(gg)) * L.fw + L.fw / 2;
-  const nY = L.notesY, nX = (x) => (tall ? 56 : x), nA = tall ? 'start' : 'middle', nW = tall ? 288 : 250;
+  const nY = L.notesY, nX = (x) => (tall ? 22 : x), nA = tall ? 'start' : 'middle', nW = tall ? 280 : 250;
   const notes = [];
   const note = (lines, a, b, out, mark, dy = 0) => {
     const grp = g(main);

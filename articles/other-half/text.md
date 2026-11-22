@@ -46,7 +46,7 @@ The way around this is to store the information in the way several qubits relate
 In the scheme we studied, the surface code, the qubits sit on a square grid, and the size of the grid is called its **distance**. A bigger grid should protect better, but only if each qubit is good enough. Below a certain error rate, called the **threshold**, it does. Above it, a bigger grid is worse, since every added qubit is one more thing that smears. For years the hardware sat above it. {{GQA-2023 GQA-2024}}
 
 :::figure threshold column
-How many times fewer logical errors per round a grid of distance 5 makes than one of distance 3, at eight noise levels, both read by plain matching. The bigger grid wins at every level we ran, and by less as the noise rises: from about 9 times at 0.1% to 1.14 times at 1%. The threshold is where the line would reach no gain; in this simulation it lies above 1%. Our own runs, with the simulation of section 9.
+How many times fewer logical errors per round a grid of distance 5 makes than one of distance 3, at eight noise levels, both read by plain matching. The bigger grid wins at every level we ran, and by less as the noise rises: from about 9 times at 0.1% to 1.14 times at 1%. The threshold is where the line would reach no gain; at 1%, the highest level we ran, the bigger grid still wins, so for these two grids it lies higher. Our own runs, with the simulation of section 9.
 :::
 
 ## 3. Asking without looking
@@ -116,7 +116,7 @@ A grid of distance 5, showing flips and the checks that notice them. Three real 
 
 ## 6. Where the standard method goes wrong
 
-We went through every possible error on the smallest grid and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 possible patterns on the smallest grid, 24 get an answer from the standard decoder that is less likely than another. {{OWN-ENUM}} They are rare: with a 5% chance of an error per storing qubit, together they turn up in fewer than 1 case in 100, while in 63 cases in 100 no check fires at all. On 79 more patterns, two answers are exactly as likely, and no decoder can do better than matching there. {{OWN-ENUM}}
+We went through every possible error on the smallest grid and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 possible patterns on the smallest grid, 24 get an answer from the standard decoder that is less likely than another. {{OWN-ENUM}} They are rare: with a 5% chance of an error per storing qubit, together they turn up in fewer than 1 case in 100, while in 63 cases in 100 no check fires at all. On 144 more patterns, two answers are exactly as likely, and no decoder can do better than matching there. {{OWN-ENUM}}
 
 :::scene lattice
 
@@ -214,6 +214,10 @@ Each training was repeated from different random starting points, or seeds: eigh
 @step 2
 **Distance 5, about 250 million examples.** Trained longer, it passes plain matching, not correlated matching. The curves were still falling at 66 million, so we trained it again from scratch on nearly four times as many. The five long runs failed in 1.29% to 1.36% of runs, 1.33% together, or about one run in 75, against 1.41% for plain matching and 1.09% for correlated matching. That is 4% to 8% fewer failures than one, and a fifth to a quarter more than the other. {{OWN-D5-250M}}
 
+:::
+
+:::figure examples column
+Examples our network had seen when its error first went below plain matching's, one dot per seed (the first check below; the curves are checked at fixed points). Distance 3: 6.6 to 9.3 million. Distance 5: 210 to 250 million; after 66 million, no seed had got there yet. A noise level of 0.5%; our own runs.
 :::
 
 At distance 3 the best answer for every pattern can simply be looked up. A table built from 200 million runs per noise level, a hundred times the test set, holds the more frequent answer for each pattern of fired checks. It failed in 1.47% of runs. {{OWN-D3}} Whether its runs overlap the test runs, and how it answers a pattern it never saw, our result files don't record. That table is our estimate of the best possible; since we can't say whether it saw the test runs, it may flatter itself slightly. The network's 1.48% is barely above it.

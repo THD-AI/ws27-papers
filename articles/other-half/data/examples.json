@@ -1,0 +1,42 @@
+{
+ "generated": "2026-11-22",
+ "generated_by": "tools/examples-data.mjs",
+ "inputs": [
+  "data/learning.json"
+ ],
+ "source": "OWN-D3 OWN-D5-250M",
+ "what": "Examples the network had seen when its curve first went below plain matching, one value per seed, at a noise level of 0.5%. The curves are probed at fixed points, so these are the first probes below, not exact crossings.",
+ "noise_level": 0.005,
+ "rows": [
+  {
+   "distance": 3,
+   "seeds": 8,
+   "examples": [
+    6553600,
+    9269248,
+    6553600,
+    9269248,
+    6553600,
+    9269248,
+    9269248,
+    6553600
+   ],
+   "min": 6553600,
+   "max": 9269248
+  },
+  {
+   "distance": 5,
+   "seeds": 5,
+   "examples": [
+    209715200,
+    249856000,
+    249856000,
+    209715200,
+    249856000
+   ],
+   "min": 209715200,
+   "max": 249856000,
+   "not_by": 65536000
+  }
+ ]
+}

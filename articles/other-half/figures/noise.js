@@ -23,6 +23,7 @@ function build(el, ctx) {
   const rel = rows.map((r) => ({
     p: r.p, net: r.network.pooled.rate / r.plain.pooled.rate, lo: r.network.seed_range.min / r.plain.pooled.rate,
     hi: r.network.seed_range.max / r.plain.pooled.rate, cor: r.correlated.pooled.rate / r.plain.pooled.rate,
+    cLo: r.correlated.pooled.ci95[0] / r.plain.pooled.rate, cHi: r.correlated.pooled.ci95[1] / r.plain.pooled.rate,
   }));
   const svg = svgRoot(el, W, H,
     `Our own simulated runs at distance 5, network trained on ${Math.round(d.training_shots / 1e6)} million examples, ${nSeeds} seeds. `
@@ -57,31 +58,33 @@ function build(el, ctx) {
 
   // plain matching: the level line
   const plain = g(svg);
-  line(plain, P.l, ly(1), P.r, ly(1), { stroke: C.ink, 'stroke-width': 1.4 });
-  if (!tall) text(plain, P.r + 6, ly(1) + 4, 'plain matching', { size: 13 });
+  line(plain, P.l, ly(1), P.r, ly(1), { stroke: C.muted, 'stroke-width': 1.6 });
+  if (!tall) text(plain, P.r + 6, ly(1) + 4, 'plain matching', { size: 13, fill: C.muted });
   // lower is better, and the side where a decoder beats plain matching
   text(plain, P.l + 6, ly(yMin) - 8, 'lower is better', { italic: true, size: 13, fill: C.muted });
 
   // the network: seed band, pooled line, dots
   const net = g(svg);
   const band = rel.map((r) => [lx(r.p), ly(r.hi)]).concat(rel.slice().reverse().map((r) => [lx(r.p), ly(r.lo)]));
-  path(net, `M${band.map((q) => q.map((v) => v.toFixed(1)).join(' ')).join('L')}Z`, { fill: C.flip, 'fill-opacity': 0.16, stroke: 'none' });
-  path(net, `M${rel.map((r) => `${lx(r.p).toFixed(1)} ${ly(r.net).toFixed(1)}`).join('L')}`, { stroke: C.flip, 'stroke-width': 2 });
-  for (const r of rel) circle(net, lx(r.p), ly(r.net), 3.4, { fill: C.flip });
+  path(net, `M${band.map((q) => q.map((v) => v.toFixed(1)).join(' ')).join('L')}Z`, { fill: C.accent, 'fill-opacity': 0.16, stroke: 'none' });
+  path(net, `M${rel.map((r) => `${lx(r.p).toFixed(1)} ${ly(r.net).toFixed(1)}`).join('L')}`, { stroke: C.accent, 'stroke-width': 2 });
+  for (const r of rel) circle(net, lx(r.p), ly(r.net), 3.4, { fill: C.accent });
   const lastN = rel.at(-1);
-  if (!tall) text(net, P.r + 6, ly(lastN.net) + 4, 'network (band: its seeds)', { size: 13, fill: C.flip });
+  if (!tall) text(net, P.r + 6, ly(lastN.net) + 4, 'network (band: its seeds)', { size: 13, fill: C.accent });
 
   // correlated matching
   const cor = g(svg);
-  path(cor, `M${rel.map((r) => `${lx(r.p).toFixed(1)} ${ly(r.cor).toFixed(1)}`).join('L')}`, { stroke: C.phase, 'stroke-width': 2, 'stroke-dasharray': '6 4' });
-  for (const r of rel) circle(cor, lx(r.p), ly(r.cor), 3, { fill: C.paper, stroke: C.phase, 'stroke-width': 1.6 });
-  if (!tall) text(cor, P.r + 6, ly(rel.at(-1).cor) + 4, 'correlated matching', { size: 13, fill: C.phase });
+  path(cor, `M${rel.map((r) => `${lx(r.p).toFixed(1)} ${ly(r.cor).toFixed(1)}`).join('L')}`, { stroke: C.ink, 'stroke-width': 1.6, 'stroke-dasharray': '6 4' });
+  // its 95% interval, so that "level" and "behind" can be read off the chart
+  for (const r of rel) line(cor, lx(r.p), ly(r.cHi), lx(r.p), ly(r.cLo), { stroke: C.ink, 'stroke-width': 1.2 });
+  for (const r of rel) circle(cor, lx(r.p), ly(r.cor), 3, { fill: C.paper, stroke: C.ink, 'stroke-width': 1.6 });
+  if (!tall) text(cor, P.r + 6, ly(rel.at(-1).cor) + 4, 'correlated matching', { size: 13, fill: C.ink });
   if (tall) {
     // on a narrow screen the names stand in a key under the title
     const ky = 92, key = g(svg);
-    line(key, 16, ky - 4, 34, ky - 4, { stroke: C.ink, 'stroke-width': 1.4 }); text(key, 40, ky, 'plain', { size: 13 });
-    line(key, 96, ky - 4, 114, ky - 4, { stroke: C.flip, 'stroke-width': 2 }); text(key, 120, ky, 'network', { size: 13, fill: C.flip });
-    line(key, 196, ky - 4, 214, ky - 4, { stroke: C.phase, 'stroke-width': 2, 'stroke-dasharray': '6 4' }); text(key, 220, ky, 'correlated', { size: 13, fill: C.phase });
+    line(key, 16, ky - 4, 34, ky - 4, { stroke: C.muted, 'stroke-width': 1.6 }); text(key, 40, ky, 'plain', { size: 13, fill: C.muted });
+    line(key, 96, ky - 4, 114, ky - 4, { stroke: C.accent, 'stroke-width': 2 }); text(key, 120, ky, 'network', { size: 13, fill: C.accent });
+    line(key, 196, ky - 4, 214, ky - 4, { stroke: C.ink, 'stroke-width': 1.6, 'stroke-dasharray': '6 4' }); text(key, 220, ky, 'correlated', { size: 13, fill: C.ink });
   }
 
   st.fade(axes, -1, 0).fade(plain, 0.05, 0.25).fade(net, 0.3, 0.6).fade(cor, 0.55, 0.85);

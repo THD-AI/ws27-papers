@@ -43,17 +43,15 @@ function pen(ctrl, size, { thin = 0.55, t0 = 3, t1 = 6 } = {}) {
   for (let i = 0; i < s.length; i++) { const [x0, y0] = s[i], [x1, y1] = s[(i + 1) % s.length]; d += `${f(x0)} ${f(y0)} ${f((x0 + x1) / 2)} ${f((y0 + y1) / 2)} `; }
   return d.trim() + 'Z';
 }
-// the pattern, around (0, 0): three rings, each drawn as one stroke that starts and
-// ends a little apart (a hand closing a circle), and a mark in the middle
-const ring = (r, start, gap, ry = 0.42) => {
+// the pattern, around (0, 0): what a finger would draw on the surface, two wave lines, each one stroke
+const wave = (amp, len, phase, y0, n = 2.5) => {
   const pts = [];
-  for (let a = start; a <= start + Math.PI * 2 - gap; a += 0.32) pts.push([Math.cos(a) * r, Math.sin(a) * r * ry]);
+  for (let x = -len / 2; x <= len / 2; x += 6) pts.push([x, y0 + amp * Math.sin((x / len) * Math.PI * 2 * n + phase)]);
   return pts;
 };
 const pattern = [
-  pen(ring(12, 0.6, 0.5), 2.2, { thin: 0.5, t0: 1.5, t1: 3 }),
-  pen(ring(26, 2.1, 0.35), 2.4, { thin: 0.6, t0: 2, t1: 4 }),
-  pen(ring(41, 4.0, 0.42), 2.2, { thin: 0.65, t0: 3, t1: 5 }),
+  pen(wave(9, 92, 0.3, -7), 2.6, { thin: 0.55, t0: 2, t1: 5 }),
+  pen(wave(6, 70, 2.2, 13, 2), 2.2, { thin: 0.65, t0: 3, t1: 4 }),
 ];
 // the water's surface in each panel: two long low strokes, different each time
 const surface = (w) => [

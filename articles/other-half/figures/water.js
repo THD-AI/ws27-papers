@@ -29,7 +29,7 @@ function build(el, ctx) {
     text(svg, 16, 18, 'a qubit doesn\'t hold still:', sans);
     text(svg, 16, 35, 'a third is left after 85 millionths of a second', sans);
   } else text(svg, 16, 18, 'a qubit doesn\'t hold still: a third is left after 85 millionths of a second', sans);
-  text(svg, 16, tall ? 56 : 39, 'Google\'s 2024 chip: median qubit lifetime 85 µs · what is left fades as e^(−t / 85 µs)', { ...mono, width: W - 30, lh: 15 });
+  text(svg, 16, tall ? 56 : 39, 'Google Quantum AI, 2024, Section II: median qubit lifetime 85 µs · what is left: e^(−t / 85 µs)', { ...mono, width: W - 30, lh: 15 });
 
   const defs = h('defs', null, svg);
   const pw = tall ? 160 : 118, ph = tall ? 118 : 136;
@@ -37,15 +37,23 @@ function build(el, ctx) {
   M.forEach((m, k) => {
     const [x, y] = pos(k), cx = x + pw / 2, cy = y + ph / 2 - 4;
     const grp = g(svg);
-    rect(grp, x, y, pw, ph, { rx: 3, fill: WATER });
+    // the water: a soft vertical fall of tone, and the light on its surface as faint drawn lines
+    const gid = `water-g-${tall ? 't' : 'w'}-${k}-${Math.round(Math.random() * 1e6)}`;
+    const lg = h('linearGradient', { id: gid, x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
+    h('stop', { offset: '0', 'stop-color': '#EEF2F1' }, lg); h('stop', { offset: '1', 'stop-color': '#D5DFDC' }, lg);
+    rect(grp, x, y, pw, ph, { rx: 3, fill: `url(#${gid})` });
     // the water's surface, drawn
     const s = g(grp, { transform: `translate(${cx} ${y + ph - 18}) scale(${pw / 130} 1)` });
-    for (const dd of d.pen.surface) path(s, dd, { fill: C.ink, 'fill-opacity': 0.28, stroke: 'none', 'data-audit': 'skip' });
+    for (const dd of d.pen.surface) path(s, dd, { fill: C.ink, 'fill-opacity': 0.22, stroke: 'none', 'data-audit': 'skip' });
+    const s2 = g(grp, { transform: `translate(${cx} ${y + 20}) scale(${pw / 150} 0.8)` });
+    for (const dd of d.pen.surface) path(s2, dd, { fill: C.paper, 'fill-opacity': 0.9, stroke: 'none', 'data-audit': 'skip' });
     // the pattern: as much as is left, blurred by as much as is gone
     const id = `water-blur-${tall ? 't' : 'w'}-${k}-${Math.round(Math.random() * 1e6)}`;
     const flt = h('filter', { id, x: '-50%', y: '-50%', width: '200%', height: '200%' }, defs);
-    h('feGaussianBlur', { stdDeviation: ((1 - m.left) * 3.2).toFixed(2) }, flt);
-    const pat = g(grp, { transform: `translate(${cx} ${cy}) scale(${tall ? 1.25 : 1.15})`, filter: m.left < 0.999 ? `url(#${id})` : null, opacity: m.left.toFixed(3) });
+    h('feGaussianBlur', { stdDeviation: ((1 - m.left) * 1.6).toFixed(2) }, flt);
+    // the pattern spreads as it fades, as rings on water do; what is left of it is its opacity
+    const spread = (tall ? 1.15 : 1.05) * (1 + 0.45 * (1 - m.left));
+    const pat = g(grp, { transform: `translate(${cx} ${cy}) scale(${spread.toFixed(3)})`, filter: m.left < 0.999 ? `url(#${id})` : null, opacity: m.left.toFixed(3) });
     for (const dd of d.pen.pattern) path(pat, dd, { fill: C.ink, stroke: 'none', 'data-audit': 'skip' });
     text(grp, x, y + ph + 18, `${m.t} µs`, { family: 'mono', size: 13 });
     text(grp, x + pw, y + ph + 18, `${Math.round(m.left * 100)}% left`, { ...mono, anchor: 'end' });

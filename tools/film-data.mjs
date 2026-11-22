@@ -134,8 +134,9 @@ function strokes(L, tall) {
     // the decoder below the strip: one stroke around it; an arrow comes down the left side and turns into it
     S.box = [pen([[bx0 + 12, by0 - 0.4], [bx0 + 120, by0 - 1.4], [bx1 - 6, by0 + 0.4], [bx1 + 1, by0 + 7], [bx1 + 1.6, m], [bx1 - 1, by1 - 5],
       [bx1 - 10, by1 + 0.8], [bx0 + 110, by1 + 1.2], [bx0 + 6, by1 - 0.3], [bx0 - 0.6, by1 - 7], [bx0 + 0.8, m], [bx0 - 0.2, by0 + 6], [bx0 + 9, by0 - 0.8], [bx0 + 26, by0 - 0.2]], 3, { thin: 0.5, t0: 2.5, t1: 5, n: 10 })];
-    S.arrow = [pen([[34, yB + 6], [32.5, (yB + by0) / 2 + 14], [35, m - 1], [46, m + 0.6], [55, m]], 2.6, { thin: 0.65, t0: 3, t1: 3 }),
-      pen([[45, m - 7.5], [55.5, m - 0.6]], 2.2, { thin: 0.3, t0: 1, t1: 2.5 }), pen([[45.5, m + 7], [55, m + 0.8]], 2.1, { thin: 0.3, t0: 1, t1: 2.5 })];
+    // the arrow leaves the strip at its right end, where the newest frame is, and turns into the box
+    S.arrow = [pen([[x1 - 4, yB + 6], [x1 - 2.5, (yB + by0) / 2 + 14], [x1 - 5, m - 1], [x1 - 16, m + 0.6], [bx1 + 5, m]], 2.6, { thin: 0.65, t0: 3, t1: 3 }),
+      pen([[bx1 + 15, m - 7.5], [bx1 + 4.5, m - 0.6]], 2.2, { thin: 0.3, t0: 1, t1: 2.5 }), pen([[bx1 + 14.5, m + 7], [bx1 + 5, m + 0.8]], 2.1, { thin: 0.3, t0: 1, t1: 2.5 })];
   } else {
     // the decoder at the end of the strip: one stroke from above the strip, round the box, back to below the strip
     S.box = [pen([[bx0 + 1, yT - 6], [bx0 - 0.5, by0 + 8], [bx0 + 9, by0 - 0.6], [bx0 + 60, by0 - 1.6], [bx1 - 6, by0 + 0.4], [bx1 + 1, by0 + 8], [bx1 + 2, m],
