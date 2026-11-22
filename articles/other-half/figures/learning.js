@@ -58,7 +58,7 @@ function build(el, ctx) {
   };
   const c5 = Math.min(...[...a5.curves, ...b5.curves].map(crossing)), e5 = 10 ** Math.floor(Math.log10(c5));
   const X5 = Math.floor(c5 / e5) * e5, XT5 = [5e7, 1e8, 2.5e8].filter((v) => v > X5);
-  const HEAD = 'how often the decoder was wrong';
+  const HEAD = 'on a bigger grid, the network needs far more examples';
   const FOOT = 'ends and levels: 2 million test runs, intervals thinner than the lines · curves: 1 million fixed runs';
   const scales = (R, x0 = X0) => {
     const x = (v) => R.x + R.w * (Math.log10(v / x0) / Math.log10(X1 / x0));
@@ -205,7 +205,7 @@ function build(el, ctx) {
   const R = tall ? { x: 42, y: 76, w: 304, h: 250 } : { x: 62, y: 60, w: 496, h: 296 };
   const fr = frame(svg, R), fr5 = frame(svg, R, X5, XT5);
   const tg = g(svg);
-  text(g(tg, { 'data-role': 'title' }), tall ? R.x : 16, 16, tall ? 'how often the decoder was wrong' : HEAD, { family: 'sans', size: 13, weight: 600 });
+  text(g(tg, { 'data-role': 'title' }), tall ? R.x : 16, 16, tall ? 'a bigger grid needs far more examples' : HEAD, { family: 'sans', size: 13, weight: 600 });
   if (tall) text(tg, 14, 33, tagStr, mono); else text(tg, W - 8, 16, tagStr, { ...mono, anchor: 'end' });
   if (!tall) {
     // rotated axis title, centred on the plate, its letters 10 units clear
@@ -213,6 +213,7 @@ function build(el, ctx) {
     const rot = g(tg, { transform: `translate(21 ${R.y + R.h / 2}) rotate(-90)`, 'data-audit': 'skip' });
     text(rot, 0, 0, 'share of runs in which the decoder was wrong', { family: 'sans', size: 12, fill: C.muted, anchor: 'middle' });
   }
+  text(tg, R.x + 8, R.y + R.h - 10, 'lower is better', { italic: true, size: 13, fill: C.muted });
   st.fade(fr, 0, 0.12, [1.14, 1.2]).fade(fr5, 1.18, 1.26).fade(tg, 0, 0.12);
 
   const p3 = panel(svg, d3, R), pa = panel(svg, a5, R, { x0: X5 }), pb = panel(svg, b5, R, { x0: X5 });
@@ -239,20 +240,7 @@ function build(el, ctx) {
   const p3rVE = [...p3.root.querySelectorAll('path, circle, line')];
   let p3rVe = false;
   const p3rKeep = (on) => { if (on === p3rVe) return; p3rVe = on; p3rVE.forEach((n) => (on ? n.setAttribute('vector-effect', 'non-scaling-stroke') : n.removeAttribute('vector-effect'))); };
-  const I = tall ? { x: R.x + 12, y: R.y + R.h - 84, w: 104, h: 50 } : { x: R.x + 22, y: R.y + R.h - 98, w: 150, h: 62 };
-  const ig = g(svg);
-  rect(ig, I.x, I.y, I.w, I.h, { fill: 'none', stroke: C.hairline, 'stroke-width': 1 });
-  text(ig, I.x, I.y - 6, tall ? `distance ${d3.distance}: ends below both` : `distance ${d3.distance}: the network ends below both`, mono);
-  st.fade(ig, 1.3, 1.45);
-  st.on((gg) => {
-    const m = ease(span(gg, 1.02, 1.4));
-    p3rKeep(m > 0);
-    if (m <= 0) { p3.root.removeAttribute('transform'); p3.root.style.opacity = ''; return; }
-    const kx = lerp(1, I.w / R.w, m), ky = lerp(1, I.h / R.h, m);
-    const tx = lerp(R.x, I.x, m), ty = lerp(R.y, I.y, m);
-    p3.root.setAttribute('transform', `translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${kx.toFixed(4)} ${ky.toFixed(4)}) translate(${-R.x} ${-R.y})`);
-    p3.root.style.opacity = lerp(1, 0.5, m).toFixed(3);
-  });
+  st.on((gg) => { p3rKeep(false); const m = ease(span(gg, 1.02, 1.3)); const v = m <= 0 ? '' : (1 - m).toFixed(3); if (p3.root.style.opacity !== v) p3.root.style.opacity = v; p3.root.style.display = m >= 0.999 ? 'none' : ''; });
   drawPanel(pa, 1.3, 1.9);
   st.fade(ta, 1.2, 1.34, [2.04, 2.14]).fade(la, 1.42, 1.6, [2.04, 2.14]);
   const na = g(svg);
@@ -269,8 +257,6 @@ function build(el, ctx) {
   st.fade(tb, 2.12, 2.28).fade(lb, 2.26, 2.42);
   const ys = b5.final_network.per_seed.map((s) => pb.y(s.rate));
   const ry = (Math.min(...ys) + Math.max(...ys)) / 2;
-  const pr = penRing(svg, pb.xe, ry, 8, (Math.max(...ys) - Math.min(...ys)) / 2 + 8, { seed: 4, stroke: C.accent, width: 1.5 });
-  pr.paths.forEach((pp, k) => st.draw(pp, 2.84 + k * 0.03, 2.97 + k * 0.02));
   const nb = g(svg);
   if (tall) {
     text(nb, R.x + R.w * 0.44, R.y + R.h - 62, 'below plain matching, above correlated matching', { ...noteO, size: 13, width: 168, lh: 15 });
