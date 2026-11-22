@@ -21,9 +21,10 @@ const REVEAL = [0, 1.25, 2.25, 3.25, 4.2, 4.6];
 const FILM = { strip: '#24211E', frame: '#2F2B27', edge: '#6A6258', dot: '#8A8178' };
 
 function build(el, ctx) {
-  const tall = ctx.layout === 'tall';
+  const print = !!ctx.print, tall = !print && ctx.layout === 'tall';
   floor(tall ? 13.8 : 12.45);
-  const C = pal(ctx), d = ctx.data, L = d.layout[tall ? 'tall' : 'wide'], P = d.pen[tall ? 'tall' : 'wide'];
+  const lay = print ? 'print' : tall ? 'tall' : 'wide';
+  const C = pal(ctx), d = ctx.data, L = d.layout[lay], P = d.pen[lay];
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
   const lattice = d.lattice_checks;
   const bet = d.stories.one_flip_against_all_pairs, nPairs = d.stories.all_pairs.length;
@@ -49,6 +50,7 @@ function build(el, ctx) {
   } else text(svg, 16, 18, 'the decoder never sees an error, only the lights it leaves', { family: 'sans', size: 13, weight: 600 });
   const chipTop = L.chipY - (tall ? 52 : 58);
   const labA = tall ? [16, chipTop - 9] : [16, L.chipY - 8], labB = tall ? [16, L.stripY - half - 8] : [16, L.stripY - 8];
+  if (print) text(main, 16, L.chipY - 66, 'round', { ...mono });
   text(main, labA[0], labA[1], 'on the chip', { size: tall ? 14 : 15 });
   text(main, labA[0] + (tall ? 92 : 0), labA[1] + (tall ? 0 : 19), 'nobody reads it directly', { size: 13, fill: C.muted, width: tall ? 240 : 112 });
   text(main, labB[0], labB[1], tall ? 'what comes out, a frame a round' : 'what comes out', { size: tall ? 14 : 15 });
@@ -103,7 +105,7 @@ function build(el, ctx) {
     frame(colA, 0, L.chipY, s, { errors: r.errors_present, suspect: r.misreport });
     if (r.new_error) circle(colA, (r.new_error.qubit % 3 - 1) * s, L.chipY + (Math.floor(r.new_error.qubit / 3) - 1) * s, s * 0.52, { fill: 'none', stroke: C.ink, 'stroke-width': 1, 'stroke-dasharray': '2 2.5' });
     if (r.misreport) text(colA, 0, L.chipY + s * 1.5 + (tall ? 9 : 22), 'a wrong answer', { ...noteO, size: tall ? 12 : 13, anchor: 'middle' });
-    text(colA, 0, tall ? chipTop + 16 : L.chipY - 66, `round ${r.round}`, { ...mono, anchor: 'middle' });
+    text(colA, 0, tall ? chipTop + 16 : L.chipY - 66, print ? `${r.round}` : `round ${r.round}`, { ...mono, anchor: 'middle' });
     rect(colB, -L.fw / 2 + 6, L.stripY - half + (tall ? 19 : 22), L.fw - 12, L.stripH - (tall ? 38 : 44), { rx: 3, fill: FILM.frame });
     frame(colB, 0, L.stripY, s, { lit: r.lit, dark: true });
     if (r.new_error && !tall) line(colA, 0, L.chipY + s * 1.9, 0, L.stripY - half - 2, { stroke: C.muted, 'stroke-width': 1, 'stroke-dasharray': '1.5 4', 'data-audit': 'skip' });
@@ -139,30 +141,34 @@ function build(el, ctx) {
   if (tall) {
     text(boxA, bcx, bcy + 5, 'decoder', { size: 16, anchor: 'middle' });
     text(boxB, bcx, bcy + 5, 'decoder: it gets only the film', { size: 15, anchor: 'middle' });
+  } else if (print) {
+    text(box, bcx, bcy + 5, 'decoder', { size: 14, anchor: 'middle' });
   } else {
     text(box, bcx, bcy - 26, 'decoder', { size: 17, anchor: 'middle' });
     text(boxA, bcx, bcy - 4, 'on an ordinary computer', { ...noteO, size: 12.5, fill: C.muted, anchor: 'middle', width: 104 });
     text(boxB, bcx, bcy - 4, 'it gets only the film', { ...noteO, size: 12.5, anchor: 'middle', width: 106 });
   }
-  st.fade(boxA, -1, 0, [5, 5.2]).fade(boxB, 5.1, 5.35);
+  st.fade(boxA, -1, 0, [5, 5.25]).fade(boxB, 5.3, 5.8);
 
   // ---- notes on the frames ---------------------------------------------------------
   // the mark sits on its frame; on a phone the words go in one place, beside the arrow
   const xOf = (round, gg) => wx0 + (round - 1 - offAt(gg)) * L.fw + L.fw / 2;
   const nY = L.notesY, nX = (x) => (tall ? 56 : x), nA = tall ? 'start' : 'middle', nW = tall ? 288 : 250;
-  const note = (lines, a, b, out, mark) => {
+  const notes = [];
+  const note = (lines, a, b, out, mark, dy = 0) => {
     const grp = g(main);
     if (mark) mark(grp);
-    lines.forEach((ln, k) => text(grp, nX(ln.x), nY + k * 18, ln.t, { ...noteO, anchor: nA, width: nW, fill: ln.muted ? C.muted : undefined }));
-    st.fade(grp, a, b, out);
+    lines.forEach((ln, k) => text(grp, nX(ln.x), nY + dy + k * 18, ln.t, { ...noteO, anchor: nA, width: print ? 200 : nW, size: print ? 12.5 : noteO.size, fill: ln.muted ? C.muted : undefined }));
+    if (!print) st.fade(grp, a, b, out);
+    notes.push(grp);
   };
-  note([{ x: xOf(2, 1.4), t: 'a flip: the two checks beside it light' }], 1.45, 1.7, [2.25, 2.4]);
-  note([{ x: xOf(3, 2.5), t: 'no change, no light:' }, { x: xOf(3, 2.5), t: 'the flip is still there', muted: true }], 2.35, 2.6, [3.25, 3.4],
+  if (!print) note([{ x: xOf(2, 1.4), t: 'a flip: the two checks beside it light' }], 1.45, 1.7, [2.25, 2.4]);
+  note([{ x: xOf(3, 2.5), t: 'no change, no light:' }, { x: xOf(3, 2.5), t: 'the flip is still there', muted: true }], 2.3, 2.85, [3.25, 3.4],
     (grp) => pen(g(grp, { transform: `translate(${xOf(3, 2.5)} ${L.stripY + half + (tall ? 15 : 18)})` }), P.tick));
-  note([{ x: xOf(4, 3.4), t: 'a phase error: the other kind of check' }], 3.45, 3.7, [4.2, 4.3]);
+  if (!print) note([{ x: xOf(4, 3.4), t: 'a phase error: the other kind of check' }], 3.45, 3.7, [4.2, 4.3]);
   note(tall ? [{ x: 0, t: 'one wrong answer lights its check twice: going wrong, and coming right again' }]
-    : [{ x: (xOf(5, 4.7) + xOf(6, 4.7)) / 2, t: 'one wrong answer, two lights:' }, { x: (xOf(5, 4.7) + xOf(6, 4.7)) / 2, t: 'going wrong, and coming right again' }],
-  4.7, 4.95, [5, 5.15], (grp) => pen(g(grp, { transform: `translate(${(xOf(5, 4.7) + xOf(6, 4.7)) / 2} ${L.stripY + half + (tall ? 10 : 12)})` }), P.bracket));
+    : [{ x: print ? 372 : (xOf(5, 4.7) + xOf(6, 4.7)) / 2, t: 'one wrong answer, two lights:' }, { x: print ? 372 : (xOf(5, 4.7) + xOf(6, 4.7)) / 2, t: 'going wrong, and coming right again' }],
+  4.7, 4.95, [5, 5.15], (grp) => pen(g(grp, { transform: `translate(${(xOf(5, 4.7) + xOf(6, 4.7)) / 2} ${L.stripY + half + (tall ? 10 : 12)})` }), P.bracket), print ? 40 : 0);
 
   // ---- key -------------------------------------------------------------------------
   const key = g(main), ky = L.keyY;
@@ -176,19 +182,21 @@ function build(el, ctx) {
 
   // ---- step 5: the chip is hidden, only the film is left ---------------------------
   st.on((gg) => {
-    const k = Math.min(1, Math.max(0, (gg - 5) / 0.35));
+    const k = Math.min(1, Math.max(0, (gg - 5.02) / 0.6));
     for (const [e, o] of [[chipRow, 1 - 0.86 * k], [chipLine, 1 - 0.5 * k]]) { const v = o >= 0.999 ? '' : o.toFixed(3); if (e.style.opacity !== v) e.style.opacity = v; }
   });
   const hidden = g(main);
   const hw = tall ? 196 : 220;
   rect(hidden, (wx0 + wx1) / 2 - hw / 2, L.chipY - 15, hw, 30, { rx: 3, fill: C.paper });
   text(hidden, (wx0 + wx1) / 2, L.chipY + 6, 'hidden from the decoder', { size: tall ? 16 : 18, anchor: 'middle' });
-  st.fade(hidden, 5.15, 5.4);
+  st.fade(hidden, 5.35, 5.85);
 
   // ---- steps 6 and 7: one frame, its stories, and the bet ---------------------------
   st.on((gg) => { const o = gg >= 6 ? 1 - Math.min(1, (gg - 6) / 0.3) : 1; const v = o >= 0.999 ? '' : o.toFixed(3); if (main.style.opacity !== v) main.style.opacity = v; });
   const six = g(svg), seven = g(svg);
-  const S6 = tall
+  const S6 = print
+    ? { seen: [632, 116], sz: 14, both: [636, 202], stories: [[590, 252], [682, 252]], ssz: 13, labY: 290, w: 160 }
+    : tall
     ? { seen: [180, 92], sz: 22, both: [180, 238], stories: [[95, 304], [265, 304]], ssz: 19, labY: 358, bet: [180, 392], w: 330 }
     : { seen: [150, 215], sz: 30, both: [515, 128], stories: [[440, 230], [590, 230]], ssz: 24, labY: 312, bet: [360, 372], w: 600 };
   const fr = S6.sz * 2.4;
@@ -201,22 +209,32 @@ function build(el, ctx) {
   [d.stories.one, d.stories.two].forEach((qs, k) => {
     const [x, y] = S6.stories[k];
     frame(six, x, y, S6.ssz, { lit: d.stories.lights, errors: qs.map((q) => ({ qubit: q, kind: 'X' })) });
-    text(six, x, S6.labY, labs[k], { size: 14, anchor: 'middle', width: 150 });
+    text(six, x, S6.labY, labs[k], { size: print ? 12.5 : 14, anchor: 'middle', width: print ? 96 : 150 });
   });
   st.fade(six, 6, 6.35);
   // the bet, counted: one dot for each time the single flip happens, against one for all four pairs together
   const n = bet.times_likelier;
-  const B7 = tall ? { lx: 16, gx: 118, gy: 380, cols: 25, p: 4.6, gap: 3, r: 1.5, row2: 440, tx: 248 } : { lx: 290, gx: 302, gy: 352, cols: 50, p: 4.4, gap: 3.5, r: 1.5, row2: 406, tx: 562 };
+  const B7 = print ? { lx: 556, gx: 562, gy: 336, cols: 25, p: 2.9, gap: 1.6, r: 1, row2: 424, tx: 664 } : tall ? { lx: 16, gx: 118, gy: 380, cols: 25, p: 4.6, gap: 3, r: 1.5, row2: 440, tx: 248 } : { lx: 290, gx: 302, gy: 352, cols: 50, p: 4.4, gap: 3.5, r: 1.5, row2: 406, tx: 562 };
   const lab = { size: tall ? 13 : 14, anchor: tall ? 'start' : 'end' };
   const dx = (i) => (i % B7.cols) * B7.p + Math.floor((i % B7.cols) / 5) * B7.gap, dy = (i) => Math.floor(i / B7.cols) * B7.p + Math.floor(Math.floor(i / B7.cols) / 5) * B7.gap;
   text(seven, B7.lx, B7.gy + (tall ? 22 : 14), 'the single flip', lab);
-  for (let i = 0; i < n; i++) circle(seven, B7.gx + dx(i), B7.gy + dy(i), B7.r, { fill: C.ink });
+  const betDots = [];
+  for (let i = 0; i < n; i++) { const c = circle(seven, B7.gx + dx(i), B7.gy + dy(i), B7.r, { fill: C.ink }); c.dataset.r = B7.r; betDots.push(c); }
   text(seven, B7.lx, B7.row2 + 4, 'all four pairs', lab);
   circle(seven, B7.gx, B7.row2, B7.r, { fill: C.ink });
   text(seven, B7.tx, B7.gy + (tall ? 22 : 14), `${n} : 1`, { family: 'mono', size: 13 });
-  text(seven, tall ? B7.gx + 14 : B7.tx, B7.row2 + 4, tall ? 'so the decoder bets on the flip' : 'so the decoder bets on the single flip', { ...noteO, width: tall ? 220 : 150 });
-  st.fade(seven, 7, 7.3);
+  text(seven, tall ? B7.gx + 14 : print ? B7.gx + 12 : B7.tx, B7.row2 + 4, tall ? 'so the decoder bets on the flip' : 'so the decoder bets on the single flip', { ...noteO, width: tall ? 220 : 150 });
+  st.fade(seven, 7, 7.2).fill(betDots, 7.1, 7.85);
 
+  if (print) {
+    st.set(4, 0.99);
+    for (const n of notes) { n.style.display = ''; n.style.opacity = ''; }
+    for (const e of [six, seven]) { e.style.display = ''; e.style.opacity = ''; }
+    for (const c of betDots) { c.style.display = ''; c.style.opacity = ''; c.setAttribute('r', c.dataset.r); }
+    main.style.opacity = '';
+    line(svg, 512, 60, 512, 430, { stroke: C.hairline, 'stroke-width': 1 });
+    return { set() {} };
+  }
   return { set: (stp, t) => st.set(stp, t) };
 }
 

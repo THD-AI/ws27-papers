@@ -115,6 +115,9 @@ const LAYOUT = {
     box: [584, 222, 704, 362], notesY: 406, keyY: 456 },
   tall: { W: 360, H: 456, win: [22, 338], fw: 105.3, chipY: 118, stripY: 246, stripH: 106, pitch: 19, visible: 3,
     box: [60, 372, 300, 406], notesY: 340, keyY: 430 },
+  // print: all six rounds at once on the left, the stories and the bet on the right, in the wide frame
+  print: { W: 720, H: 470, win: [132, 456], fw: 54, chipY: 128, stripY: 268, stripH: 96, pitch: 13, visible: 6,
+    box: [468, 230, 532, 306], notesY: 360, keyY: 456 },
 };
 function strokes(L, tall) {
   const [x0, x1] = L.win, yT = L.stripY - L.stripH / 2, yB = L.stripY + L.stripH / 2;
@@ -143,7 +146,10 @@ function strokes(L, tall) {
   S.bracket = pen([[-L.fw * 0.88, -4], [-L.fw * 0.82, 2.6], [-L.fw * 0.3, 3.4], [0, 2.4], [L.fw * 0.76, 3.6], [L.fw * 0.84, -7.5]], 2.4, { thin: 0.4, t0: 2, t1: 5 });
   return S;
 }
-const pens = { wide: strokes(LAYOUT.wide, false), tall: strokes(LAYOUT.tall, true) };
+const pens = { wide: strokes(LAYOUT.wide, false), tall: strokes(LAYOUT.tall, true), print: strokes(LAYOUT.print, false) };
+pens.print.storyArrow = pen([[632, 182], [631, 188], [632.5, 192]], 1.6, { thin: 0.5, t0: 1, t1: 1 });
+pens.print.storyArrowHead = [];
+pens.print.storyBracket = pen([[556, 222], [561, 211], [636, 208], [710, 212], [714, 223]], 2.2, { thin: 0.45, t0: 3, t1: 5 });
 // steps 6 and 7: an arrow from the seen frame to the stories (a shaft and two separate ticks), a brace over the stories
 pens.wide.storyArrow = pen([[236, 214], [276, 206], [318, 211], [346, 219]], 2.6, { thin: 0.7, t0: 4, t1: 2 });
 pens.wide.storyArrowHead = [pen([[333, 209], [347, 219.5]], 2.2, { thin: 0.3, t0: 1, t1: 3 }), pen([[334, 230], [346.5, 220.5]], 2.1, { thin: 0.3, t0: 1, t1: 3 })];
