@@ -31,7 +31,7 @@ A step lasts the sum of its parts, 0.9–2.0 s; outside that the studio flags it
 
 One sticky stage per run of chapters; figures change inside it, strictly one after the other (fade out, then the next). Consecutive chapters with the same figure continue it (a camera move, nothing thrown away). A short text-only stretch inside a run keeps the last figure as a ghost. A run starts and ends by scrolling as a block.
 
-Layout classes, as a cascade: **stills** if the window is under 500 px high (each step a still after its paragraph; held frames as a strip); **beside** if it is at least 900 wide (and wide enough for a 28 em column plus a 440 px stage), at least 560 high and wider than tall; **top** otherwise (the stage pinned above the text, 44% of the height on phones, 40% on tablets). Heights come from a stable `100svh` probe; only a change of width or class relays out, keeping the reader's paragraph at the reading line.
+Layout classes, as a cascade: **stills** if the window is under 500 px high (each step a still after its paragraph; held frames as a strip); **beside** if it is at least 900 wide (and wide enough for a 28 em column plus a 440 px stage), at least 560 high and wider than tall; **top** otherwise (the stage pinned above the text, 44% of the height on phones, 40% on tablets), unless that stage would be under 260 px high, which gives stills. Heights come from a stable `100svh` probe; only a change of width or class relays out, keeping the reader's paragraph at the reading line.
 
 ## Colour
 

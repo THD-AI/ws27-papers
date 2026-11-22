@@ -122,10 +122,10 @@ async function runDevice(browser, base, [name, w, h, mobile], outDir) {
 
   // 4. rotation: the reader's paragraph stays near where it was
   if (mobile) {
-    const active = await p.evaluate(() => { const ps = [...document.querySelectorAll('main p')]; const L = window.__tell.line; let k = 0; ps.forEach((e, i) => { if (e.getBoundingClientRect().top < L) k = i; }); return k; });
+    // the engine keeps the paragraph at its reading line (window.__tell.anchor); it must end up on screen
     await p.setViewport({ width: h, height: w, isMobile: mobile, hasTouch: mobile });
     await wait(900);
-    const vis = await p.evaluate((k) => { const e = document.querySelectorAll('main p')[k]; const r = e.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; }, active);
+    const vis = await p.evaluate(() => { const a = window.__tell.anchor; return !!a && a.after >= -1 && a.after < innerHeight * 0.8; });
     res.checks.rotationKeepsParagraph = vis;
     await p.screenshot({ path: join(outDir, 'rotated.png') });
     await p.setViewport({ width: w, height: h, isMobile: mobile, hasTouch: mobile });

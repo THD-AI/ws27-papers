@@ -1,17 +1,165 @@
 {
-  "sections": [
-    { "h": "What we wanted to know", "blocks": [
-      { "fig": "two-readers", "name": "One recording from a quantum chip, read by two programs, gives two different error counts.", "kinds": ["step", "step", "rest"] } ] },
-    { "h": "1. A qubit doesn't hold still", "blocks": [
-      { "fig": "water", "name": "A qubit's state starts to smear within a thousandth of a blink.", "kinds": ["step", "step"] } ] },
-    { "h": "2. The cure costs what it protects", "blocks": [ { "gap": 1 }, { "todo": "grid", "n": 2 } ] },
-    { "h": "3. Asking without looking", "blocks": [ { "todo": "grid", "n": 5 } ] },
-    { "h": "4. A film of hints", "blocks": [ { "todo": "film", "n": 3 } ] },
-    { "h": "5. The decoder, and the one mistake that matters", "blocks": [ { "todo": "line", "n": 4 } ] },
-    { "h": "6. Where the standard method goes wrong", "blocks": [ { "todo": "two-ways", "n": 0 } ] },
-    { "h": "7. The result that started us off", "blocks": [ { "todo": "ladder", "n": 0 } ] },
-    { "h": "8. Accurate, or in time", "blocks": [ { "todo": "clock", "n": 0 } ] },
-    { "h": "9. What we measured ourselves", "blocks": [ { "todo": "reels, six, two-readers answered", "n": 0 } ] },
-    { "h": "10. What this doesn't show", "blocks": [] }
-  ]
+ "sections": [
+  {
+   "h": "What we wanted to know",
+   "blocks": [
+    {
+     "fig": "two-readers",
+     "name": "One recording from a quantum chip, read by two programs, gives two different error counts.",
+     "kinds": [
+      "step",
+      "step",
+      "rest"
+     ]
+    }
+   ]
+  },
+  {
+   "h": "1. A qubit doesn't hold still",
+   "blocks": [
+    {
+     "fig": "water",
+     "name": "A qubit's state starts to smear within a thousandth of a blink.",
+     "kinds": [
+      "step",
+      "step"
+     ]
+    }
+   ]
+  },
+  {
+   "h": "2. The cure costs what it protects",
+   "blocks": [
+    {
+     "gap": 1
+    },
+    {
+     "fig": "grid",
+     "name": "The chip never looks at its qubits. It asks questions, and the answers light up.",
+     "kinds": [
+      "step",
+      "step"
+     ]
+    }
+   ]
+  },
+  {
+   "h": "3. Asking without looking",
+   "blocks": [
+    {
+     "fig": "grid",
+     "kinds": [
+      "step",
+      "step",
+      "step",
+      "step",
+      "step"
+     ]
+    }
+   ]
+  },
+  {
+   "h": "4. A film of hints",
+   "blocks": [
+    {
+     "fig": "grid",
+     "name": "All that leaves a quantum chip is a film of lights, and many different errors make the same lights.",
+     "kinds": [
+      "step",
+      "held:6",
+      "step"
+     ]
+    }
+   ]
+  },
+  {
+   "h": "5. The decoder, and the one mistake that matters",
+   "blocks": [
+    {
+     "todo": "line",
+     "n": 4
+    }
+   ]
+  },
+  {
+   "h": "6. Where the standard method goes wrong",
+   "blocks": [
+    {
+     "fig": "two-ways",
+     "name": "The standard program misses the answer that can happen in two ways.",
+     "kinds": [
+      "step",
+      "rest",
+      "step",
+      "step",
+      "step",
+      "rest",
+      "step",
+      "step",
+      "rest"
+     ]
+    }
+   ]
+  },
+  {
+   "h": "7. The result that started us off",
+   "blocks": [
+    {
+     "fig": "ladder",
+     "name": "On Google's chip, each step to a bigger grid halved the errors.",
+     "kinds": [
+      "step",
+      "step",
+      "step",
+      "rest"
+     ]
+    }
+   ]
+  },
+  {
+   "h": "8. Accurate, or in time",
+   "blocks": [
+    {
+     "todo": "clock",
+     "n": 0
+    }
+   ]
+  },
+  {
+   "h": "9. What we measured ourselves",
+   "blocks": [
+    {
+     "text": 5
+    },
+    {
+     "fig": "reels",
+     "name": "Our small network passed the standard program one grid bigger only at the end of a run nearly four times longer, and still trailed the better free program.",
+     "kinds": [
+      "step",
+      "step",
+      "step",
+      "rest"
+     ]
+    },
+    {
+     "text": 1
+    },
+    {
+     "todo": "six (needs the specialist's sign-off)",
+     "n": 2
+    },
+    {
+     "fig": "answered",
+     "name": "What we can answer, and what is still open.",
+     "kinds": [
+      "step"
+     ]
+    }
+   ]
+  },
+  {
+   "h": "10. What this doesn't show",
+   "blocks": []
+  }
+ ]
 }

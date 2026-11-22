@@ -77,3 +77,45 @@ export function strip(g, C, pts, fw, h, lit = () => []) {
   }
   return parts;
 }
+
+// The distance-3 grid, as in data/lattice.json (q = row * 3 + col), so every
+// figure draws the same character. Checks: squares ask about flips (z), small
+// diamonds about phase errors (x); half tiles at the edges.
+export const CHECKS = {
+  x0: { kind: 'x', sq: [0, 0], q: [0, 1, 3, 4] }, x1: { kind: 'x', sq: [1, 1], q: [4, 5, 7, 8] },
+  x2: { kind: 'x', half: 'top', q: [1, 2] }, x3: { kind: 'x', half: 'bottom', q: [6, 7] },
+  z0: { kind: 'z', sq: [0, 1], q: [1, 2, 4, 5] }, z1: { kind: 'z', sq: [1, 0], q: [3, 4, 6, 7] },
+  z2: { kind: 'z', half: 'left', q: [0, 3] }, z3: { kind: 'z', half: 'right', q: [5, 8] },
+};
+export function grid3(g, C, cx, cy, cell, { qubits = true, lines = true } = {}) {
+  const Q = (q) => [cx + ((q % 3) - 1) * cell, cy + (Math.floor(q / 3) - 1) * cell];
+  const out = { Q, checks: {}, lineEls: [], qubitEls: [] };
+  for (const [id, c] of Object.entries(CHECKS)) {
+    let tile, mx, my;
+    if (c.sq) {
+      const [r, co] = c.sq; const x = cx + (co - 1) * cell, y = cy + (r - 1) * cell;
+      tile = `M${x},${y} h${cell} v${cell} h${-cell} Z`; mx = x + cell / 2; my = y + cell / 2;
+    } else {
+      const [a, b] = c.q.map(Q); const o = { top: [0, -1], bottom: [0, 1], left: [-1, 0], right: [1, 0] }[c.half]; const r = cell / 2;
+      tile = `M${a[0]},${a[1]} A${r},${r} 0 0,${c.half === 'top' || c.half === 'right' ? 1 : 0} ${b[0]},${b[1]} Z`;
+      mx = (a[0] + b[0]) / 2 + o[0] * r * 0.5; my = (a[1] + b[1]) / 2 + o[1] * r * 0.5;
+    }
+    const field = el('path', { d: tile, fill: C.field, stroke: 'none', opacity: 0 }, g);
+    const outline = el('path', { d: tile, fill: 'none', stroke: C.hair, 'stroke-width': 1.2 }, g);
+    const m = cell * 0.09;
+    const d = c.kind === 'z' ? `M${mx - m},${my - m} h${2 * m} v${2 * m} h${-2 * m} Z` : `M${mx},${my - m * 1.3} l${m * 1.3},${m * 1.3} l${-m * 1.3},${m * 1.3} l${-m * 1.3},${-m * 1.3} Z`;
+    const mark = el('path', { d, fill: C.paper, stroke: C.ink, 'stroke-width': 1.4, 'stroke-linejoin': 'round' }, g);
+    out.checks[id] = { field, outline, mark, mx, my };
+  }
+  if (lines) for (let k = 0; k < 3; k++) out.lineEls.push(pen(g, penPath([Q(k * 3), Q(k * 3 + 2)]), C), pen(g, penPath([Q(k), Q(k + 6)]), C));
+  if (qubits) for (let q = 0; q < 9; q++) { const [x, y] = Q(q); const r = Math.max(5, cell * 0.11); const c = pen(g, `M${x - r},${y} a${r},${r} 0 1,0 ${2 * r},0 a${r},${r} 0 1,0 ${-2 * r},0`, C); c.setAttribute('fill', C.paper); out.qubitEls.push(c); }
+  out.setLit = (lit) => { for (const [id, c] of Object.entries(out.checks)) { const on = lit.includes(id); c.field.style.opacity = on ? 1 : 0; c.mark.setAttribute('fill', on ? C.accent : C.paper); c.mark.setAttribute('stroke', on ? C.accent : C.ink); } };
+  return out;
+}
+
+// A tally of n units, k filled (counted, not a chart): rows of ten small squares.
+export function tally(g, C, x, y, n, k, size = 7) {
+  const cells = [];
+  for (let i = 0; i < n; i++) cells.push(el('rect', { x: x + (i % 10) * (size + 3), y: y + Math.floor(i / 10) * (size + 3), width: size, height: size, fill: i < k ? C.accent : 'none', stroke: i < k ? C.accent : C.muted, 'stroke-width': 0.8 }, g));
+  return cells;
+}

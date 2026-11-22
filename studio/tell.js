@@ -31,6 +31,8 @@ function classify() {
   const besideNeeds = 28 * em + 32 + 440 + 32;           // text, gap, stage, gutters
   if (H < 500) return 'stills';
   if (w >= 900 && w >= besideNeeds && H >= 560 && w > H) return 'beside';
+  // a stage on top too low to keep its lettering (a short window): stills
+  if ((w < 700 ? 0.44 : 0.40) * H < 260) return 'stills';
   return 'top';
 }
 
@@ -123,11 +125,21 @@ async function mountSeg(run, seg, pos) {
   layer.appendChild(svg);
   run.stage.appendChild(layer);
   const api = mod.mount(svg, ctxFor(r.width, r.height));
+  fitSvg(svg, r);
   const total = seg.kind === 'ghost' ? seg.of.total : seg.total;
   const p = seg.kind === 'ghost' ? (api.alone ?? total) : pos;
   api.render(p);
   if (seg.kind === 'ghost') layer.style.opacity = 0.4;
   return { seg, mod, api, layer, svg, pos: p, goal: p, total, steps: mod.steps };
+}
+
+// A figure is never blown up so far that its lettering outgrows the text:
+// at most 1.3 times its design size (14–15 units -> about 18–20 px).
+function fitSvg(svg, r) {
+  const vb = svg.viewBox.baseVal;
+  if (!vb || !vb.width) return;
+  const s = Math.min(r.width / vb.width, r.height / vb.height, 1.3 * k);
+  Object.assign(svg.style, { width: vb.width * s + 'px', height: vb.height * s + 'px', margin: 'auto', position: 'absolute', inset: '0' });
 }
 
 // "set": a cross-fade between end states (0.3 s; 0.15 s with reduced motion).
@@ -219,9 +231,9 @@ let last = now();
 async function frame() {
   const t = now(), dt = Math.min(0.1, (t - last) / 1000);
   last = t;
+  T.line = lines().L;
   if (cls !== 'stills') {
     const { L, back } = lines();
-    T.line = L;
     for (const run of runs) {
       const a = activeSeg(run, L, back);
       if (run.switching) continue;
@@ -356,6 +368,7 @@ addEventListener('resize', () => {
       const keep = run.cur.pos;
       run.cur.svg.replaceChildren();
       run.cur.api = run.cur.mod.mount(run.cur.svg, ctxFor(r.width, r.height));
+      fitSvg(run.cur.svg, r);
       run.cur.api.render(keep);
     }
   });

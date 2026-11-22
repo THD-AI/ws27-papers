@@ -57,9 +57,17 @@ html.tell-top .stage::after { /* the paper fade at its lower edge */
 html.tell-top .run .flow { max-width: 34em; margin: 0 auto; }
 
 /* --------------------------------------------------------- beside class */
-html.tell-beside .run {
-  display: grid; grid-template-columns: minmax(28em, 34em) minmax(440px, 1fr);
-  column-gap: clamp(2rem, 4vw, 5rem); align-items: start;
+/* one grid for the whole page, so the text column keeps the same left edge
+   inside and outside a run (no sideways jump), and the stage column is to
+   its right; a run uses the page's columns (subgrid) */
+html.tell-beside main.tell {
+  display: grid; grid-template-columns: minmax(28em, 34em) minmax(440px, 860px);
+  column-gap: clamp(2rem, 4vw, 5rem); justify-content: center;
+}
+html.tell-beside main.tell > * { grid-column: 1; margin-left: 0; margin-right: 0; }
+html.tell-beside main.tell > h1 { grid-column: 1 / -1; max-width: 34em; }
+html.tell-beside main.tell > .run {
+  grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: start;
 }
 html.tell-beside .run .flow { grid-column: 1; grid-row: 1; }
 html.tell-beside .stage {
