@@ -14,11 +14,11 @@ export default {
     svg.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
     const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
     const C = { ink: css('--ink'), muted: css('--muted'), hair: css('--hairline'), accent: css('--accent'), field: css('--field'), paper: css('--paper') };
-    const fs = wide ? 15 : 14;
+    const fs = 15;
     const font = (size = fs) => ({ 'font-family': 'Libre Franklin, sans-serif', 'font-size': size });
 
     // the opening drawing, smaller, top-left; set in at its last state
-    const sub = { tall: [0, 0, 360, 250], mid: [0, 0, 250, 200], wide: [0, 0, 440, 300] }[lay];
+    const sub = { tall: [0, 0, 300, 210], mid: [0, 0, 250, 200], wide: [0, 0, 440, 300] }[lay];
     const inner = el('svg', { x: sub[0], y: sub[1], width: sub[2], height: sub[3] }, svg);
     const tr = twoReaders.mount(inner, { layout: lay === 'wide' ? 'wide' : 'mid', k: 1, reduced: true });
     tr.render(2);
@@ -26,7 +26,7 @@ export default {
     for (const t of inner.querySelectorAll('text')) t.remove();
 
     // ours: a smaller reader with its long reel, under the two
-    const oy = { tall: 300, mid: 238, wide: 360 }[lay];
+    const oy = { tall: 250, mid: 238, wide: 360 }[lay];
     const gw = wide ? 84 : 60, gx = { tall: 200, mid: 140, wide: 250 }[lay];
     const g = el('g', {}, svg);
     const ours = gate(g, C, gx, oy - 40 * gw / 120, gw);
@@ -35,10 +35,10 @@ export default {
     lab.textContent = 'our network';
 
     // the two notes
-    const nx = { tall: 20, mid: 258, wide: 470 }[lay], ny = { tall: 350, mid: 36, wide: 70 }[lay];
+    const nx = { tall: 20, mid: 258, wide: 470 }[lay], ny = { tall: 318, mid: 36, wide: 70 }[lay];
     const lines = wide || lay === 'mid'
       ? [['Learning to read: affordable on a laptop.', C.ink], ['One grid bigger, it passed plain matching', C.ink], ['only at the end of a run nearly four times longer,', C.ink], ['still behind correlated matching.', C.ink], ['', C.ink], ['On real recordings: not tested yet.', C.muted]]
-      : [['Learning to read: affordable on a laptop.', C.ink], ['One grid bigger: a run nearly four times longer, still behind.', C.ink], ['Real recordings: not tested yet.', C.muted]];
+      : [['Learning to read: affordable on a laptop;', C.ink], ['one grid bigger, a run nearly four times longer.', C.ink], ['Real recordings: not tested yet.', C.muted]];
     const wrap = lay === 'mid' ? 24 : wide ? 32 : 46;
     const notes = el('text', { x: nx, y: ny, fill: C.ink, ...font(fs - 1) }, svg);
     let dy = 0;

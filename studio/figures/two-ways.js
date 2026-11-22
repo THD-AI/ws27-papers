@@ -22,7 +22,7 @@ export default {
     svg.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
     const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
     const C = { ink: css('--ink'), muted: css('--muted'), hair: css('--hairline'), accent: css('--accent'), field: css('--field'), paper: css('--paper') };
-    const fs = wide ? 15 : 14;
+    const fs = 15;
     const font = (size = fs) => ({ 'font-family': 'Libre Franklin, sans-serif', 'font-size': size });
     const mono = (size = fs) => ({ 'font-family': 'JetBrains Mono, monospace', 'font-size': size });
 
@@ -57,7 +57,7 @@ export default {
       const g = el('g', {}, svg);
       const m = grid3(g, C, x, mini.y, mini.cell, { qubits: true, lines: true });
       for (const c of Object.values(m.checks)) { c.outline.style.opacity = 0; c.mark.style.opacity = 0; }
-      const ls = errs.map(([q, t]) => letter(g, q, t, C.accent, m, wide ? 14 : 13));
+      const ls = errs.map(([q, t]) => letter(g, q, t, C.accent, m, 14));
       const arrow = el('path', { d: penPath([[x, tLab + 8], [lights[0] + (x - lights[0]) * 0.3, lights[1] - 1.25 * G0[2] * lights[2] - 6]]), stroke: C.muted, 'stroke-width': 1.3, fill: 'none', 'stroke-linecap': 'round' }, svg);
       return { g, m, ls, arrow };
     };
@@ -82,8 +82,8 @@ export default {
 
     const P = [
       plan([{ at: 0, dur: 0.9 }]),                                                  // 1 set in
-      plan([{ at: 0, dur: 0.3 }, { at: 0.45, dur: 0.3 }, { at: 0.6, dur: 0.3 }]),   // 2 X shows, ghosts; fire
-      plan([{ at: 0, dur: 0.3 }, { at: 0.45, dur: 0.3 }, { at: 0.6, dur: 0.3 }]),   // 3
+      plan([{ at: 0, dur: 0.3 }, { at: 0.5, dur: 0.35 }, { at: 0.65, dur: 0.35 }]), // 2 X shows, ghosts; fire
+      plan([{ at: 0, dur: 0.3 }, { at: 0.5, dur: 0.35 }, { at: 0.65, dur: 0.35 }]), // 3
       plan([{ at: 0, dur: 0.3 }, { at: 0.35, dur: 0.1 }, { at: 0.5, dur: 0.5 }]),   // 4 errors leave; three fire; pairings draw
       plan([{ at: 0, dur: 0.8 }, { at: 0.85, dur: 0.5 }, { at: 1.2, dur: 0.3 }, { at: 1.4, dur: 0.3 }]), // 5 camera; road A; tally; words
       plan([{ at: 0, dur: 0.5 }, { at: 0.15, dur: 0.5 }, { at: 0.6, dur: 0.3 }, { at: 0.8, dur: 0.3 }]), // 6 B1, B2; tally; words

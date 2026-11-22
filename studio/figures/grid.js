@@ -40,7 +40,7 @@ export default {
     svg.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
     const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
     const C = { ink: css('--ink'), muted: css('--muted'), hair: css('--hairline'), accent: css('--accent'), field: css('--field'), paper: css('--paper') };
-    const fs = wide ? 15 : 14;
+    const fs = 15;
     const font = (size = fs, fam = 'Libre Franklin, sans-serif') => ({ 'font-family': fam, 'font-size': size });
     const mono = { 'font-family': 'JetBrains Mono, monospace', 'font-size': fs };
     const pen = (g, d, w = 1.6, col = C.ink) => el('path', { d, stroke: col, 'stroke-width': w, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g);

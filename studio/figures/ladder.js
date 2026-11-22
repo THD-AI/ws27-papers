@@ -20,7 +20,7 @@ export default {
     svg.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
     const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
     const C = { ink: css('--ink'), muted: css('--muted'), hair: css('--hairline'), accent: css('--accent'), field: css('--field'), paper: css('--paper') };
-    const fs = wide ? 15 : 14;
+    const fs = 15;
     const font = (size = fs) => ({ 'font-family': 'Libre Franklin, sans-serif', 'font-size': size });
     const mono = (size = fs) => ({ 'font-family': 'JetBrains Mono, monospace', 'font-size': size });
 
@@ -64,12 +64,12 @@ export default {
     [legM, legN].forEach((t) => t.setAttribute('fill', C.accent));
     const unit = el('text', { x: L.xs[0] - 40, y: L.base + (wide ? 24 : 20), fill: C.muted, ...font(fs - 1) }, svg);
     unit.textContent = 'wrong answers per 100,000 rounds';
-    const tag = el('text', { x: VW - 6, y: VH - 8, 'text-anchor': 'end', fill: C.muted, ...mono(fs - 2) }, svg);
+    const tag = el('text', { x: VW - 6, y: VH - 8, 'text-anchor': 'end', fill: C.muted, ...mono(fs - 1) }, svg);
     tag.textContent = 'Google, 2024';
 
     const P = [
       plan([{ at: 0, dur: 0.5 }, { at: 0.35, dur: 0.6 }, { at: 0.55, dur: 0.6 }, { at: 1.1, dur: 0.3 }, { at: 1.25, dur: 0.3 }, { at: 1.4, dur: 0.3 }, { at: 1.6, dur: 0.25 }]),
-      plan([{ at: 0, dur: 0.6 }, { at: 0.55, dur: 0.3 }]),
+      plan([{ at: 0, dur: 0.7 }, { at: 0.65, dur: 0.3 }]),
       plan([{ at: 0, dur: 0.3 }, { at: 0.15, dur: 0.3 }, { at: 0.3, dur: 0.3 }, { at: 0.65, dur: 0.3 }]),
     ];
     const at = (pos, s, i) => (pos >= s ? 1 : pos <= s - 1 ? 0 : span(pos - (s - 1), ...P[s - 1].w(i)));
