@@ -63,29 +63,31 @@ One round of checks takes 1.1 millionths of a second, and a grid of distance 7 h
 
 :::scene film
 
-@caption An example we constructed on the smallest grid (X: a flip; Z: a phase error). Above, the errors on the chip; below, the frames that come out. A check lights only in the round its answer changes.
+@caption What the decoder gets: one frame per round, in which a check lights when its answer changes. An example we constructed on the smallest grid; X is a flip, Z a phase error.
 
 @step 0
-We ended up thinking of that stream as a film. Above, the smallest grid as it is on the chip: nobody can read its qubits directly without destroying what they store. Below, what comes out of the chip, one frame for every round of checks.
+We ended up thinking of that stream as a film. Above, the smallest grid as it is on the chip: nobody can read its qubits directly without destroying what they store, and only the checks ask them anything. Below, what comes out of the chip, one frame for every round of checks.
 
 @step 1
 A flip hits the qubit in the middle. Nobody sees the flip itself, not even the chip. What comes out, in that round's frame, is two lit checks: the two that watch that qubit for flips.
 
 @step 2
-One round later the flip is still there, and the frame is dark. A check lights only when its answer changes, so an error shows only once, in the first round after it happens. The decoder has to remember it.
+One round later the flip is still there, and the frame is dark. A check lights only when its answer changes, so a qubit error shows only once, in the first round after it happens. The decoder has to remember it.
 
 @step 3
-A phase error lights the other kind of check. In the corner only one such check touches the qubit, so a single light comes on.
+A phase error lights the other kind of check. In the bottom right corner only one such check touches the qubit, so a single light comes on.
 
 @step 4
-In the next two rounds nothing happens on the chip, and yet one check lights twice. It reported wrongly once, as in section 3: the wrong answer is a change, and so is the right one coming back. A light doesn't even mean that a qubit was hit.
+In the next two rounds no storing qubit is hit, and yet one check lights twice. The check gave one wrong answer, as in section 3: going wrong is one change, and coming right again is a second.
 
 @step 5
-While the computer runs, that stream is all that comes out of it, and all the decoder gets. The lit checks say roughly where something happened and which kind of error it was. They don't say which qubits were hit.
+That stream is all that comes out while the computer runs, and all the decoder gets. It says roughly where something happened and which kind of error it was, but not which qubits were hit.
 
 @step 6
-And many sets of errors light the same checks. The two lights of round 2 also come from two flips, one above the middle and one below it, and the two stories leave the stored value opposite ways round. The decoder can't tell them apart, so it bets on the likelier one: when each qubit slips once in a thousand rounds, one flip is about a thousand times likelier than two. Most of the time the bet is right. The next section is about the time it isn't.
+And many sets of errors light the same checks. The two lights of round 2 also come from a pair of flips, one above the middle and one below, and there are four such pairs. Each leaves the stored value the opposite way round from the single flip. The decoder can't tell them apart.
 
+@step 7
+So it bets on the likelier story. If each qubit slips about once in a thousand rounds, independently, the single flip is roughly 250 times likelier than all four pairs together. Most of the time the bet is right. The next section is about the time it isn't.
 :::
 
 :::margin qubits 4

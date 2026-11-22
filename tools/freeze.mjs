@@ -25,7 +25,7 @@ for (let step = 0; step < +n; step++) for (const [name, vp] of Object.entries(si
   page.on('pageerror', (e) => errors.push(`${name} ${step}: ${e.message}`));
   page.on('console', (m) => { if (m.type() === 'error') errors.push(`${name} ${step}: ${m.text()}`); });
   await page.setViewport(vp);
-  await page.goto(`http://127.0.0.1:${port}/${slug}/?freeze=${id}:${step}:1`, { waitUntil: 'load' });
+  await page.goto(`http://127.0.0.1:${port}/${slug}/${name === "phone" ? "" : `?freeze=${id}:${step}:1`}`, { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
   await new Promise((r) => setTimeout(r, 400));
   // the scene's sticky frame where it is shown; otherwise the still of this step
@@ -34,7 +34,19 @@ for (let step = 0; step < +n; step++) for (const [name, vp] of Object.entries(si
     for (const el of await page.$$(sel)) if (await el.isVisible()) { frame = el; break; }
     if (frame) break;
   }
-  if (frame) { try { await frame.scrollIntoView(); await frame.screenshot({ path: join(out, `${id}-${step}-${name}.png`) }); } catch (e) { errors.push(`${name} ${step}: ${e.message}`); } }
+  // on a phone a pinned scene draws only while its passages are read: shoot the
+  // screen as a reader sees it, with the step's passage at the reading line
+  if (name === 'phone') {
+    const passage = (await page.$$(`.scene[data-scene="${id}"] .passage`))[step];
+    if (passage) {
+      await page.evaluate((el) => { const r = el.getBoundingClientRect(); window.scrollBy(0, r.top - window.innerHeight * 0.56); }, passage);
+      await new Promise((r) => setTimeout(r, 2500));
+      await page.screenshot({ path: join(out, `${id}-${step}-${name}.png`) });
+      await page.close();
+      continue;
+    }
+  }
+  if (frame) { try { await frame.scrollIntoView(); await new Promise((r) => setTimeout(r, 700)); await frame.screenshot({ path: join(out, `${id}-${step}-${name}.png`) }); } catch (e) { errors.push(`${name} ${step}: ${e.message}`); } }
   else errors.push(`${name} ${step}: no frame for ${id}`);
   await page.close();
 }

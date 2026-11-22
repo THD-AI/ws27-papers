@@ -164,6 +164,11 @@
    },
    "chance_right": 0.6221838324894758
   },
+  "read_together_also": {
+   "qubit": 5,
+   "kind": "Z",
+   "instead_of": 8
+  },
   "rest": 0.04482175491376261,
   "source": "OWN-ENUM"
  }

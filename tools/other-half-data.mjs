@@ -301,6 +301,15 @@ write('lattice.json', {
     chance_of_pattern: ex.total,
     plain_matching: { errors: ex.correction, chance_right: ex.pMatch, flip_puzzle: 'z2 joined to the left edge through qubit 0', phase_puzzle: 'x0 joined to x1 through qubit 4' },
     read_together: { errors: letters(exLikely.xb, exLikely.zb), chance_right: ex.pMl },
+    // the second way: the phase error one place above the corner fires the same phase-checks (they differ by the
+    // flip-check on qubits 5 and 8, which changes nothing the code cares about)
+    read_together_also: (() => {
+      const zq = Object.entries(letters(exLikely.xb, exLikely.zb)).find(([q, l]) => l === 'Z')[0];
+      const other = +zq === 8 ? 5 : null;
+      const phaseFired = (q) => c3.x.filter((c) => c.qubits.includes(q)).map((c) => c.qubits.join()).join('|');
+      if (other === null || phaseFired(8) !== phaseFired(5)) throw new Error('the second way should be Z on qubit 5, firing what Z on 8 fires');
+      return { qubit: other, kind: 'Z', instead_of: 8 };
+    })(),
     rest: 1 - ex.pMatch - ex.pMl,
     source: 'OWN-ENUM',
   },

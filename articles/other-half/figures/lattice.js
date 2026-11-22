@@ -23,6 +23,7 @@ function build(el, ctx) {
   const C = pal(ctx), d = ctx.data, tall = ctx.layout === 'tall', print = !!ctx.print;
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
   const ex = d.example, pm = ex.plain_matching, rt = ex.read_together;
+  const rtAlso = { ...rt, also: ex.read_together_also || null };
   const nPm = Math.round(pm.chance_right * STRIP), nRt = Math.round(rt.chance_right * STRIP);
   const inN = Math.round(1 / pm.chance_right), in10 = Math.round(rt.chance_right * 10);
   const pctErr = `${Math.round(ex.conditions.error_per_storing_qubit * 100)}%`;
@@ -68,8 +69,17 @@ function build(el, ctx) {
     const cnt = g(svg);
     text(cnt, cx, nt.bottom + 38, `${n} of ${STRIP}`, { family: 'mono', size: monoS, anchor: 'middle', fill: C.muted });
     let pr = null;
-    if (ring) pr = penRing(svg, cx, cy, ext + (tall ? 12 : 17), ext + (tall ? 10 : 14), { seed: 11, stroke: C.accent, width: 1.6, start: -0.4 });
-    return { grp, marks, ng, sg, dotsEl, cnt, pr, bottom: nt.bottom + 44 };
+    if (ring) pr = penRing(svg, cx, cy, ext + (tall ? 12 : 17), ext + (tall ? 10 : 14), { seed: 11, stroke: C.ink, width: 1.5, start: -0.4 });
+    // the second way: the same phase error one place above, which fires the same checks
+    let ghost = null;
+    if (answer.also) {
+      ghost = g(svg);
+      const [x, y] = G.pos(answer.also.qubit), r = G.qr * 1.22;
+      circle(ghost, x, y, r, { fill: C.paper, stroke: C.ink, 'stroke-width': 1.1, 'stroke-dasharray': '2.2 2.2' });
+      text(ghost, x, y + r * 0.5, answer.also.kind, { family: 'sans', size: r * 1.42, weight: 600, anchor: 'middle', fill: C.muted, free: true });
+      text(ghost, x + r + 4, y - r - 2, 'or here', { italic: true, size: tall ? 12 : 13, fill: C.muted });
+    }
+    return { grp, marks, ng, sg, dotsEl, cnt, pr, ghost, bottom: nt.bottom + 44 };
   }
 
   const notePm = `plain matching:
@@ -97,8 +107,8 @@ about [[${in10}]] times in [[10]]`;
     ex.fired.forEach((id) => M.tiles[id].setFired(1));
     text(svg, S.xs[0], S.noteY, `[[${firedLabel}.]]
 Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
-    copy(S.xs[1], S.cy, pm, notePm, nPm, true, 'plain matching picks this one');
-    copy(S.xs[2], S.cy, rt, noteRt, nRt, false, 'the more likely explanation');
+    copy(S.xs[1], S.cy, pm, notePm, nPm, false, 'plain matching picks this one');
+    copy(S.xs[2], S.cy, rtAlso, noteRt, nRt, true, 'the more likely explanation');
     text(svg, (S.xs[1] + S.xs[2]) / 2, 374, rest, { italic: true, size: 13, anchor: 'middle', fill: C.muted });
     text(svg, (S.xs[0] + S.xs[2]) / 2, 418, foot, { family: 'mono', size: 12, anchor: 'middle', fill: C.muted });
     return { set() {} };
@@ -241,10 +251,11 @@ Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
 Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
   st.fade(lab, 4.4, 4.6);
 
-  const c1 = copy(S.xs[1], S.cy, pm, notePm, nPm, true, 'plain matching picks this one');
+  const c1 = copy(S.xs[1], S.cy, pm, notePm, nPm, false, 'plain matching picks this one');
   st.fade(c1.grp, 4.38, 4.62).fade(c1.marks, 4.58, 4.76).fade(c1.ng, 4.66, 4.84).fill(c1.dotsEl, 4.72, 4.94).fade(c1.cnt, 4.86, 4.98);
-  c1.pr.paths.forEach((pp, k) => st.draw(pp, 4.8 + k * 0.03, 4.97 + k * 0.02));
-  const c2 = copy(S.xs[2], S.cy, rt, noteRt, nRt, false, 'the more likely explanation');
+  const c2 = copy(S.xs[2], S.cy, rtAlso, noteRt, nRt, true, 'the more likely explanation');
+  c2.pr.paths.forEach((pp, k) => st.draw(pp, 5.6 + k * 0.03, 5.8 + k * 0.02));
+  st.fade(c2.ghost, 5.5, 5.7);
   st.fade(c2.grp, 5.02, 5.3).fade(c2.marks, 5.26, 5.48).fade(c2.ng, 5.42, 5.62).fill(c2.dotsEl, 5.5, 5.8).fade(c2.cnt, 5.72, 5.86);
 
   const tail = g(svg);
