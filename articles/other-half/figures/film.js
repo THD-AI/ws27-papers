@@ -192,7 +192,7 @@ function build(el, ctx) {
   st.fade(hidden, 5.35, 5.85);
 
   // ---- steps 6 and 7: one frame, its stories, and the bet ---------------------------
-  st.on((gg) => { const o = gg >= 6 ? 1 - Math.min(1, (gg - 6) / 0.3) : 1; const v = o >= 0.999 ? '' : o.toFixed(3); if (main.style.opacity !== v) main.style.opacity = v; });
+  st.on((gg) => { const o = gg >= 6 ? 1 - Math.min(1, (gg - 6) / 0.45) : 1; const v = o >= 0.999 ? '' : o.toFixed(3); if (main.style.opacity !== v) main.style.opacity = v; });
   const six = g(svg), seven = g(svg);
   const S6 = print
     ? { seen: [632, 116], sz: 14, both: [636, 202], stories: [[590, 252], [682, 252]], ssz: 13, labY: 290, w: 160 }
@@ -211,7 +211,7 @@ function build(el, ctx) {
     frame(six, x, y, S6.ssz, { lit: d.stories.lights, errors: qs.map((q) => ({ qubit: q, kind: 'X' })) });
     text(six, x, S6.labY, labs[k], { size: print ? 12.5 : 14, anchor: 'middle', width: print ? 96 : 150 });
   });
-  st.fade(six, 6, 6.35);
+  st.fade(six, 6.15, 6.75);
   // the bet, counted: one dot for each time the single flip happens, against one for all four pairs together
   const n = bet.times_likelier;
   const B7 = print ? { lx: 556, gx: 562, gy: 336, cols: 25, p: 2.9, gap: 1.6, r: 1, row2: 424, tx: 664 } : tall ? { lx: 16, gx: 118, gy: 380, cols: 25, p: 4.6, gap: 3, r: 1.5, row2: 440, tx: 248 } : { lx: 290, gx: 302, gy: 352, cols: 50, p: 4.4, gap: 3.5, r: 1.5, row2: 406, tx: 562 };
