@@ -242,7 +242,7 @@ function frame() {
       // the figures it passed through), and nothing in the loop ever waits
       if (run.phase === 'out') { if (t < run.outUntil) continue; run.phase = null; }
       if (a !== run.active) {
-        const forward = a > run.active;
+        const forward = a > (run.active === -2 ? run.from : run.active);
         const seg = a >= 0 ? run.segs[a] : null;
         const d = reduced.matches ? 0.15 : 0.3;
         // into a ghost rest of the figure on stage, or back out of it: the same
@@ -259,7 +259,7 @@ function frame() {
           run.busyUntil = t + d * 1000; T.lastMotion = t + d * 1000;
           continue;
         }
-        if (run.cur) { fadeOut(run, d); run.phase = 'out'; run.outUntil = run.busyUntil; continue; }
+        if (run.cur) { fadeOut(run, d); run.phase = 'out'; run.outUntil = run.busyUntil; run.from = run.active; run.active = -2; continue; }
         run.active = a;
         if (seg) {
           const g = seg.kind === 'fig' ? goalOf(run, seg, L, back).g : 0;
@@ -360,11 +360,11 @@ async function buildStills() {
       };
       if (it.kind === 'held') {
         const strip = document.createElement('div');
-        strip.className = 'strip'; strip.style.setProperty('--n', it.frames);
+        strip.className = 'strip'; strip.style.setProperty('--n', it.frames); strip.setAttribute('aria-hidden', 'true');
         for (let f = 1; f <= it.frames; f++) { const c = document.createElement('div'); c.className = 'still'; strip.appendChild(c); mk(it.step - 1 + f / it.frames, c); }
         it.el.after(strip);
       } else {
-        const c = document.createElement('div'); c.className = 'still' + (keep.has(it.step) ? ' print-keep' : '');
+        const c = document.createElement('div'); c.className = 'still' + (keep.has(it.step) ? ' print-keep' : ''); c.setAttribute('aria-hidden', 'true');
         it.el.after(c);
         const api = mk(it.step, c);
         if (api.desc) { const d = document.createElement('span'); d.className = 'sr-only step-desc'; d.textContent = api.desc(it.step); it.el.appendChild(d); }
@@ -425,6 +425,7 @@ addEventListener('resize', () => {
     layout();
     requestAnimationFrame(frame);
     root.classList.add('tell-ready');
+    root.classList.remove('js-failed');   // a slow load that finished after the timeout
   } catch (e) {
     console.error(e);
     root.classList.add('js-failed');

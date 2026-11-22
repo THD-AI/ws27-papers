@@ -47,13 +47,12 @@ export default {
       const axis = el('path', { d: penPath([[x0, ay], [x1, ay]]), stroke: C.muted, 'stroke-width': 1.1, fill: 'none' }, svg);
       const lab = [
         [x0, `${lo}%`, 'start'], [(x0 + x1) / 2, '← fewer wrong', 'middle'], [x1, `${hi}%`, 'end'],
-      ].map(([x, t, a]) => { const e = el('text', { x, y: ay + 42, 'text-anchor': a, fill: C.muted, ...mono(fs - 1) }, svg); e.textContent = t; return e; });
+      ].map(([x, t, a]) => { const e = el('text', { x, y: ay + 46, 'text-anchor': a, fill: C.muted, ...mono(fs - 1) }, svg); e.textContent = t; return e; });
       // the two matchings: one name above the axis, one below; never stacked
       const lev = [['plain matching', p.plain, -1], ['correlated', p.correlated, 1]].map(([name, r, side]) => {
         const x = X(r);
         const tick = el('path', { d: penPath([[x, ay - 10], [x, ay + 10]]), stroke: C.ink, 'stroke-width': 1.8, fill: 'none' }, svg);
-        const right = x < (x0 + x1) / 2;
-        const t = el('text', { x: x + (right ? 6 : -6), y: side < 0 ? ay - 14 : ay + 24, 'text-anchor': right ? 'start' : 'end', fill: C.ink, ...font() }, svg);
+        const t = el('text', { x, y: side < 0 ? ay - 14 : ay + 24, 'text-anchor': 'middle', fill: C.ink, ...font() }, svg);
         t.textContent = name;
         return { tick, t };
       });
@@ -112,7 +111,7 @@ export default {
       dur: (s) => durs[s - 1],
       alone: 3,
       desc: (s) => [
-        'Distance 3: after 66 million examples our network is wrong less often than both matching programs.',
+        'Distance 3: after 66 million examples our network is wrong less often than plain matching; below correlated matching too, a win we do not count.',
         'Distance 5, the same 66 million examples: it is wrong more often than both.',
         'Distance 5, about 250 million examples: it passes plain matching only at the end, still behind correlated matching.',
       ][s - 1],

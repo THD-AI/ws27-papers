@@ -103,7 +103,7 @@ export default {
     // step 4: one helper asks (z0), one bit back
     // short dotted spokes from the helper towards each neighbour (never a full cross, which would read as an X)
     const asks = [1, 2, 4, 5].map((q) => { const [x, y] = Q(q); const { mx, my } = checks.z0; return el('path', { d: penPath([[mx + (x - mx) * 0.3, my + (y - my) * 0.3], [mx + (x - mx) * 0.7, my + (y - my) * 0.7]]), stroke: C.ink, 'stroke-width': 1.4, 'stroke-dasharray': '2 4', 'stroke-linecap': 'round', fill: 'none' }, G); });
-    const bit = el('text', { x: checks.z0.mx + cell * 0.16, y: checks.z0.my + cell * 0.32, fill: C.ink, ...mono }, G);
+    const bit = el('text', { x: checks.z0.mx + cell * 0.2, y: checks.z0.my + 5, fill: C.ink, ...mono }, G);
     bit.textContent = 'even';
     // step 5–6: errors on the centre qubit
     const [qx, qy] = Q(4);
@@ -116,6 +116,8 @@ export default {
       const t = el('text', { x: x + 13, y: y - 13, fill: i ? C.muted : C.ink, ...mono }, G); t.textContent = 'X';
       return t;
     });
+    // the four pairs, drawn as pairs: a faint dashed link between the two flips of each
+    const pairLinks = [[1, 6], [1, 7], [2, 6], [2, 7]].map(([a, b]) => { const [ax, ay] = Q(a), [bx, by] = Q(b); return el('path', { d: penPath([[ax + 6, ay + 4], [bx + 6, by - 4]]), stroke: C.muted, 'stroke-width': 1.1, 'stroke-dasharray': '3 4', fill: 'none' }, G); });
     const pairNote = el('text', { x: cx, y: cy + 1.5 * cell + 34, 'text-anchor': 'middle', fill: C.muted, ...font() }, G);
     pairNote.textContent = 'one flip, or one above and one below';
 
@@ -147,6 +149,8 @@ export default {
     const heldFrames = HELD.map((h, k) => {
       const g = el('g', { transform: `translate(${hx0 + k * hfw - cx * hs.sc} ${hs.y - cy * hs.sc}) scale(${hs.sc})` }, heldStrip);
       const layer = checksLayer(g);
+      // a break mark where the rounds are not consecutive
+      if (k > 0 && HELD[k].round !== HELD[k - 1].round + 1) el('path', { d: `M${hx0 + k * hfw - hfw / 2 - 4},${hs.y + 6} l4,-12 M${hx0 + k * hfw - hfw / 2},${hs.y + 6} l4,-12`, stroke: C.muted, 'stroke-width': 1.2, fill: 'none' }, heldStrip);
       const cur = el('rect', { x: hx0 + k * hfw - hfw / 2 + 1, y: hs.y - 1.6 * cell * hs.sc + 1, width: hfw - 2, height: 3.2 * cell * hs.sc - 2, fill: 'none', stroke: C.accent, 'stroke-width': 1.6 }, heldStrip);
       return { g, layer, cur };
     });
@@ -205,7 +209,7 @@ export default {
       settle(errZ, z6 * (1 - gone6));
       errZ.setAttribute('fill', zg > 0 ? C.muted : C.ink);
       if (zg > 0) errZ.style.opacity = (1 - 0.6 * zg) * (1 - gone6);
-      draw(rhythm, zg * (1 - gone6));
+      rhythm.style.opacity = 0;   // the water callback was illegible at reading size: removed
       if (pos > 5 && at(pos, 6, 3) >= 1 && pos <= 6) lit = ['x0', 'x1'];
       // 7: the grid becomes frame 1 (camera, alone), round 6 draws beside it (the lie)
       // 8: held, picked rounds, cuts, the big frame over a growing strip
@@ -241,7 +245,8 @@ export default {
       // 10: round 19 again, with its explanations
       if (pos > 9) { lit = HELD[0].lit; G.setAttribute('transform', ''); }
       const e = pos > 9 ? at(pos, 10, 2) : 0;
-      xs.forEach((t, i) => settle(t, i === 0 ? e : e * (i ? 0.55 : 1)));
+      xs.forEach((t, i) => settle(t, i === 0 ? e : e * 0.7));
+      pairLinks.forEach((l) => settle(l, e * 0.8));
       label(pairNote, pos > 9 ? at(pos, 10, 3) : 0);
       label(tag, pos > 9 ? at(pos, 10, 3) : 0);
       settle(key, pos > 2 && pos <= 6 ? 1 : 0);

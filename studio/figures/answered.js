@@ -53,7 +53,7 @@ export default {
       },
       dur: () => P.total,
       alone: 1,
-      desc: () => 'The opening drawing returns with our own small reader: learning to read is affordable on a laptop, but one grid bigger it passed plain matching only at the end of a run four times longer, still behind correlated matching. On real recordings it is not tested yet.',
+      desc: () => 'The opening drawing returns with our own small reader: the examples are measured and the laptop time is our estimate; one grid bigger it passed plain matching only at the end of a run four times longer, still behind correlated matching. On real recordings it is not tested yet.',
     };
   },
 };

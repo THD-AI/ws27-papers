@@ -101,7 +101,7 @@ export default {
       dur: (k2) => (k2 === 1 ? P1.total : P2.total),
       alone: 2,
       desc: (k2) => (k2 === 1
-        ? 'A cooled quantum chip sends out a strip of film. One reader, the standard program, reads it and gets some answers wrong.'
+        ? "A cooled quantum chip sends out a strip of film. One reader, Google's best matching program, reads it and gets some answers wrong."
         : 'The same film goes to a second reader, a neural network, which gets fewer answers wrong.'),
     };
   },

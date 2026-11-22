@@ -22,6 +22,7 @@ const built = new Set((await readdir(join(ROOT, 'studio/figures'))).map((f) => f
 const inline = (s) => s
   .replace(/\s*\{\{[^}]*\}\}/g, '')
   .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+  .replace(/\b(section|sections|distance|step) (\d+)/g, '$1&nbsp;$2')
   .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
   .replace(/\*(.+?)\*/g, '<em>$1</em>')
   .trim();

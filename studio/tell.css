@@ -44,7 +44,8 @@ html:not(.js) .stage, html.tell-stills .stage, html.js-failed .stage { display: 
 .still svg.v-tall { display: none; }
 @media (max-width: 599.98px) { .still svg.v-wide { display: none; } .still svg.v-tall { display: block; } }
 .strip { display: grid; grid-template-columns: repeat(var(--n, 6), 1fr); gap: 4px; margin: 0.4em 0 1.4em; }
-@media (max-width: 599.98px) { .strip { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 599.98px) { .strip { grid-template-columns: 1fr; } }   /* each held frame full width on a phone, readable */
+html.tell-stills .still svg { max-height: none; }
 html.tell-top .still, html.tell-top .strip, html.tell-beside .still, html.tell-beside .strip { display: none; }
 /* the script failed or is slow: the prerendered stills, whatever the class */
 html.js-failed .still { display: block !important; }
@@ -91,7 +92,8 @@ html.tell-top .held > p, html.tell-beside .held > p { position: sticky; top: var
   /* one plain column on paper: no page grid, no pitch padding, no read-grey */
   html.tell-beside main.tell, html.tell-beside main.tell > .run { display: block !important; }
   main.tell > *, .run .flow { max-width: 40em !important; margin-left: auto !important; margin-right: auto !important; }
-  .chapter p[data-k], .gap p { padding-bottom: 0 !important; }
+  .chapter p[data-k], .gap, .gap p, .held { padding-bottom: 0 !important; height: auto !important; }
+  .step-desc { display: block; margin-top: 0.3em; }
   .chapter p.is-read { color: var(--ink) !important; }
   .stage { display: none !important; }
   .still, .strip { display: block !important; }
