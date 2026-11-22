@@ -194,7 +194,7 @@ function build(el, ctx) {
       { size: narrow ? 13 : 14, width: B.w, lh: 17 });
     // lane 1: the chip
     const y1 = trade.bottom + (narrow ? 20 : 22);
-    text(base, B.x, y1, narrow ? 'the chip' : 'the chip: the end of a run', small);
+    text(base, B.x, y1, narrow ? `the chip: ${acc.chip}` : `the chip (${acc.chip}): the end of a run`, small);
     const L1 = y1 + (narrow ? 24 : 30);
     line(base, B.x, L1, right, L1, { stroke: C.ink, 'stroke-width': 1 });
     const nBack = Math.floor((xLast - B.x) / (T * s));

@@ -113,7 +113,7 @@ function pen(ctrl, size, { thin = 0.6, t0 = 4, t1 = 7, slow = 11, n = 18 } = {})
 const LAYOUT = {
   wide: { W: 720, H: 470, win: [138, 558], fw: 105, chipY: 128, stripY: 292, stripH: 132, pitch: 21, visible: 4,
     box: [584, 222, 704, 362], notesY: 406, keyY: 456 },
-  tall: { W: 360, H: 440, win: [22, 338], fw: 105.3, chipY: 118, stripY: 246, stripH: 106, pitch: 19, visible: 3,
+  tall: { W: 360, H: 456, win: [22, 338], fw: 105.3, chipY: 118, stripY: 246, stripH: 106, pitch: 19, visible: 3,
     box: [60, 372, 300, 406], notesY: 340, keyY: 430 },
 };
 function strokes(L, tall) {

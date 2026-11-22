@@ -13,7 +13,7 @@ export const steps = 8;
 // a phase error; a check that misreports (two frames, the strip moves on);
 // the chip hidden, only the film left; one frame and its stories; the bet
 export const durations = { large: [2.2, 1.4, 1.2, 1.4, 1.8, 1.4, 2.0, 1.4] };
-const SIZE = { wide: [720, 470], tall: [360, 440] };
+const SIZE = { wide: [720, 470], tall: [360, 456] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 // when (in step units) each round's frames come in; the strip moves on by whole frames
@@ -42,10 +42,11 @@ function build(el, ctx) {
 
   // ---- titles and row labels ---------------------------------------------------
   const main = g(svg);
+  const head = tall ? g(svg) : main;
   if (tall) {
-    text(main, 16, 18, 'the decoder never sees an error,', { family: 'sans', size: 13, weight: 600 });
-    text(main, 16, 35, 'only the lights it leaves', { family: 'sans', size: 13, weight: 600 });
-  } else text(main, 16, 18, 'the decoder never sees an error, only the lights it leaves', { family: 'sans', size: 13, weight: 600 });
+    text(head, 16, 18, 'the decoder never sees an error,', { family: 'sans', size: 13, weight: 600 });
+    text(head, 16, 35, 'only the lights it leaves', { family: 'sans', size: 13, weight: 600 });
+  } else text(svg, 16, 18, 'the decoder never sees an error, only the lights it leaves', { family: 'sans', size: 13, weight: 600 });
   const chipTop = L.chipY - (tall ? 52 : 58);
   const labA = tall ? [16, chipTop - 9] : [16, L.chipY - 8], labB = tall ? [16, L.stripY - half - 8] : [16, L.stripY - 8];
   text(main, labA[0], labA[1], 'on the chip', { size: tall ? 14 : 15 });
@@ -58,7 +59,7 @@ function build(el, ctx) {
   const cp = h('clipPath', { id: clipId }, h('defs', null, svg));
   rect(cp, wx0 - 6, 0, wx1 - wx0 + 12, H);
   const chipLine = g(main);
-  pen(chipLine, P.chip);
+  path(chipLine, P.chip, { fill: C.ink, 'fill-opacity': 0.5, stroke: 'none', 'data-audit': 'skip' });
   const stripEnd = tall ? wx1 + 4 : L.box[0] + 6;
   rect(main, wx0 - 6, L.stripY - half, stripEnd - wx0 + 6, L.stripH, { fill: FILM.strip });
   const chipRow = g(main, { 'clip-path': `url(#${clipId})` });
@@ -176,9 +177,11 @@ function build(el, ctx) {
   // ---- step 5: the chip is hidden, only the film is left ---------------------------
   st.on((gg) => {
     const k = Math.min(1, Math.max(0, (gg - 5) / 0.35));
-    for (const [e, o] of [[chipRow, 1 - k], [chipLine, 1 - 0.6 * k]]) { const v = o >= 0.999 ? '' : o.toFixed(3); if (e.style.opacity !== v) e.style.opacity = v; }
+    for (const [e, o] of [[chipRow, 1 - 0.86 * k], [chipLine, 1 - 0.5 * k]]) { const v = o >= 0.999 ? '' : o.toFixed(3); if (e.style.opacity !== v) e.style.opacity = v; }
   });
   const hidden = g(main);
+  const hw = tall ? 196 : 220;
+  rect(hidden, (wx0 + wx1) / 2 - hw / 2, L.chipY - 15, hw, 30, { rx: 3, fill: C.paper });
   text(hidden, (wx0 + wx1) / 2, L.chipY + 6, 'hidden from the decoder', { size: tall ? 16 : 18, anchor: 'middle' });
   st.fade(hidden, 5.15, 5.4);
 
@@ -203,14 +206,15 @@ function build(el, ctx) {
   st.fade(six, 6, 6.35);
   // the bet, counted: one dot for each time the single flip happens, against one for all four pairs together
   const n = bet.times_likelier;
-  const B7 = tall ? { lx: 16, gx: 112, gy: 378, cols: 25, p: 4.3, r: 1.45, row2: 432, tx: 230 } : { lx: 290, gx: 302, gy: 356, cols: 50, p: 5, r: 1.6, row2: 412, tx: 560 };
+  const B7 = tall ? { lx: 16, gx: 118, gy: 380, cols: 25, p: 4.6, gap: 3, r: 1.5, row2: 440, tx: 248 } : { lx: 290, gx: 302, gy: 352, cols: 50, p: 4.4, gap: 3.5, r: 1.5, row2: 406, tx: 562 };
   const lab = { size: tall ? 13 : 14, anchor: tall ? 'start' : 'end' };
-  text(seven, B7.lx, B7.gy + (tall ? 20 : 14), 'one flip', lab);
-  for (let i = 0; i < n; i++) circle(seven, B7.gx + (i % B7.cols) * B7.p, B7.gy + Math.floor(i / B7.cols) * B7.p, B7.r, { fill: C.ink });
+  const dx = (i) => (i % B7.cols) * B7.p + Math.floor((i % B7.cols) / 5) * B7.gap, dy = (i) => Math.floor(i / B7.cols) * B7.p + Math.floor(Math.floor(i / B7.cols) / 5) * B7.gap;
+  text(seven, B7.lx, B7.gy + (tall ? 22 : 14), 'the single flip', lab);
+  for (let i = 0; i < n; i++) circle(seven, B7.gx + dx(i), B7.gy + dy(i), B7.r, { fill: C.ink });
   text(seven, B7.lx, B7.row2 + 4, 'all four pairs', lab);
   circle(seven, B7.gx, B7.row2, B7.r, { fill: C.ink });
-  text(seven, B7.tx, B7.gy + (tall ? 20 : 14), `${n} : 1`, { family: 'mono', size: 13 });
-  text(seven, tall ? B7.gx + 14 : B7.tx, B7.row2 + 4, tall ? 'so the decoder bets on the flip' : 'so the decoder bets on the single flip', { ...noteO, width: tall ? 220 : 170 });
+  text(seven, B7.tx, B7.gy + (tall ? 22 : 14), `${n} : 1`, { family: 'mono', size: 13 });
+  text(seven, tall ? B7.gx + 14 : B7.tx, B7.row2 + 4, tall ? 'so the decoder bets on the flip' : 'so the decoder bets on the single flip', { ...noteO, width: tall ? 220 : 150 });
   st.fade(seven, 7, 7.3);
 
   return { set: (stp, t) => st.set(stp, t) };
