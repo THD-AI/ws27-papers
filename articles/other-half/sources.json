@@ -157,7 +157,7 @@
     "url": "",
     "type": "own measurement",
     "date": "recounted 15 and 16 November 2026; ties resolved in exact arithmetic 23 November 2026",
-    "note": "docs/proposal/paper/data/find_example.py, ported into tools/other-half-data.mjs"
+    "note": "docs/proposal/paper/data/find_example.py, ported into tools/other-half-data.mjs; each storing qubit has a 5% chance of an error, a flip, a phase error or both, each a third of that"
   },
   "OWN-FILM-SIM": {
     "title": "The film of section 4: a seeded Stim simulation of the distance-7 surface code memory (surface_code:rotated_memory_z), 40 rounds, standard circuit noise at 0.5% (after-Clifford depolarisation, before-round data depolarisation, measurement and reset flips), seed 20261122; the detection events of each round, and the rate at which checks fire over 20,000 runs (seed 20261123)",
