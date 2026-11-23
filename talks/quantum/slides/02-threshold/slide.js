@@ -44,7 +44,7 @@ export default {
     ink.note(DX(7) + 20, y3 - 150, 'above the', { color: PEN.red, size: 34 });
     ink.note(DX(7) + 20, y3 - 110, 'threshold', { color: PEN.red, size: 34 });
     ink.note(DX(7) + 20, y3 + 196, 'below it', { color: PEN.blue, size: 34 });
-    ink.note(DX(3) + 40, y3 + 150, '÷ Λ per step', { color: PEN.blue, size: 34 });
+    T(svg, DX(3) + 40, y3 + 150, '÷ Λ per step', { fill: PEN.blue, size: 34 });
     T(svg, sx0, 910, 'Google, measured: in 2023 distance 5 just beat 3;', { size: 32 });
     T(svg, sx0, 954, 'in 2024 the error about halved at each step.', { size: 32 });
   },

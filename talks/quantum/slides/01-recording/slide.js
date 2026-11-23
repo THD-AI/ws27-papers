@@ -26,7 +26,7 @@ export default {
       T(svg, rx, ry, 'matching', { family: 'virgil', size: 44 });
       // below the strip, between the reel and the tower
       // ends just left of the tower it names
-      const [tx, ty] = at(1170, 820);
+      const [tx, ty] = at(1150, 750);
       T(svg, tx, ty, 'a neural network', { family: 'virgil', size: 44, anchor: 'end' });
       T(svg, tx, ty + 50, 'read afterwards:', { size: 32, weight: 600, fill: C.accent, anchor: 'end' });
       T(svg, tx, ty + 92, `about one error in ${fewer === 6 ? 'six' : fewer} fewer`, { size: 32, weight: 600, fill: C.accent, anchor: 'end' });

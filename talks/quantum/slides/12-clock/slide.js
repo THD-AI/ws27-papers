@@ -44,7 +44,8 @@ export default {
       T(svg, X(at) - 18, y2 + 100, `at about ${Math.round(at)}: round 3 answered, the chip at round ${done},`, { size: 32, weight: 600, anchor: 'end' });
       T(svg, X(at) - 18, y2 + 140, `${done - 4} rounds waiting`, { size: 32, weight: 600, anchor: 'end' });
       const ink = inkLayer(page);
-      ink.note(X(at) - 18, y2 + 184, '…and the pile keeps growing', { size: 38, color: PEN.red, anchor: 'end' });
+      ink.note(X(at) - 18, y2 - 52, 'the pile of waiting rounds keeps growing', { size: 36, color: PEN.red, anchor: 'end' });
+      ink.arrow([[X(at) - 10, y2 - 66], [X(at) + 30, y2 - 100], [X(at) + 50, y1 + 34]], { stroke: PEN.red, seed: 94, head: 18 });
     }
     if (b >= 1) {
       const y3 = 790;
