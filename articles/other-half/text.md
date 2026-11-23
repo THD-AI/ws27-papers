@@ -61,7 +61,7 @@ A check can also just report wrongly. Then it fires twice in a row, once when th
 
 :::scene film
 
-@caption What leaves the chip, every round, is each check's answer; drawn here as the opening drawing's cable, a strip of film. An ordinary computer compares each round with the one before, and in each frame a lit point is a check of the distance-7 grid (48 checks) whose answer changed: blue for checks on flips, black for checks on phase errors. Simulated: distance 7, a 0.5% chance of error per operation, chosen so the inner checks fire as often as on Google's chip: 8.6% of rounds here, 8.7% in Google's report of 2024. Shown far slower than real time.
+@caption What leaves the chip, every round, is each check's answer; drawn here as the opening drawing's cable, a strip of film. An ordinary computer compares each round with the one before, and in each frame a lit point is a check of the distance-7 grid (48 checks) whose answer changed. The frame held up is that grid as drawn beside section 3, and the same round: its fired checks lit, the kind of each check shown by its tile. Simulated: distance 7, a 0.5% chance of error per operation, chosen so the inner checks fire as often as on Google's chip: 8.6% of rounds here, 8.7% in Google's report of 2024. Shown far slower than real time.
 
 @step 0
 One round of checks takes 1.1 millionths of a second, and a grid of distance 7 has 48 checks. In the time of one blink the chip gets through about ninety thousand rounds and puts out about four million check results, for a single logical qubit. {{GQA-2024 OWN-ARITH}}
