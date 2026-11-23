@@ -2,18 +2,6 @@
 
 Kind: log, newest first. Read this before every loop on the deck; add to it at the end of every loop (the compound step). Each entry: what happened, what it means, the rule that follows. His words are in dotUni `.docs/transcripts/` (numbers given).
 
-## Seminar evidence pass (23 November)
-
-- Slide 3 gave the 40% claim and the 32% count equal rulers. Readers saw an eight-point difference. The 40% is now a line attributed to the press release. The ruler belongs to the declared population, contract customers, and the spoken landing distinguishes contacts that started with software from the unpublished completion rate.
-- Slide 6 puts the missing resolution rate beside the handoff result. Slide 10 stays with the EU monitoring survey. Slide 11 names the limit of the US record and draws the works council process. The Article 50 disclosure rule stays in B2.
-- Slide 15 carries the cheaper-tariff customer from slide 2 through three permissions. The stage gate names the measure and the stop condition. Step 2 is the works agreement and step 7 is acceptance.
-- The reading estimate is 12:56 at 130 words per minute or 13:53 at 120, with 39 advances at 1.5 seconds and 16 landings at 2.5 seconds. The cue sheet keeps the planned start times. The room test still needs a timed run with the real speaker.
-
-Rules that follow:
-
-57. If the source leaves the denominator unspecified, attribute the number in words. Give the ruler to the defined count.
-58. A live stage gate needs the business measure and the action to take when it fails on the same build.
-
 ## State after loop 12 (21 November): where things are
 
 - The deck: `slides2.js` (open `index.html?v=2`), 46 pages. Build: `node tools/deck.mjs renovate --v2` (PDF, cue sheet `CUES-v2.md`, gates), `node tools/deck-offline.mjs renovate --v2` (one presenting file in `.shots/deck/renovate-v2/`).
