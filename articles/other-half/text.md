@@ -87,12 +87,12 @@ The harmful case looks like this. A correction acts on the grid just as errors d
 This silent failure is a **logical error**, and how often it happens is what every decoder is measured by. It also shows what distance (section 2) is worth. On a grid of distance 5 a line needs five storing qubits. So three real errors can be enough. A decoder that sees them may add two more.
 
 :::figure line column
-A grid of distance 5, showing flips and the checks that notice them. Three real errors in one column fire a single check. The shortest explanation of that one check is two errors below it. If the decoder corrects those two, errors and correction together cross the grid from edge to edge: the stored value has changed and no check fires. Constructed and checked by our script.
+A grid of distance 5, showing flips and the checks that notice them. From here on, a single round of checks, and checks that never report wrongly. Three real errors in one column fire a single check. The shortest explanation of that one check is two errors below it. If the decoder corrects those two, errors and correction together cross the grid from edge to edge: the stored value has changed and no check fires. Constructed and checked by our script.
 :::
 
 ## 6. Where the standard method goes wrong
 
-The rules are the same on a grid of any size, so we went down to the smallest one, distance 3, where every case can be counted. We went through every possible error there and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 possible patterns on the smallest grid, 103 get an answer from the standard decoder that isn't the most likely one. {{OWN-ENUM}} That sounds like a lot, but these patterns are rare: together they turn up in fewer than 2 cases in 100.
+The rules are the same on a grid of any size, so we went down to the smallest one that can correct an error, distance 3, where every case can be counted. We went through every possible error there and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 possible patterns on the smallest grid, 103 get an answer from the standard decoder that isn't the most likely one. {{OWN-ENUM}} That sounds like a lot, but these patterns are rare: together they turn up in fewer than 2 cases in 100.
 
 :::figure syndromes wide
 All 256 patterns of the eight checks at distance 3, one mark each, ordered by how many checks fire. Filled: the 103 patterns where the standard decoder's answer isn't the most likely one. These are the rarer patterns: with a 5% chance of an error per storing qubit they turn up in about 1.6% of cases, and in 63% of cases no check fires at all. Our own count.

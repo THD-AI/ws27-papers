@@ -129,13 +129,14 @@ export function grid(parent, o) {
 }
 
 // An error on a storing qubit: a disc with its letter (X flip, Z phase error,
-// Y both). 'real' is ink; 'added' is open, in the accent line.
+// Y both). 'real' is ink, filled; 'added' (the decoder's guess) is open, in
+// ink: the accent is kept for a fired check.
 export function errMark(parent, x, y, r, letter, C, kind = 'real') {
   const grp = g(parent);
   const real = kind === 'real';
-  circle(grp, x, y, r, real ? { fill: C.ink, stroke: C.ink, 'stroke-width': 1.25 } : { fill: C.paper, stroke: C.accent, 'stroke-width': 1.6 });
+  circle(grp, x, y, r, real ? { fill: C.ink, stroke: C.ink, 'stroke-width': 1.25 } : { fill: C.paper, stroke: C.ink, 'stroke-width': 1.6 });
   const size = r * 1.42;
-  figText(grp, x, y + size * 0.355, letter, { family: 'sans', size, weight: 600, anchor: 'middle', fill: real ? C.paper : C.accent });
+  figText(grp, x, y + size * 0.355, letter, { family: 'sans', size, weight: 600, anchor: 'middle', fill: real ? C.paper : C.ink });
   return grp;
 }
 

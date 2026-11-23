@@ -74,7 +74,7 @@ function build(el, ctx) {
   const G3 = plates[2];
   const top = G3.pos(d.together[0]), bot = G3.pos(d.together[d.together.length - 1]);
   const reach = pitch * 0.62;
-  const cross = line(G3.gE, top[0], top[1] - reach, bot[0], bot[1] + reach, { stroke: C.accent, 'stroke-width': 2.5, 'stroke-linecap': 'round' });
+  const cross = line(G3.gE, top[0], top[1] - reach, bot[0], bot[1] + reach, { stroke: C.ink, 'stroke-width': 2.2, 'stroke-linecap': 'round' });
   marks(G3, d.real_errors, 'real', 0.62);
   marks(G3, d.decoder_correction, 'added', 0.74);
   st.draw(cross, 0.82, 0.97);
