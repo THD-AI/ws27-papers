@@ -1,39 +1,65 @@
 {
   "id": "permits",
-  "headline": "Checks before launch, or after it",
-  "reading": "Two schedules for one kind of decision, putting a new IT system to work, on one time axis. United States, T-Mobile: the system is built and launched, and the checks come afterwards, as lawsuits and state rules. Germany, Telekom: the works council is told while the system is planned and has to agree if it can monitor staff, and a privacy review approves it; only then is it built and launched. Since 2021 a framework agreement keeps that review short for a system that fits its rules; a system outside the framework needs its own agreement, the long way, and if no agreement is reached, the conciliation board decides.",
-  "axis": {
-    "time": "time",
-    "start": "start",
-    "scale": "schematic lengths"
-  },
-  "words": {
-    "review": "works council and privacy review",
-    "build": "build",
-    "launch": "launch",
-    "afterwards": "lawsuits and state rules, afterwards",
-    "conciliation": "if no agreement: the conciliation board decides (§ 87(2) BetrVG)",
-    "source": [
-      "R6-08",
-      "R11-36",
-      "R11-37",
-      "R11-41",
-      "R11-43",
-      "R11-05",
-      "R11-07",
-      "R11-08",
-      "R11-21",
-      "R11-12"
-    ],
-    "outside": "outside the framework: its own agreement · how long: not published",
-    "inside": "inside the framework agreement (2021): a short check",
-    "check": [
-      "profile check",
-      "check"
-    ]
-  },
+  "headline": "Which checks apply, and when?",
+  "reading": "T-Mobile announced its agent platform, but the public record leaves pre-launch staff input unknown. In Germany, consult the works council during planning, agree before using monitoring-capable tools, and tell customers at first contact that they are dealing with AI unless it is obvious. Since 2021, Telekom checks eligible systems against its group framework agreement. Systems outside it can require a separate agreement. The duration of those checks for Telekom's service agents is unknown.",
+  "stages": [
+    {
+      "label": "T-Mobile US · what is public",
+      "items": [
+        [
+          "Platform announced in September 2024.",
+          "Staff input before launch: unknown."
+        ]
+      ],
+      "source": [
+        "R6-08",
+        "R11-37"
+      ]
+    },
+    {
+      "label": "Germany · the rules",
+      "items": [
+        [
+          "Planning",
+          "Inform and consult the works council."
+        ],
+        [
+          "Before use",
+          "Agree on tools suited to monitoring staff."
+        ],
+        [
+          "First customer contact",
+          "Disclose the AI unless it is obvious."
+        ]
+      ],
+      "source": [
+        "R11-05",
+        "R11-07",
+        "R11-44",
+        "R9-04"
+      ]
+    },
+    {
+      "label": "Telekom's 2021 framework",
+      "items": [
+        [
+          "Inside the rules",
+          "Check the profile against the agreement."
+        ],
+        [
+          "Outside the rules",
+          "A separate agreement may be needed."
+        ]
+      ],
+      "source": [
+        "R11-12",
+        "R11-07"
+      ]
+    }
+  ],
+  "boundary": "How long Telekom's agent approvals take: unknown.",
   "schedule": {
-    "note": "Schematic lengths in arbitrary units on one shared axis: the order and the relative length matter, no duration is measured. Building has the same length on both sides. The long review stands for the period before 2021 (about six weeks per system, R11-12) and for a system beyond the framework agreement, which needs its own agreement (R11-12); the short review for a system that fits the framework.",
+    "note": "Legacy V1 deck layout only. These coordinates do not establish comparable timing or measured durations. Current article and V2 use the evidenced stages above.",
     "source": [
       "R11-12"
     ],
@@ -86,82 +112,5 @@
         ]
       }
     }
-  },
-  "rows": {
-    "us": {
-      "label": "United States · T-Mobile",
-      "fact": "T-Mobile announced its agent platform in September 2024. There is no works council in the German sense; the checks come afterwards, as court cases (a staff body set up by T-Mobile was ordered dissolved, upheld on appeal in January 2024; a class action under California's privacy law against an AI customer-service provider) and state rules (California's regulations finalized in September 2025).",
-      "source": [
-        "R6-08",
-        "R11-36",
-        "R11-37",
-        "R11-41",
-        "R11-43"
-      ]
-    },
-    "de": {
-      "label": "Germany · Telekom",
-      "fact": "The works council has to be told while the system is planned (§ 90 BetrVG) and has to agree to a technical system suited to monitoring staff (§ 87(1) no. 6); if no agreement is reached, the conciliation board decides (§ 87(2), § 76). Telekom's privacy and security assessment approves a system before it runs.",
-      "source": [
-        "R11-05",
-        "R11-07",
-        "R11-08",
-        "R11-21"
-      ]
-    },
-    "framework": {
-      "fact": "Since March 2021 a group framework agreement sets the rules for IT systems once; a system that fits goes ahead after the works council checks its profile, without a separate decision. Before, the IT committee had about six weeks per system. A system beyond the rules needs its own agreement.",
-      "source": "R11-12"
-    }
-  },
-  "carsNote": {
-    "inFigure": false,
-    "why": "Removed from the figure on 17 November 2026: in round 2, four of twelve readers found the car metaphor one too many in an article built on houses. The article text keeps the cars as a single comparison sentence; these are its facts.",
-    "us": {
-      "text": "The maker certifies its own vehicles against the federal safety standards; NHTSA does not approve them before sale. NHTSA buys certified new cars, tests them, and pursues a recall when one does not comply.",
-      "source": "FR-2020-28107"
-    },
-    "de": {
-      "text": "A vehicle may be placed on the market, registered or put into service only once its type is approved (in Germany by the Kraftfahrt-Bundesamt). Each car built to the type comes with a certificate of conformity; a single vehicle outside an approved type needs an individual approval.",
-      "source": "EU-2018-858"
-    }
-  },
-  "notesWhy": "Removed from the figure on 17 November 2026: readers found the italic notes under the axis heavy, and the article text says the same. Kept here so that nothing is lost.",
-  "notes": [
-    {
-      "step": 0,
-      "inFigure": false,
-      "lead": "United States, T-Mobile (Telekom's US subsidiary).",
-      "text": "No works council; for this kind of decision the checks come afterwards, as court cases and state rules.",
-      "source": [
-        "R6-01",
-        "R6-06",
-        "R6-08",
-        "R11-36",
-        "R11-37",
-        "R11-41",
-        "R11-43"
-      ]
-    },
-    {
-      "step": 1,
-      "inFigure": false,
-      "lead": "Germany, Telekom.",
-      "text": "The review: the works council is told while planning, has to agree if the system can monitor staff, and a privacy review approves it. Until 2021 about six weeks per system.",
-      "source": [
-        "R11-05",
-        "R11-07",
-        "R11-08",
-        "R11-21",
-        "R11-12"
-      ]
-    },
-    {
-      "step": 2,
-      "inFigure": false,
-      "lead": "Framework agreement.",
-      "text": "Since 2021 a standing agreement approves IT systems inside fixed rules: one that fits goes live after a quick check, one outside needs its own agreement.",
-      "source": "R11-12"
-    }
-  ]
+  }
 }

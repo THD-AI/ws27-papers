@@ -8,7 +8,7 @@
 //   sequence (stills = [8]) and the print state (steps - 1), so neither
 //   reads as "we are at step 8".
 //   Why the order holds, where the text says so: stations 6 to 8 sit under
-//   a thin bracket, "they need step 5" (one customer record); station 6
+//   a thin bracket for account changes, which need step 5; station 6
 //   hands its keys over in three stages (three notches on the path after
 //   it, named in its label).
 //   The staff: a separate note with a short band that stops at a marked
@@ -33,7 +33,7 @@ export const stills = [8];
 // a walk to the next station is short (one ring moving on), 1.2 s for the
 // last; the overview is never scrolled to
 export const durations = { large: [2.6, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.2, 1.2] };
-const SIZE = { wide: [720, 440], tall: [360, 236] };
+const SIZE = { wide: [720, 448], tall: [360, 236] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 // '#rrggbb' or 'rgb(r, g, b)' -> [r, g, b]

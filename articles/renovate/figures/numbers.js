@@ -1,22 +1,14 @@
-// numbers: what the 40% and the 55% are.
-// Plate A (steps 0 to 2): 100 contacts as a 10 by 10 grid.
-// Plate B (steps 3 and 4): contacts per account in a year, the two published
-// values as large numbers on one date axis, nothing drawn between them.
-// Print: both plates side by side.
+// numbers: a scoped start rate, then the two published contacts-per-account values.
 import {
-  mountFigure, svgRoot, colors, g, line, circle, rect, text, cells, plate,
-  leader, bracket, penRing, stage, fmt, span, ease, lerp, linear, textSize,
+  mountFigure, svgRoot, colors, g, line, circle, text,
+  leader, bracket, stage, fmt, span, ease, linear, textSize,
 } from '../../../lib/fig.js';
 
 export const steps = 5;
 // where the scene reads as a sequence: the end of plate A and of plate B
 export const stills = [2, 4];
-// seconds each step plays once triggered: 100 contacts and the 40; the 32
-// with bracket and ring; the two notes of step 2; plate B assembling; the
-// three additions of step 4
-// step 1: the 32 fill first, their label after about 0.9 s; step 3: the
-// grid leaves (0–0.4 s), 7.0 (0.4–1.0), 3.1 (1.0–1.6), then −55% and the
-// axis (1.6–2.4)
+// Plate A: the release stands on its own, then the contract-customer grid and
+// what its start rate cannot tell us. Plate B retains its existing date axis.
 export const durations = { large: [2.4, 1.4, 1.6, 2.4, 2.0] };
 // t at which `sec` seconds of step `k` have passed (the engine's soft ease,
 // article.js); returns g = k + t
@@ -24,166 +16,57 @@ const soft = (x) => x * (1.4 - 0.4 * x);
 const G = (k, sec) => k + soft(Math.min(1, Math.max(0, sec / durations.large[k])));
 export const aspect = { wide: 800 / 500, tall: 360 / 440 };
 
-const fill = (tpl, v, dec = 0) => tpl.replace('{v}', fmt(v, dec));
+// Plate A uses the same local coordinates on screen and in the print composite.
+function plateA(svg, C, d, tall, st, keep) {
+  const A = d.plateA, root = g(svg);
+  const left = tall ? 14 : 20, right = tall ? 346 : 780;
+  const gridX = tall ? 20 : 441, gridY = tall ? 224 : 184;
+  const pitch = tall ? 13.5 : 21;
+  const note = { size: tall ? 13 : 16, family: 'sans', fill: C.ink };
+  const muted = { ...note, fill: C.muted };
+  const label = { ...note, weight: 600 };
+  const headline = g(root);
+  text(headline, left, 24, d.headline.a, { ...label, width: tall ? 332 : 610 });
+  text(headline, right, tall ? 48 : 24, d.tag, { family: 'mono', size: tall ? 11.5 : 12.5, fill: C.muted, anchor: 'end' });
+  st.fade(headline, 0, 0.14, keep ? undefined : TA);
 
-// ---------------------------------------------------------------------------
-// Plate A. Coordinates are those of its own box: 800 x 500 or 360 x 392.
-// `keep`: the plate stays as it is at the end of step 2 (print).
-// ---------------------------------------------------------------------------
-function plateA(svg, C, d, tall, st, keep, big) {
-  const A = d.plateA;
-  const L = tall
-    ? { p: 20.5, gx: 14, gy: 152, rBase: 2, rUnit: 6.7, note: 12.5, top: [141, 130, 112, 83, 72], bottomY: 378, relX: 229, relNoteX: 241, relW: 108, restX: 256, restY: 116, restW: 96, tagX: 346, tagY: 44 }
-    : { p: 32, gx: 150, gy: 162, rBase: 2.8, rUnit: 10.2, note: 14, top: [148, 136, 113, 83, 71], bottomY: 495, relX: 484, relNoteX: 500, relW: 230, restX: 492, restY: 110, restW: 240, tagX: 786, tagY: 17 };
-  if (big) L.note = 13.5;
-  if (tall) { L.restX = 244; L.restY = 292; L.restW = 108; }
-  const root = g(svg), body = g(root, tall ? { transform: 'translate(0 40)' } : null), grid = g(body), notes = g(body);
-  const n = A.total.value, cols = 10;
-  const at = (i) => { const c = i % cols, r = Math.floor(i / cols); return [L.gx + L.p / 2 + c * L.p, L.gy + L.p / 2 + r * L.p]; };
-  // order: the first four rows are counted column by column, so that the
-  // 32 and the 8 are two clean blocks
-  const rowsTop = Math.ceil(A.release.value / cols);
-  const order = [];
-  for (let c = 0; c < cols; c++) for (let r = 0; r < rowsTop; r++) order.push(r * cols + c);
-  for (let i = rowsTop * cols; i < n; i++) order.push(i);
+  const release = g(root, { 'data-claim': 'release' });
+  const releaseY = tall ? 76 : 109;
+  text(release, left, releaseY, 'Deutsche Telekom press release', { ...label, width: tall ? 320 : 365 });
+  st.fade(release, 0.1, 0.27);
+  const claim = g(release);
+  const number = text(claim, left, releaseY + (tall ? 57 : 74), fmt(A.release.value) + '%', { family: 'mono', size: tall ? 42 : 64, weight: 600, fill: C.ink });
+  const description = text(claim, left, number.bottom + (tall ? 16 : 23), A.release.note, { ...note, width: tall ? 320 : 335 });
+  st.fade(claim, 0.29, 0.63);
+  const scope = text(release, left, description.bottom + (tall ? 15 : 23), A.release.scope, { ...muted, width: tall ? 320 : 335 });
+  st.fade(scope.el, 0.66, 0.9);
 
-  // every contact
-  // they are there as soon as the scene pins: one quick fade, not a count,
-  // so the first pinned frame is never an empty band under the title
-  const baseG = g(grid);
-  for (let i = 0; i < n; i++) { const [x, y] = at(i); circle(baseG, x, y, L.rBase, { fill: C.ink }); }
-  st.fade(baseG, 0, 0.1);
-  // release: 40 carry a dashed outline; nothing is filled
-  const dashed = [], discs = [];
-  for (let k = 0; k < A.release.value; k++) {
-    const [x, y] = at(order[k]);
-    dashed.push(circle(grid, x, y, L.rUnit, { fill: 'none', stroke: C.ink, 'stroke-width': 1, 'stroke-dasharray': tall ? '2 2.2' : '2.6 2.8', 'vector-effect': 'non-scaling-stroke' }));
+  const group = g(root, { 'data-claim': 'contract-customer-starts' });
+  line(group, tall ? left : 405, tall ? 192 : 88, tall ? right : 405, tall ? 192 : 426, { stroke: C.hairline, 'stroke-width': 1 });
+  text(group, tall ? left : gridX, tall ? 213 : 109, 'T-Mobile investor slide', label);
+  text(group, gridX, gridY + pitch * 10 + (tall ? 22 : 26), A.total.note, { ...muted, width: tall ? 324 : 329 });
+  const cols = 10, fills = [];
+  for (let i = 0; i < A.total.value; i += 1) {
+    const x = gridX + (i % cols + 0.5) * pitch;
+    const y = gridY + (Math.floor(i / cols) + 0.5) * pitch;
+    circle(group, x, y, tall ? 2 : 2.7, { fill: C.ink });
+    if (i < A.slide.value) fills.push(circle(group, x, y, tall ? 4.6 : 7, {
+      fill: C.field, stroke: C.accent, 'stroke-width': tall ? 1.2 : 1.6,
+    }));
   }
-  // the slide: 32 fill with the accent
-  for (let k = 0; k < A.slide.value; k++) {
-    const [x, y] = at(order[k]);
-    const c = circle(grid, x, y, L.rUnit, { fill: C.field, stroke: C.accent, 'stroke-width': tall ? 1.4 : 1.6, 'vector-effect': 'non-scaling-stroke' });
-    c.dataset.r = L.rUnit;
-    discs.push(c);
-    circle(grid, x, y, L.rBase, { fill: C.accent, 'data-audit': 'skip' }).dataset.k = k;
-  }
-  const cores = [...grid.querySelectorAll('circle[data-k]')];
-  st.fill(discs, G(1, 0.02), G(1, 0.85)).fill(cores, G(1, 0.02), G(1, 0.85));
-  dashed.forEach((el, k) => {
-    const a = 0.32 + (k / dashed.length) * 0.32;
-    if (k < A.slide.value) { const f0 = G(1, 0.02), f1 = G(1, 0.85), u = (f1 - f0) * 0.85; st.fade(el, a, a + 0.1, [f0 + (k / A.slide.value) * u, f0 + (k / A.slide.value) * u + (f1 - f0) * 0.15]); }
-    else st.fade(el, a, a + 0.1);
-  });
+  st.fade(group, G(1, 0.02), G(1, 0.33));
+  st.fill(fills, G(1, 0.24), G(1, 1.08));
 
-  const hide = keep ? undefined : XA;
-  const nt = (grp, a, b) => st.fade(grp, a, b, hide);
-  const o = { italic: true, size: L.note };
+  const result = g(group);
+  const nx = tall ? 177 : gridX;
+  const ny = tall ? 269 : 164;
+  const n = text(result, nx, ny, fmt(A.slide.value) + '%', { family: 'mono', size: tall ? 32 : 35, weight: 600, fill: C.accent });
+  text(result, tall ? nx : n.right + 15, tall ? n.bottom + 17 : ny, A.slide.note, { ...label, width: tall ? 162 : 240 });
+  st.fade(result, G(1, 0.74), G(1, 1.35));
 
-  const gH = g(root, { 'data-role': 'title' });
-  const hA = text(gH, tall ? 14 : 16, tall ? 13 : 17, d.headline.a, { family: 'sans', size: tall ? 12 : 13.5, weight: 600, width: tall ? 334 : 640, lh: 15 });
-  // the title goes first, so plate B's never lies on it
-  st.fade(gH, 0, 0.12, keep ? undefined : TA);
-  // the plate's own note, under the grid
-  const gT = g(notes);
-  text(gT, L.gx + 2, L.bottomY, fill(A.total.note, A.total.value), o);
-  nt(gT, 0.1, 0.24);
-  const gTag = g(root);
-  text(gTag, L.tagX, tall ? hA.bottom + 13 : L.tagY, d.tag, { family: 'mono', size: tall ? 11.5 : 12.5, fill: C.muted, anchor: 'end' });
-  nt(gTag, 0.18, 0.32);
-
-  // release: a bracket beside the four rows
-  const y0 = L.gy + 3, y1 = L.gy + rowsTop * L.p - 3;
-  const gR = g(notes);
-  const br = bracket(gR, L.relX, y0, L.relX, y1, 5, { stroke: C.ink, 'stroke-width': 1 });
-  const relTxt = g(gR);
-  const rel = text(relTxt, L.relNoteX, 0, fill(tall && A.release.short ? A.release.short : A.release.note, A.release.value), { ...o, width: L.relW });
-  // the 40 and the 32 come from two documents: the drawing nests one in the
-  // other, the note under the release says that nobody published the overlap
-  const ovG = g(relTxt);
-  const ovTxt = (tall && A.overlap.short ? A.overlap.short : A.overlap.note).replace('{t}', fmt(A.total.value)).replace('{a}', fmt(A.release.value)).replace('{b}', fmt(A.slide.value));
-  const ov = text(ovG, L.relNoteX, rel.bottom + L.note * 0.78 + (tall ? 6 : 8), ovTxt, { ...o, width: L.relW, fill: C.muted });
-  // centred on the bracket; on the narrow plate the block is taller than the
-  // four rows and starts at the bracket's top instead
-  const dy = tall ? y0 - 1 - rel.y : (y0 + y1) / 2 - (rel.y + ov.bottom) / 2;
-  relTxt.setAttribute('transform', `translate(0 ${dy.toFixed(1)})`);
-  if (keep) st.draw(br, 0.66, 0.8); else st.draw(br, 0.66, 0.8, hide);
-  st.fade(rel.el, 0.76, 0.9);
-  nt(relTxt, 0, 0.001);
-  nt(ovG, G(1, 1.1), G(1, 1.38));
-
-  // the slide: a bracket over the 32, its note above
-  const bx0 = L.gx + 3, bx1 = L.gx + (A.slide.value / rowsTop) * L.p - 3;
-  const gS = g(notes);
-  const sb = bracket(gS, bx1, L.top[0], bx0, L.top[0], tall ? 4.5 : 6, { stroke: C.ink });
-  if (keep) st.draw(sb, G(1, 0.8), G(1, 1.0)); else st.draw(sb, G(1, 0.8), G(1, 1.0), hide);
-  const gSn = g(notes);
-  // the note, then the number on its own with clear space, ringed
-  const [pre, post] = A.slide.note.split('[[{v}]]');
-  const t1 = text(gSn, bx0, L.top[2], pre.trim(), o);
-  // the number that matters, larger than the notes so it is found first
-  const numSize = tall ? 16.5 : 18;
-  const num = text(gSn, t1.right + (tall ? 12 : 14), L.top[2], fmt(A.slide.value), { family: 'mono', size: numSize, weight: 600 });
-  text(gSn, num.right + (tall ? 12 : 14), L.top[2], post.trim(), o);
-  {
-    const pr = penRing(gSn, num.cx, num.cy - 0.5, num.w / 2 + (tall ? 6 : 7), numSize * 0.5 + (tall ? 3.6 : 4), { seed: 31, stroke: C.accent, width: tall ? 1.7 : 1.8 });
-    pr.paths.forEach((p, k) => st.draw(p, G(1, 1.02 + k * 0.06), G(1, 1.3 + k * 0.05)));
-  }
-  nt(gSn, G(1, 0.88), G(1, 1.08));
-  // at step 1 the slide's note sits on the bracket; at step 2 it makes room
-  const drop = L.top[1] - L.top[2];
-  st.on((gg) => gSn.setAttribute('transform', `translate(0 ${(drop * (1 - ease(span(gg, G(2, 0.02), G(2, 0.5))))).toFixed(2)})`));
-
-  // the eight that are only in the release
-  const gN = g(notes);
-  // on the narrow plate it sits under the release's notes, clear of them
-  const restY = tall ? Math.max(L.restY, ov.bottom + dy + L.note + 12) : L.restY;
-  const rest = text(gN, L.restX, restY, A.rest.note, { ...o, width: L.restW });
-  if (tall) {
-    const [qx, qy] = at(order[A.release.value - 1]);
-    leader(gN, rest.x + 6, rest.y - 3, qx + 3, qy + L.rUnit + 3.5, { stroke: C.muted });
-  } else {
-    // a short bracket over the two columns of the eight, beside the one
-    // over the 32, so that the top edge reads as 32 | the rest
-    const ex0 = L.gx + (A.slide.value / rowsTop) * L.p + 3, ex1 = L.gx + cols * L.p - 3;
-    bracket(gN, ex1, L.top[0], ex0, L.top[0], 6, { stroke: C.muted, 'stroke-width': 1, 'stroke-dasharray': '3 3' });
-    leader(gN, rest.x + 10, rest.bottom + 3, (ex0 + ex1) / 2, L.top[0] - 2.5, { stroke: C.muted });
-  }
-  nt(gN, G(1, 1.0), G(1, 1.25));
-
-  // step 2: what the 32 are, and what is not known about them
-  const gA = g(notes);
-  text(gA, bx0, L.top[1], A.start.note, o);
-  nt(gA, G(2, 0.4), G(2, 0.8));
-  // the empty bracket, then its words
-  const gF = g(notes), gFb = g(gF), gFt = g(gF);
-  bracket(gFb, bx1, L.top[3], bx0, L.top[3], tall ? 4.5 : 6, { stroke: C.muted, 'stroke-width': 1, 'stroke-dasharray': '3 3.5' });
-  {
-    const fo = { ...o, width: tall ? 250 : 330, fill: C.muted }, ftxt = fill(A.finished.note, A.slide.value);
-    const fs = textSize(ftxt, fo);
-    text(gFt, bx0, L.top[4] - (fs.lines - 1) * fs.lh, ftxt, fo);
-  }
-  nt(gFb, G(2, 0.8), G(2, 1.15));
-  nt(gFt, G(2, 1.1), G(2, 1.55));
-
-  // Until the notes over the grid arrive (step 1) the grid stands right
-  // under the headline, with its own note under it, so step 0 reads complete
-  // and no empty band strands the headline; it moves down to make room just
-  // before the bracket over the 32 is drawn. Wide: until the release's
-  // bracket arrives the grid also stands in the middle of the frame, and it
-  // moves to its place beside the notes as they arrive.
-  if (!keep) {
-    const y0b = tall ? 40 : 0;
-    const dx0 = tall ? 0 : 400 - (L.gx + (L.p * cols) / 2);
-    st.on((gg) => {
-      const dx = dx0 * (1 - ease(span(gg, 0.52, 0.74)));
-      // the room for the labels over the grid is kept from step 0: the grid
-      // never moves when the 32 arrive
-      const dy = y0b;
-      body.setAttribute('transform', `translate(${dx.toFixed(2)} ${dy.toFixed(2)})`);
-    });
-  }
-
-  return { root, grid, box: { x: L.gx, y: L.gy, s: L.p * cols } };
+  const finished = text(group, tall ? left : gridX, tall ? 411 : 455, A.finished.note, { ...label, width: tall ? 330 : 330 });
+  st.fade(finished.el, G(2, 0.12), G(2, 1.5));
+  return root;
 }
 
 // ---------------------------------------------------------------------------
@@ -335,8 +218,8 @@ function build(el, ctx) {
   // two opacities add up to one and no scroll position shows an empty frame
   st.on((gg) => {
     const p = 1 - ease(span(gg, XA[0], XA[1]));
-    A.root.style.display = p <= 0.001 ? 'none' : '';
-    A.root.style.opacity = p >= 0.999 ? '' : p.toFixed(3);
+    A.style.display = p <= 0.001 ? 'none' : '';
+    A.style.opacity = p >= 0.999 ? '' : p.toFixed(3);
   });
   plateB(svg, C, d, tall, st);
   return { set: (s, t) => st.set(s, t) };

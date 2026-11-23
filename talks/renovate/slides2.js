@@ -194,25 +194,24 @@ add({
 // The release is a reported claim. Draw the share only for the defined group.
 add({
   id: 'number', n: 3, beat: 'The American result', builds: 3, start: '1:15',
-  clicks: ['the press release claim', 'the share of contract customers’ contacts that started with software', 'completion rate unpublished'],
-  title: 'Telekom’s release says 40 percent. T-Mobile’s own slide counts 32 percent.',
+  clicks: ['the contract-customer start rate', 'completion rate unpublished', 'the separate press release claim'],
+  title: '32% of contract-customer contacts started with software.',
   landings: { 2: 'About one in three contacts from contract customers started with software.' },
   source: 'Company figures. Deutsche Telekom, press release and AI Investor Day transcript, 5 Oct 2026. T-Mobile US, AI Investor Day deck, Q2 2026.',
-  notes: `<p>A correction to my own proposal. Telekom's press release says AI agents now handle forty percent of customer contacts in the US. I used that number. I couldn't find which customers the release counted. T-Mobile's investor slide shows thirty-two, and it counts something different: only contract customers, only contacts the software serves. Served means the customer meets the software first. Whether it also finished the job, T-Mobile doesn't say. Company numbers, not audited. One in three is still a lot. <b>About one in three contacts from contract customers started with software.</b></p>`,
+  notes: `<p>T-Mobile's own slide shows thirty-two percent. It counts contacts from contract customers, and "served" means they meet the software first. Whether it finished the job, T-Mobile doesn't say. A correction to my proposal: I used Telekom's press release, which says AI agents now handle forty percent of customer contacts in the US. I couldn't find which customers that release counted. Company numbers, not audited. One in three is still a lot. <b>About one in three contacts from contract customers started with software.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
-    frame(svg, this);
+    frame(svg, this, { titleWidth: 1680 });
     const { release, slide } = data.numbers.plateA;
-    T(svg, L, 324, `Telekom’s press release says AI handled ${release.value}% of contacts.`, { size: 43, weight: 600 });
-    T(svg, L, 382, 'The release leaves the customer group unspecified.', { size: 36, fill: C.muted });
-    if (b >= 1) {
-      ln(svg, L, 455, R, 455, { stroke: C.hair, 'stroke-width': 2 });
-      T(svg, L, 535, 'T-Mobile’s investor slide counts contract customers only.', { size: 42, weight: 600 });
-      T(svg, L, 715, `${slide.value}%`, { size: 108, weight: 600, fill: C.accent });
-      T(svg, 400, 615, 'of their contacts started with software', { size: 44, weight: 600 });
-      bar100(svg, 400, R, 660, 58, slide.value);
+    T(svg, L, 336, 'T-Mobile’s investor slide · Q2 2026', { size: 42, weight: 600 });
+    T(svg, L, 530, `${slide.value}%`, { size: 108, weight: 600, fill: C.accent });
+    bar100(svg, 400, R, 455, 74, slide.value);
+    if (b >= 1) T(svg, 400, 628, 'T-Mobile leaves the completion rate unpublished.', { size: 40, weight: 600 });
+    if (b >= 2) {
+      ln(svg, L, 714, R, 714, { stroke: C.hair, 'stroke-width': 2 });
+      T(svg, L, 794, `The press release says AI handled ${release.value}% of contacts.`, { size: 42, weight: 600 });
+      T(svg, L, 851, release.scope, { size: 36, fill: C.muted });
     }
-    if (b >= 2) T(svg, 400, 833, 'T-Mobile leaves the completion rate unpublished.', { size: 40, weight: 600 });
     band(svg);
   },
 });
@@ -320,13 +319,13 @@ add({
   title: 'Measure first. Start beside the staff.',
   sub: 'Step 1 is this course’s business measure, not accuracy. The order of the eight is my hypothesis.',
   source: 'Step 1: the business measure from this course. Step 4: teams, never single people (2021 framework agreement). Bitkom 2025: 51% of firms with 20 or more staff strongly dependent on US digital technology.',
-  notes: `<p>So how would I do it? Step one: before any agent, measure what one contact costs today, and how often customers come back. Then, with the agent: how many requests it finishes for good, and at what cost. That's the business measure from this course. If it doesn't get better, the agent is the wrong tool, and Telekom stops there. Step two: sign the works agreement while the system is still on paper. Step three: keep the option to switch suppliers. About half of German firms say they depend strongly on the US. Step four: train the staff before each new key. Measure teams, never single people, and watch the load on the people who stay: they get the hardest calls. <b>Measure first. Start beside the staff.</b></p>`,
+  notes: `<p>So how would I do it? Step one: compare the same kinds of requests before and with the agent. Count a request as finished if it was resolved and the customer doesn't come back about it within seven days. Measure what each finished request costs and how many the agent finishes without a person. That's the business measure from this course. If it doesn't get better, the agent is the wrong tool, and Telekom stops there. Step two: sign the works agreement while the system is still on paper. Step three: keep the option to switch suppliers. About half of German firms say they depend strongly on the US. Step four: train the staff before each new key. Measure teams, never single people, and watch the load on the people who stay: they get the hardest calls. <b>Measure first. Start beside the staff.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
     const st = data.plan.steps;
     const MEASURE = {
-      1: [['cost per contact, repeat contacts: before and with the agent'], ['No gain: stop here.', { weight: 600, fill: C.ink }]],
+      1: [['cost per finished request; share finished without a person'], ['Resolved, with no same-issue return within seven days.']],
       2: [['signed before the first agent acts']],
       3: [['time to switch supplier'], ['Bitkom: 51% of firms say they depend strongly on the US']],
       4: [['cases per hour and repeat contacts, per team, never per person']],
@@ -357,9 +356,9 @@ add({
   id: 'step5', n: 14, beat: 'How to address it', builds: 3, start: '10:26',
   clicks: ['the cut channel', 'keys need step 5', 'the cost of getting it wrong'],
   title: 'The biggest job is one customer record.',
-  sub: 'Step 5: 14 ways to prove who you are become 3. Measure: callers recognised without questions.',
+  sub: 'Step 5: from 14 ways to prove who you are to a target of 3. Measure: callers recognised without questions.',
   source: 'Deutsche Telekom, AI Investor Day, 5 Oct 2026 (14 ways, 3 planned: company figures, 3 a target); T-Mobile US, Form 10-K 2025 and 10-Q Q3 2026 (write-off in Q3 2025).',
-  notes: `<p>Step five. Fourteen ways of proving who you are become three, and the customer data becomes usable. That's the one customer record T-Mobile built. An agent can't act on an account it can't identify. This is the channel cut into the brick. It takes years, and it can fail. In 2025 T-Mobile gave up part of a new billing system. It wrote off two hundred seventy-eight million dollars, before tax. About a twelfth of that quarter's profit. <b>The biggest job is one customer record.</b></p>`,
+  notes: `<p>Step five. Telekom wants to go from fourteen ways of proving who you are to three, and to make the customer data usable. That's the one customer record T-Mobile built. An agent can't act on an account it can't identify. This is the channel cut into the brick. It takes years, and it can fail. In 2025 T-Mobile gave up part of a new billing system. It wrote off two hundred seventy-eight million dollars, before tax. <b>The biggest job is one customer record.</b></p>`,
   draw(page, b) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -381,7 +380,7 @@ add({
     [cy - 9.5, cy + 9.5].forEach((yy) => ln(svg, mid, yy, 1940, yy, { stroke: C.ink, 'stroke-width': 3, 'stroke-dasharray': '14 9', 'stroke-linecap': 'butt' }));
     const lead = (tx, ty, x1, y1, a, o = {}) => { const t = T(svg, tx, ty, a, { size: 34, weight: 600, fill: o.col || C.ink, anchor: o.anchor || 'start' }); const w = textSize(a, { family: 'sans', size: 34, weight: 600, free: true }).w; const [x0, y0] = o.anchor === 'end' ? [tx - w / 2, ty + 14] : [tx + w + 16, ty - 12]; ln(svg, x0, y0, x1, y1, { stroke: C.ink, 'stroke-width': 2 }); dot(svg, x1, y1, 6, { fill: C.ink }); };
     lead(L, 420, 1250, cy - 4, 'cut open: the old systems, 14 ways in');
-    lead(R, 262, 1700, cy - 4, 'plastered: one record, 3 ways in', { col: C.accent, anchor: 'end' });
+    lead(R, 262, 1700, cy - 4, 'the target: one record, 3 ways in', { col: C.accent, anchor: 'end' });
     if (b >= 1) T(svg, L, 850, 'Keys that change an account need step 5: an agent can’t act on an account it can’t identify.', { size: 36, weight: 600, width: 1680 });
     if (b >= 2) T(svg, L, 912, 'It can fail: in Q3 2025 T-Mobile wrote off $278 million on parts of a billing-system replacement it abandoned.', { size: 32, fill: C.muted, width: 1680 });
   },
@@ -542,7 +541,7 @@ add({
   clicks: ['Klarna', 'Commonwealth Bank, about a month later'],
   title: 'Both took part of it back.',
   source: 'Klarna, press release, 27 Feb 2024 (700: company estimate); Entrepreneur, 9 May 2025; Information Age, Aug 2025 (Commonwealth Bank).',
-  notes: `<p>From the street, repainting looks the same for a while, and it's cheaper. But if nothing changes behind the agent, the saving usually comes from the staff. By February 2024 Klarna had stopped hiring and said its assistant did the work of seven hundred people in customer service, by its own estimate. In 2025 it was hiring people again, and it kept the assistant. Commonwealth Bank went the same way, faster. It declared forty-five jobs redundant for a voice bot, and took that back within weeks. These are only two cases. Both cost the companies money and trust. <b>Both took part of it back.</b></p>`,
+  notes: `<p>From the street, repainting looks the same for a while, and it's cheaper. The risk here is counting the staff saving before the tool has carried the work. By February 2024 Klarna had stopped hiring and said its assistant did the work of seven hundred people in customer service, by its own estimate. In 2025 it was hiring people again, and it kept the assistant. Commonwealth Bank went the same way, faster. It declared forty-five jobs redundant for a voice bot, and took that back within weeks. Those are two staffing decisions. I couldn't tell what either company changed behind its assistant. <b>Both took part of it back.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -636,35 +635,32 @@ add({
 // 11 --------------------------------------------------------------------------
 add({
   id: 'checks', n: 11, beat: 'Second brick: the checks', builds: 3, start: '7:31',
-  clicks: ['United States', 'Germany: the two rules', 'since 2021'],
-  title: 'Second brick: here the checks come first.',
-  source: 'BetrVG § 87(1) no. 6; AI Act Art. 50 (Reg. (EU) 2024/1689, amended by 2026/1744); Telekom framework agreement on IT systems, March 2021 (Bargmann 2022); T-Mobile US, Sep 2024. Lengths schematic.',
-  notes: `<p>I couldn't find a public record of staff input before T-Mobile launched. Here, two rules matter most. One: a system that can watch the staff needs the works council to agree before it runs. Two: since August, the AI Act says customers must be told when they talk to an AI system unless it is already obvious. And here Telekom is ahead. In 2021 it agreed a framework with its works council. Nobody is watched as a person. Results only in groups of more than five, with no names. A system inside those rules needs no new decision. <b>Second brick: here the checks come first.</b></p>`,
+  clicks: ['what T-Mobile disclosed', 'when the German rules apply', 'Telekom’s 2021 framework'],
+  title: 'Second brick: which checks apply, and when?',
+  source: 'BetrVG §§ 87 and 90. EU AI Act Art. 50. Telekom group framework agreement on IT systems, March 2021 (Bargmann 2022). T-Mobile US, Sep 2024.',
+  notes: `<p>I couldn't find a public record of staff input before T-Mobile launched. Here, the works council gets a say while you plan. If a system can watch the staff, the council has to agree before it runs. The rule for customers comes at the first conversation: tell them it's AI unless it's obvious. In 2021 Telekom agreed a framework with its works council. Nobody is watched as a person. Results only in groups of more than five, with no names. A system inside those rules needs no separate decision. I couldn't find how long the checks take for the agents. <b>Second brick: which checks apply, and when?</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
-    const S = data.permits.schedule;
-    const x0 = 560, x1 = 1800, X = (u) => x0 + u / S.span * (x1 - x0);
-    const lane = (y, label, sub, segs) => {
-      T(svg, L, y + 12, label, { size: 40, weight: 600 });
-      if (sub) T(svg, L, y + 56, sub, { size: 32, fill: C.muted });
-      segs.forEach(([a, z, kind, word]) => {
-        const st = kind === 'review' ? { fill: C.field, stroke: C.accent, 'stroke-width': 3 } : kind === 'build' ? { fill: C.paper, stroke: C.ink, 'stroke-width': 4 } : { fill: 'none', stroke: C.mid, 'stroke-width': 2 };
-        h('rect', { x: X(a), y: y - 32, width: X(z) - X(a) - 8, height: 64, ...st }, svg);
-        T(svg, X(a) + 16, y + 12, word, { size: 34, fill: kind === 'launch' ? C.muted : C.ink, weight: kind === 'review' ? 600 : 400 });
-      });
+    const [us, de, framework] = data.permits.stages;
+    const title = (y, stage) => T(svg, L, y, stage.label, { size: 36, weight: 600, fill: C.accent });
+    const row = (y, [label, detail]) => {
+      T(svg, L + 490, y, label, { size: 36, weight: 600 });
+      T(svg, L + 942, y, detail, { size: 36 });
     };
-    lane(330, 'United States', 'T-Mobile', [[0, S.us.build[1], 'build', 'build'], [S.us.launch[0], S.us.launch[1], 'launch', 'running']]);
-    T(svg, R, 440, 'I found no public record of staff input before launch.', { size: 32, fill: C.muted, anchor: 'end' });
+    title(335, us);
+    T(svg, L + 490, 335, us.items[0][0], { size: 36 });
+    T(svg, L + 490, 390, us.items[0][1], { size: 39, weight: 600 });
     if (b >= 1) {
-      lane(550, 'Germany', 'Telekom', [[S.de.review[0], S.de.review[1], 'review', 'checks first'], [S.de.build[0], S.de.build[1], 'build', 'build'], [S.de.launch[0], S.de.launch[1], 'launch', 'running']]);
-      T(svg, X(0), 636, '1  works council approves tools suited to staff monitoring (§ 87(1) no. 6)', { size: 34 });
-      T(svg, X(0), 680, '2  tell customers they’re talking to AI unless it’s obvious (AI Act Art. 50)', { size: 34 });
+      ln(svg, L, 462, R, 462, { stroke: C.hair, 'stroke-width': 2 });
+      title(522, de);
+      de.items.forEach((item, i) => row(522 + 56 * i, item));
     }
     if (b >= 2) {
-      const F = S.de.framework;
-      lane(800, 'Since 2021', 'framework agreement', [[F.review[0], F.review[1], 'review', 'short check'], [F.build[0], F.build[1], 'build', 'build'], [F.launch[0], F.launch[1], 'launch', 'running']]);
-      T(svg, X(0), 886, 'nobody watched as a person; results only for groups of more than five', { size: 32, fill: C.muted });
+      ln(svg, L, 694, R, 694, { stroke: C.hair, 'stroke-width': 2 });
+      title(754, framework);
+      framework.items.forEach((item, i) => row(754 + 56 * i, item));
+      T(svg, L + 490, 888, data.permits.boundary, { size: 34, fill: C.muted });
     }
     band(svg);
   },
@@ -702,9 +698,9 @@ add({
   id: 'steps68', n: 15, beat: 'How to address it', builds: 3, start: '11:12',
   clicks: ['step 6: keys in stages', 'steps 7 and 8', 'process model'],
   title: 'Then the keys: read first, risky changes last.',
-  sub: 'Reading doesn’t have to wait for step 5. The order is my hypothesis.',
+  sub: 'Logged-in reads can start before the shared record. The order is my hypothesis.',
   source: 'Every new key: an annex to the works agreement from step 2.',
-  notes: `<p>But reading doesn't have to wait. Step six: first the agent only reads, for customers already logged in: show a bill, check an order. Then actions you can undo. Last, the changes a fraudster could use, like a new bank account. The customer confirms those in the app. My requirement: if the agent gets a tariff wrong, the customer undoes it in one tap, and there's always a way to a person. The system enforces each key: the model can ask, the system decides. It's how I'd give any new program access to real data: read first, then we see. Step seven: each new key becomes an annex to the works agreement, and staff and works council sign off before the agent works alone. Step eight: a named team runs it. If cost per finished request doesn't fall or repeat contacts go up, we hold the next key. So: <b>Then the keys: read first, risky changes last.</b></p>`,
+  notes: `<p>But reading doesn't have to wait. Step six: first the agent only reads, for customers already logged in: show a bill, check an order. Then actions you can undo. Last, the changes a fraudster could use, like a new bank account. The customer confirms those in the app. My requirement: if the agent gets a tariff wrong, the customer undoes it in one tap, and there's always a way to a person. The system enforces each key: the model can ask, the system decides. It's how I'd give any new program access to real data: read first, then we see. Step seven: each new key becomes an annex to the works agreement, and staff and works council sign off before the agent works alone. Step eight: a named team runs it. If cost per finished request doesn't fall, or errors or reversals rise, we hold the next key. So: <b>Then the keys: read first, risky changes last.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -728,9 +724,12 @@ add({
     T(svg, L, 720, 'The model can ask; the system decides.', { size: 36, weight: 600 });
     if (b >= 1) {
       T(svg, L, 790, '7  staff and works council sign off before it works alone', { size: 32 });
-      T(svg, L, 832, '8  a named team runs it; cost per finished request', { size: 32 });
+      T(svg, L, 832, '8  a named team runs it', { size: 32 });
     }
-    if (b >= 2) T(svg, L, 878, 'Before the next key: check errors, sign the annex. Cost per finished request must fall and repeat contacts must stay level or drop.', { size: 32, weight: 600, width: 1100, lh: 38 });
+    if (b >= 2) {
+      T(svg, L, 882, 'Next key only if cost per finished request falls', { size: 36, weight: 600 });
+      T(svg, L, 928, 'with no rise in errors or reversals.', { size: 36, weight: 600 });
+    }
     band(svg);
   },
 });
@@ -742,13 +741,13 @@ add({
   clicks: ['first', 'second', 'third', 'the plug in, the closing line'],
   landings: { 2: 'Three things would prove me wrong.', 3: "Telekom can't import the 32%. It can copy the slow work behind it." },
   title: 'Three things would prove me wrong.',
-  notes: `<p>Three things would prove me wrong. One: Telekom reports a German number like the thirty-two percent before its customer data is fixed. Then the record matters less than I think. Two: the service teams shrink faster than the agreed routes allow. Then the staff are leaving after all. Three: a works agreement comes months late. Then the law weighs more than I said.</p><p>(last build) I can't prove the rebuild caused T-Mobile's result. I argue it from need: an agent can't act on an account it can't identify. People often say Germany is slow. Two economists, Hall and Soskice, argue the other way: economies like Germany's are better at step-by-step innovation than at radical innovation. The agent is the transformation. The way in is step by step, with the staff. I started out thinking Germany was the harder case, and I still do. <b>Telekom can't import the 32%. It can copy the slow work behind it.</b> Thank you.</p>`,
+  notes: `<p>Three things would prove me wrong. One: An agent finishes comparable account changes safely and at comparable cost before Telekom unifies its records. Then the shared record matters less than I think. Two: the service teams shrink faster than the agreed routes allow. Then the staff are leaving after all. Three: a works agreement comes months late. Then the law weighs more than I said.</p><p>(last build) I can't prove the rebuild caused T-Mobile's result. I argue it from need: an agent can't act on an account it can't identify. People often say Germany is slow. Two economists, Hall and Soskice, argue the other way: economies like Germany's are better at step-by-step innovation than at radical innovation. The agent is the transformation. The way in is step by step, with the staff. I started out thinking Germany was the harder case, and I still do. <b>Telekom can't import the 32%. It can copy the slow work behind it.</b> Thank you.</p>`,
   draw(page, b) {
     const svg = svgOf(page);
     if (b < 3) {
       frame(svg, this);
       const items = [
-        ['Telekom reports a German number like the 32%', 'before its customer data is fixed: the record matters less'],
+        ['An agent safely finishes comparable account changes', 'before the shared record, at comparable cost: the record matters less'],
         ['The service teams shrink faster', 'than the agreed routes allow: the staff are leaving after all'],
         ['A works agreement comes months late', 'the law weighs more than I said'],
       ];

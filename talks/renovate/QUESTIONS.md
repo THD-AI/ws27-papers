@@ -12,7 +12,7 @@ Both. For the company, the agent is a transformation: the work moves from people
 
 ## 3. What is the stop threshold in step 1?
 
-Today's cost per finished request against the agent's, with repeat contacts not going up. If the agent's isn't lower, the agent is the wrong tool and Telekom stops. The exact figure is Telekom's to set; I don't have its internal costs.
+Compare cost per finished request for the same kinds of cases. Count a request as finished if it was resolved and the customer doesn't come back about the same issue within seven days. If the agent's cost isn't lower, or errors or reversals rise, Telekom stops at the current stage. The exact figure is Telekom's to set; I don't have its internal costs.
 
 ## 4. "No dismissals" – but 4,000 positions a year still go. Isn't that replacement, only slower?
 

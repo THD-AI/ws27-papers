@@ -1,14 +1,14 @@
 {
   "id": "plan",
-  "reading": "The renovation of Telekom's customer service as one path of eight numbered steps, in the order each needs the one before, each with the measure that shows it is done: 1 measure first; 2 works agreement; 3 choose suppliers; 4 train staff; 5 one customer record, which every step after it depends on; 6 permissions in stages (read, then undoable actions, then changes fraud could use); 7 acceptance; 8 run it. A separate note: no dismissals for business reasons until 31 December 2028, for about 60,000 staff under the collective agreements; about 4,000 positions a year leave by agreed routes. No dates or durations are drawn: the path shows order only.",
-  "headline": "The renovation, in order: eight steps, each needing the one before",
+  "reading": "The renovation of Telekom's customer service as one path of eight numbered steps with a measure for each: 1 measure first; 2 works agreement; 3 choose suppliers; 4 train staff; 5 one customer record for account changes (logged-in reads can start sooner); 6 permissions in stages (read, then undoable actions, then changes fraud could use); 7 acceptance; 8 run it. A separate note: no dismissals for business reasons until 31 December 2028, for about 60,000 staff under the collective agreements; about 4,000 positions a year leave by agreed routes. No dates or durations are drawn: the path shows order only.",
+  "headline": "The renovation, in order",
   "orderNote": "order only · no dates",
   "orderWhy": "The text gives an order and a measure for each step, but no dates or durations; the figure draws none.",
   "measureWord": "measure:",
   "steps": [
     {
       "name": "Measure first",
-      "measure": "the pair is published",
+      "measure": "cost per finished request; share without a person",
       "source": "proposal"
     },
     {
@@ -33,7 +33,7 @@
     },
     {
       "name": "Permissions in stages",
-      "measure": "errors per thousand actions, stage by stage",
+      "measure": "errors and reversals per thousand actions",
       "stages": [
         "read",
         "undoable",
@@ -57,10 +57,10 @@
     "on": 4,
     "from": 5,
     "to": 7,
-    "note": "6 to 8 need step 5: an agent can't act on an account it can't identify",
-    "short": "everything after needs this step",
+    "note": "Account changes need step 5. Logged-in reads can start sooner.",
+    "short": "account changes need this step",
     "source": "R6-05",
-    "tag": "need step 5"
+    "tag": "changes need step 5"
   },
   "staff": {
     "label": "no dismissals for business reasons until 31 Dec 2028",
@@ -74,5 +74,5 @@
   },
   "headShort": "The renovation, in order",
   "stepWord": "step {n} of {N}",
-  "overview": "eight steps, each needing the one before"
+  "overview": "eight steps, with a measure for each"
 }

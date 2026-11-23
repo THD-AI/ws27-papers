@@ -1,48 +1,32 @@
 {
   "id": "numbers",
   "reading": {
-    "a": "The announcement said 40 of 100 contacts; the company's own slide says 32, and those are contacts that start with the software, not ones it finished.",
+    "a": "Deutsche Telekom's release says AI agents handled 40% of contacts in the United States. The release does not specify the customer group. Separately, 32% of T-Mobile contract customers' contacts in Q2 2026 started with software. T-Mobile does not publish how many the software finished.",
     "b": "A customer account contacted care 7 times a year in 2021 and about 3 times in 2026; the software agents arrived late in that fall."
   },
   "tag": "company-reported",
   "plateA": {
     "total": {
       "value": 100,
-      "note": "[[{v}]] contacts from contract customers, Q2 2026",
+      "note": "100 contacts from contract customers, Q2 2026",
       "source": "R6-06"
     },
     "release": {
       "value": 40,
-      "note": "release: [[{v}]] handled by AI agents",
-      "source": "R6-01",
-      "short": "release: [[{v}]] by AI agents"
+      "note": "of contacts handled by AI agents, the release says",
+      "scope": "The release leaves the customer group unspecified.",
+      "source": "R6-01"
     },
     "slide": {
       "value": 32,
-      "note": "T-Mobile's slide: [[{v}]] served by an AI agent",
-      "source": "R6-06"
-    },
-    "rest": {
-      "note": "not in T-Mobile's material",
-      "source": "R6-06",
-      "derivation": "release value minus slide value; drawn, not printed as a number"
-    },
-    "overlap": {
-      "note": "drawn on the same {t} to compare; whether the {a} include the {b} isn't published",
+      "note": "started with software",
       "source": [
-        "R6-01",
-        "R6-06"
-      ],
-      "why": "The 40 comes from a press release, the 32 from an investor slide. Drawing the 32 inside the 40 on the same 100 is the figure's choice, made to compare them; the note says that nobody published whether the 40 include the 32.",
-      "short": "whether the {a} include the {b} isn't published"
-    },
-    "start": {
-      "note": "that is: they start with the software",
-      "source": "R6-02"
+        "R6-06",
+        "R6-02"
+      ]
     },
     "finished": {
-      "value": null,
-      "note": "how many of these [[{v}]] the software finished: T-Mobile does not say",
+      "note": "How many the software finished: not published.",
       "source": "R6-02"
     }
   },
@@ -115,7 +99,7 @@
     "drawing": "The two values are drawn as numbers over their dates on one axis; nothing joins them, because the values between are not published."
   },
   "headline": {
-    "a": "United States · of 100 contacts at T-Mobile US: how many did the software handle?",
+    "a": "United States · two claims with different scope",
     "b": "United States · how often one customer account contacts care in a year"
   }
 }
