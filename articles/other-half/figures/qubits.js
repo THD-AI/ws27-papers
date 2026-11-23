@@ -52,6 +52,9 @@ function build(el, ctx) {
     const HS = [H0, H0, H0, H0, H0];
     [...new Set(HS)].forEach((hd) => { const hg = g(svg); text(hg, 4, 15, hd, { family: 'sans', size: 13.5, weight: 600 }); heads.push({ hg, at: HS.map((x, i) => (x === hd ? i : -1)).filter((i) => i >= 0) }); });
     rect(svg, 2.5, 24.5, W - 5, 168, { fill: 'none', stroke: C.hairline, 'stroke-width': 1, 'data-audit': 'skip' });
+    // the grid's own square, around its centre: where a figure that takes
+    // over this picture (the film) lines up with it (lib/article.js)
+    rect(svg, cx - 60, cy - 60, 120, 120, { fill: 'none', stroke: 'none', 'data-anchor': '', 'data-audit': 'skip' });
   }
 
   // one drawing per state, each at its own pitch around the same centre; a
