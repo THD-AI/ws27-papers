@@ -123,6 +123,8 @@ function build(el, ctx) {
   // 7 qubits a side, the half tiles' bulge, and a pitch's gap to the drawn cell
   const pitch = (Math.min(BIG.w, BIG.h) * bk) / 8.2;
   const held = grid(big, { checks: surface(7), d: 7, cx: bcx, cy: bcy, pitch, C });
+  // the picture it takes over from the margin (lib/article.js lines the two up)
+  held.root.setAttribute('data-takeover', '');
   const HELD = START + BEATS.length + (FR.length - 1 - FROM);   // the rule's frame: both kinds, never empty
   const on = run.frames[roundAt(HELD)].map((id) => toGrid(run.checks[id], 7));
   const firedT = Object.values(held.tiles).filter((t) => on.some((c) => c.row === t.check.row && c.col === t.check.col && c.asks_about === t.check.asks_about));
@@ -136,15 +138,15 @@ function build(el, ctx) {
   const pick = (kind) => firedT.filter((t) => t.check.asks_about === kind).sort((u, v) => u.c[1] - v.c[1])[0];
   const n2 = g(svg);
   // each note level with its tile, so its leader runs straight across
-  const kinds = [['flips', 'fired: a flip nearby (darker tile)'], ['phase errors', 'fired: a phase error nearby (lighter tile)']]
+  const kinds = [['flips', 'fired: a flip nearby, or a wrong report (darker tile)'], ['phase errors', 'fired: a phase error nearby, or a wrong report (lighter tile)']]
     .map(([kind, str]) => ({ t: pick(kind), str })).filter((o) => o.t).sort((u, v) => u.t.c[1] - v.t.c[1]);
   let floorY = by + (tall ? 36 : 46);
   for (const { t, str } of kinds) {
     const ty = Math.max(floorY, t.c[1] + 4);
-    text(n2, nx, ty, str.replace(' (', '\n('), { ...noteO, lh: 16 });
+    text(n2, nx, ty, str.replace(', or', ',\nor').replace(' (', '\n('), { ...noteO, lh: 16 });
     // the leader stops at the grid's edge, level with its tile, as lattice's do
     leader(n2, nx - 5, ty - 4, bcx + 3.5 * pitch + 3, t.c[1], { stroke: C.muted, dot: false });
-    floorY = ty + 40;
+    floorY = ty + 56;
   }
   // step 2: its frame in the strip, ringed by the pen (the article's one hand
   // mark), and a drawn line up to the enlarged frame; on phones it bends round
@@ -189,10 +191,6 @@ function build(el, ctx) {
     const p1 = ease(clamp(gg - 1)), fo = 1 - 0.75 * p1;
     field.style.opacity = fo >= 0.999 ? '' : fo.toFixed(3);
   });
-  // the enlarged frame comes in as the film begins, while the margin's own
-  // picture of it leaves the rail
-  st.fade(big, 0, 0.22);
-  st.fade(n0, 0, 0.22);
   ring.paths.forEach((pp, i) => st.draw(pp, 2.0 + i * 0.04, 2.3 + i * 0.03));
   st.draw(join, 2.25, 2.5);
   st.draw(join2, 2.32, 2.52);
