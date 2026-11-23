@@ -934,13 +934,23 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .steps ol::before { left: 0.7em; width: 1.2px; }
 }
 
-/* On phones and tablets a scene's caption is folded to its first line,
-   pinned or as stills (23 November: the whole caption took the screen from
-   the passages); a tap opens it, and again folds it. Not on paper. */
+/* The disclosure keeps the pinned figure short and leaves the caption's
+   own links and source buttons reachable once it opens. */
+.caption-toggle { display: none; }
 @media screen and (max-width: 999.98px) {
-  .scene figcaption.is-foldable, .scene-caption.is-foldable { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; line-clamp: 1; overflow: hidden; cursor: pointer; }
-  .scene figcaption.is-foldable.is-open, .scene-caption.is-foldable.is-open { -webkit-line-clamp: unset; line-clamp: none; }
-  .scene figcaption.is-foldable:focus-visible, .scene-caption.is-foldable:focus-visible { outline: 2px solid var(--accent-line, #4254C5); outline-offset: 2px; }
-  .scene-stage figcaption.is-foldable { display: -webkit-box; }
-  .scene.is-seq .seq-cap.is-foldable { display: -webkit-box; }
+  .caption-toggle {
+    display: block;
+    min-height: 1.5rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--accent-line);
+    font: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    cursor: pointer;
+  }
+  .caption-toggle:focus-visible { outline: 2px solid var(--accent-line); outline-offset: 2px; }
+  .caption-toggle + .caption-content { display: block; }
+  .caption-toggle[aria-expanded="false"] + .caption-content { display: none; }
 }
