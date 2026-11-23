@@ -153,7 +153,7 @@ function build(el, ctx) {
   // the machine's name
   const [sx, sy, sw0, sh0] = FR[FROM];
   const slot = g(svg);
-  const ring = penRing(slot, X(sx), Y(sy), (sw0 * k) / 2 + 6, (sh0 * k) / 2 + 6, { seed: 11, stroke: C.accent, width: 1.5 });
+  const ring = penRing(slot, X(sx), Y(sy), (sw0 * k) / 2 + 6, (sh0 * k) / 2 + 6, { seed: 11, stroke: C.ink, width: 1.5 });
   // it ends on the frame's drawn lower edge (about 0.86 of the drawing down)
   const x0 = X(sx), y0 = Y(sy) - (sh0 * k) / 2 - 8, x1 = bcx + (tall ? 30 : 0), y1 = by + bigS * 0.86;
   const cxq = tall ? 222 : (x0 + x1) / 2 + (x1 - x0) * 0.18, cyq = (y0 + y1) / 2;
@@ -168,8 +168,8 @@ function build(el, ctx) {
     return [x - (dy / l) * w, y + (dx / l) * w, -dy / l, dx / l];
   });
   const line2 = (a, b, off) => pts.slice(a, b).map(([x, y, nx, ny], i) => `${i ? 'L' : 'M'}${(x + nx * off).toFixed(1)} ${(y + ny * off).toFixed(1)}`).join('');
-  const join = path(slot, line2(0, N + 1, 0), { stroke: C.accent, 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' });
-  const join2 = path(slot, line2(Math.round(N * 0.2), Math.round(N * 0.75), 0.9), { stroke: C.accent, 'stroke-width': 0.8, 'stroke-linecap': 'round', fill: 'none', opacity: 0.8 });
+  const join = path(slot, line2(0, N + 1, 0), { stroke: C.ink, 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' });
+  const join2 = path(slot, line2(Math.round(N * 0.2), Math.round(N * 0.75), 0.9), { stroke: C.ink, 'stroke-width': 0.8, 'stroke-linecap': 'round', fill: 'none', opacity: 0.8 });
 
   // While step 0 is complete and the next has not begun, the film keeps
   // running on screen, about eight frames a second (idle motion: it changes
@@ -188,8 +188,10 @@ function build(el, ctx) {
     const n = gg >= 2 ? BEATS.length : gg >= 1 ? BEATS.length + extra : beatsAt(gg);
     setBeat(n);
     // step 1: the colour field fades; the line stays in full ink
-    const p1 = ease(clamp(gg - 1)), fo = 1 - 0.75 * p1;
-    field.style.opacity = fo >= 0.999 ? '' : fo.toFixed(3);
+    // the wash is the hero's world, kept light from the start so that the only
+    // full-strength blue on screen is a fired check
+    const p1 = ease(clamp(gg - 1)), fo = 0.55 - 0.3 * p1;
+    field.style.opacity = fo.toFixed(3);
   });
   ring.paths.forEach((pp, i) => st.draw(pp, 2.0 + i * 0.04, 2.3 + i * 0.03));
   st.draw(join, 2.25, 2.5);

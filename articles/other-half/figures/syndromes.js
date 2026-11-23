@@ -117,12 +117,12 @@ function build(el, ctx) {
   const w1 = text(rg, rx0, ct.bottom + 30, 'patterns: plain matching’s answer is not the most likely one', { size: tall ? 14 : 15, width: tall ? W - 40 : 226, lh: tall ? 18 : 20 });
   const w2 = text(rg, rx0, w1.bottom + 18, `they occur in about [[${share}]] of cases; in [[${none}]] of cases no check fires`, { size: tall ? 14 : 15, width: tall ? W - 40 : 226, lh: tall ? 18 : 20 });
   st.fade(rg, 0.74, 0.88);
-  const pr = penRing(svg, ct.cx, ct.cy, ct.w / 2 + 15, tall ? 19 : 22, { seed: 3, stroke: C.accent, width: 1.6 });
+  const pr = penRing(svg, ct.cx, ct.cy, ct.w / 2 + 15, tall ? 19 : 22, { seed: 3, stroke: C.ink, width: 1.6 });
   pr.paths.forEach((pp, k) => st.draw(pp, 0.86 + k * 0.03, 0.97 + k * 0.02));
 
   const foot = g(svg);
   text(foot, tall ? 14 : fx, tall ? w2.bottom + 22 : fy + fw + 30, tall
-    ? `distance ${dist} · ${err} error per storing qubit · one round ·\nchecks never wrong · our own count`
+    ? `${err} error per storing qubit · one round ·\nchecks never wrong · our own count`
     : `${err} error per storing qubit · one round · checks never wrong · our own count`, { ...mono, lh: 15 });
   st.fade(foot, 0.8, 0.94);
 

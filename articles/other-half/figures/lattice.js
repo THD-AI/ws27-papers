@@ -68,7 +68,7 @@ function build(el, ctx) {
     const cnt = g(svg);
     text(cnt, cx, nt.bottom + 38, `${n} of ${STRIP}`, { family: 'mono', size: monoS, anchor: 'middle', fill: C.muted });
     let pr = null;
-    if (ring) pr = penRing(svg, cx, cy, ext + (tall ? 12 : 17), ext + (tall ? 10 : 14), { seed: 11, stroke: C.accent, width: 1.6, start: -0.4 });
+    if (ring) pr = penRing(svg, cx, cy, ext + (tall ? 12 : 17), ext + (tall ? 10 : 14), { seed: 11, stroke: C.ink, width: 1.6, start: -0.4 });
     return { grp, marks, ng, sg, dotsEl, cnt, pr, bottom: nt.bottom + 44 };
   }
 
