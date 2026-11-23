@@ -64,7 +64,7 @@ function build(el, ctx) {
   // one scale for both axes, so the grid keeps its shape inside any cell
   const unit = (w, hh) => Math.min((w * 0.76) / (mxx - mnx), (hh * 0.76) / (mxy - mny));
   const inCell = (c, cx, cy, w, hh) => { const u = unit(w, hh); return [cx - (c.x - (mnx + mxx) / 2) * u, cy + (c.y - (mny + mxy) / 2) * u]; };
-  const R = tall ? 2.1 : 2.8;   // half the side of a fired mark: a small square, as a tile is
+  const R = tall ? 1.1 : 1.3;   // the least radius of a fired dot on the strip
   // every lit check is drawn, none merged, in one colour (fired); every dot
   // keeps a readable size and neighbours may touch
   const dotsFor = (parent, round, cx, cy, w, hh, rr) => {
@@ -72,7 +72,8 @@ function build(el, ctx) {
     for (const id of frame) {
       const c = run.checks[id];
       const [px, py] = inCell(c, cx, cy, w, hh);
-      rect(parent, px - rr, py - rr, rr * 2, rr * 2, { fill: C.accent, stroke: C.paper, 'stroke-width': 0.6 });
+      // the grid's own fired dot: 0.137 of the frame's pitch (two units)
+      circle(parent, px, py, Math.max(rr, 0.274 * unit(w, hh)), { fill: C.accent });
     }
   };
   // the 48 places a check can light, very faint, in every frame of the strip

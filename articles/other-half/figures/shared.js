@@ -94,7 +94,7 @@ export function grid(parent, o) {
   const gF = g(root), gT = g(root), gH = g(root), gQ = g(root), gE = g(root);
   // lines thin with the pitch below about 20 px, so a small grid does not
   // turn into black beads; at main's sizes nothing changes
-  const sw = Math.min(1.25, Math.max(0.7, pitch * 0.062)), swThin = Math.min(0.7, Math.max(0.45, pitch * 0.035));
+  const sw = Math.min(1.9, Math.max(0.7, pitch * 0.024)), swThin = Math.max(0.45, sw * 0.56);
   const tiles = {};
   checks.forEach((ch, i) => {
     const t = tile(ch, pos), flips = ch.asks_about === 'flips';
