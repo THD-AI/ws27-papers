@@ -136,7 +136,7 @@ function build(el, ctx) {
     // the fired checks of the film's round: lit once the grid has arrived
     for (const L of layers) {
       if (!L.k.fired) continue;
-      const pf = L.s === k1 ? (k0 === k1 || G <= 0 ? 1 : ease(clamp((u - 0.72) / 0.28))) : L.s === k0 ? (k0 === k1 ? 1 : fadeOld) : 0;
+      const pf = L.s === k1 ? (k0 === k1 || G <= 0 ? 1 : ease(clamp((u - 0.45) / 0.25))) : L.s === k0 ? (k0 === k1 ? 1 : fadeOld) : 0;
       for (const tl of L.k.fired) tl.setFired(pf);
     }
     // labels: the old one stays in full ink until the new one takes its place,
