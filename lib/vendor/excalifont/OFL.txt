@@ -1,0 +1,3 @@
+Excalifont (Excalidraw), SIL Open Font License 1.1.
+Source: npm @excalidraw/excalidraw 0.18.0, dist/prod/fonts/Excalifont (seven unicode subsets merged into one file with fontTools).
+Licence text: https://openfontlicense.org
