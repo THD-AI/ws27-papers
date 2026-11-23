@@ -39,7 +39,7 @@ function build(el, ctx) {
     const r = byD(k.d);
     if (!r) { k.say = 'One qubit on its own.'; return; }
     k.label = `${r.total} · distance ${r.distance}`;
-    k.sub = k.lit ? `one round: ${lit.checks.length} of ${r.helpers} fire` : k.d === D[0] ? `${r.storing} store, ${r.helpers} check` : `${r.helpers} checks a round`;
+    k.sub = k.lit ? `one round: ${lit.checks.length} of ${r.helpers} fire` : k.d === D[3] ? `one step larger: ${r.helpers} checks` : k.d === D[0] ? `${r.storing} store, ${r.helpers} check` : `${r.helpers} checks a round`;
     k.say = `Distance ${r.distance}: ${r.storing} storing qubits, drawn as circles, and ${r.helpers} checks, drawn as tiles between them; ${r.total} qubits in all.`
       + (k.lit ? ` In one simulated round, ${lit.checks.length} of the ${r.helpers} checks fire, lit in blue: the round the film in section 4 holds up.` : '');
   });
@@ -49,7 +49,7 @@ function build(el, ctx) {
   const heads = [];
   if (rail) {
     const H0 = 'what one qubit takes';
-    const HS = [H0, H0, H0, H0, 'one step larger'];
+    const HS = [H0, H0, H0, H0, H0];
     [...new Set(HS)].forEach((hd) => { const hg = g(svg); text(hg, 4, 15, hd, { family: 'sans', size: 13.5, weight: 600 }); heads.push({ hg, at: HS.map((x, i) => (x === hd ? i : -1)).filter((i) => i >= 0) }); });
     rect(svg, 2.5, 24.5, W - 5, 168, { fill: 'none', stroke: C.hairline, 'stroke-width': 1, 'data-audit': 'skip' });
   }
