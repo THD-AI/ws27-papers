@@ -112,7 +112,7 @@ function build(el, ctx) {
   // the picture the reader has just seen beside section 3 is here, in the
   // strip's own pen. Step 2 shows which frame of the strip it is, and names
   // the two kinds of fired check.
-  const bx = tall ? 4 : X(385), by = tall ? 2 : 4;
+  const bx = tall ? 4 : X(336), by = tall ? 2 : 4;   // wide: its grid under the margin's at 1440 px
   // the frame and its label take over the margin's picture: on wide screens
   // they fade in as the margin fades out, with the scroll (--rail-away, set
   // by the page; 1 where there is no pinned margin)
