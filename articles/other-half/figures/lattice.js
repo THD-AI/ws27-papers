@@ -78,8 +78,8 @@ right [[1]] time in [[${inN}]]`;
 about [[${in10}]] times in [[10]]`;
   const rest = 'the rest: rarer explanations';
   const foot = tall
-    ? `${pctErr} error per storing qubit ·\nchecks never wrong · our own count`
-    : `${pctErr} error per storing qubit · checks never wrong · our own count`;
+    ? `${pctErr} error per storing qubit · one round ·\nchecks never wrong · our own count`
+    :`${pctErr} error per storing qubit · one round · checks never wrong · our own count`;
   const firedLabel = `${ex.fired.length} of ${d.helpers} checks fired`;
 
   // ---- print: the walk at its second step, then the example ---------------

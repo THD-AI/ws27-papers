@@ -225,11 +225,11 @@ function build(el, ctx) {
     const after = g(l3);
     const wa = x(live.value - live.plus_minus), wb = x(live.value + live.plus_minus);
     line(after, xLast + 4, y3, wa - 4, y3, { stroke: C.ink, 'stroke-width': 0.9, 'stroke-dasharray': '1 4', 'stroke-linecap': 'round' });
-    line(after, wa, y3, wb, y3, { stroke: C.accent, 'stroke-width': 1.1 });
-    line(after, wa, y3 - 4.5, wa, y3 + 4.5, { stroke: C.accent, 'stroke-width': 1.1 });
-    line(after, wb, y3 - 4.5, wb, y3 + 4.5, { stroke: C.accent, 'stroke-width': 1.1 });
-    circle(after, x(live.value), y3, 5, { fill: C.accent });
-    text(after, wb, y3 - 11, `± ${us(live.plus_minus)}`, { family: 'mono', size: 11.5, anchor: 'end', fill: C.accent });
+    line(after, wa, y3, wb, y3, { stroke: C.ink, 'stroke-width': 1.1 });
+    line(after, wa, y3 - 4.5, wa, y3 + 4.5, { stroke: C.ink, 'stroke-width': 1.1 });
+    line(after, wb, y3 - 4.5, wb, y3 + 4.5, { stroke: C.ink, 'stroke-width': 1.1 });
+    circle(after, x(live.value), y3, 5, { fill: C.ink });
+    text(after, wb, y3 - 11, `± ${us(live.plus_minus)}`, { family: 'mono', size: 11.5, anchor: 'end', fill: C.ink });
     const bg = g(l3);
     bracket(bg, xLast, y3 + 14, x(live.value), y3 + 14, 5, { stroke: C.ink, 'stroke-width': 1 });
     const lab = text(bg, xLast, y3 + 35, `${live.label_on_page}:`, noteO);

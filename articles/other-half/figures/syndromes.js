@@ -58,7 +58,7 @@ function build(el, ctx) {
     const x = fx + cell.col * c + (c - sq) / 2, y = fy + cell.row * c + (c - sq) / 2;
     const differs = cell.state === 'differs';
     rect(rowsG[cell.row], x, y, sq, sq, differs
-      ? { fill: C.accent, 'data-audit': 'skip' }
+      ? { fill: C.ink, 'fill-opacity': 0.78, 'data-audit': 'skip' }
       : { fill: 'none', stroke: C.muted, 'stroke-width': 0.8, 'stroke-opacity': 0.7, 'data-audit': 'skip' });
     if (cell.flip_checks === d.example.flip_checks && cell.phase_checks === d.example.phase_checks) ex = cell;
   }
@@ -123,8 +123,8 @@ function build(el, ctx) {
 
   const foot = g(svg);
   text(foot, tall ? 14 : fx, tall ? w2.bottom + 22 : fy + fw + 30, tall
-    ? `distance ${dist} · ${err} error per storing qubit ·\nchecks never wrong · our own count`
-    : `distance ${dist} · ${err} error per storing qubit · checks never wrong · our own count`, { ...mono, lh: 15 });
+    ? `distance ${dist} · ${err} error per storing qubit · one round ·\nchecks never wrong · our own count`
+    :`distance ${dist} · ${err} error per storing qubit · one round · checks never wrong · our own count`, { ...mono, lh: 15 });
   st.fade(foot, 0.8, 0.94);
 
   return { set: (s2, t) => st.set(s2, t) };
