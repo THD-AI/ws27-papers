@@ -114,7 +114,9 @@ function build(el, ctx) {
   const rg = g(svg);
   const rx0 = tall ? 26 : fx + fw + 38, ry0 = tall ? ecy + pitch * 1.5 + 62 : fy + fw - 140;
   const ct = text(rg, rx0 + 8, ry0, `${cnt.differs} of ${cnt.patterns}`, { family: 'mono', size: tall ? 20 : 23, weight: 500 });
-  const w1 = text(rg, rx0, ct.bottom + 30, 'patterns: plain matching’s answer is not the most likely one', { size: tall ? 14 : 15, width: tall ? W - 40 : 226, lh: tall ? 18 : 20 });
+  // the key to the grid's grey, at the words that say what it means
+  rect(rg, rx0, ct.bottom + 30 - 11, 11, 11, { fill: C.ink, 'fill-opacity': 0.55, 'data-audit': 'skip' });
+  const w1 = text(rg, rx0 + 18, ct.bottom + 30, 'patterns: plain matching’s answer is not the most likely one', { size: tall ? 14 : 15, width: tall ? W - 58 : 208, lh: tall ? 18 : 20 });
   const w2 = text(rg, rx0, w1.bottom + 18, `they occur in about [[${share}]] of cases; in [[${none}]] of cases no check fires`, { size: tall ? 14 : 15, width: tall ? W - 40 : 226, lh: tall ? 18 : 20 });
   st.fade(rg, 0.74, 0.88);
   const pr = penRing(svg, ct.cx, ct.cy, ct.w / 2 + 15, tall ? 19 : 22, { seed: 3, stroke: C.ink, width: 1.6 });

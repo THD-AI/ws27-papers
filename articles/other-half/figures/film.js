@@ -23,7 +23,7 @@ import { filmRounds, toGrid, BEATS as BEATS_N } from './film-rule.js';
 
 export const steps = 3;
 export const durations = { large: [3.0, 1.4, 1.5] };
-const SIZE = { wide: [720, 592], tall: [360, 326] };
+const SIZE = { wide: [720, 624], tall: [360, 354] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 const IMG = [1536, 1024];
@@ -38,7 +38,7 @@ function build(el, ctx) {
   const C = pal(ctx), d = ctx.data, run = d.runs[0];
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
   const k = W / CROP[2];
-  const bigS = tall ? 168 : 290;                     // the enlarged frame's drawn size: its grid about as large as the margin's
+  const bigS = tall ? 196 : 322;                     // the enlarged frame's drawn size: its grid about as large as the margin's
   // the drawing starts below a band that holds the lifted frame and its key
   const top = bigS + (tall ? 12 : 14);
   const X = (x) => (x - CROP[0]) * k, Y = (y) => (y - CROP[1]) * k + top;
@@ -112,7 +112,7 @@ function build(el, ctx) {
   // the picture the reader has just seen beside section 3 is here, in the
   // strip's own pen. Step 2 shows which frame of the strip it is, and names
   // the two kinds of fired check.
-  const bx = tall ? 4 : X(400), by = tall ? 2 : 4;
+  const bx = tall ? 4 : X(385), by = tall ? 2 : 4;
   // the frame and its label take over the margin's picture: on wide screens
   // they fade in as the margin fades out, with the scroll (--rail-away, set
   // by the page; 1 where there is no pinned margin)
@@ -144,7 +144,9 @@ function build(el, ctx) {
   let floorY = by + (tall ? 36 : 46);
   for (const { t, str } of kinds) {
     const ty = Math.max(floorY, t.c[1] + 4);
-    text(n2, nx, ty, str.replace(', or', ',\nor').replace(' (', '\n('), { ...noteO, lh: 16 });
+    // on phones the note column is narrow: the words wrap at fixed places
+    const lines = tall ? str.replace('fired: a phase error nearby, or a wrong report (lighter tile)', 'fired: a phase error\nnearby, or a wrong\nreport (lighter tile)').replace('fired: a flip nearby, or a wrong report (darker tile)', 'fired: a flip nearby,\nor a wrong report\n(darker tile)') : str.replace(', or', ',\nor').replace(' (', '\n(');
+    text(n2, nx, ty, lines, { ...noteO, lh: 16 });
     // the leader stops at the grid's edge, level with its tile, as lattice's do
     leader(n2, nx - 5, ty - 4, bcx + 3.5 * pitch + 3, t.c[1], { stroke: C.muted, dot: false });
     floorY = ty + 56;

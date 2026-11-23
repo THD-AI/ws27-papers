@@ -70,7 +70,7 @@ One round of checks takes 1.1 millionths of a second, and a grid of distance 7 h
 While the computer runs, that stream is all that comes out of it. We ended up thinking of it as a film in which a few points light up in most frames.
 
 @step 2
-The fired checks say roughly where something happened and which kind of error it was. They don't say which qubits were hit. Many sets of errors light up the same points.
+The fired checks say roughly where something happened and of which kind: a flip, a phase error, or a check that reported wrongly. They don't say which qubits were hit. Many sets of errors light up the same points.
 
 :::
 
@@ -87,7 +87,7 @@ The harmful case looks like this. A correction acts on the grid just as errors d
 This silent failure is a **logical error**, and how often it happens is what every decoder is measured by. It also shows what distance (section 2) is worth. On a grid of distance 5 a line needs five storing qubits. So three real errors can be enough. A decoder that sees them may add two more.
 
 :::figure line column
-A grid of distance 5, showing flips and the checks that notice them. From here on, a single round of checks, and checks that never report wrongly. Three real errors in one column fire a single check. The shortest explanation of that one check is two errors below it. If the decoder corrects those two, errors and correction together cross the grid from edge to edge: the stored value has changed and no check fires. Constructed and checked by our script.
+A grid of distance 5, showing flips and the checks that notice them. Here and in section 6: a single round of checks, and checks that never report wrongly. A real decoder reads many rounds, wrong reports included. Three real errors in one column fire a single check. The shortest explanation of that one check is two errors below it. If the decoder corrects those two, errors and correction together cross the grid from edge to edge: the stored value has changed and no check fires. Constructed and checked by our script.
 :::
 
 ## 6. Where the standard method goes wrong
@@ -139,7 +139,7 @@ Google read the same recorded data with two decoders. Its best matching decoder 
 Other labs have got below the threshold with other hardware, some with decoders that learn {{NA-2025 QTN-2026 QTN-PR-2026 USTC-2025}}, and IBM has shown in simulation a fast one that doesn't {{IBM-RELAY-2025 IBM-FPGA-2025}}. None of these results settles which route is best.
 
 :::figure suppression column
-Logical error rate per round, times 100,000, on Google's 2024 chip at distances 3, 5 and 7, each recording read afterwards by two decoders. The values at distances 3 and 5 are averages over 9 and 4 smaller grids on the same chip, so each distance is its own recording. Each step in distance divides the rate by Λ: 2.04 for the matching decoder, 2.14 for the network. Google's measurements, not ours. Source: Google Quantum AI, Nature 638 (2025), with its supplementary table S1.
+Logical error rate per round, times 100,000, on Google's 2024 chip at distances 3, 5 and 7, each recording read afterwards by two decoders. The values at distances 3 and 5 are averages over 9 and 4 smaller grids on the same chip, so each distance is its own recording. Each step in distance divides the rate by about Λ, fitted over all three: 2.04 for the matching decoder, 2.14 for the network. Google's measurements, from real recordings over many rounds, wrong reports included; not ours. Source: Google Quantum AI, Nature 638 (2025), with its supplementary table S1.
 :::
 
 :::margin qubits end
@@ -159,7 +159,7 @@ The clock is where it struggles. The chip asks its checks once every 1.1 million
 Google's paper quotes 24 millionths of a second per round for its network, from earlier work. {{GQA-2024 AQ-2024}} In that time the chip finishes about 22 more rounds. The network is accurate, but each answer comes late.
 
 @step 2
-By the time the network has answered round 3, at 72 millionths of a second, the chip is at round 65. An interpreter who needs twenty-two seconds for every second of speech is more than twenty minutes behind after one minute. {{OWN-ARITH}} And the gap keeps growing.
+By the time the network has answered round 3, at 72 millionths of a second, the chip is at round 65, with 62 rounds waiting. An interpreter who needs twenty-two seconds for every second of speech is more than twenty minutes behind after one minute. {{OWN-ARITH}} And the gap keeps growing.
 
 @step 3
 So the network's results were worked out afterwards, on recorded data. The decoder that ran live was a fast, plain version of matching, and it kept pace. On a smaller chip, at distance 5 and on the same data, live matching's logical error rate was 350 per 100,000 rounds and the network's, afterwards, 269. {{GQA-2024}} Part of that gap is live against offline, not only matching against network.
