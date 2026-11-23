@@ -35,7 +35,7 @@ In the timber frame the cable drops from above into one hollow bay, and nothing 
 
 Here the walls are the conditions a firm works under, and the cables are the connections between its systems. American walls open fast. German walls protect the people inside and are built to last, and every new opening is cut and plastered again. Political economists have names for the two kinds of country: liberal and coordinated market economies, with the United States and Germany as the standard examples. In the liberal kind a firm can hire and let people go quickly and buy its software from next door. In Germany two mechanisms matter here: protection against dismissal, which keeps the staff in the house, and co-determination, which gives them a say in the plans before the work starts. {{HS-2001}} The houses are only a picture of that difference. They prove nothing about software.
 
-Inside its timber walls, T-Mobile's wiring was as tangled as anyone's, and it rewired while its agents went in. Telekom's wiring in Europe is a row of old houses, each wired differently, and Telekom says so itself. The research on how firms adopt new technology sorts what speeds or slows them into three places: the technology, the organisation and the environment. {{TOE-1990}} In Germany each has its weight: know-how that doesn't reach the firms, laws that check a system before it runs, and technology bought from America. And the staff stay. That is what this article means by renovating: making the systems usable for software agents, so that the staff who stay are enabled by them rather than replaced by them. Section 4 shows the other route: repainting.
+Inside its timber walls, T-Mobile's wiring was as tangled as anyone's, and it rewired while its agents went in. Telekom's wiring in Europe is a row of old houses, each wired differently, and Telekom says so itself. The research on how firms adopt new technology sorts what speeds or slows them into three places: the technology, the organisation and the environment. {{TOE-1990}} In Germany each has its weight: know-how that doesn't reach the firms, laws that check a system before it runs, and technology bought from America. And the staff stay. That is what this article means by renovating: making the systems usable for software agents, so that the staff who stay are enabled by them rather than replaced by them. Section 4 looks at what happens when firms count staffing savings early.
 
 The order I'd follow, in brief: measure first, agree the rules with the works council, keep the choice of supplier open, train the staff, build one customer record, and hand the agent its keys one stage at a time. Then give it a team that answers for it.
 
@@ -118,7 +118,7 @@ This pattern has a name, the productivity J-curve, from Brynjolfsson, Rock and S
 @caption Two public cases: the saving was announced or taken from the staff first, and taken back later. Klarna froze hiring rather than cutting; at Commonwealth Bank the roles were declared redundant. Sources: Klarna; Information Age on Commonwealth Bank.
 
 @step 0
-Repainting is the duct on the surface in figure 1. The duct itself is sound work; the trouble is what it leaves alone. In a company it's an agent put in front of the customers while the wiring behind it stays as it was. It's cheaper and faster than renovating, and from the street it looks the same for a while. But the wiring isn't touched, so the saving has to come from somewhere. In the two cases below, it came from the people.
+Repainting is the duct on the surface in figure 1. The duct itself is sound work; the trouble is what it leaves alone. In a company it's an agent put in front of the customers while the wiring behind it stays as it was. It's cheaper and faster than renovating, and from the street it looks the same for a while. In the two cases below, I could track the staffing decisions. The public record leaves the wiring unknown.
 
 @step 1
 Klarna, a Swedish payment company, said in February 2024 that its assistant did work that, by its own estimate, equalled 700 service agents, and by then it had stopped hiring and wasn't replacing staff who left. In May 2025 its chief executive said: "Really, investing in the quality of human support is the way of the future for us". The company began hiring service staff again. {{R12-14 R12-15}} That's fifteen months from saving to reversal.
@@ -128,7 +128,7 @@ Commonwealth Bank of Australia did it faster. It said in July 2025 that 45 custo
 
 :::
 
-Neither company is American or German, and two cases don't make a rule. What they show is the risk of counting savings in staff early. Both companies took part of the staffing decision back. I couldn't tell from the public record what each company had changed behind its assistant.
+Neither company is American or German, and two cases don't make a rule. What they show is the risk of counting savings in staff early. Both companies took part of the staffing decision back.
 
 ## 5. Renovating with the staff at home
 

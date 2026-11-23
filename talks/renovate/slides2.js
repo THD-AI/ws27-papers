@@ -206,7 +206,7 @@ add({
     T(svg, L, 336, 'T-Mobile’s investor slide · Q2 2026', { size: 42, weight: 600 });
     T(svg, L, 530, `${slide.value}%`, { size: 108, weight: 600, fill: C.accent });
     bar100(svg, 400, R, 455, 74, slide.value);
-    if (b >= 1) T(svg, 400, 628, 'T-Mobile leaves the completion rate unpublished.', { size: 40, weight: 600 });
+    T(svg, 400, 628, 'T-Mobile leaves the completion rate unpublished.', { size: 40, weight: b >= 1 ? 600 : 400 });
     if (b >= 2) {
       ln(svg, L, 714, R, 714, { stroke: C.hair, 'stroke-width': 2 });
       T(svg, L, 794, `The press release says AI handled ${release.value}% of contacts.`, { size: 42, weight: 600 });
@@ -537,9 +537,10 @@ add({
 
 // 8 ---------------------------------------------------------------------------
 add({
-  id: 'walkback', n: 8, beat: 'Repainting, twice', builds: 2, start: '4:59',
+  id: 'walkback', n: 8, beat: 'Two staffing reversals', builds: 2, start: '4:59',
   clicks: ['Klarna', 'Commonwealth Bank, about a month later'],
   title: 'Both took part of it back.',
+  sub: 'The public record shows staffing decisions. What changed behind the assistants remains unknown.',
   source: 'Klarna, press release, 27 Feb 2024 (700: company estimate); Entrepreneur, 9 May 2025; Information Age, Aug 2025 (Commonwealth Bank).',
   notes: `<p>From the street, repainting looks the same for a while, and it's cheaper. The risk here is counting the staff saving before the tool has carried the work. By February 2024 Klarna had stopped hiring and said its assistant did the work of seven hundred people in customer service, by its own estimate. In 2025 it was hiring people again, and it kept the assistant. Commonwealth Bank went the same way, faster. It declared forty-five jobs redundant for a voice bot, and took that back within weeks. Those are two staffing decisions. I couldn't tell what either company changed behind its assistant. <b>Both took part of it back.</b></p>`,
   draw(page, b, data) {
