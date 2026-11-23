@@ -157,7 +157,7 @@
     "url": "",
     "type": "own measurement",
     "date": "recounted 15 and 16 November 2026; ties resolved in exact arithmetic 23 November 2026",
-    "note": "docs/proposal/paper/data/find_example.py, ported into tools/other-half-data.mjs"
+    "note": "docs/proposal/paper/data/find_example.py, ported into tools/other-half-data.mjs; each storing qubit has a 5% chance of an error, a flip, a phase error or both, each a third of that"
   },
   "OWN-TIME": {
     "title": "Training time on a GPU; rough decoding times on one laptop core",
