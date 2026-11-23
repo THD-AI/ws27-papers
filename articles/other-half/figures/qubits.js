@@ -39,7 +39,7 @@ function build(el, ctx) {
     const r = byD(k.d);
     if (!r) { k.say = 'One qubit on its own.'; return; }
     k.label = `${r.total} · distance ${r.distance}`;
-    k.sub = k.lit ? `${lit.checks.length} of ${r.helpers} checks fire` : k.d === D[0] ? `${r.storing} store, ${r.helpers} check` : `${r.helpers} checks a round`;
+    k.sub = k.lit ? `one round: ${lit.checks.length} of ${r.helpers} fire` : k.d === D[0] ? `${r.storing} store, ${r.helpers} check` : `${r.helpers} checks a round`;
     k.say = `Distance ${r.distance}: ${r.storing} storing qubits, drawn as circles, and ${r.helpers} checks, drawn as tiles between them; ${r.total} qubits in all.`
       + (k.lit ? ` In one simulated round, ${lit.checks.length} of the ${r.helpers} checks fire, lit in blue: the round the film in section 4 holds up.` : '');
   });
@@ -61,19 +61,23 @@ function build(el, ctx) {
     const els = [];
     if (k.d === 1) {
       const c = circle(root, cx, cy, k.pitch * 0.17, { fill: C.paper, stroke: C.ink, 'stroke-width': 1.25 });
-      els.push({ el: c, rad: 0 });
+      els.push({ el: c, rad: 0, cheb: 0 });
     } else {
       const checks = surface(k.d);
       const r = byD(k.d);
       if (r && checks.length !== r.helpers) console.warn(`qubits: ${checks.length} checks drawn at distance ${k.d}, data says ${r.helpers}`);
-      const gr = grid(root, { checks, d: k.d, cx, cy, pitch: k.pitch, C, helper: 0 });
+      const gr = grid(root, { checks, d: k.d, cx, cy, pitch: k.pitch, C });
       const mid = (k.d - 1) / 2;
       for (const t of Object.values(gr.tiles)) {
-        const ch = t.check, rad = Math.hypot(ch.row + 0.5 - mid, ch.col + 0.5 - mid);
-        els.push({ el: t.base, rad });
-        t.rad = rad;
+        const ch = t.check, dx = ch.col + 0.5 - mid, dy = ch.row + 0.5 - mid;
+        const rad = Math.hypot(dx, dy), cheb = Math.max(Math.abs(dx), Math.abs(dy)), edge = ch.shape === 'half';
+        els.push({ el: t.base, rad, cheb, edge });
+        if (t.helper) els.push({ el: t.helper, rad, cheb, edge });
       }
-      for (const q of gr.qubits) els.push({ el: q.el, rad: Math.hypot((q.q % k.d) - mid, Math.floor(q.q / k.d) - mid) });
+      for (const q of gr.qubits) {
+        const dx = (q.q % k.d) - mid, dy = Math.floor(q.q / k.d) - mid;
+        els.push({ el: q.el, rad: Math.hypot(dx, dy), cheb: Math.max(Math.abs(dx), Math.abs(dy)) });
+      }
       if (k.lit) {
         k.fired = Object.values(gr.tiles).filter((t) => lit.checks.some((c) => c.row === t.check.row && c.col === t.check.col && c.asks_about === t.check.asks_about));
         if (k.fired.length !== lit.checks.length) console.warn(`qubits: ${k.fired.length} of ${lit.checks.length} lit checks found on the grid`);
@@ -97,15 +101,18 @@ function build(el, ctx) {
 
   // layer L at a common pitch p, its elements present to the share 'reach'
   // (from the centre out; the part inside the old grid is there at once)
-  const place = (L, p, opacity, reach, inner) => {
-    if (!show(L.root, opacity)) return;
+  // old: the layer that leaves; its interior is covered exactly by the new
+  // layer's, so only its rim (the half tiles) fades, and nothing doubles up
+  const place = (L, p, opacity, reach, inner, old = false) => {
+    if (!show(L.root, old ? (opacity > 0.001 ? 1 : 0) : opacity)) return;
     const z = p / L.k.pitch;
     const tr = Math.abs(z - 1) < 1e-4 ? '' : `translate(${cx} ${cy}) scale(${z.toFixed(4)}) translate(${-cx} ${-cy})`;
     if (L.tr !== tr) { L.tr = tr; L.root.setAttribute('transform', tr); }
     const n = L.els.length, spread = Math.max(1, n * 0.3);
     L.els.forEach((e, i) => {
       let o = 1;
-      if (reach < 1 && e.rad > inner) o = easeOut(clamp((reach * (n + spread) - i) / spread));
+      if (old) o = e.edge ? opacity : 0;
+      else if (reach < 1 && e.cheb > inner) o = easeOut(clamp((reach * (n + spread) - i) / spread));
       put(L, e, o >= 0.999 ? '1' : o <= 0.001 ? '0' : o.toFixed(2));
     });
   };
@@ -118,33 +125,34 @@ function build(el, ctx) {
     const m = ease(clamp(u / 0.7));
     const p = lerp(a.pitch, b.pitch, m);
     const arrive = G <= 0 ? 1 : clamp((u - 0.25) / 0.65);
-    const inner = (a.d - 1) / 2 + 0.01;
+    const fadeOld = 1 - ease(clamp((u - 0.15) / 0.5));
+    const inner = (a.d - 1) / 2 + 0.01;   // inside the old grid's last qubits
     layers.forEach((L, s) => {
       if (k0 === k1 || G <= 0) { place(L, L.k.pitch, s === k1 ? 1 : 0, 1, 0); return; }
-      if (s === k0) place(L, p, 1 - ease(clamp((u - 0.15) / 0.5)), 1, 0);
+      if (s === k0) place(L, p, fadeOld, 1, 0, true);
       else if (s === k1) place(L, p, 1, arrive, inner);
       else show(L.root, 0);
     });
     // the fired checks of the film's round: lit once the grid has arrived
     for (const L of layers) {
       if (!L.k.fired) continue;
-      const pf = L.s === k1 ? (k0 === k1 || G <= 0 ? 1 : ease(clamp((u - 0.72) / 0.28))) : L.s === k0 ? 1 : 0;
+      const pf = L.s === k1 ? (k0 === k1 || G <= 0 ? 1 : ease(clamp((u - 0.72) / 0.28))) : L.s === k0 ? (k0 === k1 ? 1 : fadeOld) : 0;
       for (const tl of L.k.fired) tl.setFired(pf);
     }
-    // labels: the old one leaves, the new one comes last
+    // labels: the old one gives way to the new one, never a blank
     labels.forEach((lb, i) => {
       let pp = 0;
       if (k0 === k1) pp = i === k1 ? 1 : 0;
-      else if (i === k0) pp = 1 - ease(clamp(u / 0.25));
-      else if (i === k1) pp = ease(clamp((u - 0.75) / 0.25));
+      else if (i === k0) pp = 1 - ease(clamp(u / 0.3));
+      else if (i === k1) pp = ease(clamp((u - 0.3) / 0.3));
       show(lb, pp);
     });
     const hv = (i) => heads.find((hh) => hh.at.includes(i));
     heads.forEach((hh) => {
       let pp = 0;
       if (hv(k0) === hv(k1)) pp = hh === hv(k1) ? 1 : 0;
-      else if (hh === hv(k0)) pp = 1 - ease(clamp(u / 0.25));
-      else if (hh === hv(k1)) pp = ease(clamp((u - 0.75) / 0.25));
+      else if (hh === hv(k0)) pp = 1 - ease(clamp(u / 0.3));
+      else if (hh === hv(k1)) pp = ease(clamp((u - 0.3) / 0.3));
       show(hh.hg, pp);
     });
     svg.setAttribute('aria-label', K[u >= 0.6 ? k1 : k0].say);

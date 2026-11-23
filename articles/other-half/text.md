@@ -49,13 +49,13 @@ Only about half of the qubits store anything. The rest are helpers, each sitting
 
 Once every round, each helper interacts with its neighbours and is measured. One bit comes out. It doesn't say what state any neighbour is in – only whether the number of errors among those neighbours is even or odd. That answer is the same whatever is stored. So measuring it leaves the stored information alone.
 
+:::margin qubits 3
+
 These questions are called **checks**. While nothing goes wrong, a check gives the same answer round after round. When a qubit next to it is hit, the answer changes, and we say the check **fires**.
 
 Two kinds of error can hit a qubit. A flip swaps 0 and 1, as in an ordinary bit. A phase error is harder to picture. In the water image, it keeps the pattern's shape and shifts its rhythm: 0 and 1 stay as they are, but "0 plus 1" becomes "0 minus 1". That only shows while the qubit is in both states at once, which an ordinary bit can't be. Half of the checks notice flips and the other half notice phase errors. Some errors are both at once and fire checks of both kinds. We come back to those in section 6.
 
 A check can also just report wrongly. Then it fires twice in a row, once when the wrong answer appears and once when the right one returns, although no storing qubit was hit. So a single round is never enough. The checks must be read as a sequence.
-
-:::margin qubits 3
 
 ## 4. A film of hints
 
