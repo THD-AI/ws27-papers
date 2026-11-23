@@ -1,3 +1,3 @@
-# B3 · Our noise: the same chance of any error on every operation.
+# B3 · Four noise mechanisms share one probability
 
-Decoherence enters as these random errors. Our uniform model is simpler than a real chip's, which is why the test on real recordings matters.
+Stim uses the same parameter for all four settings. Random Pauli errors include phase flips. To see how the decoder handles real device noise, we would need to test on chip recordings.

@@ -3,10 +3,22 @@ import { svgOf, backup } from '../../kit.js';
 // Backup 3: for the questions.
 export default {
   id: 'noise-model', n: 'B3', backup: true, builds: 1,
-  title: "Our noise: the same chance of any error on every operation.",
+  title: 'Four noise mechanisms share one probability.',
   clicks: ['backup'],
-  draw(page, b, data) {
+  draw(page) {
     const svg = svgOf(page);
-    backup(svg, { title: this.title, n: this.n, source: "Stim (Gidney 2021), its standard circuit noise; article, sections 6 and 9, and 'What we could not show'." }, { rows: [["The course", "The phase-flip channel: with chance p a qubit gets a phase error (Z).", "Our model contains it as one of its parts."], ["Ours", "Every operation in the simulated circuit goes wrong with the same", "chance p, with a flip, a phase error or both (X, Z or Y): depolarizing noise."], ["The levels", "Trained at seven levels from 0.2% to 1%; tested at 0.5%,", "five times the one slip per thousand of slide 2."], ["Not modelled", "Qubits that slip into a third state (leakage), and chances of error", "that differ from operation to operation, as on a real chip."]] });
+    backup(svg, {
+      title: this.title, n: this.n,
+      source: 'The four parameters passed to Stim’s rotated surface-code circuit in our simulation (OWN-D3, OWN-D5, OWN-D5-250M).',
+    }, {
+      rows: [
+        ['Random Pauli errors', 'Depolarization after Clifford gates and on storing qubits before each round.',
+          'It includes phase errors (Z).'],
+        ['Flips', 'Preparation flips after resets and readout flips before measurements.'],
+        ['Noise levels', 'The same parameter p for all four settings.',
+          'Trained at 0.2% to 1%. Main test at 0.5%.'],
+        ['Limits', 'Real chips can leak into a third state and have different rates per operation.'],
+      ],
+    });
   },
 };

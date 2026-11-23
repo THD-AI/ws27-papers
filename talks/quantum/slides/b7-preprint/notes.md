@@ -1,3 +1,3 @@
-# B7 · AlphaQubit 2 claims a network that keeps pace. Nobody has reviewed it yet.
+# B7 · AlphaQubit 2 reports high throughput on simulated data
 
-If asked whether the speed problem is solved: a preprint says so; it is not reviewed and we couldn't test it.
+The team timed a stream of simulated rounds on accelerators. Those benchmarks show how fast the network reads the stream. The delay in a live chip's feedback loop remains an open question.

@@ -17,7 +17,7 @@ export default {
       ['Performance', `ours at distance 5: ${(p.final_network.mean * 100).toFixed(2)}% of runs wrong`, `correlated matching ${(p.levels.correlated.rate * 100).toFixed(2)}%, plain ${(p.levels.plain.rate * 100).toFixed(2)}%`],
       ['Speed-up', 'none', 'it is classical software that serves the chip'],
       ['Relevance', 'on Google’s data: Λ from 2.04 to 2.14, the reader alone', 'at Λ near 2, one more halving costs 64 qubits (97 to 161)'],
-      ['Availability', 'about 250 million examples to pass plain matching', 'correlated matching is free; a network at live speed is only claimed'],
+      ['Availability', 'our longer run used about 250 million examples', 'correlated matching is free. AQ2 reports stream throughput.'],
     ];
     const y0 = 330, hh = 118;
     const boxA = [], boxC = [];

@@ -6,24 +6,24 @@
 // correlated matching dashed ink, the lookup table (distance 3 only) dotted.
 // Build 1: distance 3, and distance 5 after 66 million (axis already at 260
 // million); build 2 adds the run to about 250 million.
-import { C, L, R, svgOf, T, frame, ln, pth, h, inkLayer, PEN } from '../../kit.js';
+import { C, L, R, svgOf, T, frame, ln, pth, h } from '../../kit.js';
 
 const pct = (v, dg = 2) => `${(v * 100).toFixed(dg)}%`;
 
 export default {
   id: 'ours', n: 14, part: 'Content', builds: 2, speaker: 'B',
-  title: 'Ours passed plain matching at distance 5 only after about 250 million examples.',
+  title: 'Our distance-5 network finished between the two matchers.',
   clicks: ['distance 3; distance 5 after 66 million', 'distance 5, about 250 million'],
   draw(page, b, data) {
     const svg = svgOf(page);
     const [p3, p66, p250] = data.learning.panels;
     frame(svg, {
-      title: this.title, n: this.n, part: this.part,
-      source: 'Simulated, our own runs at 0.5% per operation (OWN-D3, OWN-D5, OWN-D5-250M): share of runs (3 rounds at distance 3, 5 at distance 5) that ended wrong. Curve points on 1 million runs, end values on 2 million.',
+      title: b === 0 ? 'At 66 million examples, distance 5 trailed both matchers.' : this.title,
+      n: this.n, part: this.part,
+      source: 'Simulated, our own runs (OWN-D3, OWN-D5, OWN-D5-250M). Each curve point uses 1 million test runs, end values use 2 million per seed.',
     });
-    T(svg, L, 312, 'share of simulated runs (3 rounds at distance 3, 5 at distance 5) that ended wrong', { size: 32, weight: 600 });
-    // the article's own tag line, in its mono face
-    T(svg, R, 222, 'our runs · simulation · noise level 0.5%', { family: 'mono', size: 30, fill: C.muted, anchor: 'end' });
+    T(svg, L, 288, 'Share of simulated runs that ended wrong', { size: 36, weight: 600 });
+    T(svg, R, 288, '0.5% circuit noise', { family: 'mono', size: 32, fill: C.ink, anchor: 'end' });
     const panel = (x0, x1, xmax, step, ylo, yhi, head) => {
       const y0 = 420, y1 = 830;
       const X = (n) => x0 + (n / xmax) * (x1 - x0);
@@ -51,30 +51,29 @@ export default {
     // each line named at its right end, outside the plot, so no label crosses a curve
     const tag = (P, r, str, o = {}) => T(svg, P.x1 + 14, P.Y(r) + 11 + (o.dy || 0), str, { size: 32, ...o });
     // left: distance 3, 0 to 70 million
-    const A = panel(L + 120, 660, 70e6, 10e6, 0.014, 0.020, 'Distance 3');
+    const A = panel(L + 120, 660, 70e6, 10e6, 0.014, 0.020, 'Distance 3 · three rounds');
     level(A, p3.levels.plain.rate); level(A, p3.levels.correlated.rate, '18 12'); level(A, p3.levels.table.rate, '3 10');
     band(A, p3);
     tag(A, p3.levels.plain.rate, `plain ${pct(p3.levels.plain.rate)}`, { dy: -6 });
     tag(A, p3.levels.correlated.rate, `correlated ${pct(p3.levels.correlated.rate)}`, { dy: 8 });
-    tag(A, p3.levels.correlated.rate, 'its lead not counted (B4)', { dy: 44, fill: C.muted });
+    tag(A, p3.levels.correlated.rate, 'see library issue (B4)', { dy: 44, fill: C.muted });
     tag(A, p3.final_network.mean, `network ${pct(p3.final_network.mean)}`, { dy: -22, weight: 600, fill: C.accent });
     tag(A, p3.levels.table.rate, `lookup table ${pct(p3.levels.table.rate)}`, { dy: 20 });
     // right: distance 5, 0 to 260 million, fixed from the first build
-    const B = panel(1180, 1540, 260e6, 50e6, 0.010, 0.028, 'Distance 5');
-    level(B, p66.levels.plain.rate); level(B, p66.levels.correlated.rate, '18 12');
-    tag(B, p66.levels.plain.rate, `plain ${pct(p66.levels.plain.rate)}`, { dy: -14 });
-    tag(B, p66.levels.correlated.rate, `correlated ${pct(p66.levels.correlated.rate)}`, { dy: 14 });
+    const B = panel(1140, 1490, 260e6, 50e6, 0.010, 0.028, 'Distance 5 · five rounds');
+    const result = b === 0 ? p66 : p250;
+    level(B, result.levels.plain.rate); level(B, result.levels.correlated.rate, '18 12');
+    tag(B, result.levels.plain.rate, `plain ${pct(result.levels.plain.rate)}`, { dy: -18, size: 36, weight: 600 });
+    tag(B, result.levels.correlated.rate, `correlated ${pct(result.levels.correlated.rate)}`, { dy: 14, size: 36, weight: 600 });
     if (b === 0) {
       const [ex, ey] = band(B, p66);
       T(svg, ex + 24, ey - 40, 'after 66 million:', { size: 32, weight: 600, fill: C.accent });
       T(svg, ex + 24, ey, 'behind in all five seeds', { size: 32, weight: 600, fill: C.accent });
     } else {
       band(B, p250);
-      tag(B, p250.final_network.mean, `network ${pct(p250.final_network.mean)}`, { dy: 18, weight: 600, fill: C.accent });
-      const ink = inkLayer(page);
-      ink.ellipse(B.X(250e6) - 6, B.Y(p250.final_network.mean) - 4, 46, 46, { stroke: PEN.red, seed: 81 });
-      ink.note(B.X(120e6), B.Y(0.0245), 'it got there, slowly', { color: PEN.red, size: 34 });
-      ink.arrow([[B.X(215e6), B.Y(0.0236)], [B.X(240e6), B.Y(0.019)], [B.X(248e6), B.Y(p250.final_network.mean) - 30]], { stroke: PEN.red, seed: 82, head: 20 });
+      tag(B, p250.final_network.mean, `network ${pct(p250.final_network.mean)}`, { dy: 22, size: 36, weight: 600, fill: C.accent });
+      T(svg, B.X(58e6), B.Y(0.026), 'training budget:', { size: 32, weight: 600 });
+      T(svg, B.X(58e6), B.Y(0.026) + 38, 'about 250 million', { size: 32, weight: 600 });
     }
   },
 };

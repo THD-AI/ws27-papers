@@ -23,8 +23,8 @@ export default {
         ink.arrow([[x1, y], [(x1 + x2) / 2, y - 22 + i * 10], [x2, y]], { seed: 60 + i, head: 24 });
       }
     });
-    ink.note(140, y + 150, 'the same chance of error on every operation;', { size: 36 });
-    ink.note(140, y + 196, 'trained at 0.2% to 1%, tested at 0.5%', { size: 36 });
+    ink.note(140, y + 150, 'four noise mechanisms share one probability', { size: 36 });
+    ink.note(140, y + 196, 'trained at 0.2% to 1%, main test at 0.5%', { size: 36 });
     ink.note(1180, y + 150, 'it never sees the', { size: 36, color: PEN.blue });
     ink.note(1180, y + 196, 'grid’s layout', { size: 36, color: PEN.blue });
     if (b < 1) return;
