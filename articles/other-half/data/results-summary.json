@@ -1556,7 +1556,10 @@
   "patterns": 256,
   "differs": 24,
   "ties": 0,
-  "example_matching": 0.33299441259676155,
-  "example_likeliest": 0.6221838324894758
+  "optimal_ties": 144,
+  "two_way": 64,
+  "four_way": 80,
+  "example_matching": 0.33299441259676127,
+  "example_likeliest": 0.6221838324894762
  }
 }

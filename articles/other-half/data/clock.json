@@ -32,7 +32,7 @@
   {
    "id": "live-matching-2024",
    "label": "matching decoder that ran live, 2024",
-   "quantity": "average delay between the last round of a run and the decoder's answer",
+   "quantity": "average delay from the software receiving the final round's data to returning the correction",
    "value": 63,
    "plus_minus": 17,
    "kind": "measured on the 72-qubit chip at distance 5, for runs of up to 1,000,000 rounds (1.1 seconds); the delay stays roughly constant, so the decoder keeps pace",
@@ -48,11 +48,11 @@
    "label": "neural network, preprint of December 2025",
    "quantity": "time needed per round",
    "below": 1,
-   "kind": "claimed in a preprint that has not been peer-reviewed: faster than 1 per round on commercial accelerators, surface code up to distance 11 (abstract)",
-   "keeps_pace": "claimed",
+   "kind": "throughput reported in a preprint: under 1 per simulated round on Trillium TPUs, surface code up to distance 11",
+   "keeps_pace": "reported on simulated data",
    "source": "AQ2-2025",
-   "verified": "Read 16 November 2026 from the arXiv HTML through a summarising fetch: timed on Trillium TPU accelerators; the figure comparing speed and accuracy uses simulated noise; no loop with a quantum chip is reported. Whether the timing itself ran on simulated data could not be verified, so the tag on the page does not say so.",
-   "tag_on_page": "claimed · under 1 µs per round on accelerator chips · up to distance 11 · preprint, not peer-reviewed"
+   "verified": "AlphaQubit 2, arXiv:2512.07737v2, section 4 and Figure 4a. The surface-code throughput benchmark uses simulated SI1000 data. Figure 4c measures accuracy on Willow recordings.",
+   "tag_on_page": "preprint · under 1 µs per simulated round · up to distance 11 · Trillium TPUs"
   }
  ],
  "derived": [

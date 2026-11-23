@@ -251,7 +251,7 @@ function build(el, ctx) {
       const xx = x(-k * T);
       path(l4a, `M${(xx - w4).toFixed(1)} ${y4}L${xx.toFixed(1)} ${y4}L${xx.toFixed(1)} ${y4 + 9}L${(xx - w4).toFixed(1)} ${y4 + 9}`, { stroke: C.ink, 'stroke-width': 0.9, 'stroke-dasharray': '1.5 1.8' });
     }
-    const on = text(l4b, xLast + 10, y4 + 9, 'claimed, 2025 preprint, not yet reviewed', { ...noteO, size: narrow ? 12.5 : 13.5 });
+    const on = text(l4b, xLast + 10, y4 + 9, 'throughput reported in a preprint', { ...noteO, size: narrow ? 12.5 : 13.5 });
     if (on.right + 8 < right) line(l4b, on.right + 8, y4 + 4.5, right, y4 + 4.5, { stroke: C.ink, 'stroke-width': 0.9, 'stroke-dasharray': '2 5' });
     const tg = text(l4c, B.x, y4 + 28, narrow ? claim.tag_on_page.split(' · ').slice(1, 3).join(' · ') : claim.tag_on_page, { ...mono, width: B.w, lh: 15 });
     // the axis: time after the last round. It belongs to the lowest lane

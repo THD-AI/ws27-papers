@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-16",
+ "generated": "2026-11-23",
  "generated_by": "tools/other-half-data.mjs",
  "inputs": [
   "port of docs/proposal/paper/data/find_example.py"
@@ -147,13 +147,13 @@
    "x0",
    "x1"
   ],
-  "chance_of_pattern": 0.000635700376467001,
+  "chance_of_pattern": 0.000635700376467002,
   "plain_matching": {
    "errors": {
     "0": "X",
     "4": "Z"
    },
-   "chance_right": 0.33299441259676155,
+   "chance_right": 0.33299441259676127,
    "flip_puzzle": "z2 joined to the left edge through qubit 0",
    "phase_puzzle": "x0 joined to x1 through qubit 4"
   },
@@ -162,7 +162,7 @@
     "0": "Y",
     "8": "Z"
    },
-   "chance_right": 0.6221838324894758
+   "chance_right": 0.6221838324894762
   },
   "rest": 0.04482175491376261,
   "source": "OWN-ENUM"

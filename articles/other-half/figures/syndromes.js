@@ -1,6 +1,6 @@
 // syndromes: all 256 patterns of the eight checks at distance 3, one small
 // square each. A filled square is a pattern where plain matching's answer is
-// less likely than another (24 of them; on 144 more, two answers tie exactly). One pattern is shown enlarged, so
+// less likely than another (24 of them; on 144 more, two or four outcomes tie for best). One pattern is shown enlarged, so
 // that a square can be read as "which of the 8 checks fired". States, order
 // and counts are from data/syndromes.json; nothing is sized or shaded by
 // probability.
@@ -39,8 +39,8 @@ function build(el, ctx) {
   const dist = Math.round(Math.sqrt(Math.log2(cnt.patterns) + 1));   // d * d - 1 checks
   const err = `${Math.round(d.conditions.error_per_storing_qubit * 100)}%`;
   const svg = svgRoot(el, W, H,
-    `The eight checks of the smallest grid can fire in ${cnt.patterns} patterns. In ${cnt.differs} of them plain matching's answer is less likely than another; in ${cnt.tie_best} more, two answers are exactly as likely. `
-    + `They occur in about ${share} of cases; in ${none} of cases no check fires. Counted by us at distance ${dist} with ${err} error per storing qubit and checks that are never wrong.`);
+    `The eight checks of the smallest grid can fire in ${cnt.patterns} patterns. In ${cnt.differs} of them plain matching's answer is less likely than another; in ${cnt.tie_best} more, two or four outcomes tie for best. `
+    + `The ${cnt.differs} patterns occur in about ${share} of cases; in ${none} of cases no check fires. Counted by us at distance ${dist} with ${err} error per storing qubit and checks that are never wrong.`);
   svg.style.color = C.ink;
   const st = stage();
   const noteO = { italic: true, size: tall ? 13 : 14.5 };
