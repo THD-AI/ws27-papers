@@ -36,10 +36,10 @@ export default {
     ink.line(L + 316, y0 + hh + 24, L + 290, y0 + hh + 58, { stroke: PEN.red, strokeWidth: 4, seed: 72 });
     // ring round "2.04 to 2.14", measured from the drawn words
     const w1 = boxA[2].find('2.04'), w2 = boxA[2].find('2.14,');
-    if (w1 && w2) ink.ellipse((w1.x + w2.x + w2.w) / 2, w1.cy, (w2.x + w2.w - w1.x) + 60, 70, { stroke: PEN.blue, seed: 73 });
+    const yR = boxA[2].bottom - 2;
+    if (w1 && w2) ink.curve([[w1.x, yR], [(w1.x + w2.x + w2.w) / 2, yR + 6], [w2.x + w2.w - 8, yR - 2]], { stroke: PEN.blue, strokeWidth: 4, seed: 73 });
     // a wavy underline under the availability line, inside its own row
-    const a3 = boxA[3], yU = a3.bottom - 2;
-    ink.curve([[a3.x, yU], [a3.x + a3.w * 0.35, yU + 6], [a3.x + a3.w * 0.7, yU - 3], [a3.x + a3.w, yU + 4]], { stroke: PEN.orange, seed: 74 });
+
     if (b >= 1) {
       T(svg, L, 872, 'Our stop rule’s first test is passed: by our timing a laptop would train it in under two hours per seed.', { size: 32, weight: 600 });
       T(svg, L, 916, 'Its second test, on Google’s real recordings, is still open; correlated matching stays ahead.', { size: 32 });

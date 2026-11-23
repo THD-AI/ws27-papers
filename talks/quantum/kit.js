@@ -135,7 +135,8 @@ export function backup(svg, s, o = {}) {
 // the end of one of its steps; reduced motion, so nothing idles.
 // Returns the box and the scale from the figure's own units to the page, so
 // hand strokes can be laid over exact points of the figure.
-const FIG_CSS = { '--ink': C.ink, '--paper': C.paper, '--muted': C.muted, '--hairline': C.hair, '--accent': C.accent, '--field': C.field };
+// the article's muted grey (#5C6370) washes out on a projector: a darker one on slides
+const FIG_CSS = { '--ink': C.ink, '--paper': C.paper, '--muted': '#3A3F48', '--hairline': C.hair, '--accent': C.accent, '--field': C.field };
 export function articleFigure(page, mod, step, box, data, o = {}) {
   const layout = o.layout || 'wide';
   // Mounted at a narrow width and scaled up: the figure's own lettering floor

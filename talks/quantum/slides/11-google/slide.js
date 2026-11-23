@@ -1,7 +1,7 @@
 // Slide 11: Google's measured suppression (suppression.json): logical errors
 // per 100,000 rounds at distances 3, 5, 7, read afterwards by two decoders.
 // Ink: Google's best matching decoder; accent: the neural network.
-import { C, L, svgOf, T, frame, ln, pth, dot } from '../../kit.js';
+import { C, L, R, svgOf, T, frame, ln, pth, dot, inkLayer, PEN } from '../../kit.js';
 
 export default {
   id: 'google', n: 11, part: 'Content', builds: 2, speaker: 'B',
@@ -22,6 +22,7 @@ export default {
     [100, 200, 500, 1000].forEach((v) => { ln(svg, x0 - 12, Y(v), x0, Y(v)); T(svg, x0 - 22, Y(v) + 12, String(v), { size: 32, anchor: 'end', fill: C.ink }); });
     [3, 5, 7].forEach((d) => { ln(svg, X(d), y1, X(d), y1 + 12); T(svg, X(d), y1 + 50, `distance ${d}`, { size: 32, anchor: 'middle' }); });
     T(svg, L, y0 - 40, 'logical errors per 100,000 rounds (log scale)', { size: 32, weight: 600 });
+    T(svg, R, y0 - 40, 'Google Quantum AI, 2024 · read afterwards', { family: 'mono', size: 28, fill: C.muted, anchor: 'end' });
     const draw = (dec, col) => {
       const pts = dec.points.map((p) => [X(p.distance), Y(p.per_100000_rounds)]);
       pth(svg, `M${pts.map((p) => p.join(' ')).join('L')}`, { stroke: col, 'stroke-width': 5 });
@@ -41,8 +42,10 @@ export default {
       T(svg, tx, 620, 'a neural network', { size: 36, weight: 600, fill: C.accent });
       T(svg, tx, 662, 'trained on simulations, then', { size: 32 });
       T(svg, tx, 702, 'on the chip’s own data. Λ = ' + nn.lambda.toFixed(2), { size: 32 });
-      T(svg, tx, 820, 'Same chip, same recordings:', { size: 32, weight: 600 });
-      T(svg, tx, 860, 'only the reader changed.', { size: 32, weight: 600 });
+      const ink = inkLayer(page);
+      ink.note(tx, 830, 'same chip, same recordings:', { size: 36, color: PEN.blue });
+      ink.note(tx, 874, 'only the reader changed', { size: 36, color: PEN.blue });
+      ink.arrow([[tx - 10, 850], [X(7) + 160, 860], [X(7) + 120, Y(nn.points[2].per_100000_rounds) + 30]], { stroke: PEN.blue, seed: 92, head: 22 });
     }
   },
 };

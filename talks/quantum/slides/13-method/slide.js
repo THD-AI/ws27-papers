@@ -23,10 +23,10 @@ export default {
         ink.arrow([[x1, y], [(x1 + x2) / 2, y - 22 + i * 10], [x2, y]], { seed: 60 + i, head: 24 });
       }
     });
-    ink.note(140, y + 140, 'the same chance of error on every operation;', { size: 32 });
-    ink.note(140, y + 182, 'trained at seven levels from 0.2% to 1%, tested at 0.5%', { size: 32 });
-    ink.note(1140, y + 140, 'it never sees the', { size: 32, color: PEN.blue });
-    ink.note(1140, y + 182, 'grid’s layout', { size: 32, color: PEN.blue });
+    ink.note(140, y + 150, 'the same chance of error on every operation;', { size: 36 });
+    ink.note(140, y + 196, 'trained at 0.2% to 1%, tested at 0.5%', { size: 36 });
+    ink.note(1180, y + 150, 'it never sees the', { size: 36, color: PEN.blue });
+    ink.note(1180, y + 196, 'grid’s layout', { size: 36, color: PEN.blue });
     if (b < 1) return;
     const rows = [
       ['Compared with', 'plain and correlated matching, both given the exact error model'],

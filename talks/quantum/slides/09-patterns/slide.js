@@ -12,5 +12,8 @@ export default {
     frame(svg, { title: this.title, n: this.n, part: this.part, source: 'The article’s figure “syndromes”. Counted by us in exact arithmetic: distance 3, one round, 5% error per storing qubit, checks never wrong.' });
     const F = articleFigure(page, fig, STEPS[b], { x: 330, y: 230, w: 1260 }, data.syndromes, { layout: 'wide', textPx: 30 });
     const ink = inkLayer(page);
+    ink.note(1560, 560, 'together:', { size: 38, color: PEN.red });
+    ink.note(1560, 606, 'about 0.9%', { size: 44, color: PEN.red });
+    ink.note(1560, 652, 'of all cases', { size: 38, color: PEN.red });
   },
 };

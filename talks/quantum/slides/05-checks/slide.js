@@ -12,7 +12,5 @@ export default {
     const svg = svgOf(page);
     frame(svg, { title: this.title, n: this.n, part: this.part, source: 'The article’s figure “lattice”, steps 1 to 3. Distance 3, one round, checks assumed right. Constructed by us (lattice.json).' });
     articleFigure(page, lattice, b, { x: 150, y: 250, w: 1180 }, data.lattice, { textPx: 26 });
-    // one hand note, only on the first click: what the course calls this
-    if (b === 0) inkLayer(page).note(1380, 860, 'a parity check: even or odd', { size: 36, color: PEN.blue });
   },
 };

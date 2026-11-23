@@ -22,11 +22,11 @@ export default {
     ink.ellipse(X(3), y, 30, 30, { fill: PEN.ink, fillStyle: 'solid', seed: 4 });
     T(svg, X(3), y - 100, 'one slip', { size: 36, weight: 600, anchor: 'middle' });
     T(svg, X(3), y - 56, 'in about 1,000 operations', { size: 32, anchor: 'middle' });
-    ink.rect(X(9.3), y - 16, X(9.48) - X(9.3), 32, { fill: PEN.red, fillStyle: 'hachure', stroke: PEN.red, seed: 5 });
+    ink.rect(X(9.3) - 4, y - 20, X(9.48) - X(9.3) + 8, 40, { fill: PEN.red, fillStyle: 'solid', stroke: PEN.red, seed: 5 });
     T(svg, X(9.4), y - 100, '2–3 billion', { size: 36, weight: 600, anchor: 'middle' });
     T(svg, X(9.4), y - 56, 'costly steps', { size: 32, anchor: 'middle' });
-    ink.curve([[X(3) + 10, y + 100], [X(6), y + 150], [X(9.3), y + 100]], { stroke: PEN.red, seed: 6 });
-    ink.note(X(3.4), y + 205, 'millions of slips where one is enough', { color: PEN.red, size: 36 });
+    ink.curve([[X(3) + 10, y + 112], [X(6), y + 156], [X(9.3), y + 112]], { stroke: PEN.red, seed: 6 });
+    ink.note(X(3.4), y + 214, 'millions of slips where one is enough', { color: PEN.red, size: 36 });
     T(svg, x0 - 50, y + 300, 'Each step is built from many operations, and one', { size: 32 });
     T(svg, x0 - 50, y + 340, 'uncorrected slip can spoil the answer.', { size: 32 });
 

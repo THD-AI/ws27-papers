@@ -2,7 +2,7 @@
 // finishes a round every 1.1; the 2024 network needs 24 per round (quoted in
 // Google's paper), so the backlog grows; live matching on a smaller chip, in
 // its own lane with its own setup named, kept pace.
-import { C, L, R, svgOf, T, frame, ln, rc } from '../../kit.js';
+import { C, L, R, svgOf, T, frame, ln, rc, inkLayer, PEN } from '../../kit.js';
 
 export default {
   id: 'clock', n: 12, part: 'Content', builds: 2, speaker: 'B',
@@ -26,13 +26,13 @@ export default {
     // lane 1: the chip
     const y1 = 380;
     T(svg, L, y1 + 12, 'The chip', { size: 36, weight: 600 });
-    T(svg, L, y1 + 52, `a round every ${round}`, { size: 32 });
+    T(svg, L, y1 + 52, `a round every ${round} µs`, { size: 32 });
     T(svg, x0, y1 - 40, 'one tick per round', { size: 32, fill: C.ink });
     for (let t = round; t <= T80; t += round) rc(svg, X(t) - 2, y1 - 24, 4, 48, { fill: C.ink, stroke: 'none' });
     {
       const y2 = 560;
       T(svg, L, y2 + 12, 'The 2024 network', { size: 36, weight: 600, fill: C.accent });
-      T(svg, L, y2 + 52, `${net} per round, quoted`, { size: 32 });
+      T(svg, L, y2 + 52, `${net} µs per round, quoted`, { size: 32 });
       for (let k = 0; k < 3; k++) {
         const s = round + k * net, e = s + net;
         rc(svg, X(s) + 3, y2 - 30, X(e) - X(s) - 6, 60, { fill: C.field, stroke: C.accent, 'stroke-width': 3, rx: 6 });
@@ -42,7 +42,9 @@ export default {
       ln(svg, X(at), y1 - 40, X(at), y2 + 40, { 'stroke-dasharray': '10 10', 'stroke-width': 3 });
       // round 3 answered; round 4 being worked on; the rest wait
       T(svg, X(at) - 18, y2 + 100, `at about ${Math.round(at)}: round 3 answered, the chip at round ${done},`, { size: 32, weight: 600, anchor: 'end' });
-      T(svg, X(at) - 18, y2 + 140, `${done - 4} rounds waiting, and the gap keeps growing`, { size: 32, weight: 600, anchor: 'end' });
+      T(svg, X(at) - 18, y2 + 140, `${done - 4} rounds waiting`, { size: 32, weight: 600, anchor: 'end' });
+      const ink = inkLayer(page);
+      ink.note(X(at) - 18, y2 + 184, '…and the pile keeps growing', { size: 38, color: PEN.red, anchor: 'end' });
     }
     if (b >= 1) {
       const y3 = 790;
