@@ -953,4 +953,5 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .caption-toggle:focus-visible { outline: 2px solid var(--accent-line); outline-offset: 2px; }
   .caption-toggle + .caption-content { display: block; }
   .caption-toggle[aria-expanded="false"] + .caption-content { display: none; }
+  .scene-stage .caption-content { max-block-size: min(18svh, 10rem); overflow: auto; }
 }
