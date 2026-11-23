@@ -131,7 +131,7 @@ function build(el, ctx) {
   const pick = (kind) => firedT.filter((t) => t.check.asks_about === kind).sort((u, v) => u.c[1] - v.c[1])[0];
   const n2 = g(svg);
   // each note level with its tile, so its leader runs straight across
-  const kinds = [['flips', 'fired, on flips (darker)'], ['phase errors', 'fired, on phase errors (lighter)']]
+  const kinds = [['flips', 'fired: a flip nearby (darker tile)'], ['phase errors', 'fired: a phase error nearby (lighter tile)']]
     .map(([kind, str]) => ({ t: pick(kind), str })).filter((o) => o.t).sort((u, v) => u.t.c[1] - v.t.c[1]);
   let floorY = by + (tall ? 36 : 46);
   for (const { t, str } of kinds) {
@@ -174,7 +174,7 @@ function build(el, ctx) {
   // the enlarged frame comes in as the film begins, while the margin's own
   // picture of it leaves the rail
   st.fade(big, 0, 0.22);
-  st.fade(n0, 0.12, 0.3);
+  st.fade(n0, 0, 0.22);
   ring.paths.forEach((pp, i) => st.draw(pp, 2.0 + i * 0.04, 2.3 + i * 0.03));
   st.draw(join, 2.25, 2.5);
   st.fade(n2, 2.3, 2.75);
