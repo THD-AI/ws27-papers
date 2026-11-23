@@ -942,4 +942,5 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .scene figcaption.is-foldable.is-open, .scene-caption.is-foldable.is-open { -webkit-line-clamp: unset; line-clamp: none; }
   .scene figcaption.is-foldable:focus-visible, .scene-caption.is-foldable:focus-visible { outline: 2px solid var(--accent-line, #4254C5); outline-offset: 2px; }
   .scene-stage figcaption.is-foldable { display: -webkit-box; }
+  .scene.is-seq .seq-cap.is-foldable { display: -webkit-box; }
 }
