@@ -69,6 +69,9 @@ function showNotes(n) {
 async function main() {
   const fv = new FontFace('Virgil', 'url(../../articles/other-half/art/film-virgil.woff2)');
   try { document.fonts.add(await fv.load()); } catch { /* the names fall back to the sans */ }
+  // Excalifont: the article figures' notes are set in it (lib/fig.js)
+  const fx = new FontFace('Excalifont', 'url(../../lib/vendor/excalifont/Excalifont.woff2)');
+  try { document.fonts.add(await fx.load()); } catch { /* falls back to Virgil */ }
   await Promise.all(FACES.map((f) => document.fonts.load(f).catch(() => null)));
   const data = await loadData();
   if (PRINT) {
