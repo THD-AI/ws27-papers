@@ -42,9 +42,15 @@ export default {
     const level = (P, r, dash) => ln(P.gc, P.x0, P.Y(r), P.x1, P.Y(r), { stroke: C.ink, 'stroke-width': 4, 'stroke-dasharray': dash || null });
     const band = (P, pd) => {
       const xs = pd.curves[0].points.map((p) => p.training_shots);
-      const at = (i) => pd.curves.map((c) => c.points[i]?.rate).filter((v) => v != null).sort((a, z) => a - z);
-      const lo = xs.map((x, i) => [P.X(x), P.Y(at(i)[0])]), hi = xs.map((x, i) => [P.X(x), P.Y(at(i)[at(i).length - 1])]);
-      const med = xs.map((x, i) => { const v = at(i); return [P.X(x), P.Y(v[Math.floor(v.length / 2)])]; });
+      const lo = [], hi = [], med = [];
+      xs.forEach((x, i) => {
+        const rates = pd.curves.map((c) => c.points[i]?.rate).filter((v) => v != null).sort((a, b) => a - b);
+        const last = rates.length - 1;
+        const median = (rates[Math.floor(last / 2)] + rates[Math.ceil(last / 2)]) / 2;
+        lo.push([P.X(x), P.Y(rates[0])]);
+        hi.push([P.X(x), P.Y(rates[last])]);
+        med.push([P.X(x), P.Y(median)]);
+      });
       pth(P.gc, `M${hi.map((q) => q.join(' ')).join('L')}L${lo.reverse().map((q) => q.join(' ')).join('L')}Z`, { fill: C.field, stroke: 'none' });
       pth(P.gc, `M${med.map((q) => q.join(' ')).join('L')}`, { stroke: C.accent, 'stroke-width': 5 });
       return med[med.length - 1];
