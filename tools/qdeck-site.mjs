@@ -32,6 +32,9 @@ for (const b of css.split('/* ').slice(1).filter((x) => /^(latin|latin-ext) \*\/
 }
 const virgil = readFileSync(join(ROOT, 'articles', 'other-half', 'art', 'film-virgil.woff2')).toString('base64');
 fontCss += `@font-face { font-family: 'Virgil'; src: url(data:font/woff2;base64,${virgil}) format('woff2'); }\n`;
+// Excalifont: the article figures' notes are set in it (lib/fig.js)
+const excali = readFileSync(join(ROOT, 'lib', 'vendor', 'excalifont', 'Excalifont.woff2')).toString('base64');
+fontCss += `@font-face { font-family: 'Excalifont'; src: url(data:font/woff2;base64,${excali}) format('woff2'); }\n`;
 
 // 2. Every page, drawn once in print mode; its whole HTML kept.
 const { server, port } = await startServer(ROOT, 0);
