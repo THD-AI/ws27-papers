@@ -71,7 +71,8 @@ async function main() {
     deck.appendChild(p);
     fit(p);
     showNotes(n);
-    history.replaceState(null, '', `?page=${n + 1}`);
+    q.set('page', n + 1);
+    history.replaceState(null, '', `?${q}${location.hash}`);
   };
   addEventListener('resize', () => { const p = deck.firstChild; if (p) fit(p); });
   addEventListener('keydown', (e) => {
