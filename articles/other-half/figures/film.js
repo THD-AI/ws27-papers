@@ -23,7 +23,7 @@ import { filmRounds, toGrid, BEATS as BEATS_N } from './film-rule.js';
 
 export const steps = 3;
 export const durations = { large: [3.0, 1.4, 1.5] };
-const SIZE = { wide: [720, 624], tall: [360, 354] };
+const SIZE = { wide: [720, 624], tall: [360, 378] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 const IMG = [1536, 1024];
@@ -38,7 +38,7 @@ function build(el, ctx) {
   const C = pal(ctx), d = ctx.data, run = d.runs[0];
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
   const k = W / CROP[2];
-  const bigS = tall ? 196 : 322;                     // the enlarged frame's drawn size: its grid about as large as the margin's
+  const bigS = tall ? 220 : 322;                     // the enlarged frame's drawn size: its grid about as large as the margin's
   // the drawing starts below a band that holds the lifted frame and its key
   const top = bigS + (tall ? 12 : 14);
   const X = (x) => (x - CROP[0]) * k, Y = (y) => (y - CROP[1]) * k + top;
@@ -147,8 +147,8 @@ function build(el, ctx) {
     // on phones the note column is narrow: the words wrap at fixed places
     const lines = tall ? str.replace('fired: a phase error nearby, or a wrong report (lighter tile)', 'fired: a phase error\nnearby, or a wrong\nreport (lighter tile)').replace('fired: a flip nearby, or a wrong report (darker tile)', 'fired: a flip nearby,\nor a wrong report\n(darker tile)') : str.replace(', or', ',\nor').replace(' (', '\n(');
     text(n2, nx, ty, lines, { ...noteO, lh: 16 });
-    // the leader stops at the grid's edge, level with its tile, as lattice's do
-    leader(n2, nx - 5, ty - 4, bcx + 3.5 * pitch + 3, t.c[1], { stroke: C.muted, dot: false });
+    // the leader ends on its tile's edge with a small dot, level with it
+    leader(n2, nx - 5, ty - 4, t.c[0] + pitch * 0.5, t.c[1], { stroke: C.muted, dot: true, dotR: 1.6 });
     floorY = ty + 56;
   }
   // step 2: its frame in the strip, ringed by the pen (the article's one hand
@@ -193,7 +193,7 @@ function build(el, ctx) {
     // step 1: the colour field fades; the line stays in full ink
     // the wash is the hero's world, kept light from the start so that the only
     // full-strength blue on screen is a fired check
-    const p1 = ease(clamp(gg - 1)), fo = 0.55 - 0.3 * p1;
+    const p1 = ease(clamp(gg - 1)), fo = 0.4 - 0.2 * p1;
     field.style.opacity = fo.toFixed(3);
   });
   ring.paths.forEach((pp, i) => st.draw(pp, 2.0 + i * 0.04, 2.3 + i * 0.03));

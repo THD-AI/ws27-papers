@@ -190,7 +190,7 @@ function build(el, ctx) {
     // the headline and the trade in two counted results
     text(base, B.x, 20, 'accurate, or in time', sans);
     const trade = text(base, B.x, 40,
-      `network: [[${acc.network_afterwards.per_100000_rounds}]] errors per [[100,000]] rounds, answers late · live matching: [[${acc.live_matching.per_100000_rounds}]], answers in time`,
+      `${acc.chip}: network [[${acc.network_afterwards.per_100000_rounds}]] errors per [[100,000]] rounds, answers late · live matching [[${acc.live_matching.per_100000_rounds}]], in time`,
       { size: narrow ? 13 : 14, width: B.w, lh: 17 });
     // lane 1: the chip
     const y1 = trade.bottom + (narrow ? 20 : 22);
