@@ -586,6 +586,10 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .passage > :last-child { margin-bottom: 0; }
   .scene.is-live .passage { transition: color 0.25s ease; }
   .scene.is-live .passage.is-read { color: #4A4D55; }
+  /* the passage the figure shows now: a very light tint behind its text (the
+     spread of the shadow pads it without moving anything) */
+  .scene.is-live .passage > :not(.where) { transition: background-color 0.3s ease, box-shadow 0.3s ease; border-radius: 3px; }
+  .scene.is-live .passage.is-active > :not(.where) { background-color: rgba(21, 23, 28, 0.035); box-shadow: 0 0 0 0.45rem rgba(21, 23, 28, 0.035); }
   /* a focused link or mark in a passage is never scrolled under a pinned figure */
   .scene .passage :is(a, button) { scroll-margin-top: calc(var(--stage-h, 0px) + 1rem); }
 }
