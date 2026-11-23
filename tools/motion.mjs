@@ -93,6 +93,7 @@ async function walk(index, from, to, step, backwards) {
   let goal = String(player ? player.goal : el.dataset.goal);
   let last = sig();
   let lastY = null;
+  let idleSeen = false;
   for (let y = Math.max(0, from); y <= to; y += step) {
     scrollTo(0, y);
     await two();
@@ -106,7 +107,14 @@ async function walk(index, from, to, step, backwards) {
     } else {
       if (el.dataset.goal !== undefined) goal = el.dataset.goal;
       const now = sig();
-      if (now !== last && !idle && onScreen && !root.dataset.moving) scrubbed.push(Math.round(scrollY));
+      if (now !== last && !idle && onScreen && !root.dataset.moving) {
+        // an idle motion that runs only in some states (the film runs while it
+        // rests between its steps) changes with the scroll held still too: that
+        // is idle motion, not a step scrubbed by the scroll
+        const held = sig();
+        await new Promise((ok) => setTimeout(ok, 300));
+        if (sig() !== held) idleSeen = true; else scrubbed.push(Math.round(scrollY));
+      }
     }
     last = sig();
     if (scrollY >= document.documentElement.scrollHeight - innerHeight - 1 && y > scrollY + step) break;
@@ -122,7 +130,7 @@ async function walk(index, from, to, step, backwards) {
       if (el.dataset.goal !== g) { back = await play(Math.round(scrollY)); break; }
     }
   }
-  return { plays, scrubbed, back, idle };
+  return { plays, scrubbed, back, idle: idle || idleSeen };
 }
 
 // Per playback: real duration from the first to the last visible change,

@@ -194,7 +194,7 @@ function build(el, ctx) {
     title(svg, R2, b5, `${a5.seeds} + ${b5.seeds} seeds · ${rounds(b5)}`);
     text(svg, R2.x, 438, `not comparable with distance ${d3.distance}: ${rounds(d3)} there, ${rounds(b5)} here`, { ...mono, width: 300, lh: 15 });
     const ys = pb.pn.final_network.per_seed.map((s) => pb.y(s.rate));
-    penRing(svg, pb.xe, (Math.min(...ys) + Math.max(...ys)) / 2, 8, (Math.max(...ys) - Math.min(...ys)) / 2 + 8, { seed: 4, stroke: C.accent, width: 1.4 });
+    penRing(svg, pb.xe, (Math.min(...ys) + Math.max(...ys)) / 2, 8, (Math.max(...ys) - Math.min(...ys)) / 2 + 8, { seed: 4, stroke: C.ink, width: 1.4 });
     text(svg, R1.x, 372, res.d3, { ...mono, fill: C.ink, width: 300, lh: 15 });
     text(svg, R2.x, 372, `faint, ${M(a5.training_shots, 0)} million: ${res.a5}\n${res.b5}`, { ...mono, fill: C.ink, width: 300, lh: 15 });
     text(svg, R1.x, 418, FOOT, { ...mono, width: 300, lh: 15 });
@@ -210,7 +210,7 @@ function build(el, ctx) {
   if (!tall) {
     // rotated axis title, centred on the plate, its letters 10 units clear
     // of the drawing's left edge so that no frame crops it
-    const rot = g(tg, { transform: `translate(21 ${R.y + R.h / 2}) rotate(-90)`, 'data-audit': 'skip' });
+    const rot = g(tg, { transform: `translate(11 ${R.y + R.h / 2}) rotate(-90)`, 'data-audit': 'skip' });
     text(rot, 0, 0, 'share of runs in which the decoder was wrong', { family: 'sans', size: 12, fill: C.muted, anchor: 'middle' });
   }
   st.fade(fr, 0, 0.12, [1.14, 1.2]).fade(fr5, 1.18, 1.26).fade(tg, 0, 0.12);
@@ -269,7 +269,7 @@ function build(el, ctx) {
   st.fade(tb, 2.12, 2.28).fade(lb, 2.26, 2.42);
   const ys = b5.final_network.per_seed.map((s) => pb.y(s.rate));
   const ry = (Math.min(...ys) + Math.max(...ys)) / 2;
-  const pr = penRing(svg, pb.xe, ry, 8, (Math.max(...ys) - Math.min(...ys)) / 2 + 8, { seed: 4, stroke: C.accent, width: 1.5 });
+  const pr = penRing(svg, pb.xe, ry, 8, (Math.max(...ys) - Math.min(...ys)) / 2 + 8, { seed: 4, stroke: C.ink, width: 1.5 });
   pr.paths.forEach((pp, k) => st.draw(pp, 2.84 + k * 0.03, 2.97 + k * 0.02));
   const nb = g(svg);
   if (tall) {

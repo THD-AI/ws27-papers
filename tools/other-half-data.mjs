@@ -258,10 +258,17 @@ for (const [k, classes] of prob) {
   const tie = a.flips.size > 1 || b.flips.size > 1;
   const matchCls = tie ? null : [...a.flips][0] + '' + [...b.flips][0];
   cells.push({ sx, sz, total, tie, matchCls, ml, pMatch: tie ? null : classes.get(matchCls) / total, pMl: classes.get(ml) / total,
-    correction: letters(a.b, b.b), state: tie ? 'tie' : matchCls === ml ? 'same' : 'differs' });
+    // Several error classes can be exactly equally likely, and a strict comparison of floating-point sums would let
+    // rounding call one of them "the most likely" (it did: 103 instead of 24). Matching differs only where its
+    // answer is less likely than the best by more than rounding; where another answer is exactly as likely, it is a tie.
+    correction: letters(a.b, b.b),
+    state: tie ? 'tie' : classes.get(matchCls) < classes.get(ml) * (1 - 1e-9) ? 'differs'
+      : [...classes].filter(([c, v]) => c !== matchCls && v >= classes.get(ml) * (1 - 1e-9)).length ? 'tie-best' : 'same' });
 }
 const differs = cells.filter(c => c.state === 'differs').sort((a, b) => (+b.total.toPrecision(10)) - (+a.total.toPrecision(10)) || (a.sx < b.sx ? 1 : a.sx > b.sx ? -1 : 0) || (a.sz < b.sz ? 1 : -1));
 const nTie = cells.filter(c => c.state === 'tie').length;
+const nTieBest = cells.filter(c => c.state === 'tie-best').length;
+if (differs.length !== 24) throw new Error('expected 24 patterns where matching is strictly less likely, got ' + differs.length);
 if (cells.length !== 256) throw new Error('expected 256 patterns, got ' + cells.length);
 // The proposal's Figure 1 shows the pattern z2 + x0 + x1. Several differing patterns are equally frequent
 // (mirror images of each other); which of them a sort lists first is decided by rounding, so it is named here
@@ -278,7 +285,7 @@ write('syndromes.json', {
   ...head(['port of docs/proposal/paper/data/find_example.py']), source: 'OWN-ENUM',
   what: 'All 256 patterns of the eight checks at distance 3. For each: does the correction of smallest weight per kind of check (plain matching) belong to the most likely kind of correction?',
   conditions: { error_per_storing_qubit: P_ENUM, error_kinds: 'X, Z or Y, each with a third of that chance', checks: 'perfect, one round' },
-  counts: { patterns: cells.length, differs: differs.length, same: cells.filter(c => c.state === 'same').length, tie: nTie },
+  counts: { patterns: cells.length, differs: differs.length, same: cells.filter(c => c.state === 'same').length, tie: nTie, tie_best: nTieBest },
   share_of_all_cases_with_a_differing_pattern: differs.reduce((s, c) => s + c.total, 0),
   share_of_all_cases_with_no_check_fired: cells.find(c => c.sx === '0000' && c.sz === '0000').total,
   grid: { rows: 'flip-check pattern (z0 z1 z2 z3)', columns: 'phase-check pattern (x0 x1 x2 x3)', order: order16,

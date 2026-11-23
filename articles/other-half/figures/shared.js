@@ -94,7 +94,7 @@ export function grid(parent, o) {
   const gF = g(root), gT = g(root), gH = g(root), gQ = g(root), gE = g(root);
   // lines thin with the pitch below about 20 px, so a small grid does not
   // turn into black beads; at main's sizes nothing changes
-  const sw = Math.min(1.25, Math.max(0.7, pitch * 0.062)), swThin = Math.min(0.7, Math.max(0.45, pitch * 0.035));
+  const sw = Math.min(1.9, Math.max(0.7, pitch * 0.024)), swThin = Math.max(0.45, sw * 0.56);
   const tiles = {};
   checks.forEach((ch, i) => {
     const t = tile(ch, pos), flips = ch.asks_about === 'flips';
@@ -129,13 +129,14 @@ export function grid(parent, o) {
 }
 
 // An error on a storing qubit: a disc with its letter (X flip, Z phase error,
-// Y both). 'real' is ink; 'added' is open, in the accent line.
+// Y both). 'real' is ink, filled; 'added' (the decoder's guess) is open, in
+// ink: the accent is kept for a fired check.
 export function errMark(parent, x, y, r, letter, C, kind = 'real') {
   const grp = g(parent);
   const real = kind === 'real';
-  circle(grp, x, y, r, real ? { fill: C.ink, stroke: C.ink, 'stroke-width': 1.25 } : { fill: C.paper, stroke: C.accent, 'stroke-width': 1.6 });
+  circle(grp, x, y, r, real ? { fill: C.ink, stroke: C.ink, 'stroke-width': 1.25 } : { fill: C.paper, stroke: C.ink, 'stroke-width': 1.6 });
   const size = r * 1.42;
-  figText(grp, x, y + size * 0.355, letter, { family: 'sans', size, weight: 600, anchor: 'middle', fill: real ? C.paper : C.accent });
+  figText(grp, x, y + size * 0.355, letter, { family: 'sans', size, weight: 600, anchor: 'middle', fill: real ? C.paper : C.ink });
   return grp;
 }
 

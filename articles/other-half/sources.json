@@ -152,12 +152,20 @@
     "note": "results/correlated-check-2026-11-15.json. The single-mechanism result at distance 3 was reproduced by a second script written by a second AI agent; the pair check at distance 5 was not repeated."
   },
   "OWN-ENUM": {
-    "title": "All errors on the distance-3 grid, counted: 256 check patterns, 103 where the smallest correction is not the most likely kind",
+    "title": "All errors on the distance-3 grid, counted: 256 check patterns; on 24 the standard decoder’s answer is less likely than another, on 144 two answers are exactly as likely",
     "publisher": "This work",
     "url": "",
     "type": "own measurement",
-    "date": "recounted 15 and 16 November 2026",
-    "note": "docs/proposal/paper/data/find_example.py, ported into tools/other-half-data.mjs"
+    "date": "recounted 15 and 16 November 2026; ties resolved in exact arithmetic 23 November 2026",
+    "note": "docs/proposal/paper/data/find_example.py, ported into tools/other-half-data.mjs; each storing qubit has a 5% chance of an error, a flip, a phase error or both, each a third of that"
+  },
+  "OWN-FILM-SIM": {
+    "title": "The film of section 4: a seeded Stim simulation of the distance-7 surface code memory (surface_code:rotated_memory_z), 40 rounds, standard circuit noise at 0.5% (after-Clifford depolarisation, before-round data depolarisation, measurement and reset flips), seed 20261122; the detection events of each round, and the rate at which checks fire over 20,000 runs (seed 20261123)",
+    "publisher": "This work",
+    "url": "",
+    "type": "own simulation",
+    "date": "22 November 2026, Stim 1.16.0",
+    "note": "tools/film-sim.py, written to articles/other-half/data/film.json; the frames shown, and the round lit in the margin scene at distance 7 (data/qubits.json lit_d7), are chosen by rule in figures/film-rule.js"
   },
   "OWN-TIME": {
     "title": "Training time on a GPU; rough decoding times on one laptop core",

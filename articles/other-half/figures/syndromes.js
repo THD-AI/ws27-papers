@@ -1,6 +1,6 @@
 // syndromes: all 256 patterns of the eight checks at distance 3, one small
 // square each. A filled square is a pattern where plain matching's answer is
-// not the most likely one (103 of them). One pattern is shown enlarged, so
+// less likely than another (24 of them; on 144 more, two answers tie exactly). One pattern is shown enlarged, so
 // that a square can be read as "which of the 8 checks fired". States, order
 // and counts are from data/syndromes.json; nothing is sized or shaded by
 // probability.
@@ -39,7 +39,7 @@ function build(el, ctx) {
   const dist = Math.round(Math.sqrt(Math.log2(cnt.patterns) + 1));   // d * d - 1 checks
   const err = `${Math.round(d.conditions.error_per_storing_qubit * 100)}%`;
   const svg = svgRoot(el, W, H,
-    `The eight checks of the smallest grid can fire in ${cnt.patterns} patterns. In ${cnt.differs} of them plain matching's answer is not the most likely one. `
+    `The eight checks of the smallest grid can fire in ${cnt.patterns} patterns. In ${cnt.differs} of them plain matching's answer is less likely than another; in ${cnt.tie_best} more, two answers are exactly as likely. `
     + `They occur in about ${share} of cases; in ${none} of cases no check fires. Counted by us at distance ${dist} with ${err} error per storing qubit and checks that are never wrong.`);
   svg.style.color = C.ink;
   const st = stage();
@@ -58,7 +58,7 @@ function build(el, ctx) {
     const x = fx + cell.col * c + (c - sq) / 2, y = fy + cell.row * c + (c - sq) / 2;
     const differs = cell.state === 'differs';
     rect(rowsG[cell.row], x, y, sq, sq, differs
-      ? { fill: C.accent, 'data-audit': 'skip' }
+      ? { fill: C.ink, 'fill-opacity': 0.55, 'data-audit': 'skip' }
       : { fill: 'none', stroke: C.muted, 'stroke-width': 0.8, 'stroke-opacity': 0.7, 'data-audit': 'skip' });
     if (cell.flip_checks === d.example.flip_checks && cell.phase_checks === d.example.phase_checks) ex = cell;
   }
@@ -114,17 +114,18 @@ function build(el, ctx) {
   const rg = g(svg);
   const rx0 = tall ? 26 : fx + fw + 38, ry0 = tall ? ecy + pitch * 1.5 + 62 : fy + fw - 140;
   const ct = text(rg, rx0 + 8, ry0, `${cnt.differs} of ${cnt.patterns}`, { family: 'mono', size: tall ? 20 : 23, weight: 500 });
-  const w1 = text(rg, rx0, ct.bottom + 30, 'patterns: plain matching’s answer is not the most likely one', { size: tall ? 14 : 15, width: tall ? W - 40 : 226, lh: tall ? 18 : 20 });
+  // the key to the grid's grey, at the words that say what it means
+  rect(rg, rx0, ct.bottom + 30 - 11, 11, 11, { fill: C.ink, 'fill-opacity': 0.55, 'data-audit': 'skip' });
+  const w1 = text(rg, rx0 + 18, ct.bottom + 30, 'patterns: plain matching’s answer is less likely than another', { size: tall ? 14 : 15, width: tall ? W - 58 : 208, lh: tall ? 18 : 20 });
   const w2 = text(rg, rx0, w1.bottom + 18, `they occur in about [[${share}]] of cases; in [[${none}]] of cases no check fires`, { size: tall ? 14 : 15, width: tall ? W - 40 : 226, lh: tall ? 18 : 20 });
-  circle(rg, rx0 + 6, ct.bottom + 24.5 - 12, 0, { fill: C.accent });
   st.fade(rg, 0.74, 0.88);
-  const pr = penRing(svg, ct.cx, ct.cy, ct.w / 2 + 15, tall ? 19 : 22, { seed: 3, stroke: C.accent, width: 1.6 });
+  const pr = penRing(svg, ct.cx + 3, ct.cy, ct.w / 2 + 21, tall ? 20 : 23, { seed: 3, stroke: C.ink, width: 1.6, start: -0.4 });   // its tail at the upper right, clear of the number
   pr.paths.forEach((pp, k) => st.draw(pp, 0.86 + k * 0.03, 0.97 + k * 0.02));
 
   const foot = g(svg);
   text(foot, tall ? 14 : fx, tall ? w2.bottom + 22 : fy + fw + 30, tall
-    ? `distance ${dist} · ${err} error per storing qubit ·\nchecks never wrong · our own count`
-    : `distance ${dist} · ${err} error per storing qubit · checks never wrong · our own count`, { ...mono, lh: 15 });
+    ? `${err} error per storing qubit · one round ·\nchecks never wrong · our own count`
+    : `${err} error per storing qubit · one round · checks never wrong · our own count`, { ...mono, lh: 15 });
   st.fade(foot, 0.8, 0.94);
 
   return { set: (s2, t) => st.set(s2, t) };

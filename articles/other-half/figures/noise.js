@@ -134,7 +134,7 @@ function build(el, ctx) {
   st.fade(ng, 0.82, 0.98);
   if (lowest >= 0) {
     const a = anchors[lowest];
-    const pr = penRing(svg, a.cx, a.cy, a.rx, 15, { seed: 12, stroke: C.accent, width: 1.4 });
+    const pr = penRing(svg, a.cx, a.cy, a.rx, 15, { seed: 12, stroke: C.ink, width: 1.4 });
     pr.paths.forEach((pp, k) => st.draw(pp, 0.86 + k * 0.03, 0.97 + k * 0.02));
   }
 

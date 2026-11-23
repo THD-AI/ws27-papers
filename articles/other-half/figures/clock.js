@@ -17,7 +17,7 @@ export const steps = 5;
 // answer; the answers that follow and the rounds that wait; the second
 // view assembles; the claim's lane arrives
 export const durations = { large: [2.4, 2.0, 1.5, 2.4, 1.8] };
-const SIZE = { wide: [720, 472], tall: [360, 458] };
+const SIZE = { wide: [720, 472], tall: [360, 528] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 function build(el, ctx) {
@@ -151,7 +151,7 @@ function build(el, ctx) {
     st.fade(bn, 2.76, 2.9);
     let pr = null;
     if (ringAt) {
-      pr = penRing(root, ringAt.cx, ringAt.cy, ringAt.w / 2 + 6.5, 10.5, { seed: 6, stroke: C.accent, width: 1.5 });
+      pr = penRing(root, ringAt.cx, ringAt.cy, ringAt.w / 2 + 6.5, 10.5, { seed: 6, stroke: C.ink, width: 1.5 });
       pr.paths.forEach((pp, k) => st.draw(pp, 2.84 + k * 0.03, 2.95 + k * 0.02));
     }
     // the axis
@@ -190,13 +190,15 @@ function build(el, ctx) {
     // the headline and the trade in two counted results
     text(base, B.x, 20, 'accurate, or in time', sans);
     const trade = text(base, B.x, 40,
-      `network: [[${acc.network_afterwards.per_100000_rounds}]] errors per [[100,000]] rounds, answers late · live matching: [[${acc.live_matching.per_100000_rounds}]], answers in time`,
+      `${acc.chip}: network [[${acc.network_afterwards.per_100000_rounds}]] errors per [[100,000]] rounds, answers late · live matching [[${acc.live_matching.per_100000_rounds}]], in time`,
       { size: narrow ? 13 : 14, width: B.w, lh: 17 });
     // lane 1: the chip
     const y1 = trade.bottom + (narrow ? 20 : 22);
     text(base, B.x, y1, narrow ? 'the chip' : 'the chip: the end of a run', small);
     const L1 = y1 + (narrow ? 24 : 30);
     line(base, B.x, L1, right, L1, { stroke: C.ink, 'stroke-width': 1 });
+    // the rounds before these are left out: two slanted strokes across the lane
+    for (const dx of [10, 16]) line(base, B.x + dx - 3, L1 - 1, B.x + dx + 3, L1 - 15, { stroke: C.ink, 'stroke-width': 1.25 });
     const nBack = Math.floor((xLast - B.x) / (T * s));
     for (let k = 0; k <= nBack; k++) {
       const xx = x(-k * T);
@@ -225,11 +227,11 @@ function build(el, ctx) {
     const after = g(l3);
     const wa = x(live.value - live.plus_minus), wb = x(live.value + live.plus_minus);
     line(after, xLast + 4, y3, wa - 4, y3, { stroke: C.ink, 'stroke-width': 0.9, 'stroke-dasharray': '1 4', 'stroke-linecap': 'round' });
-    line(after, wa, y3, wb, y3, { stroke: C.accent, 'stroke-width': 1.1 });
-    line(after, wa, y3 - 4.5, wa, y3 + 4.5, { stroke: C.accent, 'stroke-width': 1.1 });
-    line(after, wb, y3 - 4.5, wb, y3 + 4.5, { stroke: C.accent, 'stroke-width': 1.1 });
-    circle(after, x(live.value), y3, 5, { fill: C.accent });
-    text(after, wb, y3 - 11, `± ${us(live.plus_minus)}`, { family: 'mono', size: 11.5, anchor: 'end', fill: C.accent });
+    line(after, wa, y3, wb, y3, { stroke: C.ink, 'stroke-width': 1.1 });
+    line(after, wa, y3 - 4.5, wa, y3 + 4.5, { stroke: C.ink, 'stroke-width': 1.1 });
+    line(after, wb, y3 - 4.5, wb, y3 + 4.5, { stroke: C.ink, 'stroke-width': 1.1 });
+    circle(after, x(live.value), y3, 5, { fill: C.ink });
+    text(after, wb, y3 - 11, `± ${us(live.plus_minus)}`, { family: 'mono', size: 11.5, anchor: 'end', fill: C.ink });
     const bg = g(l3);
     bracket(bg, xLast, y3 + 14, x(live.value), y3 + 14, 5, { stroke: C.ink, 'stroke-width': 1 });
     const lab = text(bg, xLast, y3 + 35, `${live.label_on_page}:`, noteO);
@@ -237,7 +239,7 @@ function build(el, ctx) {
       ? text(bg, xLast + 8, lab.bottom + 22, us(live.value), { family: 'mono', size: 15, weight: 500 })
       : text(bg, lab.right + 18, y3 + 35.5, us(live.value), { family: 'mono', size: 15, weight: 500 });
     const same = text(n3, narrow ? big.right + 22 : xLast, narrow ? big.y + big.h - 4 : big.bottom + 17, narrow ? 'for runs of up to\na million rounds' : 'the same for runs of up to a million rounds', { ...noteO, lh: 15, fill: C.muted });
-    const pr = penRing(root, big.cx, big.cy, big.w / 2 + 8, 12, { seed: 8, stroke: C.accent, width: 1.5 });
+    const pr = penRing(root, big.cx, big.cy, big.w / 2 + 8, 12, { seed: 8, stroke: C.ink, width: 1.5 });
     // lane 4: the claim
     y = Math.max(big.bottom, same.bottom) + (narrow ? 20 : 28);
     // in reading order (step 4): the lane and its blocks, the note on
@@ -261,8 +263,9 @@ function build(el, ctx) {
       line(axg, x(t), ay, x(t), ay + 5, { stroke: C.ink, 'stroke-width': 1 });
       text(axg, x(t), ay + 18, t === 0 ? '0' : String(t), { ...mono, anchor: 'middle' });
     }
-    if (narrow) text(axg, B.x, ay + 18, 'µs after', mono);
-    else text(axg, xLast - 12, ay + 18, 'µs after the last round', { ...mono, anchor: 'end' });
+    // this view's own time: after the run ends (decision D1, reviews/v3-decisions)
+    if (narrow) text(axg, B.x, ay + 36, 'after the run ends ·\nµs after the last round', { ...mono, lh: 15 });
+    else text(axg, xLast - 12, ay + 4, 'after the run ends ·\nµs after the last round', { ...mono, anchor: 'end', lh: 14 });
 
     const a = o.at;
     // step 3 draws across its passage: the frame, the live run, its answer

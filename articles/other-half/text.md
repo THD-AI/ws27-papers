@@ -3,7 +3,7 @@ title: The other half of a quantum computer
 deck: The same recorded data from one of Google's quantum chips gave two different results, depending on which program read it. We asked what that program has to do, why a neural network can do it better, and what that costs. In our own small runs, it didn't always.
 author: Alexander Rudaev and group
 context: Quantum Computing seminar · TH Deggendorf · winter semester 2026/27
-status: Draft for review, 16 November 2026
+status: Draft for review, 23 November 2026
 accent: other-half
 hero: hero
 summary: The program that reads a quantum chip's errors decides whether the computer works: what it does, why a neural network can do it better, and the cost.
@@ -61,16 +61,16 @@ A check can also just report wrongly. Then it fires twice in a row, once when th
 
 :::scene film
 
-@caption What leaves the chip, every round, is each check's answer; drawn here as the opening drawing's cable, a strip of film. An ordinary computer compares each round with the one before, and in each frame a lit point is a check of the distance-7 grid (48 checks) whose answer changed: blue for checks on flips, black for checks on phase errors. Simulated: distance 7, a 0.5% chance of error per operation, chosen so the inner checks fire as often as on Google's chip: 8.6% of rounds here, 8.7% in Google's report of 2024. Shown far slower than real time.
+@caption What leaves the chip each round is every check's answer, drawn here as the opening drawing's cable: a strip of film whose frames show the checks of the distance-7 grid that fired. The frame enlarged above it is the round lit beside section 3. Simulated at distance 7 with a 0.5% chance of error per operation, which makes the inner checks fire about as often as on Google's 2024 chip (8.6% of rounds here, 8.7% there), and shown far slower than real time. {{OWN-FILM-SIM GQA-2024}}
 
 @step 0
-One round of checks takes 1.1 millionths of a second, and a grid of distance 7 has 48 checks. In the time of one blink the chip gets through about ninety thousand rounds and puts out about four million check results, for a single logical qubit. {{GQA-2024 OWN-ARITH}}
+One round of checks takes 1.1 millionths of a second, and a grid of distance 7 has 48 checks. In the time of one blink the chip gets through about ninety thousand rounds and puts out over four million check results, for a single logical qubit. {{GQA-2024 OWN-ARITH}}
 
 @step 1
-While the computer runs, that stream is all that comes out of it. We ended up thinking of it as a film in which a few points light up in every frame.
+While the computer runs, that stream is all that comes out of it. We ended up thinking of it as a film in which a few points light up in most frames.
 
 @step 2
-The fired checks say roughly where something happened and which kind of error it was. They don't say which qubits were hit. Many sets of errors light up the same points.
+The fired checks say roughly where something happened and of which kind: a flip, a phase error, or a check that reported wrongly. They don't say which qubits were hit. Many sets of errors light up the same points.
 
 :::
 
@@ -87,15 +87,15 @@ The harmful case looks like this. A correction acts on the grid just as errors d
 This silent failure is a **logical error**, and how often it happens is what every decoder is measured by. It also shows what distance (section 2) is worth. On a grid of distance 5 a line needs five storing qubits. So three real errors can be enough. A decoder that sees them may add two more.
 
 :::figure line column
-A grid of distance 5, showing flips and the checks that notice them. Three real errors in one column fire a single check. The shortest explanation of that one check is two errors below it. If the decoder corrects those two, errors and correction together cross the grid from edge to edge: the stored value has changed and no check fires. Constructed and checked by our script.
+A grid of distance 5, showing flips and the checks that notice them. Here and in section 6: a single round of checks, and checks that never report wrongly. A real decoder reads many rounds, wrong reports included. Three real errors in one column fire a single check. The shortest explanation of that one check is two errors below it. If the decoder corrects those two, errors and correction together cross the grid from edge to edge: the stored value has changed and no check fires. Constructed and checked by our script.
 :::
 
 ## 6. Where the standard method goes wrong
 
-We went through every possible error on the smallest grid and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 possible patterns on the smallest grid, 103 get an answer from the standard decoder that isn't the most likely one. {{OWN-ENUM}} That sounds like a lot, but these patterns are rare: together they turn up in fewer than 2 cases in 100.
+The rules are the same on a grid of any size, so we went down to the smallest one that can correct an error, distance 3, where every case can be counted. We went through every possible error there and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 possible patterns on the smallest grid, 24 get an answer from the standard decoder that is less likely than another. {{OWN-ENUM}} They are rare: with a 5% chance of an error per storing qubit (a flip, a phase error or both, each a third of that), together they turn up in fewer than 1 case in 100, while in 63 cases in 100 no check fires at all. On 144 more patterns, two answers are exactly as likely, and no decoder can do better than matching there. {{OWN-ENUM}}
 
 :::figure syndromes wide
-All 256 patterns of the eight checks at distance 3, one mark each, ordered by how many checks fire. Filled: the 103 patterns where the standard decoder's answer isn't the most likely one. These are the rarer patterns: with a 5% chance of an error per storing qubit they turn up in about 1.6% of cases, and in 63% of cases no check fires at all. Our own count.
+All 256 patterns of the eight checks at distance 3, one mark each, ordered by how many checks fire. Filled: the 24 patterns where the standard decoder's answer is less likely than another. They are rare: with a 5% chance of an error per storing qubit (a flip, a phase error or both, each a third of that), they turn up in about 0.9% of cases, and in 63% of cases no check fires at all. On 144 other patterns two answers are exactly as likely. Our own count, in exact arithmetic.
 :::
 
 :::scene lattice
@@ -117,7 +117,7 @@ Decoding then becomes a pairing puzzle: join every fired check to another fired 
 Plain matching solves the puzzle separately for flip-checks and phase-checks, so an error that is both at once (section 3) counts as two. And it seeks the single likeliest explanation, though explanations that differ only in a way the code doesn't care about (section 5) add up.
 
 @step 4
-The first of our 103 patterns shows it. Three checks fire. Plain matching explains them with two errors: a flip in one corner and a phase error in the centre. It fits the checks, and it is right one time in three. {{OWN-ENUM}} But when the truth is the other answer, matching's correction and the real errors together cross the grid: a silent logical error, about two times in three. Two cautions: we gave every storing qubit a 5% chance of an error, far more than a real chip has, so the effect is easy to count, and we assumed the checks never report wrongly. {{OWN-ENUM}}
+One of the most frequent of the 24 shows it. Three checks fire. Plain matching explains them with two errors: a flip in one corner and a phase error in the centre. It fits the checks, and it is right one time in three. {{OWN-ENUM}} But when the truth is the other answer, matching's correction and the real errors together cross the grid: a silent logical error, about two times in three. Two cautions: we gave every storing qubit a 5% chance of an error (a flip, a phase error or both, each a third of that), far more than a real chip has, so the effect is easy to count, and we assumed the checks never report wrongly. {{OWN-ENUM}}
 
 @step 5
 The same checks also fit a combined error in that corner, a flip and a phase error at once, which the figure marks Y, plus one phase error on the right. Counting Y as one error, this answer also has two, and on its own it is exactly as likely as plain matching's. What tips the balance is that it can happen in two ways. The phase error can sit in the far corner. Or it can sit one place above it, and the checks fire just the same. Together, the two ways are right about six times in ten. {{OWN-ENUM}} The rest are rarer explanations.
@@ -134,12 +134,12 @@ Google first showed, in 2023, a grid of distance 5 that beat distance 3, but onl
 
 The factor by which the error shrinks per step is written **Λ** (lambda), and it decides how big a useful machine has to be. With Λ near 2, halving the error once more means going from distance 7 to distance 9: from 97 qubits to 161. {{GQA-2024 OWN-ARITH}} That one halving costs 64 more qubits.
 
-Google read the same recorded data with two decoders. Its best matching decoder already links the two kinds of check in a limited way – the idea behind the correlated matching we use in section 9. It learns no rules of its own, though its error weights were tuned on the chip's data. It gave Λ = 2.04, and a neural network gave Λ = 2.14. At distance 7 the matching decoder's logical error rate was 171 per 100,000 rounds and the network's 143, about one in six fewer. {{GQA-2024}} Same chip, same data; only the reader changed.
+Google read the same recorded data with two decoders. Its best matching decoder already links the two kinds of check in a limited way – the idea behind the correlated matching we use in section 9. It learns no rules of its own, though its error weights were tuned on the chip's data. It gave Λ = 2.04, and a neural network gave Λ = 2.14. At distance 7 the matching decoder's logical error rate was 171 per 100,000 rounds and the network's 143, about one in six fewer. {{GQA-2024}} Same chip, same data; only the reader changed.
 
 Other labs have got below the threshold with other hardware, some with decoders that learn {{NA-2025 QTN-2026 QTN-PR-2026 USTC-2025}}, and IBM has shown in simulation a fast one that doesn't {{IBM-RELAY-2025 IBM-FPGA-2025}}. None of these results settles which route is best.
 
 :::figure suppression column
-Logical error rate per round, times 100,000, on Google's 2024 chip at distances 3, 5 and 7, each recording read afterwards by two decoders. The values at distances 3 and 5 are averages over 9 and 4 smaller grids on the same chip, so each distance is its own recording. Each step in distance divides the rate by Λ: 2.04 for the matching decoder, 2.14 for the network. Google's measurements, not ours. Source: Google Quantum AI, Nature 638 (2025), with its supplementary table S1.
+Logical error rate per round, times 100,000, on Google's 2024 chip at distances 3, 5 and 7, each recording read afterwards by two decoders. The values at distances 3 and 5 are averages over 9 and 4 smaller grids on the same chip, so each distance is its own recording. Each step in distance divides the rate by about Λ, fitted over all three: 2.04 for the matching decoder, 2.14 for the network. Google's measurements, from real recordings over many rounds, wrong reports included; not ours. Source: Google Quantum AI, Nature 638 (2025), with its supplementary table S1.
 :::
 
 :::margin qubits end
@@ -159,7 +159,7 @@ The clock is where it struggles. The chip asks its checks once every 1.1 million
 Google's paper quotes 24 millionths of a second per round for its network, from earlier work. {{GQA-2024 AQ-2024}} In that time the chip finishes about 22 more rounds. The network is accurate, but each answer comes late.
 
 @step 2
-By the time the network has answered round 3, at 72 millionths of a second, the chip is at round 65. An interpreter who needs twenty-two seconds for every second of speech is more than twenty minutes behind after one minute. {{OWN-ARITH}} And the gap keeps growing.
+By the time the network has answered round 3, about 73 millionths of a second in, the chip has finished round 66, and 62 rounds wait behind the one it is working on. An interpreter who needs twenty-two seconds for every second of speech is more than twenty minutes behind after one minute. {{OWN-ARITH}} And the gap keeps growing.
 
 @step 3
 So the network's results were worked out afterwards, on recorded data. The decoder that ran live was a fast, plain version of matching, and it kept pace. On a smaller chip, at distance 5 and on the same data, live matching's logical error rate was 350 per 100,000 rounds and the network's, afterwards, 269. {{GQA-2024}} Part of that gap is live against offline, not only matching against network.
@@ -171,7 +171,7 @@ A preprint from December 2025 reports a network that keeps pace: under one milli
 
 ## 9. What we measured ourselves
 
-We can't build a chip and we can't match Google's network. We can measure, in simulation, what a small neural decoder costs to train and run. The short answer: on the smallest grid our network soon beats plain matching; one grid larger it needs about 250 million examples to do so, and never catches correlated matching. We simulate the surface code with Stim, a free simulator written at Google, and use its standard noise model. {{STIM-2021}}
+We can't build a chip and we can't match Google's network. We can measure, in simulation, what a small neural decoder costs to train and run. The short answer: on the smallest grid our network soon beats plain matching; one grid larger it needs about 250 million examples to do so, and even then it stays behind correlated matching except at the lowest noise level. We simulate the surface code with Stim, a free simulator written at Google, and use its standard noise model. {{STIM-2021}}
 
 We wanted three measurements. First, whether a small network beats matching, and how many more examples it needs at distance 5 than at 3. Second, how long each decoder takes per run of three or five rounds on the same machine, next to how often it's wrong. Third, whether a network trained in simulation still works on the recordings Google has made public {{GQA-DATA-2022 GQA-DATA-2024}}, before and after it has seen some of them. We did the first, part of the second, and not the third.
 
@@ -196,7 +196,7 @@ Each training was repeated from different random starting points, or seeds: eigh
 
 :::
 
-At distance 3 the best answer for every pattern can simply be looked up. A table built from 200 million runs per noise level, a hundred times the test set, holds the more frequent answer for each pattern of fired checks. It failed in 1.47% of runs. {{OWN-D3}} Whether its runs overlap the test runs, and how it answers a pattern it never saw, our result files don't record. That table is our estimate of the best possible; since we can't say whether it saw the test runs, it may flatter itself slightly. The network's 1.48% is barely above it.
+At distance 3 the best answer for every pattern can simply be looked up. A table built from 200 million runs per noise level, a hundred times the test set, holds the more frequent answer for each pattern of fired checks. It failed in 1.47% of runs. {{OWN-D3}} Its runs come from different random seeds than the test runs, and for a pattern it never saw, or saw equally often with either answer, it falls back to plain matching: about 0.15% of the test runs at 0.5%. {{OWN-D3}} That table is our estimate of the best possible. The network's 1.48% is barely above it.
 
 :::figure noise wide
 Distance 5, network trained on about 250 million examples: share of runs in which each decoder was wrong, at eight noise levels, with 95% intervals. Five seeds together, 10 million runs per noise level. At 0.1% the network and correlated matching can't be told apart. From 0.2% the network is behind correlated matching, and from 0.8% it is behind plain matching too. Our own runs.
@@ -248,7 +248,7 @@ Our numbers come from small grids and from a network far smaller than Google's. 
 ## What we could not show
 
 - How any of our decoders would do on a real chip. Every run of ours is a simulation with the same noise on every operation, unlike a real chip's errors (section 6), and matching was handed the exact error model. {{OWN-D3 OWN-D5 OWN-D5-250M OWN-TIME}}
-- How the decoders do on the other of the two kinds of value a logical qubit can hold. We stored only one.
+- How our network does on the other of the two kinds of value a logical qubit can hold. We trained and tested it on one; only the check of the two matching decoders in section 9 covers both.
 - How many examples our network needs to reach correlated matching at distance 5, and whether it learns distance 7 at all.
 - Why correlated matching gets those single errors and pairs wrong, and whether another version of the library does too.
 
@@ -276,7 +276,7 @@ Every figure from outside our group comes from a source one of us opened: publis
 - Question, choices, what to keep and drop, and conclusions: the group.
 - Code and prose: written and revised with AI assistants under our direction; the code run by us on Kaggle.
 - Second scripts: by an AI agent that had not seen ours; a check on our code, not a replication by other people.
-- Reviews: four AI readers in different roles (student, outsider, examiner, voice) on an earlier draft, an AI fact checker on a later one; we worked in their lists. No person outside the group has read it yet.
+- Reviews: AI readers in different roles (student, outsider, examiner, voice, editor, motion designer, sceptic of machine-made looks, a quantum specialist who recomputed the numbers) over many rounds, on the text and on every figure; we worked in their lists. No person outside the group has read it yet.
 - Opening drawing: an image model, from our own line reference and photographs of real hardware.
 
 We are responsible for the question and every claim.

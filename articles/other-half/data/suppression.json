@@ -10,7 +10,7 @@
  "decoders": [
   {
    "id": "matching",
-   "label": "Google's best matching decoder",
+   "label": "Google’s best matching decoder",
    "paper_name": "ensembled matching synthesis (Libra)",
    "lambda": 2.04,
    "lambda_plus_minus": 0.02,
