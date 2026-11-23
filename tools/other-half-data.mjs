@@ -195,6 +195,18 @@ const qubits = {
   what: 'Physical qubits for one logical qubit in the surface code: d × d storing qubits and d × d − 1 helpers, 2d² − 1 in all.',
   rows: [3, 5, 7, 9].map(d => ({ distance: d, storing: d * d, helpers: code(d).checks.length, total: 2 * d * d - 1, source: 'OWN-ARITH' })),
 };
+// The margin scene lights, at distance 7, the round the film holds up
+// (figures/film-rule.js applied to data/film.json, written by tools/film-sim.py).
+{
+  const { filmRounds, toGrid } = await import('../articles/other-half/figures/film-rule.js');
+  const film = JSON.parse(readFileSync(join(OUT, 'film.json'), 'utf8')), run = film.runs[0];
+  const { held } = filmRounds(run);
+  qubits.lit_d7 = {
+    source: film.source, round: held, noise: run.noise, seed: film.seed,
+    meaning: 'The checks of the distance-7 grid whose answer changed in this simulated round: the frame the film holds up.',
+    checks: run.frames[held].map((id) => toGrid(run.checks[id], 7)),
+  };
+}
 write('qubits.json', qubits);
 
 // ---------------------------------------------------------------- the enumeration at distance 3

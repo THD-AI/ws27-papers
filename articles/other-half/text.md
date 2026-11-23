@@ -74,7 +74,7 @@ The fired checks say roughly where something happened and which kind of error it
 
 :::
 
-:::margin qubits 4
+:::margin qubits off
 
 ## 5. The decoder, and the one mistake that matters
 
@@ -130,7 +130,7 @@ Real chips add trouble of the same sort: errors that hit two neighbouring qubits
 
 Google first showed, in 2023, a grid of distance 5 that beat distance 3, but only just. A year later, on a new chip, the errors were finally below the threshold – the error rate from section 2 under which bigger grids win – and the effect was clear. Each step from distance 3 to 5 to 7 cut the rate of logical errors roughly in half. At distance 7 the logical qubit lasted more than twice as long as the best single qubit on the chip. {{GQA-2023 GQA-2024}}
 
-:::margin qubits 5
+:::margin qubits 4
 
 The factor by which the error shrinks per step is written **Λ** (lambda), and it decides how big a useful machine has to be. With Λ near 2, halving the error once more means going from distance 7 to distance 9: from 97 qubits to 161. {{GQA-2024 OWN-ARITH}} That one halving costs 64 more qubits.
 
