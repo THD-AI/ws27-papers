@@ -16,7 +16,7 @@ Today's cost per finished request against the agent's, with repeat contacts not 
 
 ## 4. "No dismissals" – but 4,000 positions a year still go. Isn't that replacement, only slower?
 
-Partly, yes, and that's why the title says it. Positions go by agreed routes, and any saving has to fit into those 4,000 a year. My point is what the agents are for: the people who stay are the first to train, and the agent works with them. At T-Mobile, in about three of four conversations, the staff see the system's recommendations. (Slide 6 notes, B1 row 6)
+Partly, yes, and that's why the title says it. Positions go by agreed routes, and any saving has to fit into those 4,000 a year. My point is what the agents are for: the people who stay are the first to train, and the agent works with them. At T-Mobile, in about three of four conversations, the staff see the system's recommendations. (B1 row 6)
 
 ## 5. Does the agreement cover outsourced call-centre staff? What happens after 2028?
 

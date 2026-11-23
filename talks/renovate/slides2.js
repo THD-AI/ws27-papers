@@ -191,37 +191,29 @@ add({
 });
 
 // 3 ---------------------------------------------------------------------------
-// Two counts, two bars: each on its own hundred, because nobody published
-// whether one contains the other. Then: how many were finished isn't known.
+// The release is a reported claim. Draw the share only for the defined group.
 add({
   id: 'number', n: 3, beat: 'The American result', builds: 3, start: '1:15',
-  clicks: ['the release: 40', 'T-Mobile’s slide: 32, another count', 'finished: not published'],
-  title: 'Telekom’s release says 40 percent. T-Mobile’s own slide counts 32 percent.',
-  source: 'Deutsche Telekom, press release, 5 Oct 2026; T-Mobile US, AI Investor Day deck, Q2 2026. Company figures, not audited. Two separate counts on different bases; whether the 40 include the 32 isn’t published.',
-  notes: `<p>A correction to my own proposal. Telekom's press release says AI agents now handle forty percent of customer contacts in the US. I used that number. In T-Mobile's own material I couldn't find the forty. Its investor slide shows thirty-two, and it counts something narrower: only contract customers, only contacts the software serves. Served means the customer meets the software first. Whether it also finished the job, T-Mobile doesn't say. Company numbers, not audited. One in three is still a lot. <b>Telekom's release says forty percent. T-Mobile's own slide counts thirty-two percent.</b></p>`,
+  clicks: ['the press release claim', 'the share of contract customers’ contacts that started with software', 'completion rate unpublished'],
+  title: 'What did the software actually do?',
+  landings: { 2: 'About one in three contacts from contract customers started with software.' },
+  source: 'Company figures. Deutsche Telekom, press release and AI Investor Day transcript, 5 Oct 2026. T-Mobile US, AI Investor Day deck, Q2 2026.',
+  notes: `<p>A correction to my own proposal. I used the forty percent from Telekom's press release. The release says AI agents handled that share of contacts. I couldn't find which customers it counted. T-Mobile's own slide gives a figure for contract customers: thirty-two percent of their contacts started with software. I couldn't find a figure for how many of those the software finished. These are company figures. <b>About one in three contacts from contract customers started with software.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
-    const P = data.numbers.plateA, r = P.release.value, s = P.slide.value;
-    const x0 = 420, x1 = 1760, X = (v) => x0 + (v / 100) * (x1 - x0), hh = 64;
-    const bar = (y, v, col, fill, head, desc, base) => {
-      T(svg, x0, y - 62, head, { size: 36, weight: 600, fill: col });
-      T(svg, x0, y - 20, desc, { size: 32, fill: C.muted });
-      h('rect', { x: X(0), y, width: X(v) - X(0), height: hh, fill }, svg);
-      rc(svg, x0, y, x1 - x0, hh);
-      for (let t = 10; t < 100; t += 10) ln(svg, X(t), y + hh - 14, X(t), y + hh, { stroke: C.mid, 'stroke-width': 2 });
-      ln(svg, X(v), y, X(v), y + hh, { stroke: col, 'stroke-width': 4 });
-      T(svg, x0 - 40, y + hh - 2, `${v}`, { size: 96, weight: 600, fill: col, anchor: 'end' });
-      T(svg, x1, y + hh + 42, base, { size: 32, fill: C.muted, anchor: 'end' });
-    };
-    bar(400, r, C.ink, C.faint, 'Telekom’s press release', 'of customer contacts handled by AI agents; whose, it doesn’t say', 'of 100 contacts');
-    if (b >= 1) bar(680, s, C.accent, C.field, 'T-Mobile’s own slide', 'of contract customers’ contacts, “served by an AI agent”: they start with the software', 'of 100 contract customers’ contacts');
-    if (b >= 2) {
-      const y = 680 + hh + 22;
-      pth(svg, `M${X(0)} ${y} L${X(0)} ${y + 18} L${X(s)} ${y + 18} L${X(s)} ${y}`, { stroke: C.ink, 'stroke-width': 2.5, 'stroke-dasharray': '10 8' });
-      T(svg, X(0), y + 76, 'how many of these the software finished: not published', { size: 38, weight: 600 });
+    const { release, slide } = data.numbers.plateA;
+    T(svg, L, 324, `Telekom’s press release says AI handled ${release.value}% of contacts.`, { size: 43, weight: 600 });
+    T(svg, L, 382, 'The release leaves the customer group unspecified.', { size: 36, fill: C.muted });
+    if (b >= 1) {
+      ln(svg, L, 455, R, 455, { stroke: C.hair, 'stroke-width': 2 });
+      T(svg, L, 535, 'T-Mobile’s investor slide counts contract customers only.', { size: 42, weight: 600 });
+      T(svg, L, 715, `${slide.value}%`, { size: 108, weight: 600, fill: C.accent });
+      T(svg, 400, 615, 'of their contacts started with software', { size: 44, weight: 600 });
+      bar100(svg, 400, R, 660, 58, slide.value);
     }
-    cable(svg, [[-20, CABLE_Y], [1940, CABLE_Y]]);
+    if (b >= 2) T(svg, 400, 833, 'T-Mobile leaves the completion rate unpublished.', { size: 40, weight: 600 });
+    band(svg);
   },
 });
 
@@ -511,7 +503,7 @@ add({
   clicks: ['before and now', 'the agents plugged in', '78%'],
   title: 'T-Mobile rebuilt alongside its agents.',
   source: "Deutsche Telekom, AI Investor Day transcript, 5 Oct 2026 (T-Mobile's head of IT); T-Mobile US, AI Investor Day deck; Form 10-K 2025. Share of chats: company figure.",
-  notes: `<p>Look at what T-Mobile did. Their head of IT described it to investors. Before, outside contractors worked on the suppliers' systems. Now T-Mobile's own engineers work on T-Mobile's own systems. They built one customer record, one system that knows each customer, and the agents read from it. With that in place, almost eight in ten chats never reached a person. That's not the same as solved. Still, a real result. And the staff got help too: in about three of four conversations, the staff see the system's recommendations. Company figures again. <b>T-Mobile rebuilt alongside its agents.</b></p>`,
+  notes: `<p>Look at what T-Mobile did. Their head of IT described it to investors. Outside contractors used to work on the suppliers' systems. Now T-Mobile's own engineers work on T-Mobile's own systems. They built one customer record, and the agents read from it. T-Mobile also reports that almost eight in ten chats never reached a person in mid-2026. That tells us where the chats ended. I'd still want to see how many customers got what they came for. <b>T-Mobile rebuilt alongside its agents.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -539,7 +531,7 @@ add({
       T(svg, x0 - 30, y + 54, `${v}%`, { size: 80, weight: 600, fill: C.accent, anchor: 'end' });
       ln(svg, X(was), y - 14, X(was), y + 70, { stroke: C.ink, 'stroke-width': 3, 'stroke-dasharray': '8 6' });
       T(svg, X(was), y + 104, 'mid-2024: about a quarter', { size: 32, fill: C.muted, anchor: 'middle' });
-      T(svg, x0, 920, 'Company figure. Not reaching a person isn’t the same as resolved.', { size: 32, fill: C.muted });
+      T(svg, x0, 920, 'Company figure. No resolution rate for these chats.', { size: 36, weight: 600 });
     }
   },
 });
@@ -626,7 +618,7 @@ add({
   clicks: ['79%'],
   title: 'Nearly four in five Germans see monitoring at work as bad.',
   source: 'European Commission, Special Eurobarometer 554, Artificial Intelligence and the future of work (asked in the EU only).',
-  notes: `<p>The second brick starts with a worry. The EU asked people about digital monitoring at work. On AI and jobs, Germans are no more worried than Americans. On being watched at work, they stand out even within the EU: only Sweden is higher. Any new system here has to answer that first. <b>Nearly four in five Germans see monitoring at work as bad.</b></p>`,
+  notes: `<p>The second brick starts with a worry. The EU asked people about digital monitoring at work. In Germany seventy-nine percent saw it negatively. Only Sweden was higher. I'd want to know what my employer sees before I use the tool. <b>Nearly four in five Germans see monitoring at work as bad.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this, { titleWidth: 1700 });
@@ -637,8 +629,6 @@ add({
     T(svg, X(v) - 20, y + 300, `${v}%`, { size: 150, weight: 600, fill: C.accent, anchor: 'end' });
     ln(svg, X(80), y - 40, X(80), y + 90, { stroke: C.ink, 'stroke-width': 3, 'stroke-dasharray': '8 6' });
     T(svg, X(80) - 14, y - 22, 'Sweden 80%, the only higher one in the EU', { size: 32, fill: C.muted, anchor: 'end' });
-    T(svg, L, y + 240, 'On AI and jobs, Germans are no more', { size: 34 });
-    T(svg, L, y + 284, 'pessimistic than Americans.', { size: 34 });
     band(svg);
   },
 });
@@ -646,10 +636,10 @@ add({
 // 11 --------------------------------------------------------------------------
 add({
   id: 'checks', n: 11, beat: 'Second brick: the checks', builds: 3, start: '7:31',
-  clicks: ['United States', 'Germany: the two rules', 'since 2021'],
-  title: 'Second brick: here the checks come first.',
-  source: 'BetrVG § 87(1) no. 6; AI Act Art. 50 (Reg. (EU) 2024/1689, amended by 2026/1744); Telekom framework agreement on IT systems, March 2021 (Bargmann 2022); T-Mobile US, Sep 2024. Lengths schematic.',
-  notes: `<p>German law makes every new system answer that before launch. At T-Mobile, as far as I could find, the staff had no say before launch. Here, two rules matter most. One: a system that can watch the staff needs the works council to agree before it runs. Two: since August, the AI Act says customers must be told when they talk to an AI system. And here Telekom is ahead. In 2021 it agreed a framework with its works council. Nobody is watched as a person. Results only in groups of more than five, with no names. A system inside those rules needs no new decision. <b>Second brick: here the checks come first.</b></p>`,
+  clicks: ['what T-Mobile disclosed', 'German works council approval', 'Telekom’s 2021 framework'],
+  title: 'The works council has a say before launch.',
+  source: 'BetrVG § 87(1) no. 6. Telekom framework agreement on IT systems, March 2021 (Bargmann 2022). T-Mobile US, Sep 2024. Schematic.',
+  notes: `<p>I looked for a public record showing staff had a say before T-Mobile launched. I couldn't find one. In Germany, if the tool can monitor staff, the works council has to agree before it runs. Telekom already has a framework from 2021. It rules out monitoring individual employees. Anonymous group results are allowed for groups of more than five. A system that fits those rules needs no separate agreement. That gives me something to work with. <b>The works council has a say before launch.</b></p>`,
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -665,17 +655,15 @@ add({
       });
     };
     lane(330, 'United States', 'T-Mobile', [[0, S.us.build[1], 'build', 'build'], [S.us.launch[0], S.us.launch[1], 'launch', 'running']]);
-    S.us.checks.forEach((u) => dot(svg, X(u), 394, 9, { fill: C.ink }));
-    T(svg, R, 440, 'no staff say found before launch; checks come later', { size: 32, fill: C.muted, anchor: 'end' });
+    T(svg, X(0), 425, 'I found no public record of staff input before launch.', { size: 36, fill: C.muted });
     if (b >= 1) {
-      lane(550, 'Germany', 'Telekom', [[S.de.review[0], S.de.review[1], 'review', 'checks first'], [S.de.build[0], S.de.build[1], 'build', 'build'], [S.de.launch[0], S.de.launch[1], 'launch', 'running']]);
-      T(svg, X(0), 636, '1  works council agrees before it runs (§ 87(1) no. 6)', { size: 34 });
-      T(svg, X(0), 680, '2  customers told they talk to an AI system (AI Act Art. 50, since Aug 2026)', { size: 34 });
+      lane(550, 'Germany', 'Telekom', [[S.de.review[0], S.de.review[1], 'review', 'council review'], [S.de.build[0], S.de.build[1], 'build', 'build'], [S.de.launch[0], S.de.launch[1], 'launch', 'running']]);
+      T(svg, X(0), 636, 'Tools suited to staff monitoring need works council approval.', { size: 34 });
     }
     if (b >= 2) {
       const F = S.de.framework;
       lane(800, 'Since 2021', 'framework agreement', [[F.review[0], F.review[1], 'review', 'short check'], [F.build[0], F.build[1], 'build', 'build'], [F.launch[0], F.launch[1], 'launch', 'running']]);
-      T(svg, X(0), 886, 'nobody watched as a person; results only for groups of more than five', { size: 32, fill: C.muted });
+      T(svg, X(0), 886, 'Anonymous results for groups of more than five.', { size: 34, fill: C.muted });
     }
     band(svg);
   },
@@ -707,41 +695,38 @@ add({
 });
 
 // 15 --------------------------------------------------------------------------
-// The building again, five floors built, then the keys: one drawn key per
-// stage, in the order they are handed over.
+// One drawn key per stage, in the order they are handed over.
 add({
   id: 'steps68', n: 15, beat: 'How to address it', builds: 3, start: '11:12',
-  clicks: ['step 6: keys in stages', 'steps 7 and 8', 'process model'],
+  clicks: ['step 6 permissions', 'stage gate and stop condition', 'steps 7 and 8'],
   title: 'Then the keys: read first, risky changes last.',
-  sub: 'Reading doesn’t have to wait for step 5. The order is my hypothesis.',
-  source: 'Every new key: an annex to the works agreement (step 7).',
-  notes: `<p>But reading doesn't have to wait. Step six: first the agent only reads, for customers already logged in: show a bill, check an order. Then actions you can undo. Last, the changes a fraudster could use, like a new bank account. The customer confirms those in the app. My requirement: if the agent gets a tariff wrong, the customer undoes it in one tap, and there's always a way to a person. The system enforces each key: the model can ask, the system decides. It's how I'd give any new program access to real data: read first, then we see. Step seven: each new key becomes an annex to the works agreement, and staff and works council sign off before the agent works alone. Step eight: a named team runs it. So: <b>Then the keys: read first, risky changes last.</b></p>`,
-  draw(page, b, data) {
+  sub: 'Step 6. The agent can read for signed-in customers before step 5 is complete.',
+  source: 'Proposed process model. Each key goes in an annex to the works agreement from step 2.',
+  notes: `<p>Take the customer who asked for a cheaper tariff. First the agent can show them their bill after they sign in. Then it can change the tariff, and they can undo it in one tap. A change to their bank details comes last. They confirm it in the app. The system enforces each key. At the stage gate, we measure errors and sign the annex. If cost per finished request fails to fall, or repeat contacts rise, we hold the next key. Staff and the works council sign off before the agent works alone. Then a named team runs it. There's always a way to a person. <b>Then the keys: read first, risky changes last.</b></p>`,
+  draw(page, b) {
     const svg = svgOf(page);
     frame(svg, this);
-    const st = data.plan.steps, top = 6;
-    const bx = 1250, bw = 550, g = CABLE_Y - 64, fh = 70;
-    for (let i = 1; i <= 8; i++) {
-      const y = g - i * fh, built = i <= top;
-      if (built) h('rect', { x: bx, y, width: bw, height: fh, fill: i === top ? C.field : C.paper, stroke: C.ink, 'stroke-width': 4 }, svg);
-      else h('rect', { x: bx, y, width: bw, height: fh, fill: 'none', stroke: C.muted, 'stroke-width': 3, 'stroke-dasharray': '12 9' }, svg);
-      T(svg, bx + 26, y + fh / 2 + 12, `${i}  ${st[i - 1].name}`, { size: 34, weight: built && i >= 6 ? 600 : 400, fill: built ? C.ink : C.muted });
-    }
-    pth(svg, `M${bx - 20} ${g - 8 * fh} L${bx + bw / 2} ${g - 8 * fh - 70} L${bx + bw + 20} ${g - 8 * fh}`, { stroke: C.muted, 'stroke-width': 3, 'stroke-dasharray': '12 9' });
-    T(svg, L, 330, 'Step 6, permissions in stages: the keys', { size: 38, weight: 600 });
-    const stages = [['read', 'logged-in customers: a bill, an order'], ['undoable', 'actions that can be undone'], ['fraud-prone', 'confirmed by the customer in the app']];
-    stages.forEach(([w, d], i) => {
-      const y = 430 + i * 100;
-      key(svg, L, y + 10, 230, i + 1);
-      T(svg, L + 260, y, w, { size: 40, weight: 600, fill: i === 0 ? C.accent : C.ink });
-      T(svg, L + 520, y, d, { size: 32, fill: C.muted });
+    const stages = [
+      ['Read', 'Show the bill after sign-in.'],
+      ['Change with undo', 'Switch the tariff. Give the customer one tap to undo.'],
+      ['Change with confirmation', 'Update bank details only after the customer confirms in the app.'],
+    ];
+    stages.forEach(([label, example], i) => {
+      const y = 358 + i * 115;
+      key(svg, L, y + 12, 240, i + 1);
+      T(svg, 400, y, label, { size: 40, weight: 600, fill: i === 0 ? C.accent : C.ink });
+      T(svg, 1020, y, example, { size: 36, fill: C.muted, width: 780, lh: 40 });
     });
-    T(svg, L, 720, 'The model can ask; the system decides.', { size: 36, weight: 600 });
     if (b >= 1) {
-      T(svg, L, 790, '7  staff and works council sign off before it works alone', { size: 32 });
-      T(svg, L, 832, '8  a named team runs it; cost per finished request', { size: 32 });
+      ln(svg, L, 691, R, 691, { stroke: C.hair, 'stroke-width': 2 });
+      T(svg, L, 750, 'Stage gate', { size: 42, weight: 600 });
+      T(svg, 400, 742, 'Measure errors and sign the annex before granting the next key.', { size: 36 });
+      T(svg, 400, 796, 'Hold the next key unless cost per finished request falls and repeat contacts stay flat or fall.', { size: 36, weight: 600, width: 1400, lh: 42 });
     }
-    if (b >= 2) T(svg, L, 878, 'Each key is a stage gate: error rate checked, works-council annex signed. If step 1 shows no gain, it stops.', { size: 32, weight: 600, width: 1100, lh: 38 });
+    if (b >= 2) {
+      T(svg, L, 906, '7  Staff and works council sign off', { size: 34, weight: 600 });
+      T(svg, R, 906, '8  A named team runs it', { size: 34, weight: 600, anchor: 'end' });
+    }
     band(svg);
   },
 });
@@ -805,7 +790,7 @@ add({
 add({
   id: 'b1', backup: 'B1', n: 'B1', beat: 'Backup', builds: 1, clicks: ['table'], title: 'The ten pairs: none compares fully.',
   source: 'Sources per row in the article, appendix. Company figures; targets and outlooks marked.',
-  notes: '<p>Q3: why not compare the numbers directly?</p>',
+  notes: '<p>Which US and German figures measure the same thing?</p>',
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -828,7 +813,7 @@ add({
 add({
   id: 'b2', backup: 'B2', n: 'B2', beat: 'Backup', builds: 1, clicks: ['table'], title: 'Which rule bites, and when.',
   source: 'BetrVG §§ 76, 87, 90; GDPR Art. 35; AI Act (Regulation (EU) 2024/1689) as amended by Regulation (EU) 2026/1744.',
-  notes: '<p>Q8–Q11: the law in detail.</p>',
+  notes: '<p>Works council, privacy and customer disclosure.</p>',
   draw(page) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -836,7 +821,7 @@ add({
       ['BetrVG § 90', 'the works council is told while the system is planned'],
       ['BetrVG § 87(1) no. 6', 'its agreement for any system suited to monitoring staff; if none, the conciliation board decides (§ 87(2), § 76)'],
       ['GDPR Art. 35', 'a data protection impact assessment before risky processing'],
-      ['AI Act Art. 50', 'customers told they talk to an AI system, since 2 August 2026'],
+      ['AI Act Art. 50', 'disclose AI at first contact unless the interaction with AI is already obvious'],
       ['AI Act, high risk', 'a tool that monitors or evaluates employees can count as high risk; those duties from 2 December 2027'],
     ].forEach(([a, z], i) => {
       const y = 320 + i * 124;
@@ -848,7 +833,7 @@ add({
 
 add({
   id: 'b3', backup: 'B3', n: 'B3', beat: 'Backup', builds: 1, clicks: ['list'], title: 'Keys enforced by the systems, not the model.',
-  notes: '<p>Q12, Q13: prompt injection, fraud.</p>',
+  notes: '<p>How the system enforces the keys. See question 6.</p>',
   draw(page) {
     const svg = svgOf(page);
     frame(svg, this);
@@ -868,7 +853,7 @@ add({
 add({
   id: 'b4', backup: 'B4', n: 'B4', beat: 'Backup', builds: 1, clicks: ['bars'], title: 'On AI and jobs, no more worried. On monitoring, near the top of the EU.',
   source: 'Ipsos for Google 2025 and Ipsos AI Monitor 2025, in Stanford HAI AI Index 2026; Special Eurobarometer 554 (EU only).',
-  notes: '<p>Q16: are Germans just against AI?</p>',
+  notes: '<p>What did the two surveys actually ask?</p>',
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, this);
