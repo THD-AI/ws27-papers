@@ -657,6 +657,12 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
      as long as the figure is pinned (18 November: after the passages it was
      read as belonging to nothing; under the box it scrolled away at once) */
   .scene-stage figcaption { display: block; max-width: var(--measure); margin: 0.35rem auto 0; padding: 0 var(--gutter); font-size: 0.75rem; line-height: 1.4; }
+  /* folded to one line under the pinned figure (23 November: the whole
+     caption took the screen from the passages); a tap opens it, and again
+     folds it */
+  .scene-stage figcaption { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; line-clamp: 1; overflow: hidden; cursor: pointer; }
+  .scene-stage figcaption.is-open { -webkit-line-clamp: unset; line-clamp: none; }
+  .scene-stage figcaption:focus-visible { outline: 2px solid var(--accent-line, #4254C5); outline-offset: 2px; }
   .scene-caption { display: none; }
   .scene-stage .fig-where { margin-bottom: 0.2rem; padding: 0 var(--gutter); }
   .scene-text, .scene-caption { max-width: var(--measure); margin-left: var(--left); margin-right: var(--gutter); }
