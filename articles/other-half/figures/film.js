@@ -125,7 +125,9 @@ function build(el, ctx) {
   const pitch = (Math.min(BIG.w, BIG.h) * bk) / 8.2;
   const held = grid(big, { checks: surface(7), d: 7, cx: bcx, cy: bcy, pitch, C });
   // the picture it takes over from the margin (lib/article.js lines the two up)
-  held.root.setAttribute('data-takeover', '');
+  // its extent (3.5 pitches each way from the centre), the same box the
+  // margin marks round its distance-7 grid
+  h('rect', { x: bcx - 3.5 * pitch, y: bcy - 3.5 * pitch, width: 7 * pitch, height: 7 * pitch, fill: 'none', stroke: 'none', 'data-takeover': '' }, big);
   const HELD = START + BEATS.length + (FR.length - 1 - FROM);   // the rule's frame: both kinds, never empty
   const on = run.frames[roundAt(HELD)].map((id) => toGrid(run.checks[id], 7));
   const firedT = Object.values(held.tiles).filter((t) => on.some((c) => c.row === t.check.row && c.col === t.check.col && c.asks_about === t.check.asks_about));
@@ -152,13 +154,14 @@ function build(el, ctx) {
     floorY = ty + 56;
   }
   // step 2: its frame in the strip, ringed by the pen (the article's one hand
-  // mark), and a drawn line up to the enlarged frame; on phones it bends round
-  // the machine's name
+  // mark), and a hand-drawn arrow from the enlarged frame down to the ring,
+  // touching neither; on phones it bends round the machine's name
   const [sx, sy, sw0, sh0] = FR[FROM];
   const slot = g(svg);
   const ring = penRing(slot, X(sx), Y(sy), (sw0 * k) / 2 + 6, (sh0 * k) / 2 + 6, { seed: 11, stroke: C.ink, width: 1.5 });
-  // it ends on the frame's drawn lower edge (about 0.86 of the drawing down)
-  const x0 = X(sx), y0 = Y(sy) - (sh0 * k) / 2 - 8, x1 = bcx + (tall ? 30 : 0), y1 = by + bigS * 0.86;
+  // from a little below the frame's drawn lower edge (about 0.86 of the
+  // drawing down) to a little above the ring
+  const x0 = bcx + (tall ? 30 : 0), y0 = by + bigS * 0.86 + (tall ? 8 : 12), x1 = X(sx), y1 = Y(sy) - (sh0 * k) / 2 - 6 - (tall ? 7 : 10);
   const cxq = tall ? 222 : (x0 + x1) / 2 + (x1 - x0) * 0.18, cyq = (y0 + y1) / 2;
   // in the pen's hand, as the ring: a seeded wobble, and a second thinner
   // pass beside the first over part of its length
@@ -173,6 +176,9 @@ function build(el, ctx) {
   const line2 = (a, b, off) => pts.slice(a, b).map(([x, y, nx, ny], i) => `${i ? 'L' : 'M'}${(x + nx * off).toFixed(1)} ${(y + ny * off).toFixed(1)}`).join('');
   const join = path(slot, line2(0, N + 1, 0), { stroke: C.ink, 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' });
   const join2 = path(slot, line2(Math.round(N * 0.2), Math.round(N * 0.75), 0.9), { stroke: C.ink, 'stroke-width': 0.8, 'stroke-linecap': 'round', fill: 'none', opacity: 0.8 });
+  // the head: two short strokes back from the tip, as Excalidraw draws one
+  const [tx, ty] = pts[N], [px, py] = pts[N - 2], al = Math.atan2(ty - py, tx - px), hl = tall ? 8 : 11;
+  const head = path(slot, [-0.48, 0.48].map((da) => `M${(tx - hl * Math.cos(al + da)).toFixed(1)} ${(ty - hl * Math.sin(al + da)).toFixed(1)}L${tx.toFixed(1)} ${ty.toFixed(1)}`).join(''), { stroke: C.ink, 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' });
 
   // While step 0 is complete and the next has not begun, the film keeps
   // running on screen, about eight frames a second (idle motion: it changes
@@ -199,6 +205,7 @@ function build(el, ctx) {
   ring.paths.forEach((pp, i) => st.draw(pp, 2.0 + i * 0.04, 2.3 + i * 0.03));
   st.draw(join, 2.25, 2.5);
   st.draw(join2, 2.32, 2.52);
+  st.fade(head, 2.48, 2.56);
   st.fade(n2, 2.3, 2.75);
 
   return { set: (step, t) => st.set(step, t), destroy() { run0.stop(); } };

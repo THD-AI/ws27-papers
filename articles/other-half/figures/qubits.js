@@ -50,7 +50,7 @@ function build(el, ctx) {
   // the lettering and the frame fade as the picture flies into the film
   // (--rail-fly, set by lib/article.js; unset, it stays)
   const letters = g(svg);
-  letters.style.opacity = 'calc(1 - var(--rail-fly, 0))';
+  letters.style.opacity = 'calc(1 - 1.8 * var(--rail-fly, 0))';
   if (rail) {
     const H0 = 'what one qubit takes';
     const HS = [H0, H0, H0, H0, H0];
@@ -58,7 +58,7 @@ function build(el, ctx) {
     rect(letters, 2.5, 24.5, W - 5, 168, { fill: 'none', stroke: C.hairline, 'stroke-width': 1, 'data-audit': 'skip' });
     // the grid's own square, around its centre: where a figure that takes
     // over this picture (the film) lines up with it (lib/article.js)
-    rect(svg, cx - 60, cy - 60, 120, 120, { fill: 'none', stroke: 'none', 'data-anchor': '', 'data-audit': 'skip' });
+    rect(svg, cx - 3.5 * 20, cy - 3.5 * 20, 7 * 20, 7 * 20, { fill: 'none', stroke: 'none', 'data-anchor': '', 'data-audit': 'skip' });   // the distance-7 grid's extent (pitch 20)
   }
 
   // one drawing per state, each at its own pitch around the same centre; a
