@@ -17,7 +17,7 @@
 //           two kinds of fired check are named
 // Frames: data/film.json (tools/film-sim.py, a seeded Stim simulation). The
 // rounds shown are chosen by a rule, below, not by eye.
-import { mountFigure, svgRoot, g, h, circle, rect, path, leader, penRing, stage, clamp, ease, idle } from '../../../lib/fig.js';
+import { mountFigure, svgRoot, g, h, circle, rect, path, leader, penRing, rng, stage, clamp, ease, idle } from '../../../lib/fig.js';
 import { pal, text, floor, surface, grid } from './shared.js';
 import { filmRounds, toGrid, BEATS as BEATS_N } from './film-rule.js';
 
@@ -102,7 +102,7 @@ function build(el, ctx) {
   const L = (str, x, y, anchor = 'start', o = {}) => { const lg = g(svg); text(lg, x, y, str, { family: 'sans', size: tall ? 13 : 14, anchor, ...o }); return lg; };
   h('style', {}, svg).textContent = `@font-face { font-family: 'Virgil'; src: url('${art('film-virgil.woff2')}') format('woff2'); font-display: swap; }`;
   const nameO = { size: tall ? 13 : 15, fill: C.ink };
-  for (const lg of [L('a quantum computer', X(60), Y(312), 'start', nameO), L('an ordinary computer', X(1480), Y(318), 'end', nameO)]) {
+  for (const lg of [L('a quantum computer', X(tall ? 40 : 24), Y(tall ? 300 : 286), 'start', nameO), L('an ordinary computer', X(1480), Y(318), 'end', nameO)]) {
     for (const t of lg.querySelectorAll('text, tspan')) t.setAttribute('font-family', "'Virgil', 'Libre Franklin', sans-serif");
   }
 
@@ -136,10 +136,10 @@ function build(el, ctx) {
   let floorY = by + (tall ? 36 : 46);
   for (const { t, str } of kinds) {
     const ty = Math.max(floorY, t.c[1] + 4);
-    text(n2, nx, ty, tall ? str.replace(' (', '\n(') : str, { ...noteO, lh: 16 });
+    text(n2, nx, ty, str.replace(' (', '\n('), { ...noteO, lh: 16 });
     // the leader stops at the grid's edge, level with its tile, as lattice's do
     leader(n2, nx - 5, ty - 4, bcx + 3.5 * pitch + 3, t.c[1], { stroke: C.muted, dot: false });
-    floorY = ty + (tall ? 40 : 24);
+    floorY = ty + 40;
   }
   // step 2: its frame in the strip, ringed by the pen (the article's one hand
   // mark), and a drawn line up to the enlarged frame; on phones it bends round
@@ -147,9 +147,22 @@ function build(el, ctx) {
   const [sx, sy, sw0, sh0] = FR[FROM];
   const slot = g(svg);
   const ring = penRing(slot, X(sx), Y(sy), (sw0 * k) / 2 + 6, (sh0 * k) / 2 + 6, { seed: 11, stroke: C.accent, width: 1.5 });
-  const x0 = X(sx), y0 = Y(sy) - (sh0 * k) / 2 - 8, x1 = bcx + (tall ? 30 : 0), y1 = by + bigS - (tall ? 8 : 12);
-  const cxq = tall ? 222 : (x0 + x1) / 2 + (x1 - x0) * 0.18;
-  const join = path(slot, `M${x0.toFixed(1)} ${y0.toFixed(1)}Q${cxq.toFixed(1)} ${((y0 + y1) / 2).toFixed(1)} ${x1.toFixed(1)} ${y1.toFixed(1)}`, { stroke: C.accent, 'stroke-width': 1.3, 'stroke-linecap': 'round', fill: 'none' });
+  // it ends on the frame's drawn lower edge (about 0.86 of the drawing down)
+  const x0 = X(sx), y0 = Y(sy) - (sh0 * k) / 2 - 8, x1 = bcx + (tall ? 30 : 0), y1 = by + bigS * 0.86;
+  const cxq = tall ? 222 : (x0 + x1) / 2 + (x1 - x0) * 0.18, cyq = (y0 + y1) / 2;
+  // in the pen's hand, as the ring: a seeded wobble, and a second thinner
+  // pass beside the first over part of its length
+  const rnd = rng(23), N = 26, ph = rnd() * 6.28;
+  const pts = Array.from({ length: N + 1 }, (_, i) => {
+    const t = i / N, u = 1 - t;
+    const x = u * u * x0 + 2 * u * t * cxq + t * t * x1, y = u * u * y0 + 2 * u * t * cyq + t * t * y1;
+    const dx = 2 * u * (cxq - x0) + 2 * t * (x1 - cxq), dy = 2 * u * (cyq - y0) + 2 * t * (y1 - cyq), l = Math.hypot(dx, dy) || 1;
+    const w = Math.sin(t * 9 + ph) * 0.7 + (rnd() - 0.5) * 0.5;
+    return [x - (dy / l) * w, y + (dx / l) * w, -dy / l, dx / l];
+  });
+  const line2 = (a, b, off) => pts.slice(a, b).map(([x, y, nx, ny], i) => `${i ? 'L' : 'M'}${(x + nx * off).toFixed(1)} ${(y + ny * off).toFixed(1)}`).join('');
+  const join = path(slot, line2(0, N + 1, 0), { stroke: C.accent, 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' });
+  const join2 = path(slot, line2(Math.round(N * 0.2), Math.round(N * 0.75), 0.9), { stroke: C.accent, 'stroke-width': 0.8, 'stroke-linecap': 'round', fill: 'none', opacity: 0.8 });
 
   // While step 0 is complete and the next has not begun, the film keeps
   // running on screen, about eight frames a second (idle motion: it changes
@@ -177,6 +190,7 @@ function build(el, ctx) {
   st.fade(n0, 0, 0.22);
   ring.paths.forEach((pp, i) => st.draw(pp, 2.0 + i * 0.04, 2.3 + i * 0.03));
   st.draw(join, 2.25, 2.5);
+  st.draw(join2, 2.32, 2.52);
   st.fade(n2, 2.3, 2.75);
 
   return { set: (step, t) => st.set(step, t), destroy() { run0.stop(); } };
