@@ -123,7 +123,7 @@ function build(el, ctx) {
   // they fade in as the margin fades out, with the scroll (--rail-away, set
   // by the page; 1 where there is no pinned margin)
   const takeover = g(svg);
-  takeover.style.opacity = 'var(--rail-away, 1)';
+  if (!print) takeover.style.opacity = 'var(--rail-away, 1)';
   const big = g(takeover);
   h('image', { href: art('film-frame.png'), x: bx, y: by, width: bigS, height: bigS }, big);
   const bk = bigS / BIG.img, bcx = bx + BIG.cx * bk, bcy = by + BIG.cy * bk;
