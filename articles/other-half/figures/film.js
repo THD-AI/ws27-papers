@@ -6,12 +6,15 @@
 //   art/film-frame.png  board film-frame r1 c1: one frame of that strip, alone.
 // Code adds only data, in the article's one grid language (shared.js): in
 // each drawn frame of the strip, the checks of one round whose answer changed
-// since the round before, as accent points over a faint ghost of the 48 check
-// places; the frame held up is the distance-7 grid itself, drawn by grid() as
-// the margin scene draws it, with the same round lit (figures/film-rule.js).
-//   step 0  the frames' contents advance frame by frame on a quickening beat
+// since the round before, as small accent squares over a faint ghost of the
+// 48 check places; above the drawing, one frame enlarged: the distance-7 grid
+// itself, drawn by grid() as the margin scene draws it, with the same round
+// lit (figures/film-rule.js).
+//   step 0  the enlarged frame comes in; the strip's frames advance frame by
+//           frame on a quickening beat
 //   step 1  the colour field fades: the strip is all that leaves
-//   step 2  one frame is held up, enlarged; its place in the strip goes empty
+//   step 2  the enlarged frame is outlined as one of the strip's frames; the
+//           two kinds of fired check are named
 // Frames: data/film.json (tools/film-sim.py, a seeded Stim simulation). The
 // rounds shown are chosen by a rule, below, not by eye.
 import { mountFigure, svgRoot, g, h, circle, rect, leader, stage, clamp, ease, idle } from '../../../lib/fig.js';
@@ -128,13 +131,13 @@ function build(el, ctx) {
   const pick = (kind) => firedT.filter((t) => t.check.asks_about === kind).sort((u, v) => u.c[1] - v.c[1])[0];
   const n2 = g(svg);
   // each note level with its tile, so its leader runs straight across
-  const kinds = [['flips', 'fired: a check on flips (tinted)'], ['phase errors', 'fired: a check on phase errors (open)']]
+  const kinds = [['flips', 'fired: a check on flips (darker)'], ['phase errors', 'fired: a check on phase errors (lighter)']]
     .map(([kind, str]) => ({ t: pick(kind), str })).filter((o) => o.t).sort((u, v) => u.t.c[1] - v.t.c[1]);
   let floorY = by + (tall ? 34 : 44);
   for (const { t, str } of kinds) {
     const lines = tall ? 2 : 1, ty = Math.max(floorY, t.c[1] + 4 - (lines - 1) * 8);
     text(n2, nx, ty, tall ? str.replace(': ', ':\n') : str, { ...noteO, lh: 16 });
-    leader(n2, nx - 5, ty - 4, t.c[0] + pitch * 0.5, t.c[1], { stroke: C.muted, dot: false });
+    leader(n2, nx - 5, ty - 4, t.c[0] + pitch * 0.2, t.c[1], { stroke: C.muted, dot: false });
     floorY = ty + lines * 16 + 8;
   }
   // step 2: its frame in the strip, outlined, and a line up to it
@@ -166,6 +169,10 @@ function build(el, ctx) {
     const p1 = ease(clamp(gg - 1)), fo = 1 - 0.75 * p1;
     field.style.opacity = fo >= 0.999 ? '' : fo.toFixed(3);
   });
+  // the enlarged frame comes in as the film begins, while the margin's own
+  // picture of it leaves the rail
+  st.fade(big, 0, 0.22);
+  st.fade(n0, 0.12, 0.3);
   st.fade(slot, 2.0, 2.35);
   st.fade(n2, 2.3, 2.75);
 
