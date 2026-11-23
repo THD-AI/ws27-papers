@@ -6,7 +6,7 @@ Quantum Computing seminar, TH Deggendorf, group talk, Saturday 9 January 2027, 1
 
 - **Live, from this folder:** serve the repository root (`node tools/serve.mjs` or `python -m http.server 8830`) and open `talks/quantum/index.html`. Right, Space or a click: next build. Left: back. N: speaker notes. G: go to a page. Home and End.
 - **One slide alone:** `index.html?only=<slide id>` (for example `?only=clock`).
-- **Offline, one file:** `node tools/deck-offline.mjs quantum` (fonts and drawings embedded). Present this one; the PDF is the fallback.
+- **The talk's page, one file:** `node tools/qdeck-site.mjs` writes `.shots/deck/quantum/quantum-talk.html` (with `--site` also `dist/other-half/talk/index.html`): every slide as drawn, fonts and drawings embedded, a bar with the article, contents, references and thanks, speaker notes (N), full screen (F). **Ctrl+P prints every slide, one per page** (save as PDF). Present from this file.
 - **PDF and pictures:** `node tools/qdeck.mjs` writes every build as a PNG into its slide's `export/` folder, the PDF and contact sheets into `.shots/deck/quantum/`, a projector pass (1024 × 768, lifted blacks) into `.shots/deck/quantum/projector/`, the gates into `gates.txt`, and the cue sheet `CUES.md` with the timing from the notes.
 
 ## The folders
@@ -26,7 +26,13 @@ CUES.md                generated: page, slide, start time, what each click adds,
 
 ## Speakers
 
-`slide.js` names a speaker part for each slide: A (1–5), B (6–10), C (11–15). With two speakers, split at slide 9. The cue sheet adds 8 seconds at each change of speaker.
+`slide.js` names a speaker part for each slide: A (1–8), B (9–15). One speaker takes both. The cue sheet adds 8 seconds at the change of speaker.
+
+## How the slides are made
+
+- **The article's own figures** (`kit.js` `articleFigure`): the figure module from `articles/other-half/figures/` is mounted at a narrow width and scaled up, so the drawing is the article's and its lettering lands at 22–38 px. Slides 4–12 and B5.
+- **Hand sketches** (`kit.js` `inkLayer`, rough.js, the library Excalidraw uses; Virgil, Excalidraw's face): where the article has no figure (slides 2, 3, 13) and as marks on a figure (an arrow, a ring, a short note), never a copy of a label.
+- **Slide versions in the article's style** where an article figure is too dense for a projector (slide 14).
 
 ## The rules the deck keeps
 

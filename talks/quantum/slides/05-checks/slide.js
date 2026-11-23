@@ -12,13 +12,7 @@ export default {
     const svg = svgOf(page);
     frame(svg, { title: this.title, n: this.n, part: this.part, source: 'The article’s figure “lattice”, steps 1 to 3. Distance 3, one round, checks assumed right. Constructed by us (lattice.json).' });
     articleFigure(page, lattice, b, { x: 150, y: 250, w: 1180 }, data.lattice, { textPx: 26 });
-    const ink = inkLayer(page);
-    const say = [
-      ['tinted tiles ask', 'about flips, open ones', 'about phase errors'],
-      ['one flip:', 'the two checks', 'beside it fire'],
-      ['two flips in a line:', 'only the upper end fires;', 'the lower end meets the edge'],
-    ][b];
-    say.forEach((s, i) => ink.note(1400, 420 + i * 48, s, { size: 36 }));
-    ink.arrow([[1390, 470], [1340, 520], [1250, 560]], { seed: 3 + b, stroke: PEN.red, strokeWidth: 3.5 });
+    // one hand note, only on the first click: what the course calls this
+    if (b === 0) inkLayer(page).note(1380, 860, 'a parity check: even or odd', { size: 36, color: PEN.blue });
   },
 };

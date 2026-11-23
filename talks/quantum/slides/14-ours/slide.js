@@ -72,7 +72,7 @@ export default {
       band(B, p250);
       tag(B, p250.final_network.mean, `network ${pct(p250.final_network.mean)}`, { dy: 18, weight: 600, fill: C.accent });
       const ink = inkLayer(page);
-      ink.ellipse(B.X(250e6), B.Y(p250.final_network.mean), 70, 56, { stroke: PEN.red, seed: 81 });
+      ink.ellipse(B.X(250e6) - 6, B.Y(p250.final_network.mean) - 4, 46, 46, { stroke: PEN.red, seed: 81 });
       ink.note(B.X(150e6), B.Y(0.0245), 'it got there, slowly', { color: PEN.red, size: 34 });
     }
   },

@@ -13,11 +13,15 @@ export default {
     const ink = inkLayer(page);
     // the pipeline, sketched
     const y = 400, boxes = [[140, 'Stim', 'simulated runs'], [640, 'which checks', 'fired'], [1140, 'network', '3 × 256 units'], [1560, 'flipped', 'or not?']];
+    // a chain of words joined by hand arrows, each arrow a little different
     boxes.forEach(([x, a, c], i) => {
-      ink.rect(x, y - 70, i === 3 ? 230 : 330, 150, { seed: 50 + i, stroke: i === 2 ? PEN.blue : PEN.ink, fill: i === 2 ? '#d0ebff' : undefined, fillStyle: 'hachure', hachureGap: 14 });
-      T(svg, x + (i === 3 ? 115 : 165), y - 4, a, { size: 36, weight: 600, anchor: 'middle' });
-      T(svg, x + (i === 3 ? 115 : 165), y + 40, c, { size: 32, anchor: 'middle' });
-      if (i < 3) ink.arrow([[x + 340, y], [boxes[i + 1][0] - 14, y]], { seed: 60 + i, head: 24 });
+      T(svg, x + 165, y - 4, a, { size: 40, weight: 600, anchor: 'middle', fill: i === 2 ? C.accent : C.ink });
+      T(svg, x + 165, y + 40, c, { size: 32, anchor: 'middle' });
+      if (i === 2) ink.ellipse(x + 165, y + 10, 340, 150, { stroke: PEN.blue, seed: 52 });
+      if (i < 3) {
+        const x1 = x + 320, x2 = boxes[i + 1][0] + 10;
+        ink.arrow([[x1, y], [(x1 + x2) / 2, y - 22 + i * 10], [x2, y]], { seed: 60 + i, head: 24 });
+      }
     });
     ink.note(140, y + 140, 'the same chance of error on every operation;', { size: 32 });
     ink.note(140, y + 182, 'trained at seven levels from 0.2% to 1%, tested at 0.5%', { size: 32 });
