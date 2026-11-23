@@ -112,7 +112,12 @@ function build(el, ctx) {
   // strip's own pen. Step 2 shows which frame of the strip it is, and names
   // the two kinds of fired check.
   const bx = tall ? 4 : X(400), by = tall ? 2 : 4;
-  const big = g(svg);
+  // the frame and its label take over the margin's picture: on wide screens
+  // they fade in as the margin fades out, with the scroll (--rail-away, set
+  // by the page; 1 where there is no pinned margin)
+  const takeover = g(svg);
+  takeover.style.opacity = 'var(--rail-away, 1)';
+  const big = g(takeover);
   h('image', { href: art('film-frame.png'), x: bx, y: by, width: bigS, height: bigS }, big);
   const bk = bigS / BIG.img, bcx = bx + BIG.cx * bk, bcy = by + BIG.cy * bk;
   // 7 qubits a side, the half tiles' bulge, and a pitch's gap to the drawn cell
@@ -125,7 +130,7 @@ function build(el, ctx) {
 
   const noteO = { italic: true, size: tall ? 13 : 14.5 };
   const nx = bx + bigS + (tall ? 8 : 16);
-  const n0 = g(svg);
+  const n0 = g(takeover);
   text(n0, nx, by + (tall ? 16 : 24), 'one round, enlarged', noteO);
   // step 2: the two kinds, each pointed at a fired check of that kind
   const pick = (kind) => firedT.filter((t) => t.check.asks_about === kind).sort((u, v) => u.c[1] - v.c[1])[0];
