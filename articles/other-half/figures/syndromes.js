@@ -124,7 +124,7 @@ function build(el, ctx) {
   const foot = g(svg);
   text(foot, tall ? 14 : fx, tall ? w2.bottom + 22 : fy + fw + 30, tall
     ? `distance ${dist} · ${err} error per storing qubit · one round ·\nchecks never wrong · our own count`
-    :`distance ${dist} · ${err} error per storing qubit · one round · checks never wrong · our own count`, { ...mono, lh: 15 });
+    : `${err} error per storing qubit · one round · checks never wrong · our own count`, { ...mono, lh: 15 });
   st.fade(foot, 0.8, 0.94);
 
   return { set: (s2, t) => st.set(s2, t) };
