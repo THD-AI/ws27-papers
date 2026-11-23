@@ -119,7 +119,7 @@ function build(el, ctx) {
   const w1 = text(rg, rx0 + 18, ct.bottom + 30, 'patterns: plain matching’s answer is less likely than another', { size: tall ? 14 : 15, width: tall ? W - 58 : 208, lh: tall ? 18 : 20 });
   const w2 = text(rg, rx0, w1.bottom + 18, `they occur in about [[${share}]] of cases; in [[${none}]] of cases no check fires`, { size: tall ? 14 : 15, width: tall ? W - 40 : 226, lh: tall ? 18 : 20 });
   st.fade(rg, 0.74, 0.88);
-  const pr = penRing(svg, ct.cx, ct.cy, ct.w / 2 + 15, tall ? 19 : 22, { seed: 3, stroke: C.ink, width: 1.6 });
+  const pr = penRing(svg, ct.cx + 3, ct.cy, ct.w / 2 + 21, tall ? 20 : 23, { seed: 3, stroke: C.ink, width: 1.6, start: -0.4 });   // its tail at the upper right, clear of the number
   pr.paths.forEach((pp, k) => st.draw(pp, 0.86 + k * 0.03, 0.97 + k * 0.02));
 
   const foot = g(svg);
