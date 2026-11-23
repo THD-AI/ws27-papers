@@ -1,6 +1,6 @@
 // syndromes: all 256 patterns of the eight checks at distance 3, one small
 // square each. A filled square is a pattern where plain matching's answer is
-// not the most likely one (103 of them). One pattern is shown enlarged, so
+// less likely than another (24 of them; on 144 more, two answers tie exactly). One pattern is shown enlarged, so
 // that a square can be read as "which of the 8 checks fired". States, order
 // and counts are from data/syndromes.json; nothing is sized or shaded by
 // probability.
@@ -39,7 +39,7 @@ function build(el, ctx) {
   const dist = Math.round(Math.sqrt(Math.log2(cnt.patterns) + 1));   // d * d - 1 checks
   const err = `${Math.round(d.conditions.error_per_storing_qubit * 100)}%`;
   const svg = svgRoot(el, W, H,
-    `The eight checks of the smallest grid can fire in ${cnt.patterns} patterns. In ${cnt.differs} of them plain matching's answer is not the most likely one. `
+    `The eight checks of the smallest grid can fire in ${cnt.patterns} patterns. In ${cnt.differs} of them plain matching's answer is less likely than another; in ${cnt.tie_best} more, two answers are exactly as likely. `
     + `They occur in about ${share} of cases; in ${none} of cases no check fires. Counted by us at distance ${dist} with ${err} error per storing qubit and checks that are never wrong.`);
   svg.style.color = C.ink;
   const st = stage();
@@ -116,7 +116,7 @@ function build(el, ctx) {
   const ct = text(rg, rx0 + 8, ry0, `${cnt.differs} of ${cnt.patterns}`, { family: 'mono', size: tall ? 20 : 23, weight: 500 });
   // the key to the grid's grey, at the words that say what it means
   rect(rg, rx0, ct.bottom + 30 - 11, 11, 11, { fill: C.ink, 'fill-opacity': 0.55, 'data-audit': 'skip' });
-  const w1 = text(rg, rx0 + 18, ct.bottom + 30, 'patterns: plain matching’s answer is not the most likely one', { size: tall ? 14 : 15, width: tall ? W - 58 : 208, lh: tall ? 18 : 20 });
+  const w1 = text(rg, rx0 + 18, ct.bottom + 30, 'patterns: plain matching’s answer is less likely than another', { size: tall ? 14 : 15, width: tall ? W - 58 : 208, lh: tall ? 18 : 20 });
   const w2 = text(rg, rx0, w1.bottom + 18, `they occur in about [[${share}]] of cases; in [[${none}]] of cases no check fires`, { size: tall ? 14 : 15, width: tall ? W - 40 : 226, lh: tall ? 18 : 20 });
   st.fade(rg, 0.74, 0.88);
   const pr = penRing(svg, ct.cx, ct.cy, ct.w / 2 + 15, tall ? 19 : 22, { seed: 3, stroke: C.ink, width: 1.6 });

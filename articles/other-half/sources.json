@@ -152,11 +152,11 @@
     "note": "results/correlated-check-2026-11-15.json. The single-mechanism result at distance 3 was reproduced by a second script written by a second AI agent; the pair check at distance 5 was not repeated."
   },
   "OWN-ENUM": {
-    "title": "All errors on the distance-3 grid, counted: 256 check patterns, 103 where the smallest correction is not the most likely kind",
+    "title": "All errors on the distance-3 grid, counted: 256 check patterns; on 24 the standard decoder’s answer is less likely than another, on 144 two answers are exactly as likely",
     "publisher": "This work",
     "url": "",
     "type": "own measurement",
-    "date": "recounted 15 and 16 November 2026",
+    "date": "recounted 15 and 16 November 2026; ties resolved in exact arithmetic 24 November 2026",
     "note": "docs/proposal/paper/data/find_example.py, ported into tools/other-half-data.mjs"
   },
   "OWN-FILM-SIM": {

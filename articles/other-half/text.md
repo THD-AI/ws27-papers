@@ -92,10 +92,10 @@ A grid of distance 5, showing flips and the checks that notice them. Here and in
 
 ## 6. Where the standard method goes wrong
 
-The rules are the same on a grid of any size, so we went down to the smallest one that can correct an error, distance 3, where every case can be counted. We went through every possible error there and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 possible patterns on the smallest grid, 103 get an answer from the standard decoder that isn't the most likely one. {{OWN-ENUM}} That sounds like a lot, but these patterns are rare: together they turn up in fewer than 2 cases in 100.
+The rules are the same on a grid of any size, so we went down to the smallest one that can correct an error, distance 3, where every case can be counted. We went through every possible error there and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 possible patterns on the smallest grid, 24 get an answer from the standard decoder that is less likely than another. {{OWN-ENUM}} They are rare: with a 5% chance of an error per storing qubit, together they turn up in fewer than 1 case in 100, while in 63 cases in 100 no check fires at all. On 144 more patterns, two answers are exactly as likely, and no decoder can do better than matching there. {{OWN-ENUM}}
 
 :::figure syndromes wide
-All 256 patterns of the eight checks at distance 3, one mark each, ordered by how many checks fire. Filled: the 103 patterns where the standard decoder's answer isn't the most likely one. These are the rarer patterns: with a 5% chance of an error per storing qubit they turn up in about 1.6% of cases, and in 63% of cases no check fires at all. Our own count.
+All 256 patterns of the eight checks at distance 3, one mark each, ordered by how many checks fire. Filled: the 24 patterns where the standard decoder's answer is less likely than another. They are rare: with a 5% chance of an error per storing qubit they turn up in about 0.9% of cases, and in 63% of cases no check fires at all. On 144 other patterns two answers are exactly as likely. Our own count, in exact arithmetic.
 :::
 
 :::scene lattice
@@ -117,7 +117,7 @@ Decoding then becomes a pairing puzzle: join every fired check to another fired 
 Plain matching solves the puzzle separately for flip-checks and phase-checks, so an error that is both at once (section 3) counts as two. And it seeks the single likeliest explanation, though explanations that differ only in a way the code doesn't care about (section 5) add up.
 
 @step 4
-The first of our 103 patterns shows it. Three checks fire. Plain matching explains them with two errors: a flip in one corner and a phase error in the centre. It fits the checks, and it is right one time in three. {{OWN-ENUM}} But when the truth is the other answer, matching's correction and the real errors together cross the grid: a silent logical error, about two times in three. Two cautions: we gave every storing qubit a 5% chance of an error, far more than a real chip has, so the effect is easy to count, and we assumed the checks never report wrongly. {{OWN-ENUM}}
+One of the most frequent of the 24 shows it. Three checks fire. Plain matching explains them with two errors: a flip in one corner and a phase error in the centre. It fits the checks, and it is right one time in three. {{OWN-ENUM}} But when the truth is the other answer, matching's correction and the real errors together cross the grid: a silent logical error, about two times in three. Two cautions: we gave every storing qubit a 5% chance of an error, far more than a real chip has, so the effect is easy to count, and we assumed the checks never report wrongly. {{OWN-ENUM}}
 
 @step 5
 The same checks also fit a combined error in that corner, a flip and a phase error at once, which the figure marks Y, plus one phase error on the right. Counting Y as one error, this answer also has two, and on its own it is exactly as likely as plain matching's. What tips the balance is that it can happen in two ways. The phase error can sit in the far corner. Or it can sit one place above it, and the checks fire just the same. Together, the two ways are right about six times in ten. {{OWN-ENUM}} The rest are rarer explanations.
@@ -159,7 +159,7 @@ The clock is where it struggles. The chip asks its checks once every 1.1 million
 Google's paper quotes 24 millionths of a second per round for its network, from earlier work. {{GQA-2024 AQ-2024}} In that time the chip finishes about 22 more rounds. The network is accurate, but each answer comes late.
 
 @step 2
-By the time the network has answered round 3, at 72 millionths of a second, the chip is at round 65, with 62 rounds waiting. An interpreter who needs twenty-two seconds for every second of speech is more than twenty minutes behind after one minute. {{OWN-ARITH}} And the gap keeps growing.
+By the time the network has answered round 3, about 73 millionths of a second in, the chip has finished round 66, and 62 rounds wait behind the one it is working on. An interpreter who needs twenty-two seconds for every second of speech is more than twenty minutes behind after one minute. {{OWN-ARITH}} And the gap keeps growing.
 
 @step 3
 So the network's results were worked out afterwards, on recorded data. The decoder that ran live was a fast, plain version of matching, and it kept pace. On a smaller chip, at distance 5 and on the same data, live matching's logical error rate was 350 per 100,000 rounds and the network's, afterwards, 269. {{GQA-2024}} Part of that gap is live against offline, not only matching against network.
