@@ -97,9 +97,9 @@ async function walk(index, from, to, step, backwards) {
   for (let y = Math.max(0, from); y <= to; y += step) {
     scrollTo(0, y);
     await two();
-    // a figure that leaves the window is set back at once, unseen: only a step forward on screen plays
+    // The hidden margin can prepare its next state before fading in.
     const fr = (el.querySelector('.fig-frame') || el).getBoundingClientRect();
-    const onScreen = fr.bottom > 0 && fr.top < innerHeight;
+    const onScreen = fr.bottom > 0 && fr.top < innerHeight && !el.closest('.rail-pin.is-away');
     if (el.dataset.goal !== undefined && Number(el.dataset.goal) > Number(goal) && onScreen && root.dataset.moving) {
       goal = el.dataset.goal;
       plays.push({ ...(await play(Math.round(scrollY))), from: Number(plays.length ? plays[plays.length - 1].goal : NaN) });
