@@ -273,10 +273,10 @@ function build(el, ctx) {
   pr.paths.forEach((pp, k) => st.draw(pp, 2.84 + k * 0.03, 2.97 + k * 0.02));
   const nb = g(svg);
   if (tall) {
-    text(nb, R.x + R.w * 0.44, R.y + R.h - 62, 'below plain matching, above correlated matching', { ...noteO, size: 13, width: 168, lh: 15 });
+    text(nb, R.x + R.w * 0.44, R.y + R.h - 62, 'below plain matching, above correlated matching', { ...noteO, size: 13, width: 168, lh: 15, hand: true });
   } else {
     const yl = (pb.y(b5.levels.plain.rate) + pb.y(b5.levels.correlated.rate)) / 2;
-    const nt = text(nb, pb.xe - 44, yl + 5, 'below plain matching, above correlated matching', { ...noteO, size: 14.5, anchor: 'end' });
+    const nt = text(nb, pb.xe - 44, yl + 5, 'below plain matching, above correlated matching', { ...noteO, size: 14.5, anchor: 'end', hand: true });
     leader(nb, nt.right + 5, yl, pb.xe - 13, ry + 5, { stroke: C.muted, dot: false });
   }
   st.fade(nb, 2.84, 2.98);
