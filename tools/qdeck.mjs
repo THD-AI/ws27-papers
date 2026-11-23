@@ -42,24 +42,40 @@ const report = await page.evaluate(() => {
     const n = pg.dataset.page, id = pg.dataset.slide;
     const small = [], off = [], band = [], overlap = [];
     const boxes = [];
+    // Measured as the room sees it: the size after every scale (an article
+    // figure is mounted narrow and scaled up), boxes in page pixels, and
+    // nothing that is hidden. Text inside an article figure has its own
+    // floor (24 px): its lettering is the article's.
+    const pr = pg.getBoundingClientRect();
+    const minFig = { n: Infinity, label: '' };
     pg.querySelectorAll('text').forEach((t) => {
       if (t.closest('[data-gate="skip"]')) return;
-      const fs = parseFloat(t.getAttribute('font-size')) || 0;
-      const b = t.getBBox();
+      const r = t.getBoundingClientRect();
+      if (!r.width || !r.height || getComputedStyle(t).visibility === 'hidden') return;
+      let hidden = false; for (let e = t; e && e !== pg; e = e.parentElement) if (getComputedStyle(e).display === 'none' || getComputedStyle(e).opacity === '0') { hidden = true; break; }
+      if (hidden) return;
+      const m = t.getScreenCTM();
+      const fs = (parseFloat(getComputedStyle(t).fontSize) || 0) * (m ? Math.hypot(m.a, m.b) : 1) / (pr.width / 1920);
+      const b = { x: r.left - pr.left, y: r.top - pr.top, width: r.width, height: r.height };
       const label = (t.textContent || '').slice(0, 40);
       const inBand = b.y + b.height > 990;
-      if (fs < (pg.dataset.backup ? 24 : 32) && !inBand) small.push(`${fs}px "${label}"`);
+      const inFig = !!t.closest('.article-figure');
+      if (inFig && fs < minFig.n) { minFig.n = fs; minFig.label = label; }
+      const mono = (t.getAttribute('font-family') || '').includes('Mono');
+      const floor = inFig ? 22 : (pg.dataset.backup ? 24 : mono ? 28 : 32);
+      if (fs < floor - 0.5 && !inBand) small.push(`${fs.toFixed(1)}px "${label}"`);
       if (b.x < 40 || b.x + b.width > 1880 || b.y < 30 || b.y + b.height > 1068) off.push(`"${label}"`);
       if (inBand && fs > 28) band.push(`"${label}"`);
       boxes.push({ b, label });
     });
+    if (minFig.n < Infinity) pg.dataset.minfig = `${minFig.n.toFixed(1)}px "${minFig.label}"`;
     for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
       const a = boxes[i].b, c = boxes[j].b;
       const ix = Math.min(a.x + a.width, c.x + c.width) - Math.max(a.x, c.x);
       const iy = Math.min(a.y + a.height, c.y + c.height) - Math.max(a.y, c.y);
       if (ix > 4 && iy > 6) overlap.push(`"${boxes[i].label}" x "${boxes[j].label}"`);
     }
-    out.push({ n, id, build: Number(pg.dataset.build), small, off, band, overlap });
+    out.push({ n, id, build: Number(pg.dataset.build), small, off, band, overlap, minfig: pg.dataset.minfig || '' });
   });
   return out;
 });
@@ -149,6 +165,7 @@ for (const r of report) {
   if (r.off.length) issues.push(`off page: ${r.off.join('; ')}`);
   if (r.band.length) issues.push(`in bottom band: ${r.band.join('; ')}`);
   if (r.overlap.length) issues.push(`overlap: ${r.overlap.join('; ')}`);
+  if (r.minfig) issues.push(`article figure, smallest text ${r.minfig}`);
   if (issues.length) lines.push(`page ${r.n} (${r.id} b${r.build + 1}): ${issues.join(' | ')}`);
 }
 writeFileSync(join(OUT, 'gates.txt'), lines.join('\n') + '\n');
