@@ -17,7 +17,7 @@ export const steps = 5;
 // answer; the answers that follow and the rounds that wait; the second
 // view assembles; the claim's lane arrives
 export const durations = { large: [2.4, 2.0, 1.5, 2.4, 1.8] };
-const SIZE = { wide: [720, 472], tall: [360, 458] };
+const SIZE = { wide: [720, 472], tall: [360, 528] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 function build(el, ctx) {
@@ -197,6 +197,8 @@ function build(el, ctx) {
     text(base, B.x, y1, narrow ? 'the chip' : 'the chip: the end of a run', small);
     const L1 = y1 + (narrow ? 24 : 30);
     line(base, B.x, L1, right, L1, { stroke: C.ink, 'stroke-width': 1 });
+    // the rounds before these are left out: two slanted strokes across the lane
+    for (const dx of [10, 16]) line(base, B.x + dx - 3, L1 - 1, B.x + dx + 3, L1 - 15, { stroke: C.ink, 'stroke-width': 1.25 });
     const nBack = Math.floor((xLast - B.x) / (T * s));
     for (let k = 0; k <= nBack; k++) {
       const xx = x(-k * T);
@@ -261,8 +263,9 @@ function build(el, ctx) {
       line(axg, x(t), ay, x(t), ay + 5, { stroke: C.ink, 'stroke-width': 1 });
       text(axg, x(t), ay + 18, t === 0 ? '0' : String(t), { ...mono, anchor: 'middle' });
     }
-    if (narrow) text(axg, B.x, ay + 18, 'µs after', mono);
-    else text(axg, xLast - 12, ay + 18, 'µs after the last round', { ...mono, anchor: 'end' });
+    // this view's own time: after the run ends (decision D1, reviews/v3-decisions)
+    if (narrow) text(axg, B.x, ay + 36, 'after the run ends ·\nµs after the last round', { ...mono, lh: 15 });
+    else text(axg, xLast - 12, ay + 4, 'after the run ends ·\nµs after the last round', { ...mono, anchor: 'end', lh: 14 });
 
     const a = o.at;
     // step 3 draws across its passage: the frame, the live run, its answer
