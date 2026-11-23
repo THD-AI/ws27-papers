@@ -6,6 +6,8 @@ import { h, text, textSize, penRing, g, circle, path, line, FONTS } from '../../
 
 // Virgil, the article's face for the machines' names only.
 FONTS.virgil = "'Virgil', 'Libre Franklin', sans-serif";
+// the pen's words (a note on a ring or a hand arrow): Excalifont, as in the article's figures
+FONTS.hand = FONTS.hand || "'Excalifont', 'Virgil', 'Libre Franklin', sans-serif";
 
 // The article's colours (articles/other-half/figures/shared.js).
 export const C = {
@@ -189,7 +191,7 @@ export function inkLayer(page) {
       [a + Math.PI - sp, a + Math.PI + sp].forEach((t, i) => svg.appendChild(rc.line(bx, by, bx + L0 * Math.cos(t), by + L0 * Math.sin(t), base({ ...o, seed: (o.seed || 7) + i + 1 }))));
     },
     // a handwritten note in Virgil, Excalidraw's own face
-    note: (x, y, s, o = {}) => T(svg, x, y, s, { family: 'virgil', size: 34, fill: o.color || PEN.ink, ...o }),
+    note: (x, y, s, o = {}) => T(svg, x, y, s, { family: 'hand', size: 34, fill: o.color || PEN.ink, ...o }),
   };
   return api;
 }
