@@ -160,12 +160,12 @@
     "note": "docs/proposal/paper/data/find_example.py, ported into tools/other-half-data.mjs"
   },
   "OWN-FILM-SIM": {
-    "title": "The film of section 4: a seeded Stim simulation of the distance-7 surface code memory (rotated_memory_z), 40 rounds, 0.5% circuit noise, seed 20261122; detection events per round, and the rate at which checks fire over 20,000 runs",
+    "title": "The film of section 4: a seeded Stim simulation of the distance-7 surface code memory (surface_code:rotated_memory_z), 40 rounds, standard circuit noise at 0.5% (after-Clifford depolarisation, before-round data depolarisation, measurement and reset flips), seed 20261122; the detection events of each round, and the rate at which checks fire over 20,000 runs (seed 20261123)",
     "publisher": "This work",
     "url": "",
     "type": "own simulation",
-    "date": "22 November 2026",
-    "note": "tools/film-sim.py, written to articles/other-half/data/film.json; the frames shown are chosen by rule in figures/film-rule.js"
+    "date": "22 November 2026, Stim 1.16.0",
+    "note": "tools/film-sim.py, written to articles/other-half/data/film.json; the frames shown, and the round lit in the margin scene at distance 7 (data/qubits.json lit_d7), are chosen by rule in figures/film-rule.js"
   },
   "OWN-TIME": {
     "title": "Training time on a GPU; rough decoding times on one laptop core",
