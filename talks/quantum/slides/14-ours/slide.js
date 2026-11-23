@@ -21,7 +21,7 @@ export default {
       title: this.title, n: this.n, part: this.part,
       source: 'Simulated, our own runs at 0.5% per operation (OWN-D3, OWN-D5, OWN-D5-250M): share of runs (3 rounds at distance 3, 5 at distance 5) that ended wrong. Curve points on 1 million runs, end values on 2 million.',
     });
-    T(svg, L, 312, 'share of simulated runs that ended wrong', { size: 32, weight: 600 });
+    T(svg, L, 312, 'share of simulated runs (3 rounds at distance 3, 5 at distance 5) that ended wrong', { size: 32, weight: 600 });
     const panel = (x0, x1, xmax, step, ylo, yhi, head) => {
       const y0 = 420, y1 = 830;
       const X = (n) => x0 + (n / xmax) * (x1 - x0);
@@ -30,7 +30,7 @@ export default {
       T(svg, x0, y0 - 26, head, { size: 36, weight: 600 });
       for (let v = 0; v <= xmax + 1; v += step) { ln(svg, X(v), y1, X(v), y1 + 12); T(svg, X(v), y1 + 46, String(v / 1e6), { size: 32, anchor: 'middle', fill: C.ink }); }
       T(svg, x1, y1 + 88, 'examples seen, millions', { size: 32, anchor: 'end', fill: C.muted });
-      for (let r = ylo; r <= yhi + 1e-9; r += 0.002) { ln(svg, x0 - 10, Y(r), x0, Y(r)); T(svg, x0 - 16, Y(r) + 11, pct(r, 1), { size: 32, anchor: 'end', fill: C.muted }); }
+      for (let r = ylo; r <= yhi + 1e-9; r += (yhi - ylo > 0.01 ? 0.004 : 0.002)) { ln(svg, x0 - 10, Y(r), x0, Y(r)); T(svg, x0 - 16, Y(r) + 11, pct(r, 1), { size: 32, anchor: 'end', fill: C.muted }); }
       const clipId = `c${x0}`;
       const cp = h('clipPath', { id: clipId }, svg); h('rect', { x: x0, y: y0, width: x1 - x0, height: y1 - y0 }, cp);
       const gc = h('g', { 'clip-path': `url(#${clipId})` }, svg);
@@ -46,34 +46,29 @@ export default {
       pth(P.gc, `M${med.map((q) => q.join(' ')).join('L')}`, { stroke: C.accent, 'stroke-width': 5 });
       return med[med.length - 1];
     };
+    // each line named at its right end, outside the plot, so no label crosses a curve
+    const tag = (P, r, str, o = {}) => T(svg, P.x1 + 14, P.Y(r) + 11 + (o.dy || 0), str, { size: 32, ...o });
     // left: distance 3, 0 to 70 million
-    const A = panel(L + 120, 860, 70e6, 10e6, 0.014, 0.020, 'Distance 3');
+    const A = panel(L + 120, 660, 70e6, 10e6, 0.014, 0.020, 'Distance 3');
     level(A, p3.levels.plain.rate); level(A, p3.levels.correlated.rate, '18 12'); level(A, p3.levels.table.rate, '3 10');
-    const [ax, ay] = band(A, p3);
-    T(svg, A.x0 + 120, A.Y(p3.levels.plain.rate) - 14, `plain ${pct(p3.levels.plain.rate)}`, { size: 32 });
-    // in the empty top right, with a leader down to the curve's end (as on the right)
-    const la = A.Y(0.0193);
-    T(svg, A.x1, la, `network ${pct(p3.final_network.mean)}`, { size: 44, weight: 600, fill: C.accent, anchor: 'end' });
-    ln(svg, ax - 6, la + 20, ax - 2, ay - 14, { stroke: C.accent, 'stroke-width': 3 });
-    // the dashed and dotted lines named at their own left ends
-    T(svg, A.x0 + 120, A.Y(p3.levels.correlated.rate) + 40, `correlated ${pct(p3.levels.correlated.rate)} (lead not counted, B4)`, { size: 32 });
-    T(svg, A.x0 + 20, A.Y(p3.levels.table.rate) + 40, `lookup table ${pct(p3.levels.table.rate)}`, { size: 32 });
+    band(A, p3);
+    tag(A, p3.levels.plain.rate, `plain ${pct(p3.levels.plain.rate)}`, { dy: -6 });
+    tag(A, p3.levels.correlated.rate, `correlated ${pct(p3.levels.correlated.rate)}`, { dy: 8 });
+    tag(A, p3.levels.correlated.rate, 'its lead not counted (B4)', { dy: 44, fill: C.muted });
+    tag(A, p3.final_network.mean, `network ${pct(p3.final_network.mean)}`, { dy: -22, weight: 600, fill: C.accent });
+    tag(A, p3.levels.table.rate, `lookup table ${pct(p3.levels.table.rate)}`, { dy: 20 });
     // right: distance 5, 0 to 260 million, fixed from the first build
-    const B = panel(1100, R, 260e6, 50e6, 0.010, 0.024, 'Distance 5');
+    const B = panel(1180, 1540, 260e6, 50e6, 0.010, 0.028, 'Distance 5');
     level(B, p66.levels.plain.rate); level(B, p66.levels.correlated.rate, '18 12');
-    T(svg, B.x0 + 20, B.Y(p66.levels.plain.rate) - 14, `plain ${pct(p66.levels.plain.rate)}`, { size: 32 });
-    T(svg, B.x0 + 20, B.Y(p66.levels.correlated.rate) - 14, `correlated ${pct(p66.levels.correlated.rate)}`, { size: 32 });
+    tag(B, p66.levels.plain.rate, `plain ${pct(p66.levels.plain.rate)}`, { dy: -14 });
+    tag(B, p66.levels.correlated.rate, `correlated ${pct(p66.levels.correlated.rate)}`, { dy: 14 });
     if (b === 0) {
       const [ex, ey] = band(B, p66);
       T(svg, ex + 24, ey - 40, 'after 66 million:', { size: 32, weight: 600, fill: C.accent });
       T(svg, ex + 24, ey, 'behind in all five seeds', { size: 32, weight: 600, fill: C.accent });
     } else {
-      const [ex, ey] = band(B, p250);
-      // in the empty top right, with a leader down to the curve's end
-      const ly = B.Y(0.0215);
-      T(svg, B.x1, ly, `network ${pct(p250.final_network.mean)}`, { size: 44, weight: 600, fill: C.accent, anchor: 'end' });
-      T(svg, B.x1, ly + 42, 'after about 250 million', { size: 32, weight: 600, fill: C.accent, anchor: 'end' });
-      ln(svg, ex - 6, ly + 62, ex - 2, ey - 14, { stroke: C.accent, 'stroke-width': 3 });
+      band(B, p250);
+      tag(B, p250.final_network.mean, `network ${pct(p250.final_network.mean)}`, { dy: 18, weight: 600, fill: C.accent });
     }
   },
 };

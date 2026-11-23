@@ -27,6 +27,7 @@ export default {
     const y1 = 380;
     T(svg, L, y1 + 12, 'The chip', { size: 36, weight: 600 });
     T(svg, L, y1 + 52, `a round every ${round}`, { size: 32 });
+    T(svg, x0, y1 - 40, 'one tick per round', { size: 32, fill: C.ink });
     for (let t = round; t <= T80; t += round) rc(svg, X(t) - 2, y1 - 24, 4, 48, { fill: C.ink, stroke: 'none' });
     {
       const y2 = 560;
@@ -47,8 +48,10 @@ export default {
       const y3 = 790;
       T(svg, L, y3 - 8, 'Live matching,', { size: 36, weight: 600 });
       T(svg, L, y3 + 34, 'distance 5, 72-qubit chip', { size: 32, weight: 600 });
-      T(svg, x0 + 20, y3 + 10, `kept pace: answered on average ${live.value} millionths of a second after the last round,`, { size: 32 });
-      T(svg, x0 + 20, y3 + 50, 'for runs of up to a million rounds', { size: 32 });
+      // the delay itself, drawn on the same axis: 63 after the last round
+      rc(svg, X(0), y3 - 24, X(live.value) - X(0), 30, { fill: C.hair, stroke: C.ink, 'stroke-width': 3, rx: 4 });
+      T(svg, X(live.value) + 16, y3 + 2, String(live.value), { size: 36, weight: 600 });
+      T(svg, X(0), y3 + 46, 'its answer, on average, after the last round of a run of up to a million rounds: it kept pace', { size: 32 });
     }
   },
 };

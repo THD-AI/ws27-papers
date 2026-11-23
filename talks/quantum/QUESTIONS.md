@@ -55,4 +55,4 @@ Roughly 14 to 27 millionths of a second per run on one laptop core, emulated, wi
 ## On the result
 
 **Is the difference between 2.04 and 2.14 big?**
-At distance 7 it is 171 against 143 errors per 100,000 rounds, about one in six fewer, from the same recordings. Λ decides how many qubits a halving costs: near 2, one more halving costs 64 qubits.
+At distance 7 it is 171 against 143 errors per 100,000 rounds, about one in six fewer, from the same recordings. The grid's geometry sets what each step costs (distance 7 to 9 is 64 more qubits); Λ sets how many steps a target needs. Near 2, each step halves the error.
