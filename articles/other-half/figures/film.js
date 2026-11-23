@@ -17,7 +17,7 @@
 //           two kinds of fired check are named
 // Frames: data/film.json (tools/film-sim.py, a seeded Stim simulation). The
 // rounds shown are chosen by a rule, below, not by eye.
-import { mountFigure, svgRoot, g, h, circle, rect, leader, stage, clamp, ease, idle } from '../../../lib/fig.js';
+import { mountFigure, svgRoot, g, h, circle, rect, path, leader, penRing, stage, clamp, ease, idle } from '../../../lib/fig.js';
 import { pal, text, floor, surface, grid } from './shared.js';
 import { filmRounds, toGrid, BEATS as BEATS_N } from './film-rule.js';
 
@@ -131,23 +131,25 @@ function build(el, ctx) {
   const pick = (kind) => firedT.filter((t) => t.check.asks_about === kind).sort((u, v) => u.c[1] - v.c[1])[0];
   const n2 = g(svg);
   // each note level with its tile, so its leader runs straight across
-  const kinds = [['flips', 'fired: a check on flips (darker)'], ['phase errors', 'fired: a check on phase errors (lighter)']]
+  const kinds = [['flips', 'fired, on flips (darker)'], ['phase errors', 'fired, on phase errors (lighter)']]
     .map(([kind, str]) => ({ t: pick(kind), str })).filter((o) => o.t).sort((u, v) => u.t.c[1] - v.t.c[1]);
-  let floorY = by + (tall ? 34 : 44);
+  let floorY = by + (tall ? 36 : 46);
   for (const { t, str } of kinds) {
-    const lines = tall ? 2 : 1, ty = Math.max(floorY, t.c[1] + 4 - (lines - 1) * 8);
-    text(n2, nx, ty, tall ? str.replace(': ', ':\n') : str, { ...noteO, lh: 16 });
-    leader(n2, nx - 5, ty - 4, t.c[0] + pitch * 0.2, t.c[1], { stroke: C.muted, dot: false });
-    floorY = ty + lines * 16 + 8;
+    const ty = Math.max(floorY, t.c[1] + 4);
+    text(n2, nx, ty, str, noteO);
+    // the leader stops at the grid's edge, level with its tile, as lattice's do
+    leader(n2, nx - 5, ty - 4, bcx + 3.5 * pitch + 3, t.c[1], { stroke: C.muted, dot: false });
+    floorY = ty + 22;
   }
-  // step 2: its frame in the strip, outlined, and a line up to it
+  // step 2: its frame in the strip, ringed by the pen (the article's one hand
+  // mark), and a drawn line up to the enlarged frame; on phones it bends round
+  // the machine's name
   const [sx, sy, sw0, sh0] = FR[FROM];
   const slot = g(svg);
-  h('rect', { x: X(sx) - (sw0 * k) / 2 - 2, y: Y(sy) - (sh0 * k) / 2 - 2, width: sw0 * k + 4, height: sh0 * k + 4, rx: 2, fill: 'none', stroke: C.accent, 'stroke-width': 1.3, 'stroke-dasharray': '3 2.5' }, slot);
-  // the same dashed outline round the enlarged frame's cell: one frame, twice
-  h('rect', { x: bcx - (BIG.w * bk) / 2, y: bcy - (BIG.h * bk) / 2, width: BIG.w * bk, height: BIG.h * bk, rx: 2, fill: 'none', stroke: C.accent, 'stroke-width': 1.3, 'stroke-dasharray': '3 2.5' }, slot);
-  // and, where there is room for it, a line between the two
-  if (!tall) leader(slot, X(sx), Y(sy) - (sh0 * k) / 2 - 4, bcx, by + bigS - 10, { stroke: C.accent, dot: false });
+  const ring = penRing(slot, X(sx), Y(sy), (sw0 * k) / 2 + 6, (sh0 * k) / 2 + 6, { seed: 11, stroke: C.accent, width: 1.5 });
+  const x0 = X(sx), y0 = Y(sy) - (sh0 * k) / 2 - 8, x1 = bcx + (tall ? 30 : 0), y1 = by + bigS - (tall ? 8 : 12);
+  const cxq = tall ? 222 : (x0 + x1) / 2 + (x1 - x0) * 0.18;
+  const join = path(slot, `M${x0.toFixed(1)} ${y0.toFixed(1)}Q${cxq.toFixed(1)} ${((y0 + y1) / 2).toFixed(1)} ${x1.toFixed(1)} ${y1.toFixed(1)}`, { stroke: C.accent, 'stroke-width': 1.3, 'stroke-linecap': 'round', fill: 'none' });
 
   // While step 0 is complete and the next has not begun, the film keeps
   // running on screen, about eight frames a second (idle motion: it changes
@@ -173,7 +175,8 @@ function build(el, ctx) {
   // picture of it leaves the rail
   st.fade(big, 0, 0.22);
   st.fade(n0, 0.12, 0.3);
-  st.fade(slot, 2.0, 2.35);
+  ring.paths.forEach((pp, i) => st.draw(pp, 2.0 + i * 0.04, 2.3 + i * 0.03));
+  st.draw(join, 2.25, 2.5);
   st.fade(n2, 2.3, 2.75);
 
   return { set: (step, t) => st.set(step, t), destroy() { run0.stop(); } };
