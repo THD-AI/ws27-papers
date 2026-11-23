@@ -2,5 +2,5 @@
 
 | On the slide | Source |
 |---|---|
-| right 1 in 3; about 6 in 10 | `lattice.json` example: chance_right 0.333 and 0.622 (OWN-ENUM) |
-| 10 and 19 of 30 dots | rounded from those chances |
+| Plain matching 33.3%, leading outcome 62.2% | `lattice.json`, conditional chances for each logical outcome (OWN-ENUM) |
+| The two pictured cases, 30.5% each and 61.0% together | `lattice.json`, two minimum-weight error patterns in the leading logical class (OWN-ENUM) |

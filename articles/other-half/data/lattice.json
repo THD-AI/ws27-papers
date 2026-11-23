@@ -162,7 +162,19 @@
     "0": "Y",
     "8": "Z"
    },
-   "chance_right": 0.6221838324894762
+   "chance_right": 0.6221838324894762,
+   "minimum_weight_cases": [
+    {
+     "0": "Y",
+     "8": "Z"
+    },
+    {
+     "0": "Y",
+     "5": "Z"
+    }
+   ],
+   "chance_per_minimum_weight_case": 0.3051478171624666,
+   "chance_of_minimum_weight_cases": 0.6102956343249332
   },
   "rest": 0.04482175491376261,
   "source": "OWN-ENUM"

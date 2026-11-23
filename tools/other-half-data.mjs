@@ -249,13 +249,20 @@ for (let i = 0; i < 512; i++) for (let j = 0; j < 512; j++) {
   m.set(cls, (m.get(cls) ?? 0n) + massByWeight[w]);
 }
 const letters = (xb, zb) => Object.fromEntries(Array.from({ length: 9 }, (_, q) => [q, 'IXZY'[xb[q] + 2 * zb[q]]]).filter(e => e[1] !== 'I'));
-function likeliestError(sx, sz, cls) {
-  let best = null;
+function minimumWeightErrors(sx, sz, cls) {
+  let weight = 10;
+  let errors = [];
   for (let i = 0; i < 512; i++) { if (sxOf[i] !== sx || fxOf[i] !== +cls[0]) continue;
     for (let j = 0; j < 512; j++) { if (szOf[j] !== sz || fzOf[j] !== +cls[1]) continue;
       let w = 0; for (let q = 0; q < 9; q++) if (all[i][q] || all[j][q]) w++;
-      if (!best || w < best.w) best = { w, xb: all[i], zb: all[j] }; } }
-  return best;
+      if (w < weight) {
+        weight = w;
+        errors = [];
+      }
+      if (w === weight) errors.push(letters(all[i], all[j]));
+    }
+  }
+  return { weight, errors };
 }
 const cells = [];
 for (const [k, classes] of patternMass) {
@@ -291,7 +298,11 @@ if (cells.reduce((sum, cell) => sum + cell.total, 0n) !== configDenominator) {
 const ex = differs.find(c => c.sx === '0010' && c.sz === '1100');
 const mostFrequent = differs.filter(c => c.total === differs[0].total).length;
 if (!ex || ex.total !== differs[0].total) throw new Error('the proposal\'s example is not among the most frequent differing patterns');
-const exLikely = likeliestError(ex.sx, ex.sz, ex.ml);
+const exLikely = minimumWeightErrors(ex.sx, ex.sz, ex.ml);
+if (exLikely.weight !== 2 || exLikely.errors.length !== 2) {
+  throw new Error('expected two minimum-weight cases for the likelier outcome');
+}
+const caseMass = massByWeight[exLikely.weight];
 const firedIds = (bits, cs) => cs.filter((_, i) => bits[i] === '1').map(c => c.id);
 const pops = s => [...s].filter(ch => ch === '1').length;
 const order16 = Array.from({ length: 16 }, (_, i) => i.toString(2).padStart(4, '0')).sort((a, b) => pops(a) - pops(b) || (a < b ? 1 : -1));
@@ -328,7 +339,10 @@ write('lattice.json', {
     fired: [...firedIds(ex.sx, c3.z), ...firedIds(ex.sz, c3.x)],
     chance_of_pattern: fraction(ex.total, configDenominator),
     plain_matching: { errors: ex.correction, chance_right: ex.pMatch, flip_puzzle: 'z2 joined to the left edge through qubit 0', phase_puzzle: 'x0 joined to x1 through qubit 4' },
-    read_together: { errors: letters(exLikely.xb, exLikely.zb), chance_right: ex.pMl },
+    read_together: { errors: exLikely.errors[0], chance_right: ex.pMl,
+      minimum_weight_cases: exLikely.errors,
+      chance_per_minimum_weight_case: fraction(caseMass, ex.total),
+      chance_of_minimum_weight_cases: fraction(caseMass * BigInt(exLikely.errors.length), ex.total) },
     rest: 1 - ex.pMatch - ex.pMl,
     source: 'OWN-ENUM',
   },

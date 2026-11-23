@@ -1,7 +1,7 @@
-# 10 · The Y answer is right six times in ten because it can happen in two ways
+# 10 · Two likely error patterns point to the same logical outcome
 
-One of the most frequent of the 24. Three checks fire. Plain matching explains them with two errors: a flip in one corner and a phase error in the centre. It fits, and it is right one time in three.
+Three checks fire. Plain matching guesses a flip in one corner and a phase error in the centre. That's the right logical answer about one time in three.
 
-The same checks also fit a Y in that corner, a flip and a phase error at once, plus one phase error on the right. Plain matching counts a Y as two errors, because it solves flips and phase errors separately. And the phase error can sit in two places: the far corner, or one place above it. Together the two ways are right about six times in ten. Five percent error per storing qubit, with checks that never report wrongly, is far from a real chip; it makes the effect easy to count.
+Now look at the two grids on the right. Both have a Y in the top corner: a flip and a phase error at once. Plain matching solves flips and phase errors separately, so it counts the Y once in each problem. The other phase error can sit in the far corner or one place up. The checks look the same, and both cases call for the same logical correction. Add their chances and you get 61 percent. The rarer cases push that to 62.
 
-**The Y answer is right six times in ten because it can happen in two ways.**
+**Two likely error patterns point to the same logical outcome.**

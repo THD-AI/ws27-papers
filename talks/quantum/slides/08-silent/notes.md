@@ -1,5 +1,5 @@
-# 8 · Errors plus a wrong correction can cross the grid without firing a single check
+# 8 · One check fires. The wrong correction leaves a silent error
 
-Most small mistakes in that guess are harmless, except one kind. Three real flips in one column fire a single check. Matching's cheapest explanation of that check is two flips below it. Corrected that way, errors and correction together make a line from edge to edge. Every check along it sees an even number, so nothing fires, and the stored value has changed. That silent failure is a logical error, and every decoder is measured by how often it happens.
+Start on the left. Three real flips in one column fire the blue check in the middle. The decoder sees that check and chooses the cheapest explanation: the two open flips below it. On the right, the real flips and the correction make a line across the grid. Every check along it now sees an even number. The stored value changes, and the checks go quiet. That's a logical error.
 
-**Errors plus a wrong correction can cross the grid without firing a single check.**
+**One check fires. The wrong correction leaves a silent error.**
