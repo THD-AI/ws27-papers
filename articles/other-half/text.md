@@ -43,9 +43,9 @@ In the scheme we studied, the surface code, the qubits sit on a square grid, and
 
 ## 3. Asking without looking
 
-Only about half of the qubits store anything. The rest are helpers, each sitting between two or four storing qubits. The smallest grid, distance 3, has 9 storing qubits and 8 helpers, 17 in all. Distance 5 has 49 qubits, and distance 7 has 97. {{OWN-ARITH GQA-2024}}
-
 :::margin qubits 2
+
+Only about half of the qubits store anything. The rest are helpers, each sitting between two or four storing qubits. The smallest grid, distance 3, has 9 storing qubits and 8 helpers, 17 in all. Distance 5 has 49 qubits, and distance 7 has 97. {{OWN-ARITH GQA-2024}}
 
 Once every round, each helper interacts with its neighbours and is measured. One bit comes out. It doesn't say what state any neighbour is in – only whether the number of errors among those neighbours is even or odd. That answer is the same whatever is stored. So measuring it leaves the stored information alone.
 

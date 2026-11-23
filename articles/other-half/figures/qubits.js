@@ -139,20 +139,21 @@ function build(el, ctx) {
       const pf = L.s === k1 ? (k0 === k1 || G <= 0 ? 1 : ease(clamp((u - 0.72) / 0.28))) : L.s === k0 ? (k0 === k1 ? 1 : fadeOld) : 0;
       for (const tl of L.k.fired) tl.setFired(pf);
     }
-    // labels: the old one gives way to the new one, never a blank
+    // labels: the old one stays in full ink until the new one takes its place,
+    // half way through the change: never a blank or a ghost
     labels.forEach((lb, i) => {
       let pp = 0;
       if (k0 === k1) pp = i === k1 ? 1 : 0;
-      else if (i === k0) pp = 1 - ease(clamp(u / 0.3));
-      else if (i === k1) pp = ease(clamp((u - 0.3) / 0.3));
+      else if (i === k0) pp = u < 0.5 ? 1 : 0;
+      else if (i === k1) pp = u < 0.5 ? 0 : 1;
       show(lb, pp);
     });
     const hv = (i) => heads.find((hh) => hh.at.includes(i));
     heads.forEach((hh) => {
       let pp = 0;
       if (hv(k0) === hv(k1)) pp = hh === hv(k1) ? 1 : 0;
-      else if (hh === hv(k0)) pp = 1 - ease(clamp(u / 0.3));
-      else if (hh === hv(k1)) pp = ease(clamp((u - 0.3) / 0.3));
+      else if (hh === hv(k0)) pp = u < 0.5 ? 1 : 0;
+      else if (hh === hv(k1)) pp = u < 0.5 ? 0 : 1;
       show(hh.hg, pp);
     });
     svg.setAttribute('aria-label', K[u >= 0.6 ? k1 : k0].say);

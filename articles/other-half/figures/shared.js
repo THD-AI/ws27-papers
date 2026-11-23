@@ -111,6 +111,9 @@ export function grid(parent, o) {
       setFired(p) {
         const on = p > 0.001;
         field.style.display = on ? '' : 'none'; dot.style.display = on ? '' : 'none';
+        // a fired check on flips darkens its tint, so its kind still reads
+        // through the field (about 0.17 against 0.075 when quiet)
+        if (flips) base.setAttribute('fill-opacity', on ? '0.17' : '0.075');
         if (!on) return;
         field.style.opacity = p >= 0.999 ? '' : p.toFixed(3);
         dot.style.opacity = p >= 0.999 ? '' : p.toFixed(3);
