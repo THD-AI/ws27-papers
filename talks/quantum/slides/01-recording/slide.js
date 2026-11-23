@@ -20,7 +20,7 @@ export default {
     T(toArticle(svg), L, 218, 'The other half of a quantum computer', { family: 'serif', size: 84, weight: 500 });
     if (b >= 1) {
       const [m, n] = data.suppression.decoders.map((d) => d.points.find((p) => p.distance === 7).per_100000_rounds);
-      const fewer = Math.round(m / (m - n));   // 171 / 28 ≈ 6: one error in six fewer
+      const fewer = Math.round(100 * (m - n) / m);
       T(svg, L, 298, this.title, { size: 48, weight: 600 });
       const [rx, ry] = at(1262, 410);
       T(svg, rx, ry, 'matching', { family: 'virgil', size: 44 });
@@ -29,7 +29,7 @@ export default {
       const [tx, ty] = at(1150, 750);
       T(svg, tx, ty, 'a neural network', { family: 'virgil', size: 44, anchor: 'end' });
       T(svg, tx, ty + 50, 'read afterwards:', { size: 32, weight: 600, fill: C.accent, anchor: 'end' });
-      T(svg, tx, ty + 92, `about one error in ${fewer === 6 ? 'six' : fewer} fewer`, { size: 32, weight: 600, fill: C.accent, anchor: 'end' });
+      T(svg, tx, ty + 92, `about ${fewer}% fewer logical errors`, { size: 32, weight: 600, fill: C.accent, anchor: 'end' });
     }
     frame(svg, {
       n: this.n, part: this.part,

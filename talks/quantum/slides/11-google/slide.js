@@ -5,7 +5,7 @@ import { C, L, R, svgOf, T, frame, ln, pth, dot, inkLayer, PEN } from '../../kit
 
 export default {
   id: 'google', n: 11, part: 'Content', builds: 2, speaker: 'B',
-  title: 'On Google’s recordings the network made about one error in six fewer.',
+  title: 'At distance 7, the network made about 16% fewer logical errors.',
   clicks: ['Google’s best matching decoder', 'the network'],
   draw(page, b, data) {
     const svg = svgOf(page);

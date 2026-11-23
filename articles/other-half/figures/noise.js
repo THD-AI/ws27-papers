@@ -18,10 +18,10 @@ export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / 
 const WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'];
 
 function verdict(r) {
-  if (r.network_vs_correlated === 'level') return 'level with correlated';
+  if (r.network_vs_correlated === 'level') return 'intervals overlap';
   if (r.network_vs_correlated === 'ahead') return 'ahead of both';
   if (r.network_vs_plain === 'ahead') return 'between the two';
-  if (r.network_vs_plain === 'level') return 'level with plain';
+  if (r.network_vs_plain === 'level') return 'intervals overlap';
   return 'behind both';
 }
 // a round number just above v, for the top of a panel's scale
@@ -40,8 +40,8 @@ function build(el, ctx) {
   const runs = rows[0].network.pooled.shots;
   const svg = svgRoot(el, W, H,
     `Our own simulated runs at distance 5, network trained on ${Math.round(d.training_shots / 1e6)} million examples, ${nSeeds} seeds: share of runs in which each decoder was wrong at ${rows.length} noise levels. `
-    + rows.map((r) => `At ${pc(r.p)} the network is ${verdict(r)} (network ${pc(r.network.pooled.rate)}, plain matching ${pc(r.plain.pooled.rate)}, correlated matching ${pc(r.correlated.pooled.rate)})`).join('. ')
-    + '. At the lowest noise the network is level with correlated matching; as noise grows it falls behind it, and at the two highest levels it is behind plain matching too.');
+    + rows.map((r) => `At ${pc(r.p)} network versus matchers: ${verdict(r)} (network ${pc(r.network.pooled.rate)}, plain matching ${pc(r.plain.pooled.rate)}, correlated matching ${pc(r.correlated.pooled.rate)})`).join('. ')
+    + '. At the lowest noise the separate network and correlated matching intervals overlap. As noise grows the network fails more often than correlated matching, and at the two highest levels it also fails more often than plain matching.');
   svg.style.color = C.ink;
   const st = stage();
   const mono = { family: 'mono', size: 11.5, fill: C.muted };
