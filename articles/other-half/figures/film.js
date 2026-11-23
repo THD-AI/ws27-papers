@@ -14,13 +14,13 @@
 //   step 2  one frame is held up, enlarged; its place in the strip goes empty
 // Frames: data/film.json (tools/film-sim.py, a seeded Stim simulation). The
 // rounds shown are chosen by a rule, below, not by eye.
-import { mountFigure, svgRoot, g, h, circle, stage, clamp, ease, idle } from '../../../lib/fig.js';
+import { mountFigure, svgRoot, g, h, circle, rect, leader, stage, clamp, ease, idle } from '../../../lib/fig.js';
 import { pal, text, floor, surface, grid } from './shared.js';
 import { filmRounds, toGrid, BEATS as BEATS_N } from './film-rule.js';
 
 export const steps = 3;
-export const durations = { large: [3.0, 1.4, 2.2] };
-const SIZE = { wide: [720, 518], tall: [360, 304] };
+export const durations = { large: [3.0, 1.4, 1.5] };
+const SIZE = { wide: [720, 494], tall: [360, 280] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 const IMG = [1536, 1024];
@@ -61,7 +61,7 @@ function build(el, ctx) {
   // one scale for both axes, so the grid keeps its shape inside any cell
   const unit = (w, hh) => Math.min((w * 0.76) / (mxx - mnx), (hh * 0.76) / (mxy - mny));
   const inCell = (c, cx, cy, w, hh) => { const u = unit(w, hh); return [cx - (c.x - (mnx + mxx) / 2) * u, cy + (c.y - (mny + mxy) / 2) * u]; };
-  const R = tall ? 2.6 : 3.2;
+  const R = tall ? 2.1 : 2.8;   // half the side of a fired mark: a small square, as a tile is
   // every lit check is drawn, none merged, in one colour (fired); every dot
   // keeps a readable size and neighbours may touch
   const dotsFor = (parent, round, cx, cy, w, hh, rr) => {
@@ -69,7 +69,7 @@ function build(el, ctx) {
     for (const id of frame) {
       const c = run.checks[id];
       const [px, py] = inCell(c, cx, cy, w, hh);
-      circle(parent, px, py, rr, { fill: C.accent, stroke: '#FBFBFC', 'stroke-width': Math.max(0.6, rr * 0.28) });
+      rect(parent, px - rr, py - rr, rr * 2, rr * 2, { fill: C.accent, stroke: C.paper, 'stroke-width': 0.6 });
     }
   };
   // the 48 places a check can light, very faint, in every frame of the strip
@@ -94,47 +94,60 @@ function build(el, ctx) {
     });
   };
 
-  // the lettering: one line a step; the two machines named once, small
+  // the two machines named once, small, by hand, in Virgil (Excalidraw's
+  // hand font, OFL)
   const L = (str, x, y, anchor = 'start', o = {}) => { const lg = g(svg); text(lg, x, y, str, { family: 'sans', size: tall ? 13 : 14, anchor, ...o }); return lg; };
-  const ly = H - (tall ? 6 : 8);
-  // the two machines are named by hand, in Virgil (Excalidraw's hand font, OFL)
   h('style', {}, svg).textContent = `@font-face { font-family: 'Virgil'; src: url('${art('film-virgil.woff2')}') format('woff2'); font-display: swap; }`;
   const nameO = { size: tall ? 13 : 15, fill: C.ink };
   for (const lg of [L('a quantum computer', X(60), Y(312), 'start', nameO), L('an ordinary computer', X(1480), Y(318), 'end', nameO)]) {
     for (const t of lg.querySelectorAll('text, tspan')) t.setAttribute('font-family', "'Virgil', 'Libre Franklin', sans-serif");
   }
-  const l0 = L('about ninety thousand frames in one blink', tall ? 10 : 14, ly);
-  const l1 = L(tall ? 'all that leaves: each check’s answer, every\nround, drawn where it changed' : 'all that leaves: each check’s answer, every round, drawn where it changed', tall ? 10 : 14, tall ? ly - 15 : ly, 'start', tall ? { lh: 15 } : {});
 
-  // step 2: one frame held up, enlarged, in the strip's own pen
+  // One frame, enlarged, in the band above the drawing from the start: the
+  // distance-7 grid as the margin scene draws it, with the same round lit, so
+  // the picture the reader has just seen beside section 3 is here, in the
+  // strip's own pen. Step 2 shows which frame of the strip it is, and names
+  // the two kinds of fired check.
   const bx = tall ? 8 : X(560), by = tall ? 2 : 4;
-  const lift = g(svg);
-  const pk = bigS / BIG.img;
-  h('rect', { x: bx + (BIG.cx - BIG.w / 2) * pk, y: by + (BIG.cy - BIG.h / 2) * pk, width: BIG.w * pk, height: BIG.h * pk, fill: '#FBFBFC' }, lift);
-  h('image', { href: art('film-frame.png'), x: bx, y: by, width: bigS, height: bigS }, lift);
+  const big = g(svg);
+  h('image', { href: art('film-frame.png'), x: bx, y: by, width: bigS, height: bigS }, big);
   const bk = bigS / BIG.img, bcx = bx + BIG.cx * bk, bcy = by + BIG.cy * bk;
-  // the distance-7 grid, as the margin scene draws it: 7 qubits a side plus
-  // the half tiles' bulge, inside the drawn cell
-  const pitch = (Math.min(BIG.w, BIG.h) * bk * 0.9) / 7;
-  const held = grid(lift, { checks: surface(7), d: 7, cx: bcx, cy: bcy, pitch, C, helper: 0 });
-  const note = g(svg);
-  const nx = bx + bigS + (tall ? 8 : 14), ns = tall ? 11.5 : 13.5, ny = by + (tall ? 16 : 26);
-  text(note, nx, ny, 'one frame, held up:', { family: 'sans', size: ns, weight: 600 });
-  text(note, nx, ny + ns * 1.35, 'the grid of distance 7,', { family: 'sans', size: ns });
-  text(note, nx, ny + ns * 2.7, 'one round', { family: 'sans', size: ns });
-  // the key: the grid's own tiles, small
-  const sw = ns * 0.95;
-  const swatch = (y, kind) => {
-    const k1 = grid(note, { checks: [{ asks_about: kind === 'fired' ? 'flips' : kind, shape: 'square', qubits: [0, 1, 2, 3] }], d: 2, cx: nx + sw / 2, cy: y - sw * 0.32, pitch: sw, C, helper: 0, qr: 0.01 });
-    if (kind === 'fired') Object.values(k1.tiles)[0].setFired(1);
-  };
-  const kx = nx + sw + 7, k0 = ny + ns * 4.3;
-  swatch(k0, 'fired'); text(note, kx, k0, 'fired this round', { family: 'sans', size: ns });
-  swatch(k0 + ns * 1.5, 'flips'); text(note, kx, k0 + ns * 1.5, 'a check on flips', { family: 'sans', size: ns });
-  swatch(k0 + ns * 3, 'phase errors'); text(note, kx, k0 + ns * 3, 'a check on phase errors', { family: 'sans', size: ns });
+  // 7 qubits a side, the half tiles' bulge, and a pitch's gap to the drawn cell
+  const pitch = (Math.min(BIG.w, BIG.h) * bk) / 8.2;
+  const held = grid(big, { checks: surface(7), d: 7, cx: bcx, cy: bcy, pitch, C });
+  const HELD = START + BEATS.length + (FR.length - 1 - FROM);   // the rule's frame: both kinds, never empty
+  const on = run.frames[roundAt(HELD)].map((id) => toGrid(run.checks[id], 7));
+  const firedT = Object.values(held.tiles).filter((t) => on.some((c) => c.row === t.check.row && c.col === t.check.col && c.asks_about === t.check.asks_about));
+  firedT.forEach((t) => t.setFired(1));
+
+  const noteO = { italic: true, size: tall ? 13 : 14.5 };
+  const nx = bx + bigS + (tall ? 8 : 16);
+  const n0 = g(svg);
+  text(n0, nx, by + (tall ? 16 : 24), tall ? 'one round, enlarged' : 'one round, enlarged: its fired checks lit', noteO);
+  // step 2: the two kinds, each pointed at a fired check of that kind
+  const pick = (kind) => firedT.filter((t) => t.check.asks_about === kind).sort((u, v) => u.c[1] - v.c[1])[0];
+  const n2 = g(svg);
+  // each note level with its tile, so its leader runs straight across
+  const kinds = [['flips', 'fired: a check on flips (tinted)'], ['phase errors', 'fired: a check on phase errors (open)']]
+    .map(([kind, str]) => ({ t: pick(kind), str })).filter((o) => o.t).sort((u, v) => u.t.c[1] - v.t.c[1]);
+  let floorY = by + (tall ? 34 : 44);
+  for (const { t, str } of kinds) {
+    const lines = tall ? 2 : 1, ty = Math.max(floorY, t.c[1] + 4 - (lines - 1) * 8);
+    text(n2, nx, ty, tall ? str.replace(': ', ':\n') : str, { ...noteO, lh: 16 });
+    leader(n2, nx - 5, ty - 4, t.c[0] + pitch * 0.5, t.c[1], { stroke: C.muted, dot: false });
+    floorY = ty + lines * 16 + 8;
+  }
+  // step 2: its frame in the strip, outlined, and a line up to it
+  const [sx, sy, sw0, sh0] = FR[FROM];
+  const slot = g(svg);
+  h('rect', { x: X(sx) - (sw0 * k) / 2 - 2, y: Y(sy) - (sh0 * k) / 2 - 2, width: sw0 * k + 4, height: sh0 * k + 4, rx: 2, fill: 'none', stroke: C.accent, 'stroke-width': 1.3, 'stroke-dasharray': '3 2.5' }, slot);
+  // the same dashed outline round the enlarged frame's cell: one frame, twice
+  h('rect', { x: bcx - (BIG.w * bk) / 2, y: bcy - (BIG.h * bk) / 2, width: BIG.w * bk, height: BIG.h * bk, rx: 2, fill: 'none', stroke: C.accent, 'stroke-width': 1.3, 'stroke-dasharray': '3 2.5' }, slot);
+  // and, where there is room for it, a line between the two
+  if (!tall) leader(slot, X(sx), Y(sy) - (sh0 * k) / 2 - 4, bcx, by + bigS - 10, { stroke: C.accent, dot: false });
 
   // While step 0 is complete and the next has not begun, the film keeps
-  // running on screen, about five frames a second (idle motion: it changes
+  // running on screen, about eight frames a second (idle motion: it changes
   // which rounds are shown, never what is true).
   let atRest = false, extra = 0, since = null;
   const run0 = idle(svg, ctx, (secs) => {
@@ -143,9 +156,8 @@ function build(el, ctx) {
     const e = Math.floor((secs - since) * 8);
     if (e !== extra) { extra = e; setBeat(BEATS.length + extra); }
   });
-  let liftRound = -1;
   st.on((gg) => {
-    // the film keeps running through step 1 and stops when a frame is held up
+    // the film keeps running through step 1 and stops at step 2, on the frame held up
     atRest = gg >= 1 && gg < 2;
     if (gg < 1) extra = 0;
     const n = gg >= 2 ? BEATS.length : gg >= 1 ? BEATS.length + extra : beatsAt(gg);
@@ -153,24 +165,9 @@ function build(el, ctx) {
     // step 1: the colour field fades; the line stays in full ink
     const p1 = ease(clamp(gg - 1)), fo = 1 - 0.75 * p1;
     field.style.opacity = fo >= 0.999 ? '' : fo.toFixed(3);
-    // step 2: the frame is held up; its place in the strip goes empty
-    const p2 = ease(clamp((gg - 2) / 0.7));
-    const round = START + BEATS.length + (FR.length - 1 - FROM);   // the rule's frame: both kinds, never empty
-    if (round !== liftRound) {
-      liftRound = round;
-      const on = run.frames[roundAt(round)].map((id) => toGrid(run.checks[id], 7));
-      for (const t of Object.values(held.tiles)) t.setFired(on.some((c) => c.row === t.check.row && c.col === t.check.col && c.asks_about === t.check.asks_about) ? 1 : 0);
-    }
-    // one object: the frame leaves its slot and grows into the band
-    lift.style.display = p2 <= 0.001 ? 'none' : '';
-    const [sx, sy, sw] = FR[FROM], z = (sw * k) / (BIG.w * bk) + (1 - (sw * k) / (BIG.w * bk)) * p2;
-    const tx = X(sx) + (bcx - X(sx)) * p2, ty = Y(sy) + (bcy - Y(sy)) * p2;
-    lift.setAttribute('transform', p2 >= 0.999 ? '' : `translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${z.toFixed(4)}) translate(${(-bcx).toFixed(2)} ${(-bcy).toFixed(2)})`);
-    cells[FROM].style.opacity = p2 > 0.001 ? '0' : '';
-    note.style.opacity = String(clamp((gg - 2.7) / 0.3));
   });
-  st.fade(l0, 0.12, 0.42, [1.05, 1.3]);
-  st.fade(l1, 1.35, 1.75);
+  st.fade(slot, 2.0, 2.35);
+  st.fade(n2, 2.3, 2.75);
 
   return { set: (step, t) => st.set(step, t), destroy() { run0.stop(); } };
 }
