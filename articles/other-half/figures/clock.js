@@ -141,13 +141,13 @@ function build(el, ctx) {
     const bn = g(root);
     const last = waiting(3);
     if (narrow) {
-      const t = text(bn, B.x, pileBottom + 22, 'the backlog grows without end:', noteO);
+      const t = text(bn, B.x, pileBottom + 22, 'the backlog grows without end:', { ...noteO, hand: true });
       const m2 = text(bn, B.x + 6, t.bottom + 17, String(waiting(2)), { family: 'mono', size: 12.5, weight: 500 });
-      text(bn, B.x + 40, t.bottom + 17, 'waiting after the second answer', noteO);
+      text(bn, B.x + 40, t.bottom + 17, 'waiting after the second answer', { ...noteO, hand: true });
       const m3 = text(bn, B.x + 6, m2.bottom + 22, String(last), { family: 'mono', size: 12.5, weight: 500 });
-      text(bn, B.x + 40, m2.bottom + 22, 'waiting after the third', noteO);
+      text(bn, B.x + 40, m2.bottom + 22, 'waiting after the third', { ...noteO, hand: true });
       ringAt = m3; pileBottom = m3.bottom + 4;
-    } else text(bn, B.x, py + 12, 'rounds that wait\nfor an answer:\nthe backlog\ngrows without end', { ...noteO, size: 14.5, lh: 18 });
+    } else text(bn, B.x, py + 12, 'rounds that wait\nfor an answer:\nthe backlog\ngrows without end', { ...noteO, size: 14.5, lh: 18, hand: true });
     st.fade(bn, 2.76, 2.9);
     let pr = null;
     if (ringAt) {
@@ -234,7 +234,7 @@ function build(el, ctx) {
     text(after, wb, y3 - 11, `± ${us(live.plus_minus)}`, { family: 'mono', size: 11.5, anchor: 'end', fill: C.ink });
     const bg = g(l3);
     bracket(bg, xLast, y3 + 14, x(live.value), y3 + 14, 5, { stroke: C.ink, 'stroke-width': 1 });
-    const lab = text(bg, xLast, y3 + 35, `${live.label_on_page}:`, noteO);
+    const lab = text(bg, xLast, y3 + 35, `${live.label_on_page}:`, { ...noteO, hand: true });   // the ring's words
     const big = narrow
       ? text(bg, xLast + 8, lab.bottom + 22, us(live.value), { family: 'mono', size: 15, weight: 500 })
       : text(bg, lab.right + 18, y3 + 35.5, us(live.value), { family: 'mono', size: 15, weight: 500 });

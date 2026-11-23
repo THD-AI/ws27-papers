@@ -1,3 +1,4 @@
+@font-face { font-family: 'Excalifont'; src: url('vendor/excalifont/Excalifont.woff2') format('woff2'); font-display: swap; }
 /* Page, type, tables, print. The design system is SPEC.md; this file sets it.
  *
  * How the file is organised
