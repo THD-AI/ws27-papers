@@ -21,7 +21,8 @@ export default {
     if (b >= 1) d.decoder_correction.forEach((q) => { const [x, y] = G.pos(q); errMark(G.gE, x, y, 26, 'X', 'added'); });
     if (b >= 2) {
       const [x, yTop] = G.pos(d.together[0]), [, yBot] = G.pos(d.together[d.together.length - 1]);
-      pth(svg, `M${x + 44} ${yTop - 70} C ${x + 58} ${yTop + 80}, ${x + 36} ${yBot - 80}, ${x + 46} ${yBot + 70}`, { 'stroke-width': 5 });
+      // the crossing line runs through the column itself, under the marks
+      pth(G.gH, `M${x + 4} ${yTop - 70} C ${x + 12} ${yTop + 80}, ${x - 8} ${yBot - 80}, ${x + 2} ${yBot + 70}`, { 'stroke-width': 6 });
     }
     const tx = 1000;
     T(svg, tx, 360, 'filled X: a real flip', { size: 32 });

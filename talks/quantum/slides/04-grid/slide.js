@@ -3,9 +3,9 @@
 import { C, L, svgOf, T, frame, slideGrid, surface, dot } from '../../kit.js';
 
 export default {
-  id: 'grid', n: 4, part: 'Preliminaries', builds: 3, speaker: 'A',
+  id: 'grid', n: 4, part: 'Preliminaries', builds: 1, speaker: 'A',
   title: 'Only about half of a logical qubit’s qubits store anything.',
-  clicks: ['distance 3', 'distance 5', 'distance 7'],
+  clicks: ['distances 3, 5 and 7'],
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, {
@@ -20,7 +20,6 @@ export default {
     const pitch = 62, cy = 610;
     const rows = data.qubits.rows.filter((r) => [3, 5, 7].includes(r.distance));
     [[3, 330], [5, 820], [7, 1450]].forEach(([d, cx], i) => {
-      if (i > b) return;
       slideGrid(svg, { checks: surface(d), d, cx, cy, pitch, qr: 10 });
       const row = rows.find((r) => r.distance === d) || {};
       const total = row.total ?? 2 * d * d - 1;

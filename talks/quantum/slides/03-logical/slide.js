@@ -3,9 +3,9 @@
 import { C, L, svgOf, T, frame, ln, pth, dot } from '../../kit.js';
 
 export default {
-  id: 'logical', n: 3, part: 'Preliminaries', builds: 2, speaker: 'A',
+  id: 'logical', n: 3, part: 'Preliminaries', builds: 1, speaker: 'A',
   title: 'A logical qubit keeps its value in how its qubits relate.',
-  clicks: ['three qubits, all-0 or all-1 together', 'no copy; the surface code'],
+  clicks: ['three qubits together; no copy'],
   draw(page, b) {
     const svg = svgOf(page);
     frame(svg, {
@@ -27,7 +27,6 @@ export default {
     T(svg, bx + 60, 628, 'only ever all-0', { size: 36, weight: 600 });
     T(svg, bx + 60, 676, 'or all-1, together', { size: 36, weight: 600 });
     T(svg, bx + 60, 724, '(or both at once)', { size: 32, fill: C.muted });
-    if (b < 1) return;
     const nx = 1180;
     ln(svg, nx - 60, 420, nx - 60, 880, { stroke: C.hair, 'stroke-width': 2 });
     T(svg, nx, 470, 'No qubit is a copy.', { size: 40, weight: 600 });

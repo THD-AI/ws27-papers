@@ -4,16 +4,14 @@
 import { C, L, R, svgOf, T, frame, ln, pth, dot } from '../../kit.js';
 
 export default {
-  id: 'threshold', n: 2, part: 'Motivation', builds: 2, speaker: 'A',
+  id: 'threshold', n: 2, part: 'Motivation', builds: 1, speaker: 'A',
   title: 'A bigger grid helps when each qubit is below the threshold.',
-  clicks: ['one slip per thousand, billions of steps', 'the threshold, schematic'],
+  clicks: ['slips against steps; the threshold, schematic'],
   draw(page, b) {
     const svg = svgOf(page);
     frame(svg, {
       title: this.title, n: this.n, part: this.part,
-      source: b === 0
-        ? 'Published estimate: Gidney and Ekerå, Quantum 5 (2021), hardware slipping once in about 1,000 operations; 2–3 billion costly steps for RSA-2048.'
-        : 'Schematic (no scale). Measured notes: Google Quantum AI, Nature 614 (2023) and Nature 638 (2025).',
+      source: 'Published estimate: Gidney and Ekerå, Quantum 5, 433 (2021). Right: schematic, no scale; measured notes from Google Quantum AI, Nature 614 (2023) and Nature 638 (2025).',
     });
 
     // Left: one log axis of counts, 1 to 10^10.
@@ -37,7 +35,6 @@ export default {
     T(svg, x0, y + 192, 'and one uncorrected slip can spoil the answer:', { size: 32 });
     T(svg, x0, y + 250, 'millions of slips where one is enough.', { size: 36, weight: 600 });
 
-    if (b < 1) return;
     // Right: the threshold, schematic, in its own strip without y ticks.
     const sx0 = 1080, sx1 = R, sy0 = 380, sy1 = 760;
     ln(svg, sx0, sy0, sx0, sy1); ln(svg, sx0, sy1, sx1, sy1);

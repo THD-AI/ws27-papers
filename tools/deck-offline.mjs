@@ -1,7 +1,7 @@
 // Builds the talk as ONE offline HTML file for presenting: every build
 // pre-drawn as SVG, the three typefaces and the house drawing embedded, no
 // network and no server. Double-click it, press F11, then Right / Left.
-//   node tools/deck-offline.mjs [renovate] [--v2]
+//   node tools/deck-offline.mjs [renovate|quantum] [--v2]
 // Writes .shots/deck/<talk>[-v2]/<talk>-talk.html
 import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
@@ -58,16 +58,23 @@ const pages = await page.evaluate(async (v2) => {
 await browser.close();
 server.close();
 
-// 3. Each drawing once, as a data URI the pages point to at show time.
-const ART_PREFIX = `../../articles/${talk}/art/`;
+// 3. Each drawing (and the Virgil face) once, as a data URI the pages point
+// to at show time. The Quantum deck draws from the article's art and its own.
+const ARTICLE = { renovate: 'renovate', quantum: 'other-half' }[talk] || talk;
+const PREFIXES = [[`../../articles/${ARTICLE}/art/`, join(ROOT, 'articles', ARTICLE, 'art')], ['./art/', join(ROOT, 'talks', talk, 'art')]];
+const MIME = { png: 'image/png', woff2: 'font/woff2' };
 const ART = {};
 for (const p of pages) {
-  p.svg = p.svg.split(ART_PREFIX).map((part, i) => {
-    if (i === 0) return part;
-    const f = part.match(/^[\w.-]+\.png/)[0];
-    if (!ART[f]) ART[f] = `data:image/png;base64,${readFileSync(join(ROOT, 'articles', talk, 'art', f)).toString('base64')}`;
-    return `%ART:${f}%` + part.slice(f.length);
-  }).join('');
+  for (const [prefix, dir] of PREFIXES) {
+    p.svg = p.svg.split(prefix).map((part, i) => {
+      if (i === 0) return part;
+      const m = part.match(/^[\w.-]+\.(png|woff2)/);
+      if (!m) return prefix + part;
+      const f = m[0];
+      if (!ART[f]) ART[f] = `data:${MIME[m[1]]};base64,${readFileSync(join(dir, f)).toString('base64')}`;
+      return `%ART:${f}%` + part.slice(f.length);
+    }).join('');
+  }
 }
 
 const doc = `<!doctype html>
@@ -76,7 +83,7 @@ const doc = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Renovate, don’t repaint: the talk</title>
+<title>${talk === 'quantum' ? 'The other half of a quantum computer' : 'Renovate, don’t repaint'}: the talk</title>
 <style>
 ${fontCss}
 html, body { margin: 0; height: 100%; background: #111214; overflow: hidden; }

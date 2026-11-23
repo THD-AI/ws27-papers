@@ -90,7 +90,7 @@ export function slideGrid(parent, o) {
     // the flip tint a little deeper than the article's 0.075, for the projector
     if (t.check.asks_about === 'flips') t.base.setAttribute('fill-opacity', 0.16);
     t.field.setAttribute('stroke-width', 3);
-    t.dot.setAttribute('r', Math.max(10, o.pitch * 0.1));
+    t.dot.setAttribute('r', Math.max(10, o.pitch * 0.15));   // the dot carries 'fired' on either kind of tile
     if (t.helper) t.helper.setAttribute('r', Math.max(6, o.pitch * 0.065));
   });
   G.qubits.forEach((q) => q.el.setAttribute('stroke-width', 3));

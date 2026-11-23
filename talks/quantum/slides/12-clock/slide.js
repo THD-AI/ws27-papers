@@ -5,9 +5,9 @@
 import { C, L, R, svgOf, T, frame, ln, rc } from '../../kit.js';
 
 export default {
-  id: 'clock', n: 12, part: 'Content', builds: 3, speaker: 'C',
+  id: 'clock', n: 12, part: 'Content', builds: 2, speaker: 'C',
   title: 'The network needed 24 millionths of a second for a round the chip finishes in 1.1.',
-  clicks: ['the chip’s rounds', 'the network’s answers, the backlog', 'live matching, another setup'],
+  clicks: ['the chip’s rounds and the network’s answers', 'live matching, another setup'],
   draw(page, b, data) {
     const svg = svgOf(page);
     const ck = data.clock, round = ck.round.value;
@@ -28,7 +28,7 @@ export default {
     T(svg, L, y1 + 12, 'The chip', { size: 36, weight: 600 });
     T(svg, L, y1 + 52, `a round every ${round}`, { size: 32 });
     for (let t = round; t <= T80; t += round) rc(svg, X(t) - 2, y1 - 24, 4, 48, { fill: C.ink, stroke: 'none' });
-    if (b >= 1) {
+    {
       const y2 = 560;
       T(svg, L, y2 + 12, 'The 2024 network', { size: 36, weight: 600, fill: C.accent });
       T(svg, L, y2 + 52, `${net} per round, quoted`, { size: 32 });
@@ -43,11 +43,11 @@ export default {
       T(svg, X(at) - 18, y2 + 100, `at about ${Math.round(at)}: round 3 answered, the chip at round ${done},`, { size: 32, weight: 600, anchor: 'end' });
       T(svg, X(at) - 18, y2 + 140, `${done - 4} rounds waiting, and the gap keeps growing`, { size: 32, weight: 600, anchor: 'end' });
     }
-    if (b >= 2) {
+    if (b >= 1) {
       const y3 = 790;
       T(svg, L, y3 - 8, 'Live matching,', { size: 36, weight: 600 });
       T(svg, L, y3 + 34, 'distance 5, 72-qubit chip', { size: 32, weight: 600 });
-      T(svg, x0 + 20, y3 + 10, `kept pace: answered on average ${live.value} after the last round,`, { size: 32 });
+      T(svg, x0 + 20, y3 + 10, `kept pace: answered on average ${live.value} millionths of a second after the last round,`, { size: 32 });
       T(svg, x0 + 20, y3 + 50, 'for runs of up to a million rounds', { size: 32 });
     }
   },

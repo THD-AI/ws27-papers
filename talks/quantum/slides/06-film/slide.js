@@ -2,7 +2,7 @@
 // enlarged below it: the same simulated rounds the article's strip shows
 // (film-rule.js filmRounds), fired checks as accent dots over the faint
 // positions of the 48 checks. A check lit in two frames running is ringed.
-import { C, L, svgOf, T, frame, img, ART, dot, rc, penRing } from '../../kit.js';
+import { C, L, svgOf, T, frame, img, ART, dot, rc, penRing, pth } from '../../kit.js';
 import { filmRounds, toGrid } from '../../../../articles/other-half/figures/film-rule.js';
 
 export default {
@@ -41,6 +41,10 @@ export default {
         penRing(svg, x0 + px, y0 + py, 26, 24, { width: 4, stroke: C.ink, seed: 11 + i });
       }
     });
+    // the strip's frames, enlarged: an Excalidraw-like arrow from the drawn strip down to the row
+    pth(svg, 'M 420 640 C 432 668, 436 690, 440 712', { 'stroke-width': 4 });
+    pth(svg, 'M 424 694 L 440 714 L 452 692', { 'stroke-width': 4 });
+    T(svg, 470, 676, 'five of its frames, enlarged', { size: 32, fill: C.muted });
     const tx = 880;
     if (b >= 1) {
       T(svg, tx, 340, 'A round every 1.1 millionths of a second,', { size: 36, weight: 600 });
