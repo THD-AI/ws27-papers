@@ -700,7 +700,7 @@ add({
   id: 'steps68', n: 15, beat: 'How to address it', builds: 3, start: '11:12',
   clicks: ['step 6 permissions', 'stage gate and stop condition', 'steps 7 and 8'],
   title: 'Then the keys: read first, risky changes last.',
-  sub: 'Step 6. The agent can read for signed-in customers before step 5 is complete.',
+  sub: 'Step 6. The agent can show a signed-in customer their bill before Telekom unifies its records.',
   source: 'Proposed process model. Each key goes in an annex to the works agreement from step 2.',
   notes: `<p>Take the customer who asked for a cheaper tariff. First the agent can show them their bill after they sign in. Then it can change the tariff, and they can undo it in one tap. A change to their bank details comes last. They confirm it in the app. The system enforces each key. At the stage gate, we measure errors and sign the annex. If cost per finished request fails to fall, or repeat contacts rise, we hold the next key. Staff and the works council sign off before the agent works alone. Then a named team runs it. There's always a way to a person. <b>Then the keys: read first, risky changes last.</b></p>`,
   draw(page, b) {
@@ -720,8 +720,9 @@ add({
     if (b >= 1) {
       ln(svg, L, 691, R, 691, { stroke: C.hair, 'stroke-width': 2 });
       T(svg, L, 750, 'Stage gate', { size: 42, weight: 600 });
-      T(svg, 400, 742, 'Measure errors and sign the annex before granting the next key.', { size: 36 });
-      T(svg, 400, 796, 'Hold the next key unless cost per finished request falls and repeat contacts stay flat or fall.', { size: 36, weight: 600, width: 1400, lh: 42 });
+      T(svg, 400, 742, 'Measure errors and sign the annex. The next key requires both.', { size: 36 });
+      T(svg, 400, 805, 'Lower cost per finished request', { size: 36, weight: 600 });
+      T(svg, 1020, 805, 'No increase in repeat contacts', { size: 36, weight: 600 });
     }
     if (b >= 2) {
       T(svg, L, 906, '7  Staff and works council sign off', { size: 34, weight: 600 });
