@@ -141,7 +141,7 @@ Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
   const fire = [];
   w1.fired.forEach((id) => {
     const stays = w2.fired.includes(id);
-    fire.push([id, 1.28, 1.55, stays ? 3 : 2.3, stays ? 3.2 : 2.52]);
+    fire.push([id, 1.28, 1.55, stays ? 3 : 2.1, stays ? 3.2 : 2.3]);   // the middle check goes dark as the second flip arrives, not after
   });
   ex.fired.forEach((id, i) => fire.push([id, 3.2 + i * 0.08, 3.42 + i * 0.08, 99, 100]));
   st.on((gg) => {
