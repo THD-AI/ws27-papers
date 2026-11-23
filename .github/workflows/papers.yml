@@ -1,0 +1,37 @@
+name: Paper and deck checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Check JavaScript syntax
+        run: git ls-files -z '*.js' '*.mjs' | xargs -0 -n1 node --check
+      - name: Build articles and standalone decks
+        env:
+          CHROME: /usr/bin/google-chrome
+        run: |
+          npm run build
+          node tools/deck-offline.mjs renovate --v2 --site
+          node tools/qdeck-site.mjs --site
+          for article in renovate other-half; do
+            test -s "dist/$article/index.html"
+            test -s "dist/$article/talk/index.html"
+          done
