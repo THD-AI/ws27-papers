@@ -98,13 +98,19 @@ function build(el, ctx) {
     });
   };
 
-  // the two machines named once, small, by hand, in Virgil (Excalidraw's
-  // hand font, OFL)
+  // Virgil is the screen lettering. Use the paper's embedded sans in print
+  // so the labels keep their outlines in PDF viewers.
   const L = (str, x, y, anchor = 'start', o = {}) => { const lg = g(svg); text(lg, x, y, str, { family: 'sans', size: tall ? 13 : 14, anchor, ...o }); return lg; };
-  h('style', {}, svg).textContent = `@font-face { font-family: 'Virgil'; src: url('${art('film-virgil.woff2')}') format('woff2'); font-display: swap; }`;
   const nameO = { size: tall ? 13 : 15, fill: C.ink };
-  for (const lg of [L('a quantum computer', X(tall ? 40 : 24), Y(tall ? 300 : 286), 'start', nameO), L('an ordinary computer', X(1480), Y(318), 'end', nameO)]) {
-    for (const t of lg.querySelectorAll('text, tspan')) t.setAttribute('font-family', "'Virgil', 'Libre Franklin', sans-serif");
+  const machineNames = [
+    L('a quantum computer', X(tall ? 40 : 24), Y(tall ? 300 : 286), 'start', nameO),
+    L('an ordinary computer', X(1480), Y(318), 'end', nameO),
+  ];
+  if (!print) {
+    h('style', {}, svg).textContent = `@font-face { font-family: 'Virgil'; src: url('${art('film-virgil.woff2')}') format('woff2'); font-display: swap; }`;
+    for (const lg of machineNames) {
+      for (const t of lg.querySelectorAll('text, tspan')) t.setAttribute('font-family', "'Virgil', 'Libre Franklin', sans-serif");
+    }
   }
 
   // One frame, enlarged, in the band above the drawing from the start: the
