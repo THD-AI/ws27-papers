@@ -92,31 +92,39 @@ const doc = `<!doctype html>
 ${fontCss}
 :root { --ink: #15171C; --muted: #5C6370; --paper: #FBFBFC; --accent: #4254C5; --hair: #DADDE3; }
 html, body { margin: 0; height: 100%; background: #16171A; overflow: hidden; font-family: 'Libre Franklin', Arial, sans-serif; }
-#stage { position: fixed; inset: 44px 0 0 0; }
-body.full #stage { inset: 0; }
+body { display: grid; grid-template: auto minmax(0, 1fr) / minmax(0, 1fr); }
+#stage, .panel { grid-area: 2 / 1; position: relative; }
+#stage:focus-visible { outline: 2px solid #E8EAEE; outline-offset: -2px; }
 .page { position: absolute; width: 1920px; height: 1080px; background: var(--paper); overflow: hidden; }
 #stage .page { left: 50%; top: 50%; transform-origin: center center; }
 .page > svg { display: block; width: 1920px; height: 1080px; }
 .page > svg.ink { position: absolute; left: 0; top: 0; pointer-events: none; }
 .page a { cursor: pointer; }
-#bar { position: fixed; left: 0; right: 0; top: 0; height: 44px; display: flex; align-items: center; gap: 4px; padding: 0 12px; background: #0E0F11; color: #E8EAEE; font-size: 15px; z-index: 5; }
-#bar .name { font-weight: 600; margin-right: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#bar { grid-area: 1 / 1; min-height: 44px; display: flex; flex-wrap: wrap; align-items: center; column-gap: 4px; padding: 0 12px; background: #0E0F11; color: #E8EAEE; font-size: 15px; z-index: 5; }
+#bar .name { flex: 1 1 10rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #bar a, #bar button { color: #E8EAEE; background: none; border: 0; font: inherit; padding: 8px 10px; border-radius: 6px; cursor: pointer; text-decoration: none; white-space: nowrap; }
 #bar a:hover, #bar button:hover { background: #25272C; }
 #bar .where { color: #9AA1AD; font-variant-numeric: tabular-nums; padding: 0 8px; }
 body.full #bar, body.full #notes { display: none !important; }
 #notes { position: fixed; left: 0; right: 0; bottom: 0; max-height: 34vh; overflow: auto; background: var(--paper); color: var(--ink); font: 19px/1.5 'Libre Franklin', Arial, sans-serif; padding: 14px 28px; box-shadow: 0 -1px 0 var(--hair); z-index: 4; }
 #notes .where { color: var(--muted); font-size: 15px; }
-.panel { position: fixed; inset: 44px 0 0 auto; width: min(720px, 100%); background: var(--paper); color: var(--ink); overflow: auto; padding: 22px 30px 60px; box-shadow: -1px 0 0 var(--hair); z-index: 6; font-size: 17px; line-height: 1.55; }
+.panel { box-sizing: border-box; justify-self: end; width: min(720px, 100%); background: var(--paper); color: var(--ink); overflow: auto; overflow-wrap: anywhere; padding: 22px 30px 60px; box-shadow: -1px 0 0 var(--hair); z-index: 6; font-size: 17px; line-height: 1.55; }
 .panel h2 { font-size: 22px; margin: 6px 0 12px; } .panel h3 { font-size: 17px; margin: 26px 0 6px; }
 .panel ol, .panel ul { padding-left: 22px; } .panel li { margin: 6px 0; }
 .panel a { color: var(--accent); } .panel .id { color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
 .panel .num { display: inline-block; min-width: 2.2em; color: var(--muted); font-variant-numeric: tabular-nums; }
 .panel .close { float: right; font-size: 15px; }
 #print { display: none; }
+@media screen and (max-width: 640px) {
+  #bar { padding: 4px 8px; font-size: 13px; }
+  #bar .name { flex-basis: 100%; }
+  #bar a, #bar button, #bar .where { padding: 6px; }
+  .panel, #notes { padding-inline: 16px; }
+}
 @page { size: 13.333in 7.5in; margin: 0; }
 @media print {
   html, body { height: auto; overflow: visible; background: #fff; }
+  body { display: block; }
   #bar, #stage, #notes, .panel { display: none !important; }
   #print { display: block; }
   #print .page { position: relative; zoom: 0.6667; break-after: page; }
@@ -127,13 +135,13 @@ body.full #bar, body.full #notes { display: none !important; }
 <nav id="bar" aria-label="The talk">
   <span class="name">The other half of a quantum computer: the talk</span>
   <span class="where" id="where"></span>
-  <button data-panel="contents">Contents</button>
+  <button data-panel="contents" aria-controls="contents" aria-expanded="false">Contents</button>
   <a href="${ARTICLE}" target="_blank" rel="noopener">The article</a>
-  <button data-panel="refs">References and thanks</button>
-  <button data-panel="keys">Keys</button>
+  <button data-panel="refs" aria-controls="refs" aria-expanded="false">References and thanks</button>
+  <button data-panel="keys" aria-controls="keys" aria-expanded="false">Keys</button>
   <button id="full">Full screen</button>
 </nav>
-<div id="stage"></div>
+<main id="stage" tabindex="0" aria-label="Slide"></main>
 <aside id="notes" hidden></aside>
 <section class="panel" id="contents" hidden><button class="close" data-close>Close</button><h2>Contents</h2><ol style="list-style:none;padding-left:0">${contents.join('')}</ol></section>
 <section class="panel" id="refs" hidden><button class="close" data-close>Close</button><h2>References and thanks</h2>
@@ -170,24 +178,58 @@ function show(k) {
   history.replaceState(null, '', '#' + (n + 1));
 }
 function isFull() { return !!document.fullscreenElement || matchMedia('(display-mode: fullscreen)').matches || (Math.abs(innerHeight - screen.height) < 3 && Math.abs(innerWidth - screen.width) < 3); }
-function mode() { document.body.classList.toggle('full', isFull()); setTimeout(fit, 0); }
+function mode() {
+  const full = isFull();
+  if (full) closePanel();
+  if (document.body.classList.toggle('full', full) && document.activeElement.closest('#bar')) stage.focus();
+  setTimeout(fit, 0);
+}
 function full() { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(function () {}); }
-function panel(id) { document.querySelectorAll('.panel').forEach(function (p) { p.hidden = p.id !== id || !p.hidden; }); }
+let panelButton = null;
+function closePanel() {
+  if (!panelButton) return;
+  document.getElementById(panelButton.dataset.panel).hidden = true;
+  panelButton.setAttribute('aria-expanded', 'false');
+  panelButton.focus();
+  panelButton = null;
+}
 addEventListener('resize', function () { fit(); mode(); });
 document.addEventListener('fullscreenchange', mode);
 document.getElementById('full').onclick = full;
-document.querySelectorAll('[data-panel]').forEach(function (b) { b.onclick = function () { panel(b.dataset.panel); }; });
-document.querySelectorAll('[data-close]').forEach(function (b) { b.onclick = function () { panel(''); }; });
-document.querySelectorAll('[data-go]').forEach(function (a) { a.onclick = function (e) { e.preventDefault(); panel(''); show(+a.dataset.go); }; });
+document.querySelectorAll('[data-panel]').forEach(function (b) {
+  b.onclick = function () {
+    const wasOpen = panelButton === b;
+    closePanel();
+    if (wasOpen) return;
+    panelButton = b;
+    b.setAttribute('aria-expanded', 'true');
+    const panel = document.getElementById(b.dataset.panel);
+    panel.hidden = false;
+    panel.querySelector('[data-close]').focus();
+  };
+});
+document.querySelectorAll('[data-close]').forEach(function (b) { b.onclick = closePanel; });
+document.querySelectorAll('[data-go]').forEach(function (a) {
+  a.onclick = function (e) {
+    e.preventDefault();
+    closePanel();
+    show(+a.dataset.go);
+    stage.focus();
+  };
+});
 addEventListener('keydown', function (e) {
-  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === 'Escape' && panelButton) {
+    closePanel();
+    return;
+  }
+  if (panelButton || e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey
+    || e.target.closest?.('a, button, input, select, textarea, [contenteditable], #notes')) return;
   if (['ArrowRight', ' ', 'PageDown', 'Enter', 'ArrowDown'].indexOf(e.key) >= 0) { e.preventDefault(); show(n + 1); }
   else if (['ArrowLeft', 'PageUp', 'Backspace', 'ArrowUp'].indexOf(e.key) >= 0) { e.preventDefault(); show(n - 1); }
   else if (e.key === 'Home') show(0);
   else if (e.key === 'End') show(PAGES.length - 1);
   else if (e.key === 'n' || e.key === 'N') notes.hidden = !notes.hidden;
   else if (e.key === 'f' || e.key === 'F') full();
-  else if (e.key === 'Escape') panel('');
   else if (e.key === 'g' || e.key === 'G') { var k = parseInt(prompt('Go to page (1–' + PAGES.length + ')'), 10); if (k) show(k - 1); }
 });
 stage.addEventListener('click', function (e) { if (e.target.closest('a')) return; show(n + 1); });
