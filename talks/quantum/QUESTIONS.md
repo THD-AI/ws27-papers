@@ -5,7 +5,7 @@ For the question round, 10 points. Each answer uses only the article's facts; th
 ## On the topic
 
 **Why this topic?**
-In this course it is where machine learning works for quantum hardware. A decoder is classical machine learning, so it is our field, and Google's 2024 result shows it decides real error rates.
+In this course it is where machine learning works for quantum hardware. A neural-network decoder is classical machine learning, so it is our field, and Google's 2024 result shows it decides real error rates.
 
 **Is this quantum machine learning?**
 No. The network is ordinary classical software that reads the chip's checks. It gives no quantum speed-up (slide 15).
@@ -19,7 +19,7 @@ Performance: at distance 5 ours passed plain matching after about 250 million ex
 It stores the value in how several qubits relate, never in one of them; no copy exists anywhere (slide 3).
 
 **How does a check measure without destroying the state?** (B1)
-A helper starts at 0, collects the parity of its neighbours through four controlled-NOTs and is measured. Only even or odd comes out, the same whatever is stored; the helper is reset for the next round.
+A helper starts at 0, collects the parity of its two or four neighbours through controlled-NOTs and is measured. Only even or odd comes out, the same whatever is stored; the helper is reset for the next round.
 
 **Where are decoherence and the phase-flip channel in your noise model?** (B3)
 Every operation in our simulation goes wrong with the same chance p: a flip, a phase error or both. The phase-flip channel is the phase-error part of that.
@@ -42,7 +42,7 @@ Only simulation. The test on Google's public recordings is the second half of ou
 We don't know the cause. Plain matching corrects all 219 single error mechanisms; correlated matching gets 6 wrong in our setup (PyMatching 2.4.0, called as documented), and a second script written separately found the same six. We state it for our setup only and don't count the distance-3 lead over correlated matching.
 
 **How sure is "250 million"?**
-It is a training budget, not a measured minimum. The curves first fell below plain matching between 210 and 250 million, and the falling learning rate at the end of each run helps (slide 14).
+It is a training budget, not a measured minimum. The curves first fell below plain matching between 210 and 250 million (learning.json, panel d5-250m), and the falling learning rate at the end of each run helps (slide 14).
 
 ## On speed
 

@@ -28,7 +28,7 @@ export default {
       const Y = (r) => y1 - ((r - ylo) / (yhi - ylo)) * (y1 - y0);
       ln(svg, x0, y0, x0, y1); ln(svg, x0, y1, x1, y1);
       T(svg, x0, y0 - 26, head, { size: 36, weight: 600 });
-      for (let v = 0; v <= xmax + 1; v += step) { ln(svg, X(v), y1, X(v), y1 + 12); T(svg, X(v), y1 + 46, String(v / 1e6), { size: 32, anchor: 'middle', fill: C.muted }); }
+      for (let v = 0; v <= xmax + 1; v += step) { ln(svg, X(v), y1, X(v), y1 + 12); T(svg, X(v), y1 + 46, String(v / 1e6), { size: 32, anchor: 'middle', fill: C.ink }); }
       T(svg, x1, y1 + 88, 'examples seen, millions', { size: 32, anchor: 'end', fill: C.muted });
       for (let r = ylo; r <= yhi + 1e-9; r += 0.002) { ln(svg, x0 - 10, Y(r), x0, Y(r)); T(svg, x0 - 16, Y(r) + 11, pct(r, 1), { size: 32, anchor: 'end', fill: C.muted }); }
       const clipId = `c${x0}`;
@@ -55,7 +55,9 @@ export default {
     const la = A.Y(0.0193);
     T(svg, A.x1, la, `network ${pct(p3.final_network.mean)}`, { size: 44, weight: 600, fill: C.accent, anchor: 'end' });
     ln(svg, ax - 6, la + 20, ax - 2, ay - 14, { stroke: C.accent, 'stroke-width': 3 });
-    T(svg, L, 960, `dashed: correlated ${pct(p3.levels.correlated.rate)}, lead not counted (B4); dotted: lookup table ${pct(p3.levels.table.rate)}`, { size: 32 });
+    // the dashed and dotted lines named at their own left ends
+    T(svg, A.x0 + 120, A.Y(p3.levels.correlated.rate) + 40, `correlated ${pct(p3.levels.correlated.rate)} (lead not counted, B4)`, { size: 32 });
+    T(svg, A.x0 + 20, A.Y(p3.levels.table.rate) + 40, `lookup table ${pct(p3.levels.table.rate)}`, { size: 32 });
     // right: distance 5, 0 to 260 million, fixed from the first build
     const B = panel(1100, R, 260e6, 50e6, 0.010, 0.024, 'Distance 5');
     level(B, p66.levels.plain.rate); level(B, p66.levels.correlated.rate, '18 12');

@@ -21,7 +21,7 @@ export default {
     const X = (t) => x0 + (t / T80) * (x1 - x0);
     const axisY = 900;
     ln(svg, x0, axisY, x1, axisY);
-    [0, 20, 40, 60, 80].forEach((t) => { ln(svg, X(t), axisY, X(t), axisY + 12); T(svg, X(t), axisY + 50, String(t), { size: 32, anchor: 'middle', fill: C.muted }); });
+    [0, 20, 40, 60, 80].forEach((t) => { ln(svg, X(t), axisY, X(t), axisY + 12); T(svg, X(t), axisY + 50, String(t), { size: 32, anchor: 'middle', fill: C.ink }); });
     T(svg, L, axisY + 50, 'millionths of a second', { size: 32, fill: C.muted });
     // lane 1: the chip
     const y1 = 380;

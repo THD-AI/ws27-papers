@@ -92,6 +92,10 @@ export function slideGrid(parent, o) {
     t.field.setAttribute('stroke-width', 3);
     t.dot.setAttribute('r', Math.max(10, o.pitch * 0.15));   // the dot carries 'fired' on either kind of tile
     if (t.helper) t.helper.setAttribute('r', Math.max(6, o.pitch * 0.065));
+    // on slides a fired check looks the same on both kinds of tile (field and
+    // large dot); the kind stays in the outline (ink for flips, grey for phase)
+    const fired = t.setFired.bind(t), flips = t.check.asks_about === 'flips';
+    t.setFired = (p) => { fired(p); if (flips) t.base.setAttribute('fill-opacity', p > 0.001 ? 0 : 0.16); };
   });
   G.qubits.forEach((q) => q.el.setAttribute('stroke-width', 3));
   return G;

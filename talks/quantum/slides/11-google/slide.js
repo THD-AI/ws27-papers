@@ -19,7 +19,7 @@ export default {
     const Y = (v) => y1 - ((Math.log10(v) - lo) / (hi - lo)) * (y1 - y0);
     const X = (d) => x0 + 60 + ((d - 3) / 4) * (x1 - x0 - 160);
     ln(svg, x0, y0 - 10, x0, y1); ln(svg, x0, y1, x1, y1);
-    [100, 200, 500, 1000].forEach((v) => { ln(svg, x0 - 12, Y(v), x0, Y(v)); T(svg, x0 - 22, Y(v) + 12, String(v), { size: 32, anchor: 'end', fill: C.muted }); });
+    [100, 200, 500, 1000].forEach((v) => { ln(svg, x0 - 12, Y(v), x0, Y(v)); T(svg, x0 - 22, Y(v) + 12, String(v), { size: 32, anchor: 'end', fill: C.ink }); });
     [3, 5, 7].forEach((d) => { ln(svg, X(d), y1, X(d), y1 + 12); T(svg, X(d), y1 + 50, `distance ${d}`, { size: 32, anchor: 'middle' }); });
     T(svg, L, y0 - 40, 'logical errors per 100,000 rounds (log scale)', { size: 32, weight: 600 });
     const draw = (dec, col) => {

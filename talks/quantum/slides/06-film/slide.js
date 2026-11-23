@@ -27,7 +27,7 @@ export default {
       const both = run.frames[rounds[i]].filter((id) => run.frames[rounds[i + 1]].includes(id));
       if (both.length) twice = { i, id: both[0] };
     }
-    const fw = 230, gap = 82, y0 = 740, pitch = 28;
+    const fw = 230, gap = 82, y0 = 712, pitch = 28;
     // a check's centre sits half a pitch off its qubits; rows and columns run -1..d-1
     const pos = (c) => { const g = toGrid(c, dd); return [17 + (g.col + 1) * pitch, 17 + (g.row + 1) * pitch]; };
     rounds.forEach((r, i) => {
@@ -42,9 +42,9 @@ export default {
       }
     });
     // the strip's frames, enlarged: an Excalidraw-like arrow from the drawn strip down to the row
-    pth(svg, 'M 420 640 C 432 668, 436 690, 440 712', { 'stroke-width': 4 });
-    pth(svg, 'M 424 694 L 440 714 L 452 692', { 'stroke-width': 4 });
-    T(svg, 470, 676, 'five of its frames, enlarged', { size: 32, fill: C.muted });
+    pth(svg, 'M 300 590 C 318 620, 330 650, 338 676', { 'stroke-width': 4 });
+    pth(svg, 'M 320 662 L 338 680 L 352 656', { 'stroke-width': 4 });
+    T(svg, 372, 650, 'five of its frames, enlarged', { size: 32, fill: C.muted });
     const tx = 880;
     if (b >= 1) {
       T(svg, tx, 340, 'A round every 1.1 millionths of a second,', { size: 36, weight: 600 });

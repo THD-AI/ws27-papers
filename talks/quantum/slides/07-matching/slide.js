@@ -25,7 +25,8 @@ export default {
     const ux = q0x - zx, uy = q0y - zy, n = Math.hypot(ux, uy);
     const qx = q0x + (ux / n) * 70, qy = q0y + (uy / n) * 70;
     pth(svg, `M${zx} ${zy} Q ${(zx + qx) / 2 - 12} ${(zy + qy) / 2 + 10} ${qx} ${qy}`, { 'stroke-width': 5 });
-    T(svg, qx - 10, qy - 24, 'edge', { size: 32, anchor: 'end', fill: C.muted });
+    pth(svg, `M${qx - 26} ${qy + 22} L${qx + 22} ${qy - 26}`, { 'stroke-width': 4, 'stroke-dasharray': '8 8' });
+    T(svg, qx - 20, qy - 30, 'edge', { size: 32, anchor: 'end', fill: C.muted });
     const [ax, ay] = c('x0'), [bx, by] = c('x1');
     pth(svg, `M${ax} ${ay} Q ${(ax + bx) / 2 + 30} ${(ay + by) / 2 - 30} ${bx} ${by}`, { 'stroke-width': 5 });
     const tx = 1060;

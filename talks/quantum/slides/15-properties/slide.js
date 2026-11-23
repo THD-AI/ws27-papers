@@ -19,7 +19,7 @@ export default {
       ['Relevance', 'on Google’s data: Λ from 2.04 to 2.14, the reader alone', 'at Λ near 2, one more halving costs 64 qubits (97 to 161)'],
       ['Availability', 'about 250 million examples to pass plain matching', 'correlated matching is free; a network at live speed is only claimed'],
     ];
-    const y0 = 340, hh = 128;
+    const y0 = 330, hh = 118;
     rows.forEach(([k, a, c], i) => {
       const y = y0 + i * hh;
       ln(svg, L, y, R, y, { stroke: C.hair, 'stroke-width': 2 });
@@ -29,8 +29,8 @@ export default {
     });
     ln(svg, L, y0 + 4 * hh, R, y0 + 4 * hh, { stroke: C.hair, 'stroke-width': 2 });
     if (b >= 1) {
-      T(svg, L, 900, 'Our stop rule’s first test is passed: a laptop could train it, in under two hours per seed.', { size: 32, weight: 600 });
-      T(svg, L, 944, 'Its second test, on Google’s real recordings, is still open; correlated matching stays ahead.', { size: 32 });
+      T(svg, L, 872, 'Our stop rule’s first test is passed: by our timing a laptop would train it in under two hours per seed.', { size: 32, weight: 600 });
+      T(svg, L, 916, 'Its second test, on Google’s real recordings, is still open; correlated matching stays ahead.', { size: 32 });
     }
   },
 };

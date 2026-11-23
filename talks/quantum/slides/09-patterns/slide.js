@@ -23,7 +23,6 @@ export default {
       else if (c.state === 'tie-best') dot(svg, x, y, 13, { fill: C.mid });
       else dot(svg, x, y, 12, { fill: 'none', stroke: C.ink, 'stroke-width': 3 });
     });
-    T(svg, x0, y0 + 16 * p + 46, 'rows and columns: none fired first', { size: 32, fill: C.muted });
     const kx = 900, cn = s.counts;
     const row = (y, n, mark, a, bb) => {
       mark(kx + 16, y - 18);

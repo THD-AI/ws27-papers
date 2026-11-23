@@ -26,7 +26,7 @@ export default {
       if (i === 0) return;
       const ans = i === 1 ? ex.plain_matching : ex.read_together;
       Object.entries(ans.errors).forEach(([q, l]) => { const [x, y] = G.pos(Number(q)); errMark(G.gE, x, y, 24, l); });
-      if (i === 2) { const [x, y] = G.pos(5); errMark(G.gE, x, y, 24, 'Z', 'added'); T(svg, x + 76, y + 12, 'or here', { size: 32 }); }
+      if (i === 2) { const [x, y] = G.pos(5); errMark(G.gE, x, y, 24, 'Z', 'added'); T(svg, x + 30, y - 32, 'or here', { size: 32 }); }
       // 30 dots, 3 rows of 10: how often this answer is right
       const n = Math.round(ans.chance_right * 30);
       for (let k = 0; k < 30; k++) {
