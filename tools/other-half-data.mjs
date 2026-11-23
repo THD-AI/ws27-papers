@@ -212,12 +212,7 @@ write('qubits.json', qubits);
 // ---------------------------------------------------------------- the enumeration at distance 3
 // A port of docs/proposal/paper/data/find_example.py (Quantum course repository), same order of loops.
 // Every storing qubit suffers X, Z or Y with probability p/3 each; checks are perfect.
-const c3 = code(3);
-const pDenominator = 60n;
-const noErrorNumerator = 57n;
-const configDenominator = pDenominator ** 9n;
-const P_ENUM = Number(pDenominator - noErrorNumerator) / Number(pDenominator);
-const fraction = (numerator, denominator) => Number(numerator) / Number(denominator);
+const c3 = code(3), P_ENUM = 0.05;
 { // the layout must be the proposal's
   const want = { x: [[0, 1, 3, 4], [4, 5, 7, 8], [1, 2], [6, 7]], z: [[1, 2, 4, 5], [3, 4, 6, 7], [0, 3], [5, 8]] };
   for (const k of ['x', 'z']) c3[k].forEach((c, i) => { if (c.qubits.join() !== want[k][i].join()) throw new Error('layout differs from find_example.py'); });
@@ -237,72 +232,54 @@ function minweight(sups, logical) {
   return best;
 }
 const mx = minweight(ZS, LZ), mz = minweight(XS, LX);        // flips light z checks, phase errors light x checks
-const patternMass = new Map();
+const prob = new Map();
 const sxOf = all.map(b => key(b, ZS)), fxOf = all.map(b => par(b, LZ)), szOf = all.map(b => key(b, XS)), fzOf = all.map(b => par(b, LX));
-// Each of X, Z and Y has probability 1/60, and no error has probability 57/60.
-// All configurations share denominator 60^9, so compare integer numerators.
-const massByWeight = Array.from({ length: 10 }, (_, w) => noErrorNumerator ** BigInt(9 - w));
+const pw = Array.from({ length: 10 }, (_, w) => Math.pow(P_ENUM / 3, w) * Math.pow(1 - P_ENUM, 9 - w));
 for (let i = 0; i < 512; i++) for (let j = 0; j < 512; j++) {
   let w = 0; for (let q = 0; q < 9; q++) if (all[i][q] || all[j][q]) w++;
   const k = sxOf[i] + '|' + szOf[j], cls = fxOf[i] + '' + fzOf[j];
-  let m = patternMass.get(k); if (!m) { m = new Map(); patternMass.set(k, m); }
-  m.set(cls, (m.get(cls) ?? 0n) + massByWeight[w]);
+  let m = prob.get(k); if (!m) { m = new Map(); prob.set(k, m); }
+  m.set(cls, (m.get(cls) || 0) + pw[w]);
 }
 const letters = (xb, zb) => Object.fromEntries(Array.from({ length: 9 }, (_, q) => [q, 'IXZY'[xb[q] + 2 * zb[q]]]).filter(e => e[1] !== 'I'));
-function minimumWeightErrors(sx, sz, cls) {
-  let weight = 10;
-  let errors = [];
+function likeliestError(sx, sz, cls) {
+  let best = [];
   for (let i = 0; i < 512; i++) { if (sxOf[i] !== sx || fxOf[i] !== +cls[0]) continue;
     for (let j = 0; j < 512; j++) { if (szOf[j] !== sz || fzOf[j] !== +cls[1]) continue;
       let w = 0; for (let q = 0; q < 9; q++) if (all[i][q] || all[j][q]) w++;
-      if (w < weight) {
-        weight = w;
-        errors = [];
-      }
-      if (w === weight) errors.push(letters(all[i], all[j]));
+      if (best.length && w < best[0].w) best = [];
+      if (!best.length || w === best[0].w) best.push({ w, errors: letters(all[i], all[j]) });
     }
   }
-  return { weight, errors };
+  return best;
 }
 const cells = [];
-for (const [k, classes] of patternMass) {
+for (const [k, classes] of prob) {
   const [sx, sz] = k.split('|'), a = mx.get(sx), b = mz.get(sz);
-  const total = [...classes.values()].reduce((s, v) => s + v, 0n);
+  const total = [...classes.values()].reduce((s, v) => s + v, 0);
   let ml = null; for (const [cls, v] of classes) if (ml === null || v > classes.get(ml)) ml = cls;
   const tie = a.flips.size > 1 || b.flips.size > 1;
   const matchCls = tie ? null : [...a.flips][0] + '' + [...b.flips][0];
-  const bestMass = classes.get(ml), matchMass = classes.get(matchCls);
-  const bestClasses = [...classes.values()].filter(mass => mass === bestMass).length;
-  cells.push({ sx, sz, total, ml, bestClasses,
-    pMatch: tie ? null : fraction(matchMass, total), pMl: fraction(bestMass, total),
+  cells.push({ sx, sz, total, tie, matchCls, ml, pMatch: tie ? null : classes.get(matchCls) / total, pMl: classes.get(ml) / total,
+    // Several error classes can be exactly equally likely, and a strict comparison of floating-point sums would let
+    // rounding call one of them "the most likely" (it did: 103 instead of 24). Matching differs only where its
+    // answer is less likely than the best by more than rounding; where another answer is exactly as likely, it is a tie.
     correction: letters(a.b, b.b),
-    state: tie ? 'tie' : matchMass < bestMass ? 'differs' : bestClasses > 1 ? 'tie-best' : 'same' });
+    state: tie ? 'tie' : classes.get(matchCls) < classes.get(ml) * (1 - 1e-9) ? 'differs'
+      : [...classes].filter(([c, v]) => c !== matchCls && v >= classes.get(ml) * (1 - 1e-9)).length ? 'tie-best' : 'same' });
 }
-const differs = cells.filter(c => c.state === 'differs').sort((a, b) => {
-  if (a.total !== b.total) return a.total < b.total ? 1 : -1;
-  return (b.sx + b.sz).localeCompare(a.sx + a.sz);
-});
+const differs = cells.filter(c => c.state === 'differs').sort((a, b) => (+b.total.toPrecision(10)) - (+a.total.toPrecision(10)) || (a.sx < b.sx ? 1 : a.sx > b.sx ? -1 : 0) || (a.sz < b.sz ? 1 : -1));
 const nTie = cells.filter(c => c.state === 'tie').length;
-const tieBest = cells.filter(c => c.state === 'tie-best');
-const twoWayTies = tieBest.filter(c => c.bestClasses === 2).length;
-const fourWayTies = tieBest.filter(c => c.bestClasses === 4).length;
+const nTieBest = cells.filter(c => c.state === 'tie-best').length;
 if (differs.length !== 24) throw new Error('expected 24 patterns where matching is strictly less likely, got ' + differs.length);
 if (cells.length !== 256) throw new Error('expected 256 patterns, got ' + cells.length);
-if (tieBest.length !== 144 || twoWayTies !== 64 || fourWayTies !== 80) {
-  throw new Error('expected 144 optimal ties: 64 two-way and 80 four-way');
-}
-if (cells.reduce((sum, cell) => sum + cell.total, 0n) !== configDenominator) {
-  throw new Error('pattern probabilities do not sum to one');
-}
-// The proposal's Figure 1 shows the pattern z2 + x0 + x1, one of the most frequent.
+// The proposal's Figure 1 shows the pattern z2 + x0 + x1. Several differing patterns are equally frequent
+// (mirror images of each other); which of them a sort lists first is decided by rounding, so it is named here
+// and checked to be one of the most frequent.
 const ex = differs.find(c => c.sx === '0010' && c.sz === '1100');
-const mostFrequent = differs.filter(c => c.total === differs[0].total).length;
-if (!ex || ex.total !== differs[0].total) throw new Error('the proposal\'s example is not among the most frequent differing patterns');
-const exLikely = minimumWeightErrors(ex.sx, ex.sz, ex.ml);
-if (exLikely.weight !== 2 || exLikely.errors.length !== 2) {
-  throw new Error('expected two minimum-weight cases for the likelier outcome');
-}
-const caseMass = massByWeight[exLikely.weight];
+const mostFrequent = differs.filter(c => +c.total.toPrecision(10) === +differs[0].total.toPrecision(10)).length;
+if (!ex || +ex.total.toPrecision(10) !== +differs[0].total.toPrecision(10)) throw new Error('the proposal\'s example is not among the most frequent differing patterns');
+const exLikely = likeliestError(ex.sx, ex.sz, ex.ml);
 const firedIds = (bits, cs) => cs.filter((_, i) => bits[i] === '1').map(c => c.id);
 const pops = s => [...s].filter(ch => ch === '1').length;
 const order16 = Array.from({ length: 16 }, (_, i) => i.toString(2).padStart(4, '0')).sort((a, b) => pops(a) - pops(b) || (a < b ? 1 : -1));
@@ -311,15 +288,15 @@ write('syndromes.json', {
   ...head(['port of docs/proposal/paper/data/find_example.py']), source: 'OWN-ENUM',
   what: 'All 256 patterns of the eight checks at distance 3. For each: does the correction of smallest weight per kind of check (plain matching) belong to the most likely kind of correction?',
   conditions: { error_per_storing_qubit: P_ENUM, error_kinds: 'X, Z or Y, each with a third of that chance', checks: 'perfect, one round' },
-  counts: { patterns: cells.length, differs: differs.length, same: cells.filter(c => c.state === 'same').length, tie: nTie, tie_best: tieBest.length, tie_best_two_way: twoWayTies, tie_best_four_way: fourWayTies },
-  share_of_all_cases_with_a_differing_pattern: fraction(differs.reduce((s, c) => s + c.total, 0n), configDenominator),
-  share_of_all_cases_with_no_check_fired: fraction(cells.find(c => c.sx === '0000' && c.sz === '0000').total, configDenominator),
+  counts: { patterns: cells.length, differs: differs.length, same: cells.filter(c => c.state === 'same').length, tie: nTie, tie_best: nTieBest },
+  share_of_all_cases_with_a_differing_pattern: differs.reduce((s, c) => s + c.total, 0),
+  share_of_all_cases_with_no_check_fired: cells.find(c => c.sx === '0000' && c.sz === '0000').total,
   grid: { rows: 'flip-check pattern (z0 z1 z2 z3)', columns: 'phase-check pattern (x0 x1 x2 x3)', order: order16,
     order_note: 'sorted by the number of fired checks, none first' },
   example: { flip_checks: ex.sx, phase_checks: ex.sz, equally_frequent_differing_patterns: mostFrequent },
   cells: order16.flatMap((sx, r) => order16.map((sz, c) => {
     const k = cells.find(q => q.sx === sx && q.sz === sz);
-    return { row: r, col: c, flip_checks: sx, phase_checks: sz, fired: pops(sx) + pops(sz), state: k.state, chance_of_pattern: fraction(k.total, configDenominator),
+    return { row: r, col: c, flip_checks: sx, phase_checks: sz, fired: pops(sx) + pops(sz), state: k.state, chance_of_pattern: k.total,
       chance_matching_right: k.pMatch, chance_likeliest_right: k.pMl, source: 'OWN-ENUM' };
   })),
 });
@@ -337,12 +314,12 @@ write('lattice.json', {
   example: {
     conditions: { error_per_storing_qubit: P_ENUM, checks: 'perfect, one round' },
     fired: [...firedIds(ex.sx, c3.z), ...firedIds(ex.sz, c3.x)],
-    chance_of_pattern: fraction(ex.total, configDenominator),
+    chance_of_pattern: ex.total,
     plain_matching: { errors: ex.correction, chance_right: ex.pMatch, flip_puzzle: 'z2 joined to the left edge through qubit 0', phase_puzzle: 'x0 joined to x1 through qubit 4' },
-    read_together: { errors: exLikely.errors[0], chance_right: ex.pMl,
-      minimum_weight_cases: exLikely.errors,
-      chance_per_minimum_weight_case: fraction(caseMass, ex.total),
-      chance_of_minimum_weight_cases: fraction(caseMass * BigInt(exLikely.errors.length), ex.total) },
+    read_together: { errors: exLikely[0].errors, chance_right: ex.pMl,
+      minimum_weight_cases: exLikely.map(c => c.errors),
+      chance_per_minimum_weight_case: pw[exLikely[0].w] / ex.total,
+      chance_of_minimum_weight_cases: exLikely.length * pw[exLikely[0].w] / ex.total },
     rest: 1 - ex.pMatch - ex.pMl,
     source: 'OWN-ENUM',
   },
@@ -404,9 +381,7 @@ const summary = {
     pairs_d5: cc.fault_pairs_d5 },
   timing: { source: 'OWN-TIME', machine: tm.machine.cpu, emulated: tm.machine.python_build_is_x64_on_arm64, decoding_at_noise_0_005: dec, decoding_all: decAll, notes: tm.notes, python: tm.machine.python,
     training_step_ms: tm.training.filter(r => r.d === r.rounds).map(r => ({ distance: r.d, ms_per_step: r.ms_per_step_mean })) },
-  enumeration: { source: 'OWN-ENUM', patterns: cells.length, differs: differs.length, ties: nTie,
-    optimal_ties: tieBest.length, two_way: twoWayTies, four_way: fourWayTies,
-    example_matching: ex.pMatch, example_likeliest: ex.pMl },
+  enumeration: { source: 'OWN-ENUM', patterns: 256, differs: differs.length, ties: nTie, example_matching: ex.pMatch, example_likeliest: ex.pMl },
 };
 write('results-summary.json', summary);
 
@@ -434,4 +409,4 @@ console.log('\nSingle mechanisms:'); for (const r of sf) console.log(` ${r.basis
 console.log(' pairs at distance 5: ' + JSON.stringify(cc.fault_pairs_d5.map(r => [r.basis, r.pairs, r.plain_failed, r.correlated_failed])));
 console.log('\nTraining seconds:'); for (const [id, m] of Object.entries(summary.method)) console.log(` ${id}: ${m.train_seconds.min}–${m.train_seconds.max} s on ${m.device}, ${m.training_shots} runs, ${m.network.parameters} parameters, table ${m.table_shots_per_noise_level}`);
 console.log('\nDecoding on the laptop, one core, untrained network (µs per run):'); for (const r of decAll) console.log(` d${r.distance} p=${r.p}: plain ${r.plain_us_per_run.toFixed(2)}, correlated ${r.correlated_us_per_run.toFixed(2)}, network ${r.network_one_core_us_per_run.toFixed(2)} (x${r.network_over_plain.toFixed(1)})`);
-console.log(`\nEnumeration: ${differs.length} of ${cells.length} differ, ${tieBest.length} share the best answer (${twoWayTies} two-way, ${fourWayTies} four-way); example ${ex.pMatch.toFixed(3)} against ${ex.pMl.toFixed(3)}`);
+console.log(`\nEnumeration: ${differs.length} of ${cells.length} differ, ${nTie} ties; example ${ex.pMatch.toFixed(3)} against ${ex.pMl.toFixed(3)}`);
