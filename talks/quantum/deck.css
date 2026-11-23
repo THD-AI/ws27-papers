@@ -7,7 +7,9 @@
 html, body { margin: 0; background: #2A2C31; height: 100%; }
 #deck { position: fixed; inset: 0; overflow: hidden; }
 .page { width: 1920px; height: 1080px; background: var(--paper); color: var(--ink); position: absolute; left: 50%; top: 50%; transform-origin: center center; }
-.page svg { display: block; width: 1920px; height: 1080px; }
+.page > svg { display: block; width: 1920px; height: 1080px; }
+.page > svg.ink { position: absolute; left: 0; top: 0; pointer-events: none; }
+.page { overflow: hidden; }
 #notes { position: fixed; left: 0; right: 0; bottom: 0; max-height: 34vh; overflow: auto; background: #FBFBFC; color: #15171C;
   font: 18px/1.5 'Libre Franklin', Arial, sans-serif; padding: 16px 28px; box-shadow: 0 -1px 0 #DADDE3; }
 #notes b { font-weight: 600; }

@@ -127,3 +127,68 @@ export function backup(svg, s, o = {}) {
   }
   return y;
 }
+
+// ---------------------------------------------------------------------------
+// The article's own figures on a slide (his rule of 23 November: the deck's
+// visuals must be the article's, which he approved). A figure module from
+// articles/other-half/figures is mounted into a box on the page and set to
+// the end of one of its steps; reduced motion, so nothing idles.
+// Returns the box and the scale from the figure's own units to the page, so
+// hand strokes can be laid over exact points of the figure.
+const FIG_CSS = { '--ink': C.ink, '--paper': C.paper, '--muted': C.muted, '--hairline': C.hair, '--accent': C.accent, '--field': C.field };
+export function articleFigure(page, mod, step, box, data, o = {}) {
+  const layout = o.layout || 'wide';
+  // Mounted at a narrow width and scaled up: the figure's own lettering floor
+  // (lib/fig.js, 11.5 px on screen, 9 on paper) then lands at about 32 px on
+  // the slide, the deck's floor, while the drawing keeps the article's look.
+  const paper = document.documentElement.classList.contains('is-print');
+  const k = (o.textPx || 32) / (paper ? 9 : 11.5);
+  const el = document.createElement('div');
+  el.className = 'article-figure';
+  Object.assign(el.style, { position: 'absolute', left: `${box.x}px`, top: `${box.y}px`, width: `${box.w / k}px`, transform: `scale(${k})`, transformOrigin: '0 0' });
+  page.appendChild(el);
+  const h = mod.default(el, { layout, print: false, reduced: true, data, css: (n) => FIG_CSS[n] || '', where: o.where || 'scene' });
+  if (h && h.set) h.set(step, 1);
+  const vb = el.querySelector('svg').viewBox.baseVal;
+  // fit the height too: a tall figure is scaled down (its lettering with it)
+  const maxH = o.maxH || 960 - box.y, fullH = box.w * (vb.height / vb.width);
+  if (fullH > maxH) {
+    const f = maxH / fullH, w2 = box.w * f;
+    el.style.transform = `scale(${k * f})`;
+    el.style.left = `${box.x + (box.w - w2) / 2}px`;
+    box = { ...box, x: box.x + (box.w - w2) / 2, w: w2 };
+  }
+  return { el, k: box.w / vb.width, x: box.x, y: box.y, h: box.w * (vb.height / vb.width), at: (fx, fy) => [box.x + fx * (box.w / vb.width), box.y + fy * (box.w / vb.width)] };
+}
+
+// ---------------------------------------------------------------------------
+// Hand strokes, as Excalidraw draws them (rough.js, the library Excalidraw
+// uses): an ink layer above everything else on the page. Colours from
+// Excalidraw's own stroke palette where a mark needs one.
+import rough from '../../lib/vendor/rough.esm.js';
+export const PEN = { ink: '#1e1e1e', red: '#e03131', green: '#2f9e44', blue: '#1971c2', orange: '#f08c00' };
+export function inkLayer(page) {
+  const svg = h('svg', { viewBox: '0 0 1920 1080', width: 1920, height: 1080, class: 'ink' });
+  Object.assign(svg.style, { position: 'absolute', left: 0, top: 0, pointerEvents: 'none' });
+  page.appendChild(svg);
+  const rc = rough.svg(svg);
+  const base = (o) => ({ roughness: 1.6, bowing: 1.2, strokeWidth: 3, stroke: PEN.ink, seed: o.seed || 7, ...o });
+  const api = {
+    svg,
+    line: (x1, y1, x2, y2, o = {}) => svg.appendChild(rc.line(x1, y1, x2, y2, base(o))),
+    curve: (pts, o = {}) => svg.appendChild(rc.curve(pts, base(o))),
+    ellipse: (cx, cy, w, hh, o = {}) => svg.appendChild(rc.ellipse(cx, cy, w, hh, base(o))),
+    rect: (x, y, w, hh, o = {}) => svg.appendChild(rc.rectangle(x, y, w, hh, base(o))),
+    // an arrow: a curved shaft through a middle point and an open two-stroke head
+    arrow(pts, o = {}) {
+      const shaft = pts.length > 2 ? rc.curve(pts, base(o)) : rc.line(pts[0][0], pts[0][1], pts[1][0], pts[1][1], base(o));
+      svg.appendChild(shaft);
+      const [ax, ay] = pts[pts.length - 2], [bx, by] = pts[pts.length - 1];
+      const a = Math.atan2(by - ay, bx - ax), L0 = o.head || 30, sp = 0.45;
+      [a + Math.PI - sp, a + Math.PI + sp].forEach((t, i) => svg.appendChild(rc.line(bx, by, bx + L0 * Math.cos(t), by + L0 * Math.sin(t), base({ ...o, seed: (o.seed || 7) + i + 1 }))));
+    },
+    // a handwritten note in Virgil, Excalidraw's own face
+    note: (x, y, s, o = {}) => T(svg, x, y, s, { family: 'virgil', size: 34, fill: o.color || PEN.ink, ...o }),
+  };
+  return api;
+}
