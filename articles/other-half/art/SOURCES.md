@@ -1,11 +1,11 @@
 # The opening drawing
 
-`hero-line.png` and `hero-field.png` are the two layers of one drawing: the pen line, and the one colour field behind it. Both are 1536 × 1024 px with a transparent background. They are unchanged copies of `scenes/other-half/layers/whole-line.png` and `whole-field.png` in the Paper Studio (`PROJECTS/21-Paper-Studio`), copied on 16 November 2026.
+`hero-line.png` and `hero-field.png` are the two layers of one drawing: the pen line, and the one colour field behind it. Both are 1536 × 1024 px with a transparent background. They are unchanged copies of `scenes/other-half/layers/whole-line.png` and `whole-field.png` in the Paper Studio (`PROJECTS/21-Paper-Studio`), copied on 16 November 2026. On 23 November 2026 the field's knock-outs of the pen line were closed (a morphological closing of its alpha, radius 6 px, `PROJECTS/21-Paper-Studio/forge/close-field.cjs`), so the field no longer shows a white ghost of the line where the two layers drift apart on scroll.
 
 | File | SHA-256 |
 | --- | --- |
 | `hero-line.png` | `c0dd67ed0e68880006f599dd849675aab26618784b1a77c3e4ee4f6db9c97f03` |
-| `hero-field.png` | `854d2843295b252985cc514d054d08a70969c99ddf614fcb458db2951f95387f` |
+| `hero-field.png` | `5c52f8bd50e0bf45a6c03536d3350cb3919fbc4b6d028309a1b85ffe6237c7ea` |
 
 ## How it was made
 

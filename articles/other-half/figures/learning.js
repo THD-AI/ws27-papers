@@ -210,7 +210,7 @@ function build(el, ctx) {
   if (!tall) {
     // rotated axis title, centred on the plate, its letters 10 units clear
     // of the drawing's left edge so that no frame crops it
-    const rot = g(tg, { transform: `translate(21 ${R.y + R.h / 2}) rotate(-90)`, 'data-audit': 'skip' });
+    const rot = g(tg, { transform: `translate(11 ${R.y + R.h / 2}) rotate(-90)`, 'data-audit': 'skip' });
     text(rot, 0, 0, 'share of runs in which the decoder was wrong', { family: 'sans', size: 12, fill: C.muted, anchor: 'middle' });
   }
   st.fade(fr, 0, 0.12, [1.14, 1.2]).fade(fr5, 1.18, 1.26).fade(tg, 0, 0.12);
