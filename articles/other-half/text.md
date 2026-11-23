@@ -43,11 +43,13 @@ In the scheme we studied, the surface code, the qubits sit on a square grid, and
 
 ## 3. Asking without looking
 
-Only about half of the qubits store anything. The rest are helpers, each sitting between two or four storing qubits. The smallest grid, distance 3, has 9 storing qubits and 8 helpers, 17 in all. Distance 5 has 49 qubits, and distance 7 has 97. {{OWN-ARITH GQA-2024}}
-
 :::margin qubits 2
 
+Only about half of the qubits store anything. The rest are helpers, each sitting between two or four storing qubits. The smallest grid, distance 3, has 9 storing qubits and 8 helpers, 17 in all. Distance 5 has 49 qubits, and distance 7 has 97. {{OWN-ARITH GQA-2024}}
+
 Once every round, each helper interacts with its neighbours and is measured. One bit comes out. It doesn't say what state any neighbour is in – only whether the number of errors among those neighbours is even or odd. That answer is the same whatever is stored. So measuring it leaves the stored information alone.
+
+:::margin qubits 3
 
 These questions are called **checks**. While nothing goes wrong, a check gives the same answer round after round. When a qubit next to it is hit, the answer changes, and we say the check **fires**.
 
@@ -55,17 +57,24 @@ Two kinds of error can hit a qubit. A flip swaps 0 and 1, as in an ordinary bit.
 
 A check can also just report wrongly. Then it fires twice in a row, once when the wrong answer appears and once when the right one returns, although no storing qubit was hit. So a single round is never enough. The checks must be read as a sequence.
 
-:::margin qubits 3
-
 ## 4. A film of hints
 
+:::scene film
+
+@caption What leaves the chip, every round, is each check's answer; drawn here as the opening drawing's cable, a strip of film. An ordinary computer compares each round with the one before, and in each frame a lit point is a check of the distance-7 grid (48 checks) whose answer changed: blue for checks on flips, black for checks on phase errors. Simulated: distance 7, a 0.5% chance of error per operation, chosen so the inner checks fire as often as on Google's chip: 8.6% of rounds here, 8.7% in Google's report of 2024. Shown far slower than real time.
+
+@step 0
 One round of checks takes 1.1 millionths of a second, and a grid of distance 7 has 48 checks. In the time of one blink the chip gets through about ninety thousand rounds and puts out about four million check results, for a single logical qubit. {{GQA-2024 OWN-ARITH}}
 
+@step 1
 While the computer runs, that stream is all that comes out of it. We ended up thinking of it as a film in which a few points light up in every frame.
 
+@step 2
 The fired checks say roughly where something happened and which kind of error it was. They don't say which qubits were hit. Many sets of errors light up the same points.
 
-:::margin qubits 4
+:::
+
+:::margin qubits off
 
 ## 5. The decoder, and the one mistake that matters
 
@@ -121,7 +130,7 @@ Real chips add trouble of the same sort: errors that hit two neighbouring qubits
 
 Google first showed, in 2023, a grid of distance 5 that beat distance 3, but only just. A year later, on a new chip, the errors were finally below the threshold – the error rate from section 2 under which bigger grids win – and the effect was clear. Each step from distance 3 to 5 to 7 cut the rate of logical errors roughly in half. At distance 7 the logical qubit lasted more than twice as long as the best single qubit on the chip. {{GQA-2023 GQA-2024}}
 
-:::margin qubits 5
+:::margin qubits 4
 
 The factor by which the error shrinks per step is written **Λ** (lambda), and it decides how big a useful machine has to be. With Λ near 2, halving the error once more means going from distance 7 to distance 9: from 97 qubits to 161. {{GQA-2024 OWN-ARITH}} That one halving costs 64 more qubits.
 

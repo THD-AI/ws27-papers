@@ -89,13 +89,18 @@ export function grid(parent, o) {
   const half = ((d - 1) / 2) * pitch;
   const pos = (q) => [cx - half + (q % d) * pitch, cy - half + Math.floor(q / d) * pitch];
   const root = g(parent);
-  const gT = g(root), gF = g(root), gH = g(root), gQ = g(root), gE = g(root);
+  // the fired field lies under the tile's own tint, so a fired check still
+  // shows its kind (flips tinted, phase errors open)
+  const gF = g(root), gT = g(root), gH = g(root), gQ = g(root), gE = g(root);
+  // lines thin with the pitch below about 20 px, so a small grid does not
+  // turn into black beads; at main's sizes nothing changes
+  const sw = Math.min(1.25, Math.max(0.7, pitch * 0.062)), swThin = Math.min(0.7, Math.max(0.45, pitch * 0.035));
   const tiles = {};
   checks.forEach((ch, i) => {
     const t = tile(ch, pos), flips = ch.asks_about === 'flips';
     const base = path(gT, t.d, {
       fill: flips ? C.ink : 'none', 'fill-opacity': flips ? 0.075 : null,
-      stroke: C.muted, 'stroke-width': flips ? 0.7 : 1.25, 'stroke-opacity': flips ? 0.75 : 0.6, 'stroke-linejoin': 'round',
+      stroke: C.muted, 'stroke-width': flips ? swThin : sw, 'stroke-opacity': flips ? 0.75 : 0.6, 'stroke-linejoin': 'round',
     });
     const field = path(gF, t.d, { fill: C.field, stroke: C.accent, 'stroke-width': 1, 'stroke-linejoin': 'round', 'data-audit': 'skip' });
     const helper = hr ? circle(gH, t.c[0], t.c[1], hr, { fill: C.ink }) : null;
@@ -106,6 +111,9 @@ export function grid(parent, o) {
       setFired(p) {
         const on = p > 0.001;
         field.style.display = on ? '' : 'none'; dot.style.display = on ? '' : 'none';
+        // a fired check on flips darkens its tint, so its kind still reads
+        // through the field (0.26 against 0.075 when quiet; still legible on phones)
+        if (flips) base.setAttribute('fill-opacity', on ? '0.26' : '0.075');
         if (!on) return;
         field.style.opacity = p >= 0.999 ? '' : p.toFixed(3);
         dot.style.opacity = p >= 0.999 ? '' : p.toFixed(3);
@@ -115,7 +123,7 @@ export function grid(parent, o) {
   const qubits = [];
   for (let q = 0; q < d * d; q++) {
     const [x, y] = pos(q);
-    qubits.push({ q, x, y, el: circle(gQ, x, y, qr, { fill: C.paper, stroke: C.ink, 'stroke-width': 1.25 }) });
+    qubits.push({ q, x, y, el: circle(gQ, x, y, qr, { fill: C.paper, stroke: C.ink, 'stroke-width': sw }) });
   }
   return { root, pos, tiles, qubits, qr, gT, gF, gH, gQ, gE, half, pitch };
 }
