@@ -16,12 +16,10 @@
   "differs": 24,
   "same": 88,
   "tie": 0,
-  "tie_best": 144,
-  "tie_best_two_way": 64,
-  "tie_best_four_way": 80
+  "tie_best": 144
  },
- "share_of_all_cases_with_a_differing_pattern": 0.00883722441091297,
- "share_of_all_cases_with_no_check_fired": 0.6311085335299497,
+ "share_of_all_cases_with_a_differing_pattern": 0.008837224410912945,
+ "share_of_all_cases_with_no_check_fired": 0.63110853352995,
  "grid": {
   "rows": "flip-check pattern (z0 z1 z2 z3)",
   "columns": "phase-check pattern (x0 x1 x2 x3)",
@@ -58,7 +56,7 @@
    "phase_checks": "0000",
    "fired": 0,
    "state": "same",
-   "chance_of_pattern": 0.6311085335299497,
+   "chance_of_pattern": 0.63110853352995,
    "chance_matching_right": 0.9998702630108898,
    "chance_likeliest_right": 0.9998702630108898,
    "source": "OWN-ENUM"
@@ -70,9 +68,9 @@
    "phase_checks": "1000",
    "fired": 1,
    "state": "same",
-   "chance_of_pattern": 0.02293494808870599,
-   "chance_matching_right": 0.9654053452469508,
-   "chance_likeliest_right": 0.9654053452469508,
+   "chance_of_pattern": 0.022934948088705963,
+   "chance_matching_right": 0.9654053452469509,
+   "chance_likeliest_right": 0.9654053452469509,
    "source": "OWN-ENUM"
   },
   {
@@ -82,9 +80,9 @@
    "phase_checks": "0100",
    "fired": 1,
    "state": "same",
-   "chance_of_pattern": 0.02293494808870599,
-   "chance_matching_right": 0.9654053452469508,
-   "chance_likeliest_right": 0.9654053452469508,
+   "chance_of_pattern": 0.02293494808870597,
+   "chance_matching_right": 0.9654053452469509,
+   "chance_likeliest_right": 0.9654053452469509,
    "source": "OWN-ENUM"
   },
   {
@@ -94,9 +92,9 @@
    "phase_checks": "0010",
    "fired": 1,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
-   "chance_matching_right": 0.9648021948963988,
-   "chance_likeliest_right": 0.9648021948963988,
+   "chance_of_pattern": 0.011679553837829518,
+   "chance_matching_right": 0.964802194896399,
+   "chance_likeliest_right": 0.964802194896399,
    "source": "OWN-ENUM"
   },
   {
@@ -106,9 +104,9 @@
    "phase_checks": "0001",
    "fired": 1,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
-   "chance_matching_right": 0.9648021948963988,
-   "chance_likeliest_right": 0.9648021948963988,
+   "chance_of_pattern": 0.011679553837829518,
+   "chance_matching_right": 0.964802194896399,
+   "chance_likeliest_right": 0.964802194896399,
    "source": "OWN-ENUM"
   },
   {
@@ -118,9 +116,9 @@
    "phase_checks": "1100",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.011891094627343392,
-   "chance_matching_right": 0.9333326802979881,
-   "chance_likeliest_right": 0.9333326802979881,
+   "chance_of_pattern": 0.011891094627343323,
+   "chance_matching_right": 0.9333326802979878,
+   "chance_likeliest_right": 0.9333326802979878,
    "source": "OWN-ENUM"
   },
   {
@@ -130,9 +128,9 @@
    "phase_checks": "1010",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
-   "chance_matching_right": 0.9648021948963988,
-   "chance_likeliest_right": 0.9648021948963988,
+   "chance_of_pattern": 0.011679553837829518,
+   "chance_matching_right": 0.964802194896399,
+   "chance_likeliest_right": 0.964802194896399,
    "source": "OWN-ENUM"
   },
   {
@@ -142,9 +140,9 @@
    "phase_checks": "1001",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670005,
+   "chance_matching_right": 0.932767367629356,
+   "chance_likeliest_right": 0.932767367629356,
    "source": "OWN-ENUM"
   },
   {
@@ -154,9 +152,9 @@
    "phase_checks": "0110",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670005,
+   "chance_matching_right": 0.932767367629356,
+   "chance_likeliest_right": 0.932767367629356,
    "source": "OWN-ENUM"
   },
   {
@@ -166,9 +164,9 @@
    "phase_checks": "0101",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
-   "chance_matching_right": 0.9648021948963988,
-   "chance_likeliest_right": 0.9648021948963988,
+   "chance_of_pattern": 0.011679553837829518,
+   "chance_matching_right": 0.964802194896399,
+   "chance_likeliest_right": 0.964802194896399,
    "source": "OWN-ENUM"
   },
   {
@@ -178,9 +176,9 @@
    "phase_checks": "0011",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.000227190490778844,
+   "chance_matching_right": 0.8868157856628349,
+   "chance_likeliest_right": 0.8868157856628349,
    "source": "OWN-ENUM"
   },
   {
@@ -190,9 +188,9 @@
    "phase_checks": "1110",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670006,
+   "chance_matching_right": 0.932767367629356,
+   "chance_likeliest_right": 0.932767367629356,
    "source": "OWN-ENUM"
   },
   {
@@ -202,9 +200,9 @@
    "phase_checks": "1101",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670005,
+   "chance_matching_right": 0.932767367629356,
+   "chance_likeliest_right": 0.932767367629356,
    "source": "OWN-ENUM"
   },
   {
@@ -214,9 +212,9 @@
    "phase_checks": "1011",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884397,
+   "chance_matching_right": 0.8868157856628349,
+   "chance_likeliest_right": 0.8868157856628349,
    "source": "OWN-ENUM"
   },
   {
@@ -226,9 +224,9 @@
    "phase_checks": "0111",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.000227190490778844,
+   "chance_matching_right": 0.8868157856628349,
+   "chance_likeliest_right": 0.8868157856628349,
    "source": "OWN-ENUM"
   },
   {
@@ -238,9 +236,9 @@
    "phase_checks": "1111",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884397,
+   "chance_matching_right": 0.8868157856628349,
+   "chance_likeliest_right": 0.8868157856628349,
    "source": "OWN-ENUM"
   },
   {
@@ -250,9 +248,9 @@
    "phase_checks": "0000",
    "fired": 1,
    "state": "same",
-   "chance_of_pattern": 0.02293494808870599,
-   "chance_matching_right": 0.9654053452469508,
-   "chance_likeliest_right": 0.9654053452469508,
+   "chance_of_pattern": 0.022934948088705956,
+   "chance_matching_right": 0.9654053452469509,
+   "chance_likeliest_right": 0.9654053452469509,
    "source": "OWN-ENUM"
   },
   {
@@ -262,9 +260,9 @@
    "phase_checks": "1000",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.001241179358329523,
-   "chance_matching_right": 0.6312461121604908,
-   "chance_likeliest_right": 0.6312461121604908,
+   "chance_of_pattern": 0.00124117935832952,
+   "chance_matching_right": 0.6312461121604911,
+   "chance_likeliest_right": 0.6312461121604911,
    "source": "OWN-ENUM"
   },
   {
@@ -274,9 +272,9 @@
    "phase_checks": "0100",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.001241179358329523,
-   "chance_matching_right": 0.6312461121604908,
-   "chance_likeliest_right": 0.6312461121604908,
+   "chance_of_pattern": 0.0012411793583295197,
+   "chance_matching_right": 0.631246112160491,
+   "chance_likeliest_right": 0.631246112160491,
    "source": "OWN-ENUM"
   },
   {
@@ -286,9 +284,9 @@
    "phase_checks": "0010",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
-   "chance_matching_right": 0.9648021948963988,
-   "chance_likeliest_right": 0.9648021948963988,
+   "chance_of_pattern": 0.011679553837829522,
+   "chance_matching_right": 0.9648021948963986,
+   "chance_likeliest_right": 0.9648021948963986,
    "source": "OWN-ENUM"
   },
   {
@@ -298,9 +296,9 @@
    "phase_checks": "0001",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.6221838324894762,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.000635700376467,
+   "chance_matching_right": 0.6221838324894758,
+   "chance_likeliest_right": 0.6221838324894758,
    "source": "OWN-ENUM"
   },
   {
@@ -310,9 +308,9 @@
    "phase_checks": "1100",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.0008472411659807956,
-   "chance_matching_right": 0.48303644598561607,
-   "chance_likeliest_right": 0.48303644598561607,
+   "chance_of_pattern": 0.0008472411659807927,
+   "chance_matching_right": 0.48303644598561596,
+   "chance_likeliest_right": 0.48303644598561596,
    "source": "OWN-ENUM"
   },
   {
@@ -322,7 +320,7 @@
    "phase_checks": "1010",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
+   "chance_of_pattern": 0.011679553837829539,
    "chance_matching_right": 0.9648021948963988,
    "chance_likeliest_right": 0.9648021948963988,
    "source": "OWN-ENUM"
@@ -334,9 +332,9 @@
    "phase_checks": "1001",
    "fired": 3,
    "state": "differs",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.0880254035243988,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.00024176218411827411,
+   "chance_matching_right": 0.08802540352439922,
+   "chance_likeliest_right": 0.8484330899727298,
    "source": "OWN-ENUM"
   },
   {
@@ -346,9 +344,9 @@
    "phase_checks": "0110",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670004,
+   "chance_matching_right": 0.932767367629356,
+   "chance_likeliest_right": 0.932767367629356,
    "source": "OWN-ENUM"
   },
   {
@@ -358,9 +356,9 @@
    "phase_checks": "0101",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.6221838324894762,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.0006357003764669999,
+   "chance_matching_right": 0.622183832489476,
+   "chance_likeliest_right": 0.622183832489476,
    "source": "OWN-ENUM"
   },
   {
@@ -370,9 +368,9 @@
    "phase_checks": "0011",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.000227190490778844,
+   "chance_matching_right": 0.8868157856628349,
+   "chance_likeliest_right": 0.8868157856628349,
    "source": "OWN-ENUM"
   },
   {
@@ -382,9 +380,9 @@
    "phase_checks": "1110",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670006,
+   "chance_matching_right": 0.932767367629356,
+   "chance_likeliest_right": 0.932767367629356,
    "source": "OWN-ENUM"
   },
   {
@@ -394,9 +392,9 @@
    "phase_checks": "1101",
    "fired": 4,
    "state": "differs",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.0880254035243988,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.00024176218411827414,
+   "chance_matching_right": 0.0880254035243992,
+   "chance_likeliest_right": 0.8484330899727298,
    "source": "OWN-ENUM"
   },
   {
@@ -406,9 +404,9 @@
    "phase_checks": "1011",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.0002271904907788441,
+   "chance_matching_right": 0.886815785662835,
+   "chance_likeliest_right": 0.886815785662835,
    "source": "OWN-ENUM"
   },
   {
@@ -418,9 +416,9 @@
    "phase_checks": "0111",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.000227190490778844,
+   "chance_matching_right": 0.8868157856628349,
+   "chance_likeliest_right": 0.8868157856628349,
    "source": "OWN-ENUM"
   },
   {
@@ -430,9 +428,9 @@
    "phase_checks": "1111",
    "fired": 5,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.0002271904907788441,
+   "chance_matching_right": 0.886815785662835,
+   "chance_likeliest_right": 0.886815785662835,
    "source": "OWN-ENUM"
   },
   {
@@ -442,9 +440,9 @@
    "phase_checks": "0000",
    "fired": 1,
    "state": "same",
-   "chance_of_pattern": 0.02293494808870599,
-   "chance_matching_right": 0.9654053452469508,
-   "chance_likeliest_right": 0.9654053452469508,
+   "chance_of_pattern": 0.02293494808870597,
+   "chance_matching_right": 0.9654053452469509,
+   "chance_likeliest_right": 0.9654053452469509,
    "source": "OWN-ENUM"
   },
   {
@@ -454,9 +452,9 @@
    "phase_checks": "1000",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.001241179358329523,
-   "chance_matching_right": 0.6312461121604908,
-   "chance_likeliest_right": 0.6312461121604908,
+   "chance_of_pattern": 0.00124117935832952,
+   "chance_matching_right": 0.631246112160491,
+   "chance_likeliest_right": 0.631246112160491,
    "source": "OWN-ENUM"
   },
   {
@@ -466,9 +464,9 @@
    "phase_checks": "0100",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.001241179358329523,
-   "chance_matching_right": 0.6312461121604908,
-   "chance_likeliest_right": 0.6312461121604908,
+   "chance_of_pattern": 0.00124117935832952,
+   "chance_matching_right": 0.631246112160491,
+   "chance_likeliest_right": 0.631246112160491,
    "source": "OWN-ENUM"
   },
   {
@@ -478,9 +476,9 @@
    "phase_checks": "0010",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.6221838324894762,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.0006357003764669999,
+   "chance_matching_right": 0.6221838324894758,
+   "chance_likeliest_right": 0.6221838324894758,
    "source": "OWN-ENUM"
   },
   {
@@ -490,9 +488,9 @@
    "phase_checks": "0001",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
-   "chance_matching_right": 0.9648021948963988,
-   "chance_likeliest_right": 0.9648021948963988,
+   "chance_of_pattern": 0.011679553837829522,
+   "chance_matching_right": 0.964802194896399,
+   "chance_likeliest_right": 0.964802194896399,
    "source": "OWN-ENUM"
   },
   {
@@ -502,9 +500,9 @@
    "phase_checks": "1100",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.0008472411659807956,
-   "chance_matching_right": 0.48303644598561607,
-   "chance_likeliest_right": 0.48303644598561607,
+   "chance_of_pattern": 0.0008472411659807928,
+   "chance_matching_right": 0.48303644598561585,
+   "chance_likeliest_right": 0.48303644598561585,
    "source": "OWN-ENUM"
   },
   {
@@ -514,9 +512,9 @@
    "phase_checks": "1010",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.6221838324894762,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.0006357003764670002,
+   "chance_matching_right": 0.6221838324894756,
+   "chance_likeliest_right": 0.6221838324894756,
    "source": "OWN-ENUM"
   },
   {
@@ -526,9 +524,9 @@
    "phase_checks": "1001",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670005,
+   "chance_matching_right": 0.932767367629356,
+   "chance_likeliest_right": 0.932767367629356,
    "source": "OWN-ENUM"
   },
   {
@@ -538,9 +536,9 @@
    "phase_checks": "0110",
    "fired": 3,
    "state": "differs",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.0880254035243988,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.00024176218411827452,
+   "chance_matching_right": 0.08802540352439911,
+   "chance_likeliest_right": 0.84843308997273,
    "source": "OWN-ENUM"
   },
   {
@@ -550,9 +548,9 @@
    "phase_checks": "0101",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
-   "chance_matching_right": 0.9648021948963988,
-   "chance_likeliest_right": 0.9648021948963988,
+   "chance_of_pattern": 0.011679553837829518,
+   "chance_matching_right": 0.964802194896399,
+   "chance_likeliest_right": 0.964802194896399,
    "source": "OWN-ENUM"
   },
   {
@@ -562,9 +560,9 @@
    "phase_checks": "0011",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.000227190490778844,
+   "chance_matching_right": 0.8868157856628349,
+   "chance_likeliest_right": 0.8868157856628349,
    "source": "OWN-ENUM"
   },
   {
@@ -574,9 +572,9 @@
    "phase_checks": "1110",
    "fired": 4,
    "state": "differs",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.0880254035243988,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.00024176218411827417,
+   "chance_matching_right": 0.08802540352439925,
+   "chance_likeliest_right": 0.8484330899727298,
    "source": "OWN-ENUM"
   },
   {
@@ -586,9 +584,9 @@
    "phase_checks": "1101",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670005,
+   "chance_matching_right": 0.932767367629356,
+   "chance_likeliest_right": 0.932767367629356,
    "source": "OWN-ENUM"
   },
   {
@@ -598,9 +596,9 @@
    "phase_checks": "1011",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884397,
+   "chance_matching_right": 0.8868157856628349,
+   "chance_likeliest_right": 0.8868157856628349,
    "source": "OWN-ENUM"
   },
   {
@@ -610,9 +608,9 @@
    "phase_checks": "0111",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.000227190490778844,
+   "chance_matching_right": 0.8868157856628349,
+   "chance_likeliest_right": 0.8868157856628349,
    "source": "OWN-ENUM"
   },
   {
@@ -622,9 +620,9 @@
    "phase_checks": "1111",
    "fired": 5,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884397,
+   "chance_matching_right": 0.8868157856628349,
+   "chance_likeliest_right": 0.8868157856628349,
    "source": "OWN-ENUM"
   },
   {
@@ -634,9 +632,9 @@
    "phase_checks": "0000",
    "fired": 1,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
-   "chance_matching_right": 0.9648021948963988,
-   "chance_likeliest_right": 0.9648021948963988,
+   "chance_of_pattern": 0.011679553837829563,
+   "chance_matching_right": 0.964802194896399,
+   "chance_likeliest_right": 0.964802194896399,
    "source": "OWN-ENUM"
   },
   {
@@ -646,9 +644,9 @@
    "phase_checks": "1000",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
-   "chance_matching_right": 0.9648021948963988,
-   "chance_likeliest_right": 0.9648021948963988,
+   "chance_of_pattern": 0.011679553837829561,
+   "chance_matching_right": 0.964802194896399,
+   "chance_likeliest_right": 0.964802194896399,
    "source": "OWN-ENUM"
   },
   {
@@ -658,9 +656,9 @@
    "phase_checks": "0100",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.6221838324894762,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.000635700376467001,
+   "chance_matching_right": 0.6221838324894758,
+   "chance_likeliest_right": 0.6221838324894758,
    "source": "OWN-ENUM"
   },
   {
@@ -670,9 +668,9 @@
    "phase_checks": "0010",
    "fired": 2,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320757,
+   "chance_matching_right": 0.4827403131815274,
+   "chance_likeliest_right": 0.4827403131815274,
    "source": "OWN-ENUM"
   },
   {
@@ -682,9 +680,9 @@
    "phase_checks": "0001",
    "fired": 2,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532072,
+   "chance_matching_right": 0.482740313181528,
+   "chance_likeliest_right": 0.482740313181528,
    "source": "OWN-ENUM"
   },
   {
@@ -694,9 +692,9 @@
    "phase_checks": "1100",
    "fired": 3,
    "state": "differs",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.33299441259676127,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.000635700376467001,
+   "chance_matching_right": 0.33299441259676155,
+   "chance_likeliest_right": 0.6221838324894758,
    "source": "OWN-ENUM"
   },
   {
@@ -706,9 +704,9 @@
    "phase_checks": "1010",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320757,
+   "chance_matching_right": 0.4827403131815274,
+   "chance_likeliest_right": 0.4827403131815274,
    "source": "OWN-ENUM"
   },
   {
@@ -718,9 +716,9 @@
    "phase_checks": "1001",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320725,
+   "chance_matching_right": 0.482740313181528,
+   "chance_likeliest_right": 0.482740313181528,
    "source": "OWN-ENUM"
   },
   {
@@ -730,9 +728,9 @@
    "phase_checks": "0110",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.00003022139460448099,
+   "chance_matching_right": 0.47501025010250125,
+   "chance_likeliest_right": 0.47501025010250125,
    "source": "OWN-ENUM"
   },
   {
@@ -742,9 +740,9 @@
    "phase_checks": "0101",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320725,
+   "chance_matching_right": 0.48274031318152794,
+   "chance_likeliest_right": 0.48274031318152794,
    "source": "OWN-ENUM"
   },
   {
@@ -754,9 +752,9 @@
    "phase_checks": "0011",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.2499999999999999,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -766,9 +764,9 @@
    "phase_checks": "1110",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480992,
+   "chance_matching_right": 0.4750102501025013,
+   "chance_likeliest_right": 0.4750102501025013,
    "source": "OWN-ENUM"
   },
   {
@@ -778,9 +776,9 @@
    "phase_checks": "1101",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532072,
+   "chance_matching_right": 0.4827403131815281,
+   "chance_likeliest_right": 0.4827403131815281,
    "source": "OWN-ENUM"
   },
   {
@@ -790,9 +788,9 @@
    "phase_checks": "1011",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.2499999999999999,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -802,9 +800,9 @@
    "phase_checks": "0111",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.2499999999999999,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -814,9 +812,9 @@
    "phase_checks": "1111",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.2499999999999999,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -826,9 +824,9 @@
    "phase_checks": "0000",
    "fired": 1,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
-   "chance_matching_right": 0.9648021948963988,
-   "chance_likeliest_right": 0.9648021948963988,
+   "chance_of_pattern": 0.011679553837829518,
+   "chance_matching_right": 0.964802194896399,
+   "chance_likeliest_right": 0.964802194896399,
    "source": "OWN-ENUM"
   },
   {
@@ -838,9 +836,9 @@
    "phase_checks": "1000",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.6221838324894762,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.0006357003764669996,
+   "chance_matching_right": 0.6221838324894761,
+   "chance_likeliest_right": 0.6221838324894761,
    "source": "OWN-ENUM"
   },
   {
@@ -850,9 +848,9 @@
    "phase_checks": "0100",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
-   "chance_matching_right": 0.9648021948963988,
-   "chance_likeliest_right": 0.9648021948963988,
+   "chance_of_pattern": 0.011679553837829518,
+   "chance_matching_right": 0.964802194896399,
+   "chance_likeliest_right": 0.964802194896399,
    "source": "OWN-ENUM"
   },
   {
@@ -862,9 +860,9 @@
    "phase_checks": "0010",
    "fired": 2,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532067,
+   "chance_matching_right": 0.48274031318152727,
+   "chance_likeliest_right": 0.48274031318152727,
    "source": "OWN-ENUM"
   },
   {
@@ -874,9 +872,9 @@
    "phase_checks": "0001",
    "fired": 2,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532067,
+   "chance_matching_right": 0.48274031318152727,
+   "chance_likeliest_right": 0.48274031318152727,
    "source": "OWN-ENUM"
   },
   {
@@ -886,9 +884,9 @@
    "phase_checks": "1100",
    "fired": 3,
    "state": "differs",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.33299441259676127,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.0006357003764669996,
+   "chance_matching_right": 0.33299441259676144,
+   "chance_likeliest_right": 0.6221838324894761,
    "source": "OWN-ENUM"
   },
   {
@@ -898,9 +896,9 @@
    "phase_checks": "1010",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320687,
+   "chance_matching_right": 0.4827403131815271,
+   "chance_likeliest_right": 0.48274031318152755,
    "source": "OWN-ENUM"
   },
   {
@@ -910,9 +908,9 @@
    "phase_checks": "1001",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480996,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -922,9 +920,9 @@
    "phase_checks": "0110",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532067,
+   "chance_matching_right": 0.48274031318152727,
+   "chance_likeliest_right": 0.48274031318152727,
    "source": "OWN-ENUM"
   },
   {
@@ -934,9 +932,9 @@
    "phase_checks": "0101",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532067,
+   "chance_matching_right": 0.48274031318152727,
+   "chance_likeliest_right": 0.48274031318152727,
    "source": "OWN-ENUM"
   },
   {
@@ -946,7 +944,7 @@
    "phase_checks": "0011",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
+   "chance_of_pattern": 0.000015649701265051097,
    "chance_matching_right": 0.25,
    "chance_likeliest_right": 0.25,
    "source": "OWN-ENUM"
@@ -958,9 +956,9 @@
    "phase_checks": "1110",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320687,
+   "chance_matching_right": 0.4827403131815271,
+   "chance_likeliest_right": 0.48274031318152755,
    "source": "OWN-ENUM"
   },
   {
@@ -970,9 +968,9 @@
    "phase_checks": "1101",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480996,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -982,9 +980,9 @@
    "phase_checks": "1011",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051093,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -994,7 +992,7 @@
    "phase_checks": "0111",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
+   "chance_of_pattern": 0.000015649701265051097,
    "chance_matching_right": 0.25,
    "chance_likeliest_right": 0.25,
    "source": "OWN-ENUM"
@@ -1006,9 +1004,9 @@
    "phase_checks": "1111",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051093,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -1018,9 +1016,9 @@
    "phase_checks": "0000",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.011891094627343392,
-   "chance_matching_right": 0.9333326802979881,
-   "chance_likeliest_right": 0.9333326802979881,
+   "chance_of_pattern": 0.011891094627343321,
+   "chance_matching_right": 0.9333326802979878,
+   "chance_likeliest_right": 0.9333326802979878,
    "source": "OWN-ENUM"
   },
   {
@@ -1030,33 +1028,33 @@
    "phase_checks": "1000",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.0008472411659807956,
-   "chance_matching_right": 0.48303644598561607,
-   "chance_likeliest_right": 0.48303644598561607,
-   "source": "OWN-ENUM"
-  },
-  {
-   "row": 5,
-   "col": 2,
-   "flip_checks": "1100",
-   "phase_checks": "0100",
-   "fired": 3,
-   "state": "same",
-   "chance_of_pattern": 0.0008472411659807956,
+   "chance_of_pattern": 0.0008472411659807927,
    "chance_matching_right": 0.48303644598561607,
    "chance_likeliest_right": 0.48303644598561607,
    "source": "OWN-ENUM"
   },
   {
    "row": 5,
+   "col": 2,
+   "flip_checks": "1100",
+   "phase_checks": "0100",
+   "fired": 3,
+   "state": "same",
+   "chance_of_pattern": 0.000847241165980793,
+   "chance_matching_right": 0.48303644598561585,
+   "chance_likeliest_right": 0.48303644598561585,
+   "source": "OWN-ENUM"
+  },
+  {
+   "row": 5,
    "col": 3,
    "flip_checks": "1100",
    "phase_checks": "0010",
    "fired": 3,
    "state": "differs",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.33299441259676127,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.0006357003764669999,
+   "chance_matching_right": 0.3329944125967616,
+   "chance_likeliest_right": 0.6221838324894757,
    "source": "OWN-ENUM"
   },
   {
@@ -1066,9 +1064,9 @@
    "phase_checks": "0001",
    "fired": 3,
    "state": "differs",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.33299441259676127,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.000635700376467,
+   "chance_matching_right": 0.33299441259676144,
+   "chance_likeliest_right": 0.622183832489476,
    "source": "OWN-ENUM"
   },
   {
@@ -1078,7 +1076,7 @@
    "phase_checks": "1100",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.011103218242645938,
+   "chance_of_pattern": 0.011103218242645851,
    "chance_matching_right": 0.9971537493062835,
    "chance_likeliest_right": 0.9971537493062835,
    "source": "OWN-ENUM"
@@ -1090,9 +1088,9 @@
    "phase_checks": "1010",
    "fired": 4,
    "state": "differs",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.33299441259676127,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.0006357003764670003,
+   "chance_matching_right": 0.3329944125967615,
+   "chance_likeliest_right": 0.622183832489476,
    "source": "OWN-ENUM"
   },
   {
@@ -1102,9 +1100,9 @@
    "phase_checks": "1001",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.8484330899727301,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.00024176218411827411,
+   "chance_matching_right": 0.8484330899727298,
+   "chance_likeliest_right": 0.8484330899727298,
    "source": "OWN-ENUM"
   },
   {
@@ -1114,9 +1112,9 @@
    "phase_checks": "0110",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.8484330899727301,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.00024176218411827436,
+   "chance_matching_right": 0.8484330899727299,
+   "chance_likeliest_right": 0.8484330899727299,
    "source": "OWN-ENUM"
   },
   {
@@ -1126,9 +1124,9 @@
    "phase_checks": "0101",
    "fired": 4,
    "state": "differs",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.33299441259676127,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.0006357003764669999,
+   "chance_matching_right": 0.3329944125967615,
+   "chance_likeliest_right": 0.622183832489476,
    "source": "OWN-ENUM"
   },
   {
@@ -1138,9 +1136,9 @@
    "phase_checks": "0011",
    "fired": 4,
    "state": "differs",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.017773822084055042,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.000227190490778844,
+   "chance_matching_right": 0.017773822084055143,
+   "chance_likeliest_right": 0.8868157856628349,
    "source": "OWN-ENUM"
   },
   {
@@ -1150,9 +1148,9 @@
    "phase_checks": "1110",
    "fired": 5,
    "state": "same",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.8484330899727301,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.00024176218411827433,
+   "chance_matching_right": 0.8484330899727299,
+   "chance_likeliest_right": 0.8484330899727299,
    "source": "OWN-ENUM"
   },
   {
@@ -1162,9 +1160,9 @@
    "phase_checks": "1101",
    "fired": 5,
    "state": "same",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.8484330899727301,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.0002417621841182741,
+   "chance_matching_right": 0.8484330899727298,
+   "chance_likeliest_right": 0.8484330899727298,
    "source": "OWN-ENUM"
   },
   {
@@ -1174,9 +1172,9 @@
    "phase_checks": "1011",
    "fired": 5,
    "state": "differs",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.017773822084055042,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.0002271904907788441,
+   "chance_matching_right": 0.017773822084055133,
+   "chance_likeliest_right": 0.8868157856628351,
    "source": "OWN-ENUM"
   },
   {
@@ -1186,9 +1184,9 @@
    "phase_checks": "0111",
    "fired": 5,
    "state": "differs",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.017773822084055042,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.000227190490778844,
+   "chance_matching_right": 0.017773822084055143,
+   "chance_likeliest_right": 0.8868157856628349,
    "source": "OWN-ENUM"
   },
   {
@@ -1198,9 +1196,9 @@
    "phase_checks": "1111",
    "fired": 6,
    "state": "differs",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.017773822084055042,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884413,
+   "chance_matching_right": 0.01777382208405513,
+   "chance_likeliest_right": 0.886815785662835,
    "source": "OWN-ENUM"
   },
   {
@@ -1210,9 +1208,9 @@
    "phase_checks": "0000",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670009,
+   "chance_matching_right": 0.9327673676293559,
+   "chance_likeliest_right": 0.9327673676293559,
    "source": "OWN-ENUM"
   },
   {
@@ -1222,9 +1220,9 @@
    "phase_checks": "1000",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670009,
+   "chance_matching_right": 0.9327673676293559,
+   "chance_likeliest_right": 0.9327673676293559,
    "source": "OWN-ENUM"
   },
   {
@@ -1234,9 +1232,9 @@
    "phase_checks": "0100",
    "fired": 3,
    "state": "differs",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.0880254035243988,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.00024176218411827417,
+   "chance_matching_right": 0.08802540352439903,
+   "chance_likeliest_right": 0.8484330899727299,
    "source": "OWN-ENUM"
   },
   {
@@ -1246,9 +1244,9 @@
    "phase_checks": "0010",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320784,
+   "chance_matching_right": 0.4827403131815271,
+   "chance_likeliest_right": 0.48274031318152755,
    "source": "OWN-ENUM"
   },
   {
@@ -1258,9 +1256,9 @@
    "phase_checks": "0001",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604481013,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -1270,9 +1268,9 @@
    "phase_checks": "1100",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.8484330899727301,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.00024176218411827414,
+   "chance_matching_right": 0.84843308997273,
+   "chance_likeliest_right": 0.84843308997273,
    "source": "OWN-ENUM"
   },
   {
@@ -1282,9 +1280,9 @@
    "phase_checks": "1010",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320784,
+   "chance_matching_right": 0.4827403131815275,
+   "chance_likeliest_right": 0.4827403131815275,
    "source": "OWN-ENUM"
   },
   {
@@ -1294,9 +1292,9 @@
    "phase_checks": "1001",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604481013,
+   "chance_matching_right": 0.4750102501025011,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -1306,9 +1304,9 @@
    "phase_checks": "0110",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
+   "chance_of_pattern": 0.00003022139460448101,
    "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_likeliest_right": 0.47501025010250125,
    "source": "OWN-ENUM"
   },
   {
@@ -1318,9 +1316,9 @@
    "phase_checks": "0101",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604481013,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.4750102501025012,
    "source": "OWN-ENUM"
   },
   {
@@ -1330,9 +1328,9 @@
    "phase_checks": "0011",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
+   "chance_of_pattern": 0.00001564970126505108,
    "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_likeliest_right": 0.2500000000000002,
    "source": "OWN-ENUM"
   },
   {
@@ -1342,9 +1340,9 @@
    "phase_checks": "1110",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.00003022139460448101,
+   "chance_matching_right": 0.4750102501025013,
+   "chance_likeliest_right": 0.4750102501025013,
    "source": "OWN-ENUM"
   },
   {
@@ -1354,9 +1352,9 @@
    "phase_checks": "1101",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.00003022139460448101,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.4750102501025012,
    "source": "OWN-ENUM"
   },
   {
@@ -1366,9 +1364,9 @@
    "phase_checks": "1011",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.00001564970126505108,
+   "chance_matching_right": 0.24999999999999983,
+   "chance_likeliest_right": 0.2500000000000002,
    "source": "OWN-ENUM"
   },
   {
@@ -1378,9 +1376,9 @@
    "phase_checks": "0111",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051083,
+   "chance_matching_right": 0.24999999999999994,
+   "chance_likeliest_right": 0.2500000000000002,
    "source": "OWN-ENUM"
   },
   {
@@ -1390,9 +1388,9 @@
    "phase_checks": "1111",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051083,
+   "chance_matching_right": 0.24999999999999978,
+   "chance_likeliest_right": 0.2500000000000002,
    "source": "OWN-ENUM"
   },
   {
@@ -1402,9 +1400,9 @@
    "phase_checks": "0000",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
-   "chance_matching_right": 0.9648021948963988,
-   "chance_likeliest_right": 0.9648021948963988,
+   "chance_of_pattern": 0.011679553837829518,
+   "chance_matching_right": 0.964802194896399,
+   "chance_likeliest_right": 0.964802194896399,
    "source": "OWN-ENUM"
   },
   {
@@ -1414,9 +1412,9 @@
    "phase_checks": "1000",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.6221838324894762,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.0006357003764669996,
+   "chance_matching_right": 0.6221838324894761,
+   "chance_likeliest_right": 0.6221838324894761,
    "source": "OWN-ENUM"
   },
   {
@@ -1426,9 +1424,9 @@
    "phase_checks": "0100",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
-   "chance_matching_right": 0.9648021948963988,
-   "chance_likeliest_right": 0.9648021948963988,
+   "chance_of_pattern": 0.011679553837829518,
+   "chance_matching_right": 0.964802194896399,
+   "chance_likeliest_right": 0.964802194896399,
    "source": "OWN-ENUM"
   },
   {
@@ -1438,9 +1436,9 @@
    "phase_checks": "0010",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532067,
+   "chance_matching_right": 0.48274031318152727,
+   "chance_likeliest_right": 0.48274031318152727,
    "source": "OWN-ENUM"
   },
   {
@@ -1450,9 +1448,9 @@
    "phase_checks": "0001",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532067,
+   "chance_matching_right": 0.48274031318152727,
+   "chance_likeliest_right": 0.48274031318152727,
    "source": "OWN-ENUM"
   },
   {
@@ -1462,9 +1460,9 @@
    "phase_checks": "1100",
    "fired": 4,
    "state": "differs",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.33299441259676127,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.0006357003764669996,
+   "chance_matching_right": 0.33299441259676144,
+   "chance_likeliest_right": 0.6221838324894761,
    "source": "OWN-ENUM"
   },
   {
@@ -1474,9 +1472,9 @@
    "phase_checks": "1010",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320687,
+   "chance_matching_right": 0.4827403131815271,
+   "chance_likeliest_right": 0.48274031318152755,
    "source": "OWN-ENUM"
   },
   {
@@ -1486,9 +1484,9 @@
    "phase_checks": "1001",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480996,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -1498,9 +1496,9 @@
    "phase_checks": "0110",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532067,
+   "chance_matching_right": 0.48274031318152727,
+   "chance_likeliest_right": 0.48274031318152727,
    "source": "OWN-ENUM"
   },
   {
@@ -1510,9 +1508,9 @@
    "phase_checks": "0101",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532067,
+   "chance_matching_right": 0.48274031318152727,
+   "chance_likeliest_right": 0.48274031318152727,
    "source": "OWN-ENUM"
   },
   {
@@ -1522,7 +1520,7 @@
    "phase_checks": "0011",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
+   "chance_of_pattern": 0.000015649701265051097,
    "chance_matching_right": 0.25,
    "chance_likeliest_right": 0.25,
    "source": "OWN-ENUM"
@@ -1534,9 +1532,9 @@
    "phase_checks": "1110",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320687,
+   "chance_matching_right": 0.4827403131815271,
+   "chance_likeliest_right": 0.48274031318152755,
    "source": "OWN-ENUM"
   },
   {
@@ -1546,9 +1544,9 @@
    "phase_checks": "1101",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480996,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -1558,9 +1556,9 @@
    "phase_checks": "1011",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051093,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -1570,7 +1568,7 @@
    "phase_checks": "0111",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
+   "chance_of_pattern": 0.000015649701265051097,
    "chance_matching_right": 0.25,
    "chance_likeliest_right": 0.25,
    "source": "OWN-ENUM"
@@ -1582,9 +1580,9 @@
    "phase_checks": "1111",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051093,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -1594,33 +1592,33 @@
    "phase_checks": "0000",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
-   "chance_matching_right": 0.9648021948963988,
-   "chance_likeliest_right": 0.9648021948963988,
-   "source": "OWN-ENUM"
-  },
-  {
-   "row": 8,
-   "col": 1,
-   "flip_checks": "0110",
-   "phase_checks": "1000",
-   "fired": 3,
-   "state": "same",
-   "chance_of_pattern": 0.0116795538378296,
+   "chance_of_pattern": 0.01167955383782952,
    "chance_matching_right": 0.9648021948963988,
    "chance_likeliest_right": 0.9648021948963988,
    "source": "OWN-ENUM"
   },
   {
    "row": 8,
+   "col": 1,
+   "flip_checks": "0110",
+   "phase_checks": "1000",
+   "fired": 3,
+   "state": "same",
+   "chance_of_pattern": 0.01167955383782952,
+   "chance_matching_right": 0.9648021948963988,
+   "chance_likeliest_right": 0.9648021948963988,
+   "source": "OWN-ENUM"
+  },
+  {
+   "row": 8,
    "col": 2,
    "flip_checks": "0110",
    "phase_checks": "0100",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.6221838324894762,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.0006357003764669996,
+   "chance_matching_right": 0.622183832489476,
+   "chance_likeliest_right": 0.622183832489476,
    "source": "OWN-ENUM"
   },
   {
@@ -1630,9 +1628,9 @@
    "phase_checks": "0010",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320654,
+   "chance_matching_right": 0.4827403131815275,
+   "chance_likeliest_right": 0.4827403131815275,
    "source": "OWN-ENUM"
   },
   {
@@ -1642,9 +1640,9 @@
    "phase_checks": "0001",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532072,
+   "chance_matching_right": 0.4827403131815267,
+   "chance_likeliest_right": 0.4827403131815281,
    "source": "OWN-ENUM"
   },
   {
@@ -1654,9 +1652,9 @@
    "phase_checks": "1100",
    "fired": 4,
    "state": "differs",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.33299441259676127,
-   "chance_likeliest_right": 0.6221838324894762,
+   "chance_of_pattern": 0.0006357003764669996,
+   "chance_matching_right": 0.33299441259676144,
+   "chance_likeliest_right": 0.622183832489476,
    "source": "OWN-ENUM"
   },
   {
@@ -1666,9 +1664,9 @@
    "phase_checks": "1010",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320665,
+   "chance_matching_right": 0.48274031318152727,
+   "chance_likeliest_right": 0.4827403131815273,
    "source": "OWN-ENUM"
   },
   {
@@ -1678,9 +1676,9 @@
    "phase_checks": "1001",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320725,
+   "chance_matching_right": 0.48274031318152666,
+   "chance_likeliest_right": 0.4827403131815281,
    "source": "OWN-ENUM"
   },
   {
@@ -1690,9 +1688,9 @@
    "phase_checks": "0110",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480996,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -1702,9 +1700,9 @@
    "phase_checks": "0101",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320725,
+   "chance_matching_right": 0.48274031318152666,
+   "chance_likeliest_right": 0.48274031318152794,
    "source": "OWN-ENUM"
   },
   {
@@ -1714,9 +1712,9 @@
    "phase_checks": "0011",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.25000000000000017,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -1726,9 +1724,9 @@
    "phase_checks": "1110",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480996,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -1738,9 +1736,9 @@
    "phase_checks": "1101",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320725,
+   "chance_matching_right": 0.48274031318152666,
+   "chance_likeliest_right": 0.4827403131815281,
    "source": "OWN-ENUM"
   },
   {
@@ -1750,9 +1748,9 @@
    "phase_checks": "1011",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.25000000000000017,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -1762,9 +1760,9 @@
    "phase_checks": "0111",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.25000000000000017,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -1774,9 +1772,9 @@
    "phase_checks": "1111",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.25000000000000017,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -1786,9 +1784,9 @@
    "phase_checks": "0000",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670005,
+   "chance_matching_right": 0.932767367629356,
+   "chance_likeliest_right": 0.932767367629356,
    "source": "OWN-ENUM"
   },
   {
@@ -1798,9 +1796,9 @@
    "phase_checks": "1000",
    "fired": 3,
    "state": "differs",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.0880254035243988,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.0002417621841182741,
+   "chance_matching_right": 0.08802540352439929,
+   "chance_likeliest_right": 0.8484330899727297,
    "source": "OWN-ENUM"
   },
   {
@@ -1810,9 +1808,9 @@
    "phase_checks": "0100",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670004,
+   "chance_matching_right": 0.932767367629356,
+   "chance_likeliest_right": 0.932767367629356,
    "source": "OWN-ENUM"
   },
   {
@@ -1822,9 +1820,9 @@
    "phase_checks": "0010",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.00003022139460448098,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.4750102501025012,
    "source": "OWN-ENUM"
   },
   {
@@ -1834,9 +1832,9 @@
    "phase_checks": "0001",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532067,
+   "chance_matching_right": 0.48274031318152727,
+   "chance_likeliest_right": 0.48274031318152727,
    "source": "OWN-ENUM"
   },
   {
@@ -1846,9 +1844,9 @@
    "phase_checks": "1100",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.8484330899727301,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.0002417621841182741,
+   "chance_matching_right": 0.8484330899727297,
+   "chance_likeliest_right": 0.8484330899727297,
    "source": "OWN-ENUM"
   },
   {
@@ -1858,9 +1856,9 @@
    "phase_checks": "1010",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480975,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -1870,9 +1868,9 @@
    "phase_checks": "1001",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480996,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -1882,9 +1880,9 @@
    "phase_checks": "0110",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.00003022139460448098,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.4750102501025012,
    "source": "OWN-ENUM"
   },
   {
@@ -1894,9 +1892,9 @@
    "phase_checks": "0101",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532067,
+   "chance_matching_right": 0.48274031318152727,
+   "chance_likeliest_right": 0.48274031318152727,
    "source": "OWN-ENUM"
   },
   {
@@ -1906,8 +1904,8 @@
    "phase_checks": "0011",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051097,
+   "chance_matching_right": 0.24999999999999994,
    "chance_likeliest_right": 0.25,
    "source": "OWN-ENUM"
   },
@@ -1918,9 +1916,9 @@
    "phase_checks": "1110",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480975,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -1930,9 +1928,9 @@
    "phase_checks": "1101",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480996,
+   "chance_matching_right": 0.4750102501025011,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -1942,9 +1940,9 @@
    "phase_checks": "1011",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.00001564970126505109,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -1954,7 +1952,7 @@
    "phase_checks": "0111",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
+   "chance_of_pattern": 0.000015649701265051097,
    "chance_matching_right": 0.25,
    "chance_likeliest_right": 0.25,
    "source": "OWN-ENUM"
@@ -1966,9 +1964,9 @@
    "phase_checks": "1111",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.00001564970126505109,
+   "chance_matching_right": 0.2500000000000001,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -1978,9 +1976,9 @@
    "phase_checks": "0000",
    "fired": 2,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884435,
+   "chance_matching_right": 0.8868157856628354,
+   "chance_likeliest_right": 0.8868157856628354,
    "source": "OWN-ENUM"
   },
   {
@@ -1990,9 +1988,9 @@
    "phase_checks": "1000",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884435,
+   "chance_matching_right": 0.8868157856628355,
+   "chance_likeliest_right": 0.8868157856628355,
    "source": "OWN-ENUM"
   },
   {
@@ -2002,9 +2000,9 @@
    "phase_checks": "0100",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884435,
+   "chance_matching_right": 0.8868157856628354,
+   "chance_likeliest_right": 0.8868157856628354,
    "source": "OWN-ENUM"
   },
   {
@@ -2014,9 +2012,9 @@
    "phase_checks": "0010",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051073,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -2026,9 +2024,9 @@
    "phase_checks": "0001",
    "fired": 3,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.2499999999999999,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2038,9 +2036,9 @@
    "phase_checks": "1100",
    "fired": 4,
    "state": "differs",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.017773822084055042,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884435,
+   "chance_matching_right": 0.017773822084055098,
+   "chance_likeliest_right": 0.8868157856628355,
    "source": "OWN-ENUM"
   },
   {
@@ -2050,9 +2048,9 @@
    "phase_checks": "1010",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051073,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -2062,9 +2060,9 @@
    "phase_checks": "1001",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.24999999999999983,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2074,9 +2072,9 @@
    "phase_checks": "0110",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051073,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -2086,9 +2084,9 @@
    "phase_checks": "0101",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.2499999999999999,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2098,9 +2096,9 @@
    "phase_checks": "0011",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.0000010780079256210943,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.0000010780079256210945,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -2110,9 +2108,9 @@
    "phase_checks": "1110",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.00001564970126505107,
+   "chance_matching_right": 0.2500000000000001,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -2122,9 +2120,9 @@
    "phase_checks": "1101",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.2499999999999999,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2134,9 +2132,9 @@
    "phase_checks": "1011",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.0000010780079256210943,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000001078007925621094,
+   "chance_matching_right": 0.2500000000000001,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -2146,9 +2144,9 @@
    "phase_checks": "0111",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.0000010780079256210943,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.0000010780079256210945,
+   "chance_matching_right": 0.2500000000000001,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -2158,9 +2156,9 @@
    "phase_checks": "1111",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.0000010780079256210943,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000001078007925621094,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -2170,9 +2168,9 @@
    "phase_checks": "0000",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670006,
+   "chance_matching_right": 0.9327673676293559,
+   "chance_likeliest_right": 0.9327673676293559,
    "source": "OWN-ENUM"
   },
   {
@@ -2182,9 +2180,9 @@
    "phase_checks": "1000",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670005,
+   "chance_matching_right": 0.932767367629356,
+   "chance_likeliest_right": 0.932767367629356,
    "source": "OWN-ENUM"
   },
   {
@@ -2194,9 +2192,9 @@
    "phase_checks": "0100",
    "fired": 4,
    "state": "differs",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.0880254035243988,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.00024176218411827447,
+   "chance_matching_right": 0.08802540352439894,
+   "chance_likeliest_right": 0.84843308997273,
    "source": "OWN-ENUM"
   },
   {
@@ -2206,9 +2204,9 @@
    "phase_checks": "0010",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320676,
+   "chance_matching_right": 0.4827403131815272,
+   "chance_likeliest_right": 0.48274031318152755,
    "source": "OWN-ENUM"
   },
   {
@@ -2218,9 +2216,9 @@
    "phase_checks": "0001",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604481013,
+   "chance_matching_right": 0.4750102501025012,
+   "chance_likeliest_right": 0.4750102501025012,
    "source": "OWN-ENUM"
   },
   {
@@ -2230,9 +2228,9 @@
    "phase_checks": "1100",
    "fired": 5,
    "state": "same",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.8484330899727301,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.00024176218411827444,
+   "chance_matching_right": 0.8484330899727299,
+   "chance_likeliest_right": 0.8484330899727299,
    "source": "OWN-ENUM"
   },
   {
@@ -2242,9 +2240,9 @@
    "phase_checks": "1010",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.00042415958695320676,
+   "chance_matching_right": 0.48274031318152755,
+   "chance_likeliest_right": 0.48274031318152755,
    "source": "OWN-ENUM"
   },
   {
@@ -2254,9 +2252,9 @@
    "phase_checks": "1001",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.00003022139460448101,
+   "chance_matching_right": 0.47501025010250125,
+   "chance_likeliest_right": 0.47501025010250125,
    "source": "OWN-ENUM"
   },
   {
@@ -2266,9 +2264,9 @@
    "phase_checks": "0110",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.00003022139460448101,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.4750102501025012,
    "source": "OWN-ENUM"
   },
   {
@@ -2278,9 +2276,9 @@
    "phase_checks": "0101",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604481013,
+   "chance_matching_right": 0.4750102501025012,
+   "chance_likeliest_right": 0.4750102501025012,
    "source": "OWN-ENUM"
   },
   {
@@ -2290,9 +2288,9 @@
    "phase_checks": "0011",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.00001564970126505108,
+   "chance_matching_right": 0.2500000000000003,
+   "chance_likeliest_right": 0.2500000000000003,
    "source": "OWN-ENUM"
   },
   {
@@ -2302,9 +2300,9 @@
    "phase_checks": "1110",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604481016,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -2314,9 +2312,9 @@
    "phase_checks": "1101",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604481013,
+   "chance_matching_right": 0.4750102501025012,
+   "chance_likeliest_right": 0.4750102501025012,
    "source": "OWN-ENUM"
   },
   {
@@ -2326,9 +2324,9 @@
    "phase_checks": "1011",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.00001564970126505108,
+   "chance_matching_right": 0.2500000000000001,
+   "chance_likeliest_right": 0.2500000000000003,
    "source": "OWN-ENUM"
   },
   {
@@ -2338,9 +2336,9 @@
    "phase_checks": "0111",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051083,
+   "chance_matching_right": 0.2500000000000002,
+   "chance_likeliest_right": 0.2500000000000002,
    "source": "OWN-ENUM"
   },
   {
@@ -2350,9 +2348,9 @@
    "phase_checks": "1111",
    "fired": 7,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051083,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.2500000000000002,
    "source": "OWN-ENUM"
   },
   {
@@ -2362,9 +2360,9 @@
    "phase_checks": "0000",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670005,
+   "chance_matching_right": 0.932767367629356,
+   "chance_likeliest_right": 0.932767367629356,
    "source": "OWN-ENUM"
   },
   {
@@ -2374,9 +2372,9 @@
    "phase_checks": "1000",
    "fired": 4,
    "state": "differs",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.0880254035243988,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.0002417621841182741,
+   "chance_matching_right": 0.08802540352439929,
+   "chance_likeliest_right": 0.8484330899727297,
    "source": "OWN-ENUM"
   },
   {
@@ -2386,9 +2384,9 @@
    "phase_checks": "0100",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.000635700376467002,
-   "chance_matching_right": 0.9327673676293562,
-   "chance_likeliest_right": 0.9327673676293562,
+   "chance_of_pattern": 0.0006357003764670005,
+   "chance_matching_right": 0.932767367629356,
+   "chance_likeliest_right": 0.932767367629356,
    "source": "OWN-ENUM"
   },
   {
@@ -2398,9 +2396,9 @@
    "phase_checks": "0010",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.00003022139460448098,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.4750102501025012,
    "source": "OWN-ENUM"
   },
   {
@@ -2410,9 +2408,9 @@
    "phase_checks": "0001",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532067,
+   "chance_matching_right": 0.48274031318152727,
+   "chance_likeliest_right": 0.48274031318152727,
    "source": "OWN-ENUM"
   },
   {
@@ -2422,9 +2420,9 @@
    "phase_checks": "1100",
    "fired": 5,
    "state": "same",
-   "chance_of_pattern": 0.00024176218411827466,
-   "chance_matching_right": 0.8484330899727301,
-   "chance_likeliest_right": 0.8484330899727301,
+   "chance_of_pattern": 0.0002417621841182741,
+   "chance_matching_right": 0.8484330899727297,
+   "chance_likeliest_right": 0.8484330899727297,
    "source": "OWN-ENUM"
   },
   {
@@ -2434,9 +2432,9 @@
    "phase_checks": "1010",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480975,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -2446,9 +2444,9 @@
    "phase_checks": "1001",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480996,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -2458,9 +2456,9 @@
    "phase_checks": "0110",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.00003022139460448098,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.4750102501025012,
    "source": "OWN-ENUM"
   },
   {
@@ -2470,9 +2468,9 @@
    "phase_checks": "0101",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00042415958695320833,
-   "chance_matching_right": 0.48274031318152744,
-   "chance_likeliest_right": 0.48274031318152744,
+   "chance_of_pattern": 0.0004241595869532067,
+   "chance_matching_right": 0.48274031318152727,
+   "chance_likeliest_right": 0.48274031318152727,
    "source": "OWN-ENUM"
   },
   {
@@ -2482,8 +2480,8 @@
    "phase_checks": "0011",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051097,
+   "chance_matching_right": 0.24999999999999994,
    "chance_likeliest_right": 0.25,
    "source": "OWN-ENUM"
   },
@@ -2494,9 +2492,9 @@
    "phase_checks": "1110",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480975,
+   "chance_matching_right": 0.47501025010250114,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -2506,9 +2504,9 @@
    "phase_checks": "1101",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.000030221394604481023,
-   "chance_matching_right": 0.47501025010250103,
-   "chance_likeliest_right": 0.47501025010250103,
+   "chance_of_pattern": 0.000030221394604480996,
+   "chance_matching_right": 0.4750102501025011,
+   "chance_likeliest_right": 0.47501025010250114,
    "source": "OWN-ENUM"
   },
   {
@@ -2518,9 +2516,9 @@
    "phase_checks": "1011",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.00001564970126505109,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -2530,7 +2528,7 @@
    "phase_checks": "0111",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
+   "chance_of_pattern": 0.000015649701265051097,
    "chance_matching_right": 0.25,
    "chance_likeliest_right": 0.25,
    "source": "OWN-ENUM"
@@ -2542,9 +2540,9 @@
    "phase_checks": "1111",
    "fired": 7,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.00001564970126505109,
+   "chance_matching_right": 0.2500000000000001,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -2554,9 +2552,9 @@
    "phase_checks": "0000",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884435,
+   "chance_matching_right": 0.8868157856628354,
+   "chance_likeliest_right": 0.8868157856628354,
    "source": "OWN-ENUM"
   },
   {
@@ -2566,9 +2564,9 @@
    "phase_checks": "1000",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884435,
+   "chance_matching_right": 0.8868157856628355,
+   "chance_likeliest_right": 0.8868157856628355,
    "source": "OWN-ENUM"
   },
   {
@@ -2578,9 +2576,9 @@
    "phase_checks": "0100",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884435,
+   "chance_matching_right": 0.8868157856628354,
+   "chance_likeliest_right": 0.8868157856628354,
    "source": "OWN-ENUM"
   },
   {
@@ -2590,9 +2588,9 @@
    "phase_checks": "0010",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051073,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -2602,9 +2600,9 @@
    "phase_checks": "0001",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.2499999999999999,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2614,9 +2612,9 @@
    "phase_checks": "1100",
    "fired": 5,
    "state": "differs",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.017773822084055042,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884435,
+   "chance_matching_right": 0.017773822084055098,
+   "chance_likeliest_right": 0.8868157856628355,
    "source": "OWN-ENUM"
   },
   {
@@ -2626,9 +2624,9 @@
    "phase_checks": "1010",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051073,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -2638,9 +2636,9 @@
    "phase_checks": "1001",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.24999999999999983,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2650,9 +2648,9 @@
    "phase_checks": "0110",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051073,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -2662,9 +2660,9 @@
    "phase_checks": "0101",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.2499999999999999,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2674,9 +2672,9 @@
    "phase_checks": "0011",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.0000010780079256210943,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.0000010780079256210945,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -2686,9 +2684,9 @@
    "phase_checks": "1110",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
+   "chance_of_pattern": 0.000015649701265051073,
    "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -2698,9 +2696,9 @@
    "phase_checks": "1101",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.2499999999999999,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2710,9 +2708,9 @@
    "phase_checks": "1011",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.0000010780079256210943,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000001078007925621094,
+   "chance_matching_right": 0.2500000000000001,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -2722,9 +2720,9 @@
    "phase_checks": "0111",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.0000010780079256210943,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.0000010780079256210945,
+   "chance_matching_right": 0.2500000000000001,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -2734,9 +2732,9 @@
    "phase_checks": "1111",
    "fired": 7,
    "state": "tie-best",
-   "chance_of_pattern": 0.0000010780079256210943,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000001078007925621094,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.2500000000000001,
    "source": "OWN-ENUM"
   },
   {
@@ -2746,9 +2744,9 @@
    "phase_checks": "0000",
    "fired": 3,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884397,
+   "chance_matching_right": 0.886815785662835,
+   "chance_likeliest_right": 0.886815785662835,
    "source": "OWN-ENUM"
   },
   {
@@ -2758,9 +2756,9 @@
    "phase_checks": "1000",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884394,
+   "chance_matching_right": 0.8868157856628351,
+   "chance_likeliest_right": 0.8868157856628351,
    "source": "OWN-ENUM"
   },
   {
@@ -2770,9 +2768,9 @@
    "phase_checks": "0100",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884397,
+   "chance_matching_right": 0.886815785662835,
+   "chance_likeliest_right": 0.886815785662835,
    "source": "OWN-ENUM"
   },
   {
@@ -2782,9 +2780,9 @@
    "phase_checks": "0010",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051093,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -2794,9 +2792,9 @@
    "phase_checks": "0001",
    "fired": 4,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.25000000000000017,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2806,9 +2804,9 @@
    "phase_checks": "1100",
    "fired": 5,
    "state": "differs",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.017773822084055042,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884394,
+   "chance_matching_right": 0.017773822084055146,
+   "chance_likeliest_right": 0.8868157856628351,
    "source": "OWN-ENUM"
   },
   {
@@ -2818,9 +2816,9 @@
    "phase_checks": "1010",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051093,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -2830,9 +2828,9 @@
    "phase_checks": "1001",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.25000000000000017,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2842,9 +2840,9 @@
    "phase_checks": "0110",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051093,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -2854,9 +2852,9 @@
    "phase_checks": "0101",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.25000000000000017,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2867,8 +2865,8 @@
    "fired": 5,
    "state": "tie-best",
    "chance_of_pattern": 0.0000010780079256210943,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_matching_right": 0.24999999999999986,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2878,9 +2876,9 @@
    "phase_checks": "1110",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051093,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -2890,9 +2888,9 @@
    "phase_checks": "1101",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.25000000000000017,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2902,9 +2900,9 @@
    "phase_checks": "1011",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.0000010780079256210943,
+   "chance_of_pattern": 0.000001078007925621094,
    "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2916,7 +2914,7 @@
    "state": "tie-best",
    "chance_of_pattern": 0.0000010780079256210943,
    "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2926,9 +2924,9 @@
    "phase_checks": "1111",
    "fired": 7,
    "state": "tie-best",
-   "chance_of_pattern": 0.0000010780079256210943,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000001078007925621094,
+   "chance_matching_right": 0.24999999999999986,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2938,9 +2936,9 @@
    "phase_checks": "0000",
    "fired": 4,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884397,
+   "chance_matching_right": 0.886815785662835,
+   "chance_likeliest_right": 0.886815785662835,
    "source": "OWN-ENUM"
   },
   {
@@ -2950,9 +2948,9 @@
    "phase_checks": "1000",
    "fired": 5,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884394,
+   "chance_matching_right": 0.8868157856628351,
+   "chance_likeliest_right": 0.8868157856628351,
    "source": "OWN-ENUM"
   },
   {
@@ -2962,9 +2960,9 @@
    "phase_checks": "0100",
    "fired": 5,
    "state": "same",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.8868157856628357,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884397,
+   "chance_matching_right": 0.886815785662835,
+   "chance_likeliest_right": 0.886815785662835,
    "source": "OWN-ENUM"
   },
   {
@@ -2974,9 +2972,9 @@
    "phase_checks": "0010",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051093,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -2986,9 +2984,9 @@
    "phase_checks": "0001",
    "fired": 5,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.25000000000000017,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -2998,9 +2996,9 @@
    "phase_checks": "1100",
    "fired": 6,
    "state": "differs",
-   "chance_of_pattern": 0.0002271904907788447,
-   "chance_matching_right": 0.017773822084055042,
-   "chance_likeliest_right": 0.8868157856628357,
+   "chance_of_pattern": 0.00022719049077884394,
+   "chance_matching_right": 0.017773822084055146,
+   "chance_likeliest_right": 0.8868157856628351,
    "source": "OWN-ENUM"
   },
   {
@@ -3010,9 +3008,9 @@
    "phase_checks": "1010",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051093,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -3022,9 +3020,9 @@
    "phase_checks": "1001",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.25000000000000017,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -3034,9 +3032,9 @@
    "phase_checks": "0110",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051093,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -3046,9 +3044,9 @@
    "phase_checks": "0101",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.25000000000000017,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -3058,9 +3056,9 @@
    "phase_checks": "0011",
    "fired": 6,
    "state": "tie-best",
-   "chance_of_pattern": 0.0000010780079256210943,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000001078007925621094,
+   "chance_matching_right": 0.24999999999999986,
+   "chance_likeliest_right": 0.2500000000000002,
    "source": "OWN-ENUM"
   },
   {
@@ -3070,9 +3068,9 @@
    "phase_checks": "1110",
    "fired": 7,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051093,
+   "chance_matching_right": 0.25000000000000006,
+   "chance_likeliest_right": 0.25000000000000006,
    "source": "OWN-ENUM"
   },
   {
@@ -3082,9 +3080,9 @@
    "phase_checks": "1101",
    "fired": 7,
    "state": "tie-best",
-   "chance_of_pattern": 0.00001564970126505106,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_of_pattern": 0.000015649701265051086,
+   "chance_matching_right": 0.25000000000000017,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -3095,8 +3093,8 @@
    "fired": 7,
    "state": "tie-best",
    "chance_of_pattern": 0.0000010780079256210943,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_matching_right": 0.24999999999999994,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   },
   {
@@ -3106,9 +3104,9 @@
    "phase_checks": "0111",
    "fired": 7,
    "state": "tie-best",
-   "chance_of_pattern": 0.0000010780079256210943,
+   "chance_of_pattern": 0.000001078007925621094,
    "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_likeliest_right": 0.2500000000000002,
    "source": "OWN-ENUM"
   },
   {
@@ -3119,8 +3117,8 @@
    "fired": 8,
    "state": "tie-best",
    "chance_of_pattern": 0.0000010780079256210943,
-   "chance_matching_right": 0.25,
-   "chance_likeliest_right": 0.25,
+   "chance_matching_right": 0.2499999999999998,
+   "chance_likeliest_right": 0.25000000000000017,
    "source": "OWN-ENUM"
   }
  ]

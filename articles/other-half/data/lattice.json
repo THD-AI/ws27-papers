@@ -147,13 +147,13 @@
    "x0",
    "x1"
   ],
-  "chance_of_pattern": 0.000635700376467002,
+  "chance_of_pattern": 0.000635700376467001,
   "plain_matching": {
    "errors": {
     "0": "X",
     "4": "Z"
    },
-   "chance_right": 0.33299441259676127,
+   "chance_right": 0.33299441259676155,
    "flip_puzzle": "z2 joined to the left edge through qubit 0",
    "phase_puzzle": "x0 joined to x1 through qubit 4"
   },
@@ -162,7 +162,7 @@
     "0": "Y",
     "8": "Z"
    },
-   "chance_right": 0.6221838324894762,
+   "chance_right": 0.6221838324894758,
    "minimum_weight_cases": [
     {
      "0": "Y",
@@ -173,8 +173,8 @@
      "5": "Z"
     }
    ],
-   "chance_per_minimum_weight_case": 0.3051478171624666,
-   "chance_of_minimum_weight_cases": 0.6102956343249332
+   "chance_per_minimum_weight_case": 0.3051478171624669,
+   "chance_of_minimum_weight_cases": 0.6102956343249338
   },
   "rest": 0.04482175491376261,
   "source": "OWN-ENUM"

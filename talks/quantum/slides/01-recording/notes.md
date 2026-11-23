@@ -4,6 +4,6 @@ In December 2024 Google published the first quantum memory clearly below the thr
 
 Then two programs read the same recording. The standard one, matching, and a neural network, a program that learns from examples. The network's error rate came out about one in six lower.
 
-We tried a much smaller network in simulation. At distance five it beat plain matching. Correlated matching still made fewer mistakes. The reader is an ordinary program, and we wanted to know what it takes to make it better.
+That reader is a classical program, and in this course it is where machine learning works for quantum hardware. We asked what it has to do, why a network can do it better, and what that costs.
 
 **One recording from Google's chip gave two error rates.**

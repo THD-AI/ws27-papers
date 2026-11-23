@@ -1,6 +1,6 @@
 ---
 title: The other half of a quantum computer
-deck: The same recorded data from one of Google's quantum chips gave two different results, depending on which program read it. We asked what that program has to do, why a neural network can do it better, and what that costs. In our distance-5 simulations, our network beat plain matching. Correlated matching still had the lowest error rate at our main noise setting.
+deck: The same recorded data from one of Google's quantum chips gave two different results, depending on which program read it. We asked what that program has to do, why a neural network can do it better, and what that costs. In our own small runs, it didn't always.
 author: Alexander Rudaev and group
 context: Quantum Computing seminar · TH Deggendorf · winter semester 2026/27
 status: Draft for review, 23 November 2026
@@ -92,10 +92,10 @@ A grid of distance 5, showing flips and the checks that notice them. Here and in
 
 ## 6. Where the standard method goes wrong
 
-The rules are the same on a grid of any size, so we went down to the smallest one that can correct an error, distance 3, where every case can be counted. We went through every possible error there and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 possible patterns on the smallest grid, 24 get an answer from the standard decoder that is less likely than another. {{OWN-ENUM}} They are rare: with a 5% chance of an error per storing qubit (a flip, a phase error or both, each a third of that), together they turn up in fewer than 1 case in 100, while in 63 cases in 100 no check fires at all. On 144 more patterns, matching shares the best answer: two outcomes tie on 64 patterns and four tie on the other 80. {{OWN-ENUM}}
+The rules are the same on a grid of any size, so we went down to the smallest one that can correct an error, distance 3, where every case can be counted. We went through every possible error there and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 possible patterns on the smallest grid, 24 get an answer from the standard decoder that is less likely than another. {{OWN-ENUM}} They are rare: with a 5% chance of an error per storing qubit (a flip, a phase error or both, each a third of that), together they turn up in fewer than 1 case in 100, while in 63 cases in 100 no check fires at all. On 144 more patterns, two or four outcomes tie for best, and matching gives one of them. {{OWN-ENUM}}
 
 :::figure syndromes wide
-All 256 patterns of the eight checks at distance 3, one mark each, ordered by how many checks fire. Filled: the 24 patterns where the standard decoder's answer is less likely than another. They are rare: with a 5% chance of an error per storing qubit (a flip, a phase error or both, each a third of that), they turn up in about 0.9% of cases, and in 63% of cases no check fires at all. On 144 other patterns two or four outcomes tie for best. Our own count, in exact arithmetic.
+All 256 patterns of the eight checks at distance 3, one mark each, ordered by how many checks fire. Filled: the 24 patterns where the standard decoder's answer is less likely than another. They are rare: with a 5% chance of an error per storing qubit (a flip, a phase error or both, each a third of that), they turn up in about 0.9% of cases, and in 63% of cases no check fires at all. On 144 other patterns two or four outcomes tie for best. Our own count.
 :::
 
 :::scene lattice
@@ -132,7 +132,7 @@ Google first showed, in 2023, a grid of distance 5 that beat distance 3, but onl
 
 :::margin qubits 4
 
-The factor by which the error shrinks per step is written **Λ** (lambda), and it decides how big a useful machine has to be. With Λ near 2, going from distance 7 to distance 9 would roughly halve the error again. The ideal grid grows from 97 data and check qubits to 161. Google's distance-7 experiment used four extra qubits to remove leakage. {{GQA-2024 OWN-ARITH}} One more halving costs 64 more qubits in the grid alone.
+The factor by which the error shrinks per step is written **Λ** (lambda), and it decides how big a useful machine has to be. With Λ near 2, halving the error once more means going from distance 7 to distance 9: from 97 data and check qubits to 161. {{GQA-2024 OWN-ARITH}} That one halving costs 64 more qubits in the grid itself. Google used four extra qubits at distance 7 to remove leakage.
 
 Google read the same recorded data with two decoders. Its best matching decoder already links the two kinds of check in a limited way – the idea behind the correlated matching we use in section 9. It learns no rules of its own, though its error weights were tuned on the chip's data. It gave Λ = 2.04, and a neural network gave Λ = 2.14. At distance 7 the matching decoder's logical error rate was 171 per 100,000 rounds and the network's 143, about one in six fewer. {{GQA-2024}} Same chip, same data; only the reader changed.
 
@@ -153,7 +153,7 @@ Nobody writes a neural decoder's rules; it learns them. It's trained first on a 
 @caption Times in millionths of a second. The chip finishes a round of checks every 1.1. The 2024 network needs 24 for each round, so its backlog grows. Google's live matcher kept pace for runs of up to a million rounds. It returned the answer about 63 after it received the final round's data. The December 2025 preprint reports throughput under 1 per simulated round on accelerators.
 
 @step 0
-The clock is where it struggles. The chip asks its checks once every 1.1 millionths of a second, about 900,000 times a second. {{GQA-2024 OWN-ARITH}} A live decoder has to keep up on average. How long it takes to return a final answer is a separate question.
+The clock is where it struggles. The chip asks its checks once every 1.1 millionths of a second, about 900,000 times a second. {{GQA-2024 OWN-ARITH}} A live decoder has to keep up on average. How long it takes to return the final answer is a separate question.
 
 @step 1
 Google's paper quotes 24 millionths of a second per round for its network, from earlier work. {{GQA-2024 AQ-2024}} In that time the chip finishes about 22 more rounds. The network is accurate, but each answer comes late.
@@ -162,7 +162,7 @@ Google's paper quotes 24 millionths of a second per round for its network, from 
 By the time the network has answered round 3, about 73 millionths of a second in, the chip has finished round 66, and 62 rounds wait behind the one it is working on. An interpreter who needs twenty-two seconds for every second of speech is more than twenty minutes behind after one minute. {{OWN-ARITH}} And the gap keeps growing.
 
 @step 3
-So the network's results were worked out afterwards, on recorded data. Google's streaming matching decoder accounted for correlated errors and kept pace. On a smaller chip, at distance 5 and on the same data, live matching's logical error rate was 350 per 100,000 rounds and the network's, afterwards, 269. {{GQA-2024}} Part of that gap is live against offline, not only matching against network.
+So the network's results were worked out afterwards, on recorded data. The decoder that ran live was a streaming matcher that accounted for correlated errors, and it kept pace. On a smaller chip, at distance 5 and on the same data, live matching's logical error rate was 350 per 100,000 rounds and the network's, afterwards, 269. {{GQA-2024}} Part of that gap is live against offline, not only matching against network.
 
 @step 4
 A December 2025 preprint reports that a network averaged under one millionth of a second per round on accelerator chips for simulated grids up to distance 11. {{AQ2-2025}} That measures how fast it reads a stream. Whether it can answer quickly enough in a live chip's control loop is still open.
@@ -171,9 +171,9 @@ A December 2025 preprint reports that a network averaged under one millionth of 
 
 ## 9. What we measured ourselves
 
-We can't build a chip and we can't match Google's network. We can measure, in simulation, what a small neural decoder costs to train and run. At distance 3, our network beats plain matching early. At distance 5 and 0.5% noise, the network trained on about 250 million examples failed in 1.33% of runs. Plain matching failed in 1.41%, and correlated matching had the fewest failures at 1.09%. {{OWN-D3 OWN-D5-250M}} We ran the surface code in Stim, a free simulator written at Google. {{STIM-2021}}
+We can't build a chip and we can't match Google's network. We can measure, in simulation, what a small neural decoder costs to train and run. The short answer: on the smallest grid our network soon beats plain matching; one grid larger it passed plain matching with a budget of about 250 million examples, and stayed behind correlated matching except at the lowest noise level. We simulate the surface code with Stim, a free simulator written at Google. {{STIM-2021}}
 
-We wanted three measurements. First, whether a small network beats matching at distance 3 and distance 5 with the training budgets we tried. Second, how long each decoder takes per run of three or five rounds on the same machine, next to how often it's wrong. Third, whether a network trained in simulation still works on the recordings Google has made public {{GQA-DATA-2022 GQA-DATA-2024}}, before and after it has seen some of them. We did the first, part of the second, and not the third.
+We wanted three measurements. First, whether a small network beats matching, and how its results change with the tested training budgets at distances 3 and 5. Second, how long each decoder takes per run of three or five rounds on the same machine, next to how often it's wrong. Third, whether a network trained in simulation still works on the recordings Google has made public {{GQA-DATA-2022 GQA-DATA-2024}}, before and after it has seen some of them. We did the first, part of the second, and not the third.
 
 **What we ran.** One simulated run stores a logical qubit for as many rounds of checks as the grid's distance: three rounds at distance 3, five at distance 5. We use one probability for four kinds of circuit noise: random Pauli errors after Clifford gates and before each round on storing qubits, and flips after resets and before measurements. We call that probability the noise level. The main setting is 0.5%. Every training step draws 4,096 fresh runs at one of seven noise levels between 0.2% and 1%, and afterwards every decoder reads the same 2 million fresh runs at each noise level. {{OWN-D3 OWN-D5}} No training batch is reused. The network is small and plain: three layers of 256 units. That makes 138,241 adjustable numbers at distance 3 and 162,817 at distance 5, few enough to train in minutes on a GPU. It is told only which checks fired, never how the grid is laid out. It gives one answer per run: was the stored value flipped or not.
 
@@ -192,7 +192,7 @@ Each training was repeated from different random starting points, or seeds: eigh
 **Distance 5, the same 66 million examples.** One grid larger, the same network loses in all five seeds. It failed in 1.90% to 2.16% of runs, plain matching in 1.41% and correlated matching in 1.09%. That is about a third to a half more failures than plain matching, and 1.7 to 2 times as many as correlated matching. {{OWN-D5}} The seeds also spread more than at distance 3.
 
 @step 2
-**Distance 5, about 250 million examples.** The curves were still falling at 66 million, so we trained from scratch with a budget of nearly four times as many examples. This run passed plain matching. The checkpoints show when it crossed in these runs, and the minimum training budget remains unknown. The five long runs failed in 1.29% to 1.36% of runs, 1.33% together, or about one run in 75, against 1.41% for plain matching and 1.09% for correlated matching. Across seeds, that is 4% to 8% fewer failures than plain matching and a fifth to a quarter more than correlated matching. {{OWN-D5-250M}}
+**Distance 5, about 250 million examples.** Trained longer, it passes plain matching, not correlated matching. The curves were still falling at 66 million, so we trained it again from scratch on nearly four times as many. The minimum budget is unknown. The five long runs failed in 1.29% to 1.36% of runs, 1.33% together, or about one run in 75, against 1.41% for plain matching and 1.09% for correlated matching. That is 4% to 8% fewer failures than one, and a fifth to a quarter more than the other. {{OWN-D5-250M}}
 
 :::
 
@@ -237,7 +237,7 @@ Decoding we timed only roughly: on one laptop core, with an untrained network of
 
 :::
 
-Before starting we wrote down what would make us drop the idea: if the network needs so many more examples at distance 5 that a laptop can't train it, or if it loses on real recordings, then for a group like ours a neural decoder isn't worth its cost. We now have numbers for the first. On a laptop the long run would take under two hours per seed, so by the rule we set, the idea survives. With the tested budget of about 250 million examples, the network passed plain matching at our main noise setting. It still had about a fifth more failures than correlated matching, which is free and needs no training. {{OWN-D3 OWN-D5 OWN-D5-250M}} The second test, real recordings, is still open.
+Before starting we wrote down what would make us drop the idea: if the network needs so many more examples at distance 5 that a laptop can't train it, or if it loses on real recordings, then for a group like ours a neural decoder isn't worth its cost. We now have numbers for the first. On a laptop the long run would take under two hours per seed, so by the rule we set, the idea survives. The long run passed plain matching. It still had about a fifth more failures than correlated matching, which needs no training and is free to download. {{OWN-D3 OWN-D5 OWN-D5-250M}} The second test, real recordings, is still open.
 
 ## 10. What this doesn't show
 
@@ -247,7 +247,7 @@ Our numbers come from small grids and from a network far smaller than Google's. 
 
 ## What we could not show
 
-- How any of our decoders would do on a real chip. We use one noise parameter for the whole simulated circuit, and matching was handed the exact error model. Real devices have different rates and kinds of errors (section 6). {{OWN-D3 OWN-D5 OWN-D5-250M OWN-TIME}}
+- How any of our decoders would do on a real chip. Every run of ours is a simulation with one probability shared across four kinds of circuit noise, unlike a real chip's errors (section 6), and matching was handed the exact error model. {{OWN-D3 OWN-D5 OWN-D5-250M OWN-TIME}}
 - How our network does on the other of the two kinds of value a logical qubit can hold. We trained and tested it on one; only the check of the two matching decoders in section 9 covers both.
 - How many examples our network needs to reach correlated matching at distance 5, and whether it learns distance 7 at all.
 - Why correlated matching gets those single errors and pairs wrong, and whether another version of the library does too.
@@ -265,7 +265,7 @@ Our numbers come from small grids and from a network far smaller than Google's. 
 | Logical error | Real errors and the decoder's correction together make a line across the grid: the stored value changes and no check fires | Section 5 |
 | Matching | The standard decoder: it joins fired checks to each other or to the edge along the shortest lines | Section 6 |
 | Λ (lambda) | The factor by which the logical error rate shrinks when the distance grows by two | Section 7 |
-| Noise level | The probability shared by the four circuit-noise settings in our simulation | Section 9 |
+| Noise level | In our simulation, the chance that any one operation goes wrong | Section 9 |
 | Correlated matching | Matching in two passes, where the first pass informs the second | Section 9 |
 
 ## How this was made
