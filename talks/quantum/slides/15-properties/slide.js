@@ -5,7 +5,7 @@ import { C, L, R, svgOf, T, frame, ln, inkLayer, PEN } from '../../kit.js';
 export default {
   id: 'properties', n: 15, part: 'Close', builds: 2, speaker: 'B',
   title: 'A decoder gives no quantum speed-up, but its accuracy changes how big a useful machine must be.',
-  clicks: ['four properties', 'what the stop rule decided'],
+  clicks: ['four properties', 'laptop estimate and the open recordings test'],
   draw(page, b, data) {
     const svg = svgOf(page);
     frame(svg, {
@@ -41,8 +41,8 @@ export default {
     // a wavy underline under the availability line, inside its own row
 
     if (b >= 1) {
-      T(svg, L, 872, 'Our stop rule’s first test is passed: by our timing a laptop would train it in under two hours per seed.', { size: 32, weight: 600 });
-      T(svg, L, 916, 'Its second test, on Google’s real recordings, is still open; correlated matching stays ahead.', { size: 32 });
+      T(svg, L, 872, 'Training took place on a GPU. Laptop estimate: about 1 hour 45 minutes per seed.', { size: 32, weight: 600 });
+      T(svg, L, 916, 'The test on Google’s real recordings is still open.', { size: 32 });
     }
   },
 };

@@ -24,12 +24,13 @@ export default {
     });
     T(svg, L, 288, 'Share of simulated runs that ended wrong', { size: 36, weight: 600 });
     T(svg, R, 288, '0.5% circuit noise', { family: 'mono', size: 32, fill: C.ink, anchor: 'end' });
-    const panel = (x0, x1, xmax, step, ylo, yhi, head) => {
+    T(svg, L, 333, 'Line: median · band: range across seeds', { size: 32, fill: C.muted });
+    const panel = (x0, x1, xmax, step, ylo, yhi, head, headColor = C.ink) => {
       const y0 = 420, y1 = 830;
       const X = (n) => x0 + (n / xmax) * (x1 - x0);
       const Y = (r) => y1 - ((r - ylo) / (yhi - ylo)) * (y1 - y0);
       ln(svg, x0, y0, x0, y1); ln(svg, x0, y1, x1, y1);
-      T(svg, x0, y0 - 26, head, { size: 36, weight: 600 });
+      T(svg, x0, y0 - 26, head, { size: 36, weight: 600, fill: headColor });
       for (let v = 0; v <= xmax + 1; v += step) { ln(svg, X(v), y1, X(v), y1 + 12); T(svg, X(v), y1 + 46, String(v / 1e6), { size: 32, anchor: 'middle', fill: C.ink }); }
       T(svg, x1, y1 + 88, 'examples seen, millions', { size: 32, anchor: 'end', fill: C.muted });
       for (let r = ylo; r <= yhi + 1e-9; r += (yhi - ylo > 0.01 ? 0.004 : 0.002)) { ln(svg, x0 - 10, Y(r), x0, Y(r)); T(svg, x0 - 16, Y(r) + 11, pct(r, 1), { size: 32, anchor: 'end', fill: C.muted }); }
@@ -60,7 +61,10 @@ export default {
     tag(A, p3.final_network.mean, `network ${pct(p3.final_network.mean)}`, { dy: -22, weight: 600, fill: C.accent });
     tag(A, p3.levels.table.rate, `lookup table ${pct(p3.levels.table.rate)}`, { dy: 20 });
     // right: distance 5, 0 to 260 million, fixed from the first build
-    const B = panel(1140, 1490, 260e6, 50e6, 0.010, 0.028, 'Distance 5 · five rounds');
+    if (b === 0) {
+      h('rect', { x: 1020, y: 352, width: 780, height: 589, fill: C.field, 'fill-opacity': 0.28 }, svg);
+    }
+    const B = panel(1140, 1490, 260e6, 50e6, 0.010, 0.028, 'Distance 5 · five rounds', b === 0 ? C.accent : C.ink);
     const result = b === 0 ? p66 : p250;
     level(B, result.levels.plain.rate); level(B, result.levels.correlated.rate, '18 12');
     tag(B, result.levels.plain.rate, `plain ${pct(result.levels.plain.rate)}`, { dy: -18, size: 36, weight: 600 });

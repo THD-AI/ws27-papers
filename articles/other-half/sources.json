@@ -1,4 +1,11 @@
 {
+  "IBM-REPETITION": {
+    "title": "Repetition code revisited",
+    "publisher": "IBM Quantum Learning",
+    "url": "https://quantum.cloud.ibm.com/learning/courses/foundations-of-quantum-error-correction/stabilizer-formalism/repetition-code-revisited",
+    "type": "technical documentation",
+    "note": "Three-qubit encoding and parity checks for detecting a single bit flip."
+  },
   "GQA-2024": {
     "title": "Quantum error correction below the surface code threshold",
     "publisher": "Google Quantum AI and Collaborators · Nature 638, 920–926",

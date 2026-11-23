@@ -5,7 +5,7 @@
 // and counts are from data/syndromes.json; nothing is sized or shaded by
 // probability.
 import {
-  mountFigure, svgRoot, g, rect, path, circle, bracket, penRing, stage,
+  mountFigure, svgRoot, g, rect, path, circle, bracket, stage,
 } from '../../../lib/fig.js';
 import { pal, grid, text, floor } from './shared.js';
 
@@ -110,22 +110,22 @@ function build(el, ctx) {
   text(eg, et.x, et.bottom + 15, `here ${nFired}; the example that follows`, { ...noteO, fill: C.muted, width: tall ? 190 : 132 });
   st.fade(eg, 0.6, 0.78);
 
-  // the count, with the one pen ring around the number only
-  const rg = g(svg);
-  const rx0 = tall ? 26 : fx + fw + 38, ry0 = tall ? ecy + pitch * 1.5 + 62 : fy + fw - 140;
-  const ct = text(rg, rx0 + 8, ry0, `${cnt.differs} of ${cnt.patterns}`, { family: 'mono', size: tall ? 20 : 23, weight: 500 });
-  // the key to the grid's grey, at the words that say what it means
-  rect(rg, rx0, ct.bottom + 30 - 11, 11, 11, { fill: C.ink, 'fill-opacity': 0.55, 'data-audit': 'skip' });
-  const w1 = text(rg, rx0 + 18, ct.bottom + 30, 'patterns: plain matching’s answer is less likely than another', { size: tall ? 14 : 15, width: tall ? W - 58 : 208, lh: tall ? 18 : 20 });
-  const w2 = text(rg, rx0, w1.bottom + 18, `they occur in about [[${share}]] of cases; in [[${none}]] of cases no check fires`, { size: tall ? 14 : 15, width: tall ? W - 40 : 226, lh: tall ? 18 : 20 });
-  st.fade(rg, 0.74, 0.88);
-  const pr = penRing(svg, ct.cx + 3, ct.cy, ct.w / 2 + 21, tall ? 20 : 23, { seed: 3, stroke: C.ink, width: 1.6, start: -0.4 });   // its tail at the upper right, clear of the number
-  pr.paths.forEach((pp, k) => st.draw(pp, 0.86 + k * 0.03, 0.97 + k * 0.02));
+  const facts = g(svg);
+  const rx0 = tall ? 26 : fx + fw + 38;
+  const ry0 = tall ? ecy + pitch * 1.5 + 44 : fy + fw - 153;
+  const labelSize = tall ? 14 : 15;
+  const valueStyle = { family: 'mono', size: tall ? 20 : 22, weight: 600 };
+  const count = text(facts, rx0 + 17, ry0, `${cnt.differs} of ${cnt.patterns}`, valueStyle);
+  rect(facts, rx0, ry0 - 12, 10, 10, { fill: C.ink, 'fill-opacity': 0.55, 'data-audit': 'skip' });
+  const label = text(facts, rx0, count.bottom + 17, 'distinct patterns where plain matching is less likely to be right', { size: labelSize, width: tall ? W - 40 : 215, lh: 18 });
+  const weight = text(facts, rx0, label.bottom + 26, `about ${share}`, valueStyle);
+  const weightLabel = text(facts, rx0, weight.bottom + 17, 'of rounds show one of these patterns', { size: labelSize, width: tall ? W - 40 : 215, lh: 18 });
+  st.fade(facts, 0.08, 0.24);
 
   const foot = g(svg);
-  text(foot, tall ? 14 : fx, tall ? w2.bottom + 22 : fy + fw + 30, tall
-    ? `${err} error per storing qubit · one round ·\nchecks never wrong · our own count`
-    : `${err} error per storing qubit · one round · checks never wrong · our own count`, { ...mono, lh: 15 });
+  text(foot, tall ? 14 : fx, tall ? weightLabel.bottom + 23 : fy + fw + 30, tall
+    ? `${err} error per storing qubit · one round ·\nperfect checks · our own count`
+    : `${err} error per storing qubit · one round · perfect checks · our own count`, { ...mono, lh: 15 });
   st.fade(foot, 0.8, 0.94);
 
   return { set: (s2, t) => st.set(s2, t) };

@@ -8,7 +8,7 @@ export default {
   clicks: ['three qubits together; no copy'],
   draw(page) {
     const svg = svgOf(page);
-    frame(svg, { title: this.title, n: this.n, part: this.part, source: 'The simplest code, for flips only; the surface code (next slides) protects against both kinds of error. Article, section 2.' });
+    frame(svg, { title: this.title, n: this.n, part: this.part, source: 'The simplest code, for flips only; the surface code (next slides) protects against both kinds of error. IBM Quantum Learning, Repetition code revisited; article, section 2.' });
     const ink = inkLayer(page);
     const cx0 = 300, pitch = 150;
     T(svg, L, 360, 'three qubits, one stored value', { size: 32, weight: 600 });
@@ -18,13 +18,12 @@ export default {
         T(svg, cx0 + i * pitch, y + 20, v, { size: 56, weight: 500, anchor: 'middle' });
       }
     });
-    ink.note(cx0 + pitch - 22, 632, 'or', { size: 40, color: C.muted });
+
     // a brace: all three, always together
     const bx = cx0 + 2 * pitch + 90;
     ink.curve([[bx, 448], [bx + 34, 470], [bx + 34, 600], [bx + 60, 620], [bx + 34, 640], [bx + 34, 770], [bx, 792]], { seed: 40 });
-    ink.note(bx + 80, 600, 'only ever all-0', { size: 38 });
-    ink.note(bx + 80, 648, 'or all-1, together', { size: 38 });
-    ink.note(bx + 80, 696, '(or both at once)', { size: 32, color: C.muted });
+    T(svg, bx + 80, 610, 'α|000⟩ + β|111⟩', { size: 40, weight: 600 });
+    T(svg, bx + 80, 663, 'one shared quantum state', { size: 32, fill: C.muted });
     // the copy that can't exist
     const nx = 1240;
     ink.ellipse(nx + 60, 470, 90, 90, { seed: 41, stroke: C.muted, strokeLineDash: [10, 10] });

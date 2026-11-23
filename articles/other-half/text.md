@@ -35,7 +35,7 @@ That sounds harmless until it's set against a real job. A well-known estimate fo
 
 Ordinary computers protect a bit by storing it three times and taking a vote. That doesn't work for qubits. A quantum state can't be copied, and it can't be looked at to see whether it's still right, because looking destroys it.
 
-The way around this is to store the information in the way several qubits relate to each other, and in none of them alone. The simplest version uses three qubits that are only ever all-0 or all-1 together. No single one holds the information, and no copy of it exists anywhere. Many real qubits working together like this are called a **logical qubit**.
+The way around this is to store the information in the way several qubits relate to each other, and in none of them alone. A simple code that corrects a single flip uses three qubits. It turns α|0⟩ + β|1⟩ into α|000⟩ + β|111⟩, a superposition of all three being 0 and all three being 1. No single qubit holds the original state. Several physical qubits working together like this make a **logical qubit**. {{IBM-REPETITION}}
 
 :::margin qubits 1
 
@@ -47,11 +47,11 @@ In the scheme we studied, the surface code, the qubits sit on a square grid, and
 
 Only about half of the qubits store anything. The rest are helpers, each sitting between two or four storing qubits. The smallest grid, distance 3, has 9 storing qubits and 8 helpers, 17 in all. Distance 5 has 49 qubits, and distance 7 has 97. {{OWN-ARITH GQA-2024}}
 
-Once every round, each helper interacts with its neighbours and is measured. One bit comes out. It doesn't say what state any neighbour is in – only whether the number of errors among those neighbours is even or odd. That answer is the same whatever is stored. So measuring it leaves the stored information alone.
+Once every round, each helper interacts with its neighbours and is measured. One bit comes out. It reports the parity of the neighbours together. In the simple examples below, a check that detects flips changes its answer for an odd number of flips. Two flips cancel in that check. The answer tells us about the errors while leaving the stored information alone. {{GQA-2024}}
 
 :::margin qubits 3
 
-These questions are called **checks**. While nothing goes wrong, a check gives the same answer round after round. When a qubit next to it is hit, the answer changes, and we say the check **fires**.
+These questions are called **checks**. While nothing goes wrong, a check gives the same answer round after round. A change from the previous round is a **detection event**. We say the check **fires**. {{GQA-2024}}
 
 Two kinds of error can hit a qubit. A flip swaps 0 and 1, as in an ordinary bit. A phase error is harder to picture. In the water image, it keeps the pattern's shape and shifts its rhythm: 0 and 1 stay as they are, but "0 plus 1" becomes "0 minus 1". That only shows while the qubit is in both states at once, which an ordinary bit can't be. Half of the checks notice flips and the other half notice phase errors. Some errors are both at once and fire checks of both kinds. We come back to those in section 6.
 
@@ -61,7 +61,7 @@ A check can also just report wrongly. Then it fires twice in a row, once when th
 
 :::scene film
 
-@caption What leaves the chip each round is every check's answer, drawn here as the opening drawing's cable: a strip of film whose frames show the checks of the distance-7 grid that fired. The frame enlarged above it is the round lit beside section 3. Simulated at distance 7 with a 0.5% chance of error per operation, which makes the inner checks fire about as often as on Google's 2024 chip (8.6% of rounds here, 8.7% there), and shown far slower than real time. {{OWN-FILM-SIM GQA-2024}}
+@caption What leaves the chip each round is every check's answer. The film here shows the changes from the previous round: the checks of the distance-7 grid that fired. The frame enlarged above it is the round lit beside section 3. Simulated at distance 7 with a 0.5% chance of error per operation, which makes the inner checks fire about as often as on Google's 2024 chip (8.6% of rounds here, 8.7% there), and shown far slower than real time. {{OWN-FILM-SIM GQA-2024}}
 
 @step 0
 One round of checks takes 1.1 millionths of a second, and a grid of distance 7 has 48 checks. In the time of one blink the chip gets through about ninety thousand rounds and puts out over four million check results, for a single logical qubit. {{GQA-2024 OWN-ARITH}}
@@ -92,15 +92,15 @@ A grid of distance 5, showing flips and the checks that notice them. Here and in
 
 ## 6. Where the standard method goes wrong
 
-The rules are the same on a grid of any size, so we went down to the smallest one that can correct an error, distance 3, where every case can be counted. We went through every possible error there and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 possible patterns on the smallest grid, 24 get an answer from the standard decoder that is less likely than another. {{OWN-ENUM}} They are rare: with a 5% chance of an error per storing qubit (a flip, a phase error or both, each a third of that), together they turn up in fewer than 1 case in 100, while in 63 cases in 100 no check fires at all. On 144 more patterns, two or four outcomes tie for best, and matching gives one of them. {{OWN-ENUM}}
+The rules are the same on a grid of any size, so we went down to the smallest one that can correct an error, distance 3, where every case can be counted. We went through every possible error there and compared two answers for each pattern of fired checks: the one the standard decoder gives, and the one most likely to be right. Of the 256 distinct patterns on the smallest grid, 24 get a less likely answer from plain matching. Those patterns account for about 0.9% of rounds in our toy model, while in 63% of rounds no check fires at all. We gave each storing qubit a 5% chance of an error (a flip, a phase error or both, each a third of that) and assumed perfect checks. {{OWN-ENUM}} On 144 more patterns, two or four outcomes tie for best, and matching gives one of them. {{OWN-ENUM}}
 
 :::figure syndromes wide
-All 256 patterns of the eight checks at distance 3, one mark each, ordered by how many checks fire. Filled: the 24 patterns where the standard decoder's answer is less likely than another. They are rare: with a 5% chance of an error per storing qubit (a flip, a phase error or both, each a third of that), they turn up in about 0.9% of cases, and in 63% of cases no check fires at all. On 144 other patterns two or four outcomes tie for best. Our own count.
+Each square is one distinct pattern of the eight checks at distance 3. The 24 filled squares are the patterns where plain matching gives a less likely answer. Together they occur in about 0.9% of rounds at 5% error per storing qubit, with perfect checks. In 63% of rounds no check fires at all. On 144 other patterns two or four outcomes tie for best. Our own count.
 :::
 
 :::scene lattice
 
-@caption The smallest grid: 9 storing qubits and 8 checks; X is a flip, Z a phase error, Y both. On screen, one flip fires the two checks beside it; then a line of two flips fires only its upper end, as the lower end meets the edge (on paper, at the left). Then our example's three fired checks and two explanations; the dots count 30 times this pattern shows up. Plain matching's answer is right in 10, the other in 19, because it can happen in two ways: the phase error in the far corner or one place above it (5% error per storing qubit, checks never wrong; our own count).
+@caption The smallest grid: 9 storing qubits and 8 checks; X is a flip, Z a phase error, Y both. On screen, one flip fires the two checks beside it; then a line of two flips fires only its upper end, as the lower end meets the edge (on paper, at the left). Then our example's three fired checks. Plain matching's logical answer is right about 33.3% of the time given those checks. Two physical patterns contribute 61.0% to the same alternative logical answer. Rarer patterns take it to 62.2%. The dots show those chances rounded to 30ths (5% error per storing qubit, perfect checks; our own count).
 
 @step 0
 The standard decoder is called **matching**, and the smallest grid shows how it works: 9 storing qubits, never read directly, and 8 checks between them, each asking its neighbours one question.
@@ -114,13 +114,13 @@ Now put several errors in a line. Each check along the line sees two of them, an
 @step 3
 Decoding then becomes a pairing puzzle: join every fired check to another fired check, or to the edge. Matching picks the pairing with the shortest lines in total, since a few errors are more likely than many. Fast, exact methods exist for it, and almost every experiment uses it. {{SB-2025}} Plain matching has two blind spots.
 
-Plain matching solves the puzzle separately for flip-checks and phase-checks, so an error that is both at once (section 3) counts as two. And it seeks the single likeliest explanation, though explanations that differ only in a way the code doesn't care about (section 5) add up.
+Plain matching solves the puzzle separately for flip-checks and phase-checks, so an error that is both at once (section 3) counts as two. It picks one correction. To find the most likely logical answer, we add the chances of all physical error patterns that call for the same logical correction (section 5).
 
 @step 4
-One of the most frequent of the 24 shows it. Three checks fire. Plain matching explains them with two errors: a flip in one corner and a phase error in the centre. It fits the checks, and it is right one time in three. {{OWN-ENUM}} But when the truth is the other answer, matching's correction and the real errors together cross the grid: a silent logical error, about two times in three. Two cautions: we gave every storing qubit a 5% chance of an error (a flip, a phase error or both, each a third of that), far more than a real chip has, so the effect is easy to count, and we assumed the checks never report wrongly. {{OWN-ENUM}}
+One of the most frequent of the 24 shows it. Three checks fire. Plain matching explains them with two errors: a flip in one corner and a phase error in the centre. It fits the checks, and it is right one time in three. {{OWN-ENUM}} When matching gives the wrong logical answer, its correction leaves a silent logical error. In this example that happens about twice in three. Two cautions: we gave every storing qubit a 5% chance of an error (a flip, a phase error or both, each a third of that), far more than a real chip has, so the effect is easy to count, and we assumed the checks never report wrongly. {{OWN-ENUM}}
 
 @step 5
-The same checks also fit a combined error in that corner, a flip and a phase error at once, which the figure marks Y, plus one phase error on the right. Counting Y as one error, this answer also has two, and on its own it is exactly as likely as plain matching's. What tips the balance is that it can happen in two ways. The phase error can sit in the far corner. Or it can sit one place above it, and the checks fire just the same. Together, the two ways are right about six times in ten. {{OWN-ENUM}} The rest are rarer explanations.
+The same checks also fit a combined error in that corner, a flip and a phase error at once, which the figure marks Y, plus one phase error on the right. The phase error can sit in the far corner or one place above it. The checks fire just the same, and both patterns call for the same logical correction. Given those checks, each has a 30.5% chance, so together they contribute 61.0%. Rarer patterns calling for the same correction bring its total to 62.2%. {{OWN-ENUM}}
 
 :::
 
@@ -237,7 +237,7 @@ Decoding we timed only roughly: on one laptop core, with an untrained network of
 
 :::
 
-Before starting we wrote down what would make us drop the idea: if the network needs so many more examples at distance 5 that a laptop can't train it, or if it loses on real recordings, then for a group like ours a neural decoder isn't worth its cost. We now have numbers for the first. On a laptop the long run would take under two hours per seed, so by the rule we set, the idea survives. The long run passed plain matching. It still had about a fifth more failures than correlated matching, which needs no training and is free to download. {{OWN-D3 OWN-D5 OWN-D5-250M}} The second test, real recordings, is still open.
+Before starting we wrote down what would make us drop the idea: if the network needs so many more examples at distance 5 that a laptop can't train it, or if it loses on real recordings, then for a group like ours a neural decoder isn't worth its cost. We trained the long run on a GPU. From short timing runs on an emulated laptop, we estimate about an hour and three-quarters per seed on that machine. We did not complete a long run on it. {{OWN-TIME}} The long run passed plain matching. It still had about a fifth more failures than correlated matching, which needs no training and is free to download. {{OWN-D3 OWN-D5 OWN-D5-250M}} The second test, real recordings, is still open.
 
 ## 10. What this doesn't show
 

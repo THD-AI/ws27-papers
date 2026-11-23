@@ -1,6 +1,6 @@
 // lattice: the smallest grid (9 storing qubits, 8 checks), what fires for
 // one flip and for a row of flips, and the example of three fired checks
-// with its two explanations. Geometry, fired checks and chances are all
+// with two candidate logical answers. Geometry, fired checks and chances are all
 // from data/lattice.json; the strips count the chances in units of 1/30.
 import {
   mountFigure, svgRoot, g, circle, line, path, leader, penRing, stage, lerp, ease, span,
@@ -16,6 +16,7 @@ const SIZE = { wide: [720, 450], tall: [360, 544] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 const STRIP = 30;
+const percent = (rate) => `${(rate * 100).toFixed(1)}%`;
 const KEY = '[[X]]  a flip\n[[Z]]  a phase error\n[[Y]]  both at once';
 
 function build(el, ctx) {
@@ -24,11 +25,13 @@ function build(el, ctx) {
   const [W, H] = SIZE[tall ? 'tall' : 'wide'];
   const ex = d.example, pm = ex.plain_matching, rt = ex.read_together;
   const nPm = Math.round(pm.chance_right * STRIP), nRt = Math.round(rt.chance_right * STRIP);
-  const inN = Math.round(1 / pm.chance_right), in10 = Math.round(rt.chance_right * 10);
+  const inN = Math.round(1 / pm.chance_right);
+  const twoCases = percent(rt.chance_of_minimum_weight_cases);
+  const totalCase = percent(rt.chance_right);
   const pctErr = `${Math.round(ex.conditions.error_per_storing_qubit * 100)}%`;
   const svg0 = svgRoot(el, W, H,
     `The smallest grid: ${d.storing_qubits} storing qubits and ${d.helpers} checks. Errors are never seen; only the checks next to them fire, and in a line of errors only the ends. `
-    + `The same ${ex.fired.length} fired checks can be explained in two ways: plain matching picks the one that is right ${1} time in ${inN}; the other, read together, is right about ${in10} times in 10. `
+    + `Given these ${ex.fired.length} fired checks, plain matching is right once in ${inN}. The two smallest physical error patterns for the same alternative logical answer account for ${twoCases}; rarer patterns bring that answer to ${totalCase}. `
     + `Counted by us with ${pctErr} error per storing qubit and checks that are never wrong.`);
   svg0.style.color = C.ink;
   text(g(svg0, { 'data-role': 'title' }), 16, 18, `the smallest grid: ${d.storing_qubits} storing qubits and ${d.helpers} checks`, { family: 'sans', size: 13, weight: 600 });
@@ -54,13 +57,21 @@ function build(el, ctx) {
     return els;
   }
 
-  function copy(cx, cy, answer, note, n, ring, label) {
-    const grp = g(svg);
-    text(grp, cx, cy - ext - (tall || print ? 37 : 32), tall || print ? label.replace(/ (picks|explanation)/, '\n$1') : label, { family: 'sans', size: tall ? 12 : 13, weight: 500, anchor: 'middle', lh: 15 });
-    const G = grid(grp, { checks: d.checks, d: d.distance, cx, cy, pitch: S.pitch, C });
-    ex.fired.forEach((id) => G.tiles[id].setFired(1));
-    const marks = g(grp);
-    for (const q in answer.errors) { const [x, y] = G.pos(+q); errMark(marks, x, y, G.qr * 1.22, answer.errors[q], C).setAttribute('data-audit', 'skip'); }
+  function copy(cx, cy, cases, note, n, ring, label) {
+    const grp = g(svg), marks = g(grp);
+    text(grp, cx, cy - ext - (tall || print ? 37 : 32), label, { family: 'sans', size: tall ? 12 : 13, weight: 500, anchor: 'middle', lh: 15, width: S.w });
+    const twins = cases.length === 2;
+    for (const [i, errors] of cases.entries()) {
+      const x = twins ? cx + (i * 2 - 1) * S.pitch * 0.83 : cx;
+      const pitch = twins ? S.pitch * 0.47 : S.pitch;
+      const G = grid(grp, { checks: d.checks, d: d.distance, cx: x, cy, pitch, C });
+      ex.fired.forEach((id) => G.tiles[id].setFired(1));
+      for (const [q, letter] of Object.entries(errors)) {
+        errMark(marks, ...G.pos(Number(q)), G.qr * 1.22, letter, C).setAttribute('data-audit', 'skip');
+      }
+      if (twins) text(marks, x, cy + pitch * 1.5 + 16, i === 0 ? 'corner' : 'one row up', { family: 'sans', size: 12, anchor: 'middle' });
+    }
+    grp.appendChild(marks);
     const ng = g(svg);
     const nt = text(ng, cx, S.noteY, note, { italic: true, size: S.noteSize, anchor: 'middle', width: S.w });
     const sg = g(svg);
@@ -74,9 +85,8 @@ function build(el, ctx) {
 
   const notePm = `plain matching:
 right [[1]] time in [[${inN}]]`;
-  const noteRt = `read together: right
-about [[${in10}]] times in [[10]]`;
-  const rest = 'the rest: rarer explanations';
+  const noteRt = `[[${twoCases}]] for these two\n[[${totalCase}]] with rarer patterns`;
+  const rest = 'the rest: other logical outcomes';
   const foot = tall
     ? `${pctErr} error per storing qubit · one round ·\nchecks never wrong · our own count`
     :`${pctErr} error per storing qubit · one round · checks never wrong · our own count`;
@@ -97,8 +107,8 @@ about [[${in10}]] times in [[10]]`;
     ex.fired.forEach((id) => M.tiles[id].setFired(1));
     text(svg, S.xs[0], S.noteY, `[[${firedLabel}.]]
 Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
-    copy(S.xs[1], S.cy, pm, notePm, nPm, true, 'plain matching picks this one');
-    copy(S.xs[2], S.cy, rt, noteRt, nRt, false, 'the more likely explanation');
+    copy(S.xs[1], S.cy, [pm.errors], notePm, nPm, true, 'plain matching’s answer');
+    copy(S.xs[2], S.cy, rt.minimum_weight_cases, noteRt, nRt, false, 'same logical answer');
     text(svg, (S.xs[1] + S.xs[2]) / 2, 374, rest, { italic: true, size: 13, anchor: 'middle', fill: C.muted });
     text(svg, (S.xs[0] + S.xs[2]) / 2, 418, foot, { family: 'mono', size: 12, anchor: 'middle', fill: C.muted });
     return { set() {} };
@@ -241,10 +251,10 @@ Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
 Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
   st.fade(lab, 4.4, 4.6);
 
-  const c1 = copy(S.xs[1], S.cy, pm, notePm, nPm, true, 'plain matching picks this one');
+  const c1 = copy(S.xs[1], S.cy, [pm.errors], notePm, nPm, true, 'plain matching’s answer');
   st.fade(c1.grp, 4.38, 4.62).fade(c1.marks, 4.58, 4.76).fade(c1.ng, 4.66, 4.84).fill(c1.dotsEl, 4.72, 4.94).fade(c1.cnt, 4.86, 4.98);
   c1.pr.paths.forEach((pp, k) => st.draw(pp, 4.8 + k * 0.03, 4.97 + k * 0.02));
-  const c2 = copy(S.xs[2], S.cy, rt, noteRt, nRt, false, 'the more likely explanation');
+  const c2 = copy(S.xs[2], S.cy, rt.minimum_weight_cases, noteRt, nRt, false, 'same logical answer');
   st.fade(c2.grp, 5.02, 5.3).fade(c2.marks, 5.26, 5.48).fade(c2.ng, 5.42, 5.62).fill(c2.dotsEl, 5.5, 5.8).fade(c2.cnt, 5.72, 5.86);
 
   const tail = g(svg);

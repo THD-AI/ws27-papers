@@ -2,5 +2,5 @@
 
 | On the slide | Source |
 |---|---|
-| three qubits, all-0 or all-1 together | article section 2; the textbook repetition code |
+| three-qubit repetition code and encoded state | article section 2; IBM Quantum Learning, Repetition code revisited (IBM-REPETITION) |
 | no-cloning | course term; article section 2 |

@@ -1,15 +1,14 @@
-// Slide 2: why correction is needed, then the threshold. Both halves are
-// sketches (Excalidraw strokes, rough.js): a schematic is drawn by hand so it
-// can't be mistaken for data; the numbers stay in type.
+// Slide 2: why correction is needed. The marked scale is a sketch; the
+// two numbers come from the published estimate.
 import { C, L, svgOf, T, frame, inkLayer, PEN } from '../../kit.js';
 
 export default {
   id: 'threshold', n: 2, part: 'Motivation', builds: 1, speaker: 'A',
-  title: 'A bigger grid helps when each qubit is below the threshold.',
-  clicks: ['slips against steps; the threshold, sketched'],
+  title: 'One uncorrected slip can spoil the answer.',
+  clicks: ['the hardware error rate against the size of the job'],
   draw(page) {
     const svg = svgOf(page);
-    frame(svg, { title: this.title, n: this.n, part: this.part, source: 'Published estimate: Gidney and Ekerå, Quantum 5, 433 (2021). Right: a sketch, no scale; the measured notes from Google Quantum AI, Nature 614 (2023) and Nature 638 (2025).' });
+    frame(svg, { title: this.title, n: this.n, part: this.part, source: 'Published estimate: Gidney and Ekerå, Quantum 5, 433 (2021). Right: the surface-code threshold, explained in article sections 2 and 7.' });
     const ink = inkLayer(page);
     // left: one log axis of counts, 1 to 10^10
     const x0 = 170, x1 = 940, y = 610, X = (e) => x0 + (e / 10) * (x1 - x0);
@@ -30,22 +29,10 @@ export default {
     T(svg, x0 - 50, y + 300, 'Each step is built from many operations, and one', { size: 32 });
     T(svg, x0 - 50, y + 340, 'uncorrected slip can spoil the answer.', { size: 32 });
 
-    // right: the threshold, a sketch with no scale
-    const sx0 = 1110, sy0 = 360, sy1 = 760, sx1 = 1760;
-    ink.arrow([[sx0, sy1], [sx0, sy0 - 20]], { seed: 21, head: 22 });
-    ink.arrow([[sx0, sy1], [sx1, sy1]], { seed: 22, head: 22 });
-    ink.note(sx0 + 20, sy0 - 26, 'logical error (a sketch, no scale)', { size: 32 });
-    const D = [3, 5, 7], DX = (d) => sx0 + 90 + ((d - 3) / 4) * 360;
-    D.forEach((d) => T(svg, DX(d), sy1 + 50, String(d), { size: 32, anchor: 'middle' }));
-    T(svg, DX(5), sy1 + 92, 'distance (grid size)', { size: 32, anchor: 'middle', fill: C.muted });
-    const y3 = 540;
-    ink.curve(D.map((d, i) => [DX(d), y3 - i * 70]), { stroke: PEN.red, strokeLineDash: [14, 12], seed: 23 });
-    ink.curve(D.map((d, i) => [DX(d), y3 + i * 90]), { stroke: PEN.blue, seed: 24 });
-    ink.note(DX(7) + 20, y3 - 150, 'above the', { color: PEN.red, size: 34 });
-    ink.note(DX(7) + 20, y3 - 110, 'threshold', { color: PEN.red, size: 34 });
-    ink.note(DX(7) + 20, y3 + 196, 'below it', { color: PEN.blue, size: 34 });
-    T(svg, DX(3) + 40, y3 + 150, '÷ Λ per step', { fill: PEN.blue, size: 34 });
-    T(svg, sx0, 910, 'Google, measured: in 2023 distance 5 just beat 3;', { size: 32 });
-    T(svg, sx0, 954, 'in 2024 the error about halved at each step.', { size: 32 });
+    const tx = 1120;
+    T(svg, tx, 405, 'Correction takes more qubits.', { size: 42, weight: 600 });
+    T(svg, tx, 502, 'If those qubits are reliable enough,', { size: 36 });
+    T(svg, tx, 550, 'a bigger grid protects better.', { size: 36 });
+    T(svg, tx, 670, 'That is the threshold.', { size: 36, weight: 600 });
   },
 };

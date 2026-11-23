@@ -12,7 +12,7 @@ export default {
     frame(svg, {
       title: b === 0 ? 'Three checks fire. Plain matching picks one explanation.' : this.title,
       n: this.n, part: this.part,
-      source: 'Our exact count (OWN-ENUM). All probabilities are conditional on the three fired checks. Distance 3, 5% error per storing qubit, one round, perfect checks.',
+      source: 'Our enumeration (OWN-ENUM). All probabilities are conditional on the three fired checks. Distance 3, 5% error per storing qubit, one round, perfect checks.',
     });
     const { example, checks, distance } = lattice;
     const { fired, plain_matching: plain, read_together: combined } = example;
@@ -33,7 +33,8 @@ export default {
     plate(matchingX, 'Plain matching', plain.errors);
     centerText(observedX, 739, `${fired.length} checks fire`, { weight: 600, fill: C.accent });
     centerText(matchingX, 739, `${pct(plain.chance_right)} chance of being right`, { size: 32, weight: 600 });
-    T(svg, L, 917, 'X = flip · Z = phase error · Y = both', { size: 32 });
+    T(svg, L, 946, 'X = flip · Z = phase error · Y = both', { size: 32 });
+    T(svg, R, 946, 'Toy model · one round · perfect checks', { size: 32, anchor: 'end' });
     if (b === 0) {
       centerText(1370, 533, 'What else could fire', { size: 42, weight: 600 });
       centerText(1370, 586, 'the same three checks?', { size: 42, weight: 600 });
@@ -48,7 +49,7 @@ export default {
     });
     ln(svg, 1010, 780, R, 780, { 'stroke-width': 3 });
     const mid = (1010 + R) / 2;
-    centerText(mid, 834, `${pct(combined.chance_of_minimum_weight_cases)} for the two cases shown`, { size: 38, weight: 600 });
-    centerText(mid, 887, `${pct(combined.chance_right)} with rarer cases for the same outcome`, { size: 34 });
+    centerText(mid, 834, `${pct(combined.chance_of_minimum_weight_cases)} for these two patterns`, { size: 38, weight: 600 });
+    centerText(mid, 887, `${pct(combined.chance_right)} including rarer patterns`, { size: 34 });
   },
 };
