@@ -136,7 +136,7 @@ function build(el, ctx) {
   const noteO = { italic: true, size: tall ? 13 : 14.5 };
   const nx = bx + bigS + (tall ? 8 : 16);
   const n0 = g(takeover);
-  text(n0, nx, by + (tall ? 16 : 24), 'one round, enlarged', noteO);
+  text(n0, nx, by + (tall ? 16 : 24), 'one round, enlarged', { ...noteO, hand: true });   // the pen arrow's words
   // step 2: the two kinds, each pointed at a fired check of that kind
   const pick = (kind) => firedT.filter((t) => t.check.asks_about === kind).sort((u, v) => u.c[1] - v.c[1])[0];
   const n2 = g(svg);
