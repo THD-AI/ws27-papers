@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>v3.1 board: map</title>
+<style>body{margin:0;background:#FBFBFC;font:500 28px 'Libre Franklin',sans-serif;color:#15171C}#root{display:flex;gap:40px;padding:24px}
+svg{display:block;width:1440px;height:810px;outline:1px solid #DADDE3}path{fill:none;vector-effect:non-scaling-stroke}
+[data-stroke=grid]{stroke:#DADDE3;stroke-width:1.5}[data-stroke=object]{stroke:#15171C;stroke-width:3}[data-stroke=route]{stroke:#C8321F;stroke-width:4}
+.cam{fill:none;stroke:#15171C;stroke-width:2;vector-effect:non-scaling-stroke}.panel{fill:none;stroke:#5C6370;stroke-width:2;stroke-dasharray:8 6;vector-effect:non-scaling-stroke}
+.lab{font:500 110px 'Libre Franklin',sans-serif;fill:#15171C}</style></head><body><div id="root"></div>
+<script type="module">
+// Whole map with every camera rectangle (solid) and lifted panel box (dashed), chevron and strip.
+import { makeRoute, buildWorld, panels } from '../world.js';
+import { rect } from '../camera.js';
+const P = await (await fetch('../pages.json')).json();
+const NS = 'http://www.w3.org/2000/svg', root = document.getElementById('root'), out = {};
+const add = (s, tag, a, txt) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (txt) e.textContent = txt; s.append(e); };
+for (const kind of ['chevron', 'strip']) {
+  const box = document.createElement('div'); box.innerHTML = `<div>${kind}</div>`;
+  const s = document.createElementNS(NS, 'svg'); s.setAttribute('viewBox', '0 0 9600 5400'); box.append(s); root.append(box);
+  const route = makeRoute(kind); buildWorld(s, route, P.zones, P.map, { overview: true });
+  const items = [];
+  for (const [id, st] of Object.entries(P.stops)) {
+    const r = rect(st, route, P.map); items.push({ id, kind: 'camera', ...r });
+    add(s, 'rect', { x: r.x, y: r.y, width: r.w, height: r.h, class: 'cam' });
+    add(s, 'text', { x: r.x + 30, y: r.y + 120, class: 'lab' }, id);
+  }
+  for (const pb of panels(route, P.zones)) { items.push({ kind: 'panel', ...pb }); add(s, 'rect', { x: pb.x, y: pb.y, width: pb.w, height: pb.h, class: 'panel' }); }
+  out[kind] = items;
+}
+window.MAP = out;
+</script></body></html>

@@ -1,0 +1,32 @@
+{
+  "map": [9600, 5400],
+  "frame": [1920, 1080],
+  "zones": [
+    { "id": "A", "name": "Cold box", "from": 0.00, "to": 0.20 },
+    { "id": "B", "name": "Chip", "from": 0.20, "to": 0.40 },
+    { "id": "C", "name": "Film", "from": 0.40, "to": 0.62 },
+    { "id": "D", "name": "Reader", "from": 0.62, "to": 0.82 },
+    { "id": "E", "name": "Results", "from": 0.82, "to": 1.00 }
+  ],
+  "stops": {
+    "overview": { "width": 9600, "at": null },
+    "A": { "width": 2400, "at": 0.10 },
+    "B": { "width": 1800, "at": 0.30 },
+    "BC": { "width": 2600, "at": 0.40 },
+    "CD-frame": { "width": 2200, "at": 0.60 },
+    "D": { "width": 2400, "at": 0.72 },
+    "CD": { "width": 3200, "at": 0.66 },
+    "E": { "width": 2000, "at": 0.91 }
+  },
+  "pages": [
+    { "beat": 0, "build": 0, "camera": "overview", "focus": null },
+    { "beat": 1, "build": 0, "camera": "A", "focus": "A" },
+    { "beat": 2, "build": 0, "camera": "B", "focus": "B" },
+    { "beat": 3, "build": 0, "camera": "BC", "focus": "C" },
+    { "beat": 4, "build": 0, "camera": "CD-frame", "focus": "C" },
+    { "beat": 5, "build": 0, "camera": "D", "focus": "D" },
+    { "beat": 6, "build": 0, "camera": "CD", "focus": "D" },
+    { "beat": 7, "build": 0, "camera": "E", "focus": "E" },
+    { "beat": 8, "build": 0, "camera": "overview", "focus": null }
+  ]
+}
