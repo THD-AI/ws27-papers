@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>v3.1 board: objects</title>
+<link rel="stylesheet" href="../player.css">
+<style>body{margin:0;background:#FBFBFC;font:500 24px 'Libre Franklin',sans-serif;color:#15171C}#root{padding:24px}
+.row{display:flex;gap:24px;margin-bottom:28px;align-items:flex-end}.row>div{text-align:center}
+svg.tile{display:block;background:#FBFBFC;outline:1px solid #DADDE3}</style></head>
+<body><div id="root"></div><script type="module">
+// Four objects side by side at the zooms of beats 1, 6 and 0. Tiles are numbered only.
+import { chip, film, reader } from '../objects.js';
+const q = new URLSearchParams(location.search);
+const order = (q.get('order') || 'reader,traced,film,chip').split(',');
+const T = await (await fetch('../art/cryostat.json')).json();
+const NS = 'http://www.w3.org/2000/svg';
+// each object in map units, origin at its ground point; cryostat scaled to 900 units tall
+const k = 900 / T.H;
+const OBJ = {
+  traced: { d: T.paths, transform: `translate(${-T.W * k / 2},${-900}) scale(${k})`, box: [-T.W * k / 2, -900, T.W * k, 900] },
+  chip: { d: chip([0, 0]) }, film: { d: film([0, 0]) }, reader: { d: reader([0, 0]) },
+};
+const ROWS = [['beat 1', 1920 / 2400], ['beat 6', 1920 / 3200], ['beat 0', 1920 / 9600]];
+const TILE = 1150; // map units per tile side
+const root = document.getElementById('root');
+for (const [name, s] of ROWS) {
+  const row = document.createElement('div'); row.className = 'row'; root.append(row);
+  order.forEach((id, i) => {
+    const o = OBJ[id], px = Math.round(TILE * s);
+    const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'tile'); svg.setAttribute('width', px); svg.setAttribute('height', px);
+    svg.setAttribute('data-row', name); svg.setAttribute('data-obj', id); svg.setAttribute('data-scale', s);
+    const g = document.createElementNS(NS, 'g');
+    // centre the object's bbox in the tile after drawing
+    for (const d of o.d) { const p = document.createElementNS(NS, 'path'); p.setAttribute('d', d); p.setAttribute('data-stroke', 'object'); g.append(p); }
+    if (o.transform) g.setAttribute('transform', o.transform);
+    const outer = document.createElementNS(NS, 'g'); outer.append(g); svg.append(outer);
+    const cell = document.createElement('div'); cell.append(svg); cell.append(Object.assign(document.createElement('div'), { textContent: (i + 1) + (i ? '' : '  ·  ' + name) })); row.append(cell);
+    const bb = outer.getBBox();
+    outer.setAttribute('transform', `scale(${s}) translate(${TILE / 2 - bb.x - bb.width / 2},${TILE / 2 - bb.y - bb.height / 2})`);
+  });
+}
+window.BLIND = true;
+</script></body></html>
