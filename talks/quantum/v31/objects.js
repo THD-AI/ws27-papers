@@ -92,15 +92,17 @@ export function reader(o) {
   for (let z = 60, i = 0; z < H - 70; z += i % 3 ? 45 : 70, i++) {
     P.line(F(26, z), F(U - 26, z));
     P.line(F(14, z + 6), F(14, z + 34)); P.line(F(U - 14, z + 6), F(U - 14, z + 34));
-    if (i % 2 === 0) for (let u = 50; u < 170; u += 30) P.line(F(u, z + 12), F(u, z + 30));
+    if (i % 2 === 0) for (let u = 50; u < 170; u += 34) P.line(F(u, z + 22), F(u + 20, z + 22));
     P.line(F(U - 70, z + 18), F(U - 46, z + 18));
   }
   // vents on the side face, near the top
-  for (let v = 60; v < V - 40; v += 40) for (let z = 80; z < H - 60; z += 110) P.line(iso(o, 0, v, z), iso(o, 0, v, z + 50));
+  for (let v = 60; v < V - 60; v += 56) for (let z = 90; z < H - 60; z += 70) P.line(iso(o, 0, v, z), iso(o, 0, v + 26, z));
   // top: inset lid, fan grilles, cable gland
   P.poly([[30, 30], [U - 30, 30], [U - 30, V - 30], [30, V - 30]].map(([u, v]) => iso(o, u, v, H)));
-  for (const [cu, cv] of [[100, 110], [100, 270], [210, 110]]) P.ellipse(iso(o, cu, cv, H), 110, 64);
-  for (let v = 60; v < V - 40; v += 50) P.line(iso(o, U, v, 40), iso(o, U, v, 120));
+  // one fan with blades and a dash grille
+  { const c = iso(o, 110, 130, H); P.ellipse(c, 130, 75); for (const a of [0, 1.57, 3.14, 4.71]) P.curve([c, [c[0] + Math.cos(a) * 30, c[1] + Math.sin(a) * 25], [c[0] + Math.cos(a + 0.6) * 55, c[1] + Math.sin(a + 0.6) * 30]]); }
+  for (let v = 230; v < V - 50; v += 30) for (let u = 60; u < U - 60; u += 50) P.line(iso(o, u, v, H), iso(o, u + 24, v, H));
+  
   // cable run leaving the top towards the film
   P.curve([iso(o, 60, 200, H), iso(o, 40, 260, H + 80), iso(o, -60, 320, H + 120), iso(o, -200, 360, H + 100)]);
   P.curve([iso(o, 80, 210, H), iso(o, 62, 274, H + 72), iso(o, -40, 336, H + 108), iso(o, -190, 380, H + 86)]);
@@ -114,10 +116,9 @@ export function readerOverview(o) { const P = pen('reader-ov'), U = 300, V = 380
 // cryostat overview: silhouette (top plate and can) + the three lower plates, measured on the forged image (source px, 1024 × 1536)
 export function cryoOverview() {
   const P = pen('cryo-ov');
-  P.ellipse([508, 285], 790, 150); P.line([500, 150], [500, 75]);
-  P.ellipse([512, 690], 755, 90); P.ellipse([510, 895], 690, 80); P.ellipse([505, 1150], 610, 70);
-  P.line([190, 330], [200, 1140]); P.line([830, 330], [815, 1140]);
-  P.curve([[260, 1190], [330, 1330], [440, 1410], [580, 1410], [680, 1330], [750, 1190]]);
+  P.ellipse([512, 420], 640, 330); P.ellipse([505, 745], 590, 150); P.ellipse([505, 1075], 510, 130); P.ellipse([500, 1270], 300, 90);
+  P.line([200, 440], [215, 745]); P.line([830, 440], [800, 745]); P.line([262, 790], [262, 1060]); P.line([752, 790], [752, 1060]);
+  P.line([465, 195], [465, 320]); P.line([565, 195], [565, 320]); P.line([370, 1110], [370, 1260]); P.line([640, 1110], [640, 1260]);
   return P.out;
 }
 export const countStrokes = (ds) => ds.reduce((a, d) => a + (d.d || d).split(/(?=M)/).length, 0);
