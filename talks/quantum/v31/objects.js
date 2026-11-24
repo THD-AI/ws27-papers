@@ -1,107 +1,123 @@
-// v3.1 code objects (block 4 minimum): chip, film, reader, in strict 30° iso,
-// drawn with ONE shared imperfection model (VISUAL.md §5): rough.js at
-// roughness 0.3, bowing 0, single stroke, a seeded wobble per object, endpoint
-// overshoot 1–3 px and occasional open corners. Map units; px per unit ~0.8.
+// v3.1 code objects: chip, film, reader (rack), in 30° iso, drawn with ONE shared
+// hand pen that matches the forged cryostat's line (block 4c): rough.js single
+// stroke with slight bowing on long edges, freehand ellipses at the same
+// roughness, curved runs for cables and the film curl, and a per-stroke weight
+// within the object token ± 15% (pressure-like variation). Map units.
+// Each path is { d, w }: w is the stroke width in screen px (non-scaling).
 import rough from '../../../lib/vendor/rough.esm.js';
 
 const C30 = Math.cos(Math.PI / 6), S30 = 0.5;
 const gen = rough.generator();
 const PX = 1 / 0.8; // map units per screen px at the reading cameras
+export const TOKEN = 3, VAR = 0.15;
 
 function rng(seed) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
 
-// the pen: every object gets one, seeded by name
 export function pen(name) {
-  let seed = [...name].reduce((a, c) => a * 31 + c.charCodeAt(0), 7) >>> 0;
+  const seed = [...name].reduce((a, c) => a * 31 + c.charCodeAt(0), 7) >>> 0;
   const r = rng(seed), out = [];
-  const opt = () => ({ roughness: 0.3, bowing: 0, disableMultiStroke: true, seed: 1 + Math.floor(r() * 1e6) });
+  const opt = (long) => ({ roughness: 0.55, bowing: long ? 0.9 : 0.3, disableMultiStroke: true, preserveVertices: false, seed: 1 + Math.floor(r() * 1e6), curveFitting: 0.9 });
+  const w = () => +(TOKEN * (1 - VAR + 2 * VAR * r())).toFixed(2);
+  const push = (dr) => out.push(...gen.toPaths(dr).map((p) => ({ d: p.d, w: w() })));
   return {
     out,
     line([x1, y1], [x2, y2]) {
       const L = Math.hypot(x2 - x1, y2 - y1) || 1, ux = (x2 - x1) / L, uy = (y2 - y1) / L;
-      const o1 = (r() < 0.08 ? -2 : 1 + r() * 2) * PX, o2 = (r() < 0.08 ? -2 : 1 + r() * 2) * PX; // overshoot, sometimes an open corner
-      const d = gen.toPaths(gen.line(x1 - ux * o1, y1 - uy * o1, x2 + ux * o2, y2 + uy * o2, opt()));
-      out.push(...d.map((p) => p.d));
+      const o1 = (r() < 0.08 ? -2 : 1 + r() * 2) * PX, o2 = (r() < 0.08 ? -2 : 1 + r() * 2) * PX;
+      push(gen.line(x1 - ux * o1, y1 - uy * o1, x2 + ux * o2, y2 + uy * o2, opt(L > 200)));
     },
     poly(pts, close = true) { for (let i = 0; i < pts.length - (close ? 0 : 1); i++) this.line(pts[i], pts[(i + 1) % pts.length]); },
-    ellipse([cx, cy], w, h) { out.push(...gen.toPaths(gen.ellipse(cx, cy, w, h, opt())).map((p) => p.d)); },
+    ellipse([cx, cy], ew, eh) { push(gen.ellipse(cx, cy, ew, eh, { ...opt(false), roughness: 0.7 })); },
+    curve(pts) { push(gen.curve(pts, opt(true))); },
   };
 }
 
-// iso helpers: u along +30° (right-up), v along −30° (left-up... i.e. right-down mirrored), z up
 const iso = ([x, y], u, v, z) => [x + (u - v) * C30, y - (u + v) * S30 - z];
 
 function slab(P, o, U, V, z0, H) {
   const b = [[0, 0], [U, 0], [U, V], [0, V]].map(([u, v]) => iso(o, u, v, z0));
   const t = [[0, 0], [U, 0], [U, V], [0, V]].map(([u, v]) => iso(o, u, v, z0 + H));
-  // visible: front edges of base (v=0 side and u=0 side face the viewer), verticals, top
   P.line(b[3], b[0]); P.line(b[0], b[1]);
   P.line(b[3], t[3]); P.line(b[0], t[0]); P.line(b[1], t[1]);
   P.poly(t);
   return t;
 }
 
-// Chip: flip-chip die on a ceramic carrier (sample-holder style), four coax connectors on
-// the carrier edge, wire bonds from the die edge to pads, pad row on the front edge.
+// coax connector: iso cylinder with a cable curving away from its top
+function coax(P, o, u, v, z, dir) {
+  const b = iso(o, u, v, z), t = iso(o, u, v, z + 70);
+  P.ellipse(t, 56, 32); P.line([b[0] - 28, b[1]], [t[0] - 28, t[1]]); P.line([b[0] + 28, b[1]], [t[0] + 28, t[1]]);
+  if (!dir) return;
+  P.curve([t, [t[0] + dir[0] * 40, t[1] - 120], [t[0] + dir[0] * 160, t[1] - 170 + dir[1] * 40], [t[0] + dir[0] * 300, t[1] - 140 + dir[1] * 60]]);
+}
+
+// Chip: flip-chip die on a carrier, pad ring with bond wires, four coax connectors with cables.
 export function chip(o) {
   const P = pen('chip'), U = 560, V = 560;
   slab(P, o, U, V, 0, 40);
   slab(P, iso(o, 170, 170, 40), 220, 220, 0, 26);
-  // die face: bump grid
   for (let a = 205; a < 380; a += 55) for (let c = 205; c < 380; c += 55) P.line(iso(o, a, c, 66), iso(o, a + 9, c, 66));
-  // pad ring on the carrier around the die, with a bond wire to each die edge (never to a connector)
-  for (let k = 200; k <= 360; k += 52) {
-    for (const [pu, pv, du, dv] of [[k, 135, k, 172], [k, 425, k, 388], [135, k, 172, k], [425, k, 388, k]]) {
-      P.line(iso(o, pu - 7, pv, 40), iso(o, pu + 7, pv, 40));
-      P.line(iso(o, pu, pv, 40), iso(o, du, dv, 66));
-    }
+  for (let k = 200; k <= 360; k += 52) for (const [pu, pv, du, dv] of [[k, 135, k, 172], [k, 425, k, 388], [135, k, 172, k], [425, k, 388, k]]) {
+    P.line(iso(o, pu - 7, pv, 40), iso(o, pu + 7, pv, 40));
+    P.line(iso(o, pu, pv, 40), iso(o, du, dv, 66));
   }
-  // connector feed lines: from each connector straight inward to the pad ring corner, ending short of it
-  for (const [u, v, eu, ev] of [[60, 60, 120, 120], [U - 60, 60, U - 120, 120], [60, V - 60, 120, V - 120], [U - 60, V - 60, U - 120, V - 120]]) P.line(iso(o, u + Math.sign(eu - u) * 30, v + Math.sign(ev - v) * 30, 40), iso(o, eu, ev, 40));
-  // edge pads on both visible carrier faces
-  for (let u = 90; u < U - 60; u += 46) P.line(iso(o, u, 0, 10), iso(o, u, 0, 30));
-  for (let v = 90; v < V - 60; v += 46) P.line(iso(o, 0, v, 10), iso(o, 0, v, 30));
-  // coax connectors: iso cylinders with a collar
-  for (const [u, v] of [[60, 60], [U - 60, 60], [60, V - 60], [U - 60, V - 60]]) {
-    const bb = iso(o, u, v, 40), t = iso(o, u, v, 120), m = iso(o, u, v, 75);
-    P.ellipse(t, 56, 32); P.line([bb[0] - 28, bb[1]], [t[0] - 28, t[1]]); P.line([bb[0] + 28, bb[1]], [t[0] + 28, t[1]]);
-  }
+  for (let u = 90; u < U - 60; u += 60) P.line(iso(o, u, 0, 10), iso(o, u, 0, 30));
+  coax(P, o, 60, 60, 40, null); coax(P, o, U - 60, 60, 40, [1, 1]); coax(P, o, 60, V - 60, 40, [-1, -1]); coax(P, o, U - 60, V - 60, 40, null);
+  // carrier markings: ground-via rows inside the edges
+  for (let s = 70; s < U - 40; s += 48) for (const [a, b] of [[s, 30], [30, s], [s, V - 30], [U - 30, s]]) P.line(iso(o, a - 5, b, 40), iso(o, a + 5, b, 40));
   return P.out;
 }
 
-// Film: a strip lying on the ground along +30°, sprocket holes on both edges, frame dividers.
+// Film: a strip along +30° with sprocket holes and frames; its newest end curls up.
 export function film(o) {
-  const P = pen('film'), U = 1100, V = 200;
-  P.poly([[0, 0], [U, 0], [U, V], [0, V]].map(([u, v]) => iso(o, u, v, 0)));
+  const P = pen('film'), U = 1000, V = 200;
+  P.line(iso(o, 0, 0, 0), iso(o, U, 0, 0)); P.line(iso(o, 0, V, 0), iso(o, U, V, 0)); P.line(iso(o, 0, 0, 0), iso(o, 0, V, 0));
   P.line(iso(o, 0, 40, 0), iso(o, U, 40, 0)); P.line(iso(o, 0, V - 40, 0), iso(o, U, V - 40, 0));
-  for (let u = 0; u < U; u += 180) P.line(iso(o, u, 40, 0), iso(o, u, V - 40, 0));
-  for (let u = 0; u < U - 180; u += 180) for (let i = 0; i < 5; i++) { const uu = u + 30 + ((i * 53) % 120), vv = 60 + ((i * 37) % 80); P.line(iso(o, uu, vv, 0), iso(o, uu + 14, vv, 0)); }
+  for (let u = 0; u <= U; u += 180) P.line(iso(o, u, 40, 0), iso(o, u, V - 40, 0));
+  for (let u = 0; u < U - 180; u += 180) for (let i = 0; i < 4; i++) { const uu = u + 30 + ((i * 53) % 120), vv = 60 + ((i * 37) % 80); P.line(iso(o, uu, vv, 0), iso(o, uu + 14, vv, 0)); }
   for (let u = 30; u < U - 20; u += 90) for (const v of [12, V - 28]) P.poly([[u, v], [u + 22, v], [u + 22, v + 16], [u, v + 16]].map(([a, b]) => iso(o, a, b, 0)));
+  // curl: both edges rise in a quarter turn past the end
+  for (const v of [0, V]) P.curve([iso(o, U, v, 0), iso(o, U + 90, v, 20), iso(o, U + 140, v, 100), iso(o, U + 120, v, 190), iso(o, U + 60, v, 220)]);
+  P.line(iso(o, U + 60, 0, 220), iso(o, U + 60, V, 220));
   return P.out;
 }
 
-// Reader: an ordinary computer – a rack cabinet with rack units, a vent and a door handle.
+// Reader: an ordinary computer – a 19-inch rack with ears, unit rails, servers, vents and a cable run.
 export function reader(o) {
   const P = pen('reader'), U = 300, V = 380, H = 620;
   slab(P, o, U, V, 0, H);
-  // front face is the v = 0 plane (faces the viewer, lower left); rack units across it
   const F = (u, z) => iso(o, u, 0, z);
-  P.poly([[24, 30], [U - 24, 30], [U - 24, H - 40], [24, H - 40]].map(([u, z]) => F(u, z)));
+  // unit rails and rack ears on the front face
+  P.line(F(26, 24), F(26, H - 30)); P.line(F(U - 26, 24), F(U - 26, H - 30));
   for (let z = 60, i = 0; z < H - 70; z += i % 3 ? 45 : 70, i++) {
-    P.line(F(24, z), F(U - 24, z));
-    if (i % 2 === 0 || i % 3 === 0) for (let u = 50; u < 190; u += 32) P.line(F(u, z + 12), F(u, z + 30));
-    P.line(F(U - 70, z + 16), F(U - 46, z + 16));
-    P.line(F(U - 100, z + 10), F(U - 100, z + 32));
+    P.line(F(26, z), F(U - 26, z));
+    P.line(F(14, z + 6), F(14, z + 34)); P.line(F(U - 14, z + 6), F(U - 14, z + 34));
+    if (i % 2 === 0) for (let u = 50; u < 170; u += 30) P.line(F(u, z + 12), F(u, z + 30));
+    P.line(F(U - 70, z + 18), F(U - 46, z + 18));
   }
-  for (let u = 50; u < U - 50; u += 36) P.line(F(u, H - 90), F(u, H - 60));
-  // side panel seams on the left face (u = 0)
-  for (let v = 70; v < V; v += 70) P.line(iso(o, 0, v, 20), iso(o, 0, v, H - 20));
-  for (let z = 140; z < H; z += 140) P.line(iso(o, 0, 20, z), iso(o, 0, V - 20, z));
+  // vents on the side face, near the top
+  for (let v = 60; v < V - 40; v += 40) for (let z = 80; z < H - 60; z += 110) P.line(iso(o, 0, v, z), iso(o, 0, v, z + 50));
+  // top: inset lid, fan grilles, cable gland
+  P.poly([[30, 30], [U - 30, 30], [U - 30, V - 30], [30, V - 30]].map(([u, v]) => iso(o, u, v, H)));
+  for (const [cu, cv] of [[100, 110], [100, 270], [210, 110]]) P.ellipse(iso(o, cu, cv, H), 110, 64);
+  for (let v = 60; v < V - 40; v += 50) P.line(iso(o, U, v, 40), iso(o, U, v, 120));
+  // cable run leaving the top towards the film
+  P.curve([iso(o, 60, 200, H), iso(o, 40, 260, H + 80), iso(o, -60, 320, H + 120), iso(o, -200, 360, H + 100)]);
+  P.curve([iso(o, 80, 210, H), iso(o, 62, 274, H + 72), iso(o, -40, 336, H + 108), iso(o, -190, 380, H + 86)]);
   return P.out;
 }
 
-// ---- overview variants (beat 0): 20 strokes or fewer, same pen ----
-export function chipOverview(o) { const P = pen('chip-ov'), U = 560, V = 560; slab(P, o, U, V, 0, 40); P.poly([[170, 170], [390, 170], [390, 390], [170, 390]].map(([u, v]) => iso(o, u, v, 66))); return P.out; }
-export function filmOverview(o) { const P = pen('film-ov'), U = 1100, V = 200; P.poly([[0, 0], [U, 0], [U, V], [0, V]].map(([u, v]) => iso(o, u, v, 0))); for (let u = 180; u < U; u += 180) P.line(iso(o, u, 0, 0), iso(o, u, V, 0)); return P.out; }
-export function readerOverview(o) { const P = pen('reader-ov'), U = 300, V = 380, H = 620; slab(P, o, U, V, 0, H); for (const z of [160, 320, 480]) P.line(iso(o, 24, 0, z), iso(o, U - 24, 0, z)); return P.out; }
-export const countStrokes = (ds) => ds.reduce((a, d) => a + d.split(/(?=M)/).length, 0);
+// ---- overview variants (beat 0): silhouette + 2–3 key lines, same pen ----
+export function chipOverview(o) { const P = pen('chip-ov'), U = 560, V = 560; P.poly([[0, 0], [U, 0], [U, V], [0, V]].map(([u, v]) => iso(o, u, v, 40))); P.line(iso(o, 0, 0, 0), iso(o, U, 0, 0)); P.poly([[170, 170], [390, 170], [390, 390], [170, 390]].map(([u, v]) => iso(o, u, v, 66))); return P.out; }
+export function filmOverview(o) { const P = pen('film-ov'), U = 1000, V = 200; P.poly([[0, 0], [U, 0], [U, V], [0, V]].map(([u, v]) => iso(o, u, v, 0))); for (const u of [360, 720]) P.line(iso(o, u, 0, 0), iso(o, u, V, 0)); return P.out; }
+export function readerOverview(o) { const P = pen('reader-ov'), U = 300, V = 380, H = 620; slab(P, o, U, V, 0, H); P.line(iso(o, 26, 0, 300), iso(o, U - 26, 0, 300)); return P.out; }
+// cryostat overview: silhouette (top plate and can) + the three lower plates, measured on the forged image (source px, 1024 × 1536)
+export function cryoOverview() {
+  const P = pen('cryo-ov');
+  P.ellipse([508, 285], 790, 150); P.line([500, 150], [500, 75]);
+  P.ellipse([512, 690], 755, 90); P.ellipse([510, 895], 690, 80); P.ellipse([505, 1150], 610, 70);
+  P.line([190, 330], [200, 1140]); P.line([830, 330], [815, 1140]);
+  P.curve([[260, 1190], [330, 1330], [440, 1410], [580, 1410], [680, 1330], [750, 1190]]);
+  return P.out;
+}
+export const countStrokes = (ds) => ds.reduce((a, d) => a + (d.d || d).split(/(?=M)/).length, 0);

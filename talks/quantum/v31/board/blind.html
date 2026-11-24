@@ -2,39 +2,95 @@
 <link rel="stylesheet" href="../player.css">
 <style>body{margin:0;background:#FBFBFC;font:500 24px 'Libre Franklin',sans-serif;color:#15171C}#root{padding:24px}
 .row{display:flex;gap:24px;margin-bottom:28px;align-items:flex-end}.row>div{text-align:center}
-svg.tile{display:block;background:#FBFBFC;outline:1px solid #DADDE3}</style></head>
+svg.tile{display:block;background:#FBFBFC;outline:1px solid #DADDE3}
+svg.tile path{stroke:#15171C;fill:none;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}</style></head>
 <body><div id="root"></div><script type="module">
-// Four objects side by side at the zooms of beats 1, 6 and 0 (beat 0 uses the overview
-// variants). Tiles are numbered only; the order comes from ?order= (set by the render
-// script from a local seed) and is not stored in this file.
-import { chip, film, reader, chipOverview, filmOverview, readerOverview } from '../objects.js';
-const order = new URLSearchParams(location.search).get('order').split(',');
-const T = await (await fetch('../art/cryostat.json')).json();
+// Four objects side by side at the zooms of beats 1, 6 and 0 (beat 0: overview variants).
+// Tiles are numbered only; the order comes from ?order= (set by the render script from
+// a random draw) and is not stored in this file. The forged object is a raster: the
+// forge PNG, ink recoloured to the pen colour, lines grown so they render at the object
+// token, prepared once per camera group (two sizes). ?compare=1 shows trace vs raster.
+import { chip, film, reader, chipOverview, filmOverview, readerOverview, cryoOverview, TOKEN } from '../objects.js';
+const q = new URLSearchParams(location.search);
 const NS = 'http://www.w3.org/2000/svg';
-const k = 900 / T.H, tr = `translate(${-T.W * k / 2},${-900}) scale(${k})`;
+const T = await (await fetch('../art/cryostat.json')).json();
+const img = new Image(); img.src = '../art/cryostat.png'; await img.decode();
+const W = img.width, H = img.height, k = 900 / H;
+
+// source alpha mask and its measured line width
+const base = document.createElement('canvas'); base.width = W; base.height = H;
+const bg = base.getContext('2d'); bg.drawImage(img, 0, 0);
+const src = bg.getImageData(0, 0, W, H).data;
+const A = new Uint8Array(W * H); for (let i = 0; i < W * H; i++) A[i] = src[i * 4 + 3] >= 64 ? 1 : 0;
+function runWidth(mask, w, h) {
+  const hr = [], vr = [];
+  for (let y = 0; y < h; y += 2) { let n = 0; for (let x = 0; x <= w; x++) { if (x < w && mask[y * w + x]) n++; else { if (n) hr.push(n); n = 0; } } }
+  for (let x = 0; x < w; x += 2) { let n = 0; for (let y = 0; y <= h; y++) { if (y < h && mask[y * w + x]) n++; else { if (n) vr.push(n); n = 0; } } }
+  const med = (a) => a.sort((p, r) => p - r)[Math.floor(a.length / 2)] || 0;
+  return Math.min(med(hr), med(vr));
+}
+const srcWidth = runWidth(A, W, H);
+
+// raster for one camera scale s: grow the line so it lands at TOKEN px, recolour, downscale
+function raster(s) {
+  const disp = k * s, need = TOKEN / disp, r = Math.max(0, Math.round((need - srcWidth) / 2));
+  let M = A;
+  for (let it = 0; it < r; it++) { const o = new Uint8Array(W * H); for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) { const i = y * W + x; o[i] = M[i] | M[i - 1] | M[i + 1] | M[i - W] | M[i + W]; } M = o; }
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d'), id = g.createImageData(W, H);
+  for (let i = 0; i < W * H; i++) { id.data[i * 4] = 0x15; id.data[i * 4 + 1] = 0x17; id.data[i * 4 + 2] = 0x1c; id.data[i * 4 + 3] = M[i] ? 255 : 0; }
+  g.putImageData(id, 0, 0);
+  const out = document.createElement('canvas'); out.width = Math.round(W * disp); out.height = Math.round(H * disp);
+  const og = out.getContext('2d'); og.imageSmoothingQuality = 'high'; og.drawImage(c, 0, 0, out.width, out.height);
+  const od = og.getImageData(0, 0, out.width, out.height).data, om = new Uint8Array(out.width * out.height);
+  for (let i = 0; i < om.length; i++) om[i] = od[i * 4 + 3] >= 128 ? 1 : 0;
+  return { url: out.toDataURL(), w: out.width, h: out.height, run: runWidth(om, out.width, out.height), grow: r };
+}
+
 const OBJ = {
-  t: { d: T.paths, ov: T.overview.map((i) => T.paths[i]), transform: tr },
+  t: { raster: true, ov: cryoOverview(), transform: `translate(${-W * k / 2},${-900}) scale(${k})`, trace: T.paths },
   c: { d: chip([0, 0]), ov: chipOverview([0, 0]) },
   f: { d: film([0, 0]), ov: filmOverview([0, 0]) },
   r: { d: reader([0, 0]), ov: readerOverview([0, 0]) },
 };
 const ROWS = [['beat 1', 1920 / 2400, 'd'], ['beat 6', 1920 / 3200, 'd'], ['beat 0', 1920 / 9600, 'ov']];
-const TILE = 1150;
+const TILE = 1250;
 const root = document.getElementById('root');
-for (const [name, s, kind] of ROWS) {
-  const row = document.createElement('div'); row.className = 'row'; root.append(row);
-  order.forEach((id, i) => {
-    const o = OBJ[id], px = Math.round(TILE * s);
-    const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'tile'); svg.setAttribute('width', px); svg.setAttribute('height', px);
-    svg.dataset.row = name; svg.dataset.n = i + 1;
-    const g = document.createElementNS(NS, 'g');
-    for (const d of o[kind]) { const p = document.createElementNS(NS, 'path'); p.setAttribute('d', d); p.setAttribute('data-stroke', 'object'); g.append(p); }
-    if (o.transform) g.setAttribute('transform', o.transform);
-    const outer = document.createElementNS(NS, 'g'); outer.append(g); svg.append(outer);
-    const cell = document.createElement('div'); cell.append(svg); cell.append(Object.assign(document.createElement('div'), { textContent: (i + 1) + (i ? '' : '  ·  ' + name) })); row.append(cell);
-    const bb = outer.getBBox();
-    outer.setAttribute('transform', `scale(${s}) translate(${TILE / 2 - bb.x - bb.width / 2},${TILE / 2 - bb.y - bb.height / 2})`);
-  });
+window.RASTER = {};
+
+function tile(row, n, s, label, draw) {
+  const px = Math.round(TILE * s);
+  const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'tile'); svg.setAttribute('width', px); svg.setAttribute('height', px);
+  svg.dataset.row = row[0]; svg.dataset.n = n;
+  const outer = document.createElementNS(NS, 'g'); svg.append(outer);
+  const cell = document.createElement('div'); cell.append(svg); cell.append(Object.assign(document.createElement('div'), { textContent: label })); row[1].append(cell);
+  draw(outer, px);
+  return { svg, outer, px };
+}
+function paths(g, list) { for (const it of list) { const p = document.createElementNS(NS, 'path'); p.setAttribute('d', it.d || it); p.setAttribute('stroke-width', it.w || TOKEN); p.dataset.stroke = 'object'; g.append(p); } }
+function centre(outer, s) { const bb = outer.getBBox(); outer.setAttribute('transform', `scale(${s}) translate(${TILE / 2 - bb.x - bb.width / 2},${TILE / 2 - bb.y - bb.height / 2})`); }
+
+if (q.get('compare')) {
+  const s = ROWS[0][1], row = document.createElement('div'); row.className = 'row'; root.append(row);
+  const R = raster(s);
+  tile([0, row], 'a', s, '(a) centreline trace', (outer) => { const g = document.createElementNS(NS, 'g'); g.setAttribute('transform', OBJ.t.transform); paths(g, OBJ.t.trace); outer.append(g); centre(outer, s); });
+  tile([0, row], 'b', s, '(b) raster, recoloured, grown to the token', (outer, px) => { const im = document.createElementNS(NS, 'image'); im.setAttribute('href', R.url); im.setAttribute('x', (px - R.w) / 2); im.setAttribute('y', (px - R.h) / 2); im.setAttribute('width', R.w); im.setAttribute('height', R.h); outer.append(im); });
+} else {
+  const order = q.get('order').split(',');
+  for (const [name, s, kind] of ROWS) {
+    const row = document.createElement('div'); row.className = 'row'; root.append(row);
+    order.forEach((id, i) => {
+      const o = OBJ[id], label = (i + 1) + (i ? '' : '  ·  ' + name);
+      if (o.raster && kind === 'd') {
+        const R = raster(s); window.RASTER[name] = { run: R.run, grow: R.grow, srcWidth };
+        tile([name, row], i + 1, s, label, (outer, px) => { const im = document.createElementNS(NS, 'image'); im.setAttribute('href', R.url); im.setAttribute('x', (px - R.w) / 2); im.setAttribute('y', (px - R.h) / 2); im.setAttribute('width', R.w); im.setAttribute('height', R.h); im.dataset.raster = '1'; outer.append(im);
+          // G25 proxy for the raster: its centreline paths, invisible, placed exactly over it
+          const g = document.createElementNS(NS, 'g'); g.setAttribute('visibility', 'hidden'); g.dataset.proxy = '1'; g.setAttribute('transform', `translate(${(px - R.w) / 2},${(px - R.h) / 2}) scale(${R.w / W})`); paths(g, OBJ.t.trace); outer.append(g); });
+      } else {
+        const list = kind === 'd' ? o.d : o.ov;
+        tile([name, row], i + 1, s, label, (outer) => { const g = document.createElementNS(NS, 'g'); if (o.transform) g.setAttribute('transform', o.transform); paths(g, list); outer.append(g); centre(outer, s); });
+      }
+    });
+  }
 }
 window.BLIND = true;
 </script></body></html>
