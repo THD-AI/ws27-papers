@@ -46,7 +46,8 @@
   },
   "A": {
    "width": 2400,
-   "at": 0.1
+   "at": 0.1,
+   "dy": -250
   },
   "B": {
    "width": 1800,
@@ -54,7 +55,8 @@
   },
   "BC": {
    "width": 2600,
-   "at": 0.4
+   "at": 0.4,
+   "dy": -340
   },
   "CD-frame": {
    "width": 2200,
@@ -100,7 +102,7 @@
       "red": true
      }
     ],
-    "tag": "median qubit lifetime",
+    "tag": "median lifetime, largest grid",
     "source": "Google 2024 chip – Nature 2025"
    },
    "caption": "The chip sits in a cold box; a qubit cannot be looked at without destroying it."
@@ -167,30 +169,60 @@
      "source": "checks never wrong; far more than a real chip"
     }
    ],
-   "caption": "The smallest grid: 9 qubits, 8 checks, one round, checks never wrong."
+   "caption": "The smallest grid: 9 storing qubits, 8 checks, one round, checks never wrong."
   },
   {
    "beat": 5,
    "build": 0,
    "camera": "D",
-   "focus": "D",
+   "focus": null,
    "eyebrow": "Beat 5 · D reader",
    "title": "Same recording, another reader",
    "hero": {
-    "zone": "D",
+    "zone": "p143",
     "parts": [
-     {
-      "fact": "d7-match-171"
-     },
      {
       "fact": "d7-net-143",
       "red": true
      }
     ],
-    "tag": "errors per 100,000 rounds, d 7",
-    "source": "Google 2024 chip – Nature 2025"
+    "tag": "neural network, per 100,000 rounds",
+    "source": "distance 7; Google 2024 chip – Nature 2025"
    },
-   "caption": "A neural network, a program that learns from examples, reads the same recording."
+   "caption": "A neural network, a program that learns from examples, reads the same recording.",
+   "things": [
+    {
+     "id": "p171",
+     "kind": "prism",
+     "at": 0.72,
+     "off": [
+      -725,
+      425
+     ],
+     "s": 90,
+     "h": 342
+    },
+    {
+     "id": "p143",
+     "kind": "prism",
+     "at": 0.72,
+     "off": [
+      -500,
+      325
+     ],
+     "s": 90,
+     "h": 286,
+     "red": true
+    }
+   ],
+   "flags": [
+    {
+     "zone": "p171",
+     "fact": "d7-match-171",
+     "tag": "Google’s best matching, same rounds",
+     "source": "tuned on the chip; read afterwards"
+    }
+   ]
   },
   {
    "beat": 6,
@@ -215,19 +247,39 @@
      "fact": "round-1.1",
      "tag": "a new frame every",
      "source": "Google 2024 chip – Nature 2025"
+    },
+    {
+     "zone": "pile",
+     "fact": "waiting-62-at-66",
+     "tag": "unread frames piling up",
+     "source": "our arithmetic, Google’s times"
     }
    ],
-   "caption": "Storing can wait; a calculation has steps that wait for the answer."
+   "caption": "Storing can wait; a calculation has steps that wait for the answer.",
+   "things": [
+    {
+     "id": "pile",
+     "kind": "box",
+     "at": 0.63,
+     "off": [
+      0,
+      520
+     ],
+     "s": 110,
+     "h": 300,
+     "red": true
+    }
+   ]
   },
   {
    "beat": 7,
    "build": 0,
    "camera": "E",
-   "focus": "E",
+   "focus": null,
    "eyebrow": "Beat 7 · E results",
    "title": "Ours, honestly",
    "hero": {
-    "zone": "E",
+    "zone": "corr",
     "parts": [
      {
       "fact": "d5-corr-1.09",
@@ -235,17 +287,62 @@
      }
     ],
     "tag": "correlated matching, the one to beat",
-    "source": "simulated, distance 5, 0.5% noise"
+    "source": "per run of 5 rounds; d 5; 0.5% noise, simulated"
    },
    "flags": [
     {
-     "zone": "E",
+     "zone": "ours",
      "fact": "d5-net-1.33",
-     "tag": "our network, per run",
-     "source": "per run of 5 rounds; lower is better"
+     "tag": "our network",
+     "source": "lower is better"
+    },
+    {
+     "zone": "plain",
+     "fact": "d5-plain-1.41",
+     "tag": "plain matching",
+     "source": "same runs, same noise"
     }
    ],
-   "caption": "Better than plain matching, not than correlated matching."
+   "caption": "Better than plain matching, not than correlated matching.",
+   "hide": [
+    "E"
+   ],
+   "things": [
+    {
+     "id": "plain",
+     "kind": "prism",
+     "at": 0.91,
+     "off": [
+      -520,
+      230
+     ],
+     "s": 90,
+     "h": 282
+    },
+    {
+     "id": "ours",
+     "kind": "prism",
+     "at": 0.91,
+     "off": [
+      -260,
+      80
+     ],
+     "s": 90,
+     "h": 266
+    },
+    {
+     "id": "corr",
+     "kind": "prism",
+     "at": 0.91,
+     "off": [
+      0,
+      -70
+     ],
+     "s": 90,
+     "h": 218,
+     "red": true
+    }
+   ]
   },
   {
    "beat": 8,
@@ -255,7 +352,7 @@
    "eyebrow": "Beat 8 · the whole machine",
    "title": "One run of a million rounds",
    "hero": {
-    "zone": "D",
+    "zone": "r24",
     "parts": [
      {
       "fact": "net2024-run-24s",
@@ -263,10 +360,41 @@
      }
     ],
     "tag": "Google’s 2024 network, not ours",
-    "source": "our arithmetic; serial; read afterwards"
+    "source": "our arithmetic; read afterwards"
    },
    "redRoute": false,
-   "caption": "The chip is half the computer; the other half has to read it – right, and in time."
+   "caption": "24 µs per round quoted; one network, serial; distance unstated. Our arithmetic.",
+   "things": [
+    {
+     "id": "r24",
+     "kind": "ruler",
+     "at": 0.72,
+     "off": [
+      -250,
+      433
+     ],
+     "len": 2400,
+     "red": true
+    },
+    {
+     "id": "r11",
+     "kind": "ruler",
+     "at": 0.72,
+     "off": [
+      -450,
+      780
+     ],
+     "len": 110
+    }
+   ],
+   "flags": [
+    {
+     "zone": "r11",
+     "fact": "run-1e6-1.1s",
+     "tag": "a million rounds at chip pace",
+     "source": "our arithmetic, Google’s times"
+    }
+   ]
   }
  ]
 }

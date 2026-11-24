@@ -4,7 +4,8 @@ export const FRAME = [1920, 1080];
 
 export function rect(stop, route, map = [9600, 5400]) {
   const w = stop.width, h = w * FRAME[1] / FRAME[0];
-  const [cx, cy] = stop.at == null ? [map[0] / 2, map[1] / 2] : route.at(stop.at);
+  const [cx0, cy0] = stop.at == null ? [map[0] / 2, map[1] / 2] : route.at(stop.at);
+  const cx = cx0 + (stop.dx || 0), cy = cy0 + (stop.dy || 0);
   return { x: cx - w / 2, y: cy - h / 2, w, h };
 }
 

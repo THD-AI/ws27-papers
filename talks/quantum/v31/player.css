@@ -15,3 +15,4 @@ rect[data-stroke]{vector-effect:non-scaling-stroke}
 #ann .red{fill:var(--qc-red)}
 #ann text{paint-order:stroke;stroke:var(--paper);stroke-width:10px;stroke-linejoin:round}
 #ann .band{fill:var(--paper)}
+.thing.red [data-stroke=object]{stroke:var(--qc-red)}

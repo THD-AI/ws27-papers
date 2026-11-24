@@ -73,3 +73,41 @@ export function buildWorld(svg, route, zones, map = [9600, 5400], { overview = f
   svg.append(g);
   return g;
 }
+
+// ---- block 3b: stand-in "things" (prisms, pile box, rulers) beside the route ----
+// spec: { id, kind: 'box'|'prism'|'ruler', at (route fraction), off: [dx, dy] map units,
+//         s (iso half-size), h (height), len (ruler length, map units), red }
+function dirAt(route, f) { const a = route.at(Math.max(0, f - 0.001)), b = route.at(Math.min(1, f + 0.001)); const L = Math.hypot(b[0] - a[0], b[1] - a[1]); return [(b[0] - a[0]) / L, (b[1] - a[1]) / L]; }
+export function thingGeom(route, t) {
+  const [x, y] = route.at(t.at), p = [x + (t.off?.[0] || 0), y + (t.off?.[1] || 0)];
+  if (t.kind === 'ruler') {
+    const [dx, dy] = dirAt(route, t.at), q = [p[0] + dx * t.len, p[1] + dy * t.len], n = [-dy * 40, dx * 40];
+    const d = `M${p[0]},${p[1]}L${q[0]},${q[1]}M${p[0] - n[0]},${p[1] - n[1]}L${p[0] + n[0]},${p[1] + n[1]}M${q[0] - n[0]},${q[1] - n[1]}L${q[0] + n[0]},${q[1] + n[1]}`;
+    const xs = [p[0], q[0]], ys = [p[1], q[1]];
+    return { d, box: { x: Math.min(...xs) - 40, y: Math.min(...ys) - 40, w: Math.abs(q[0] - p[0]) + 80, h: Math.abs(q[1] - p[1]) + 80 }, hull: null };
+  }
+  const { base, top } = isoCorners(p, t.s, t.h), P = (q) => q.join(',');
+  const d = `M${P(base[0])}L${P(base[1])}L${P(top[1])}L${P(top[0])}L${P(top[3])}L${P(base[3])}Z` + `M${P(base[0])}L${P(top[0])}M${P(top[0])}L${P(top[1])}L${P(top[2])}L${P(top[3])}Z`;
+  const hull = [base[0], base[1], top[1], top[2], top[3], base[3]];
+  const xs = hull.map((q) => q[0]), ys = hull.map((q) => q[1]);
+  return { d, hull, box: { x: Math.min(...xs), y: Math.min(...ys), w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys) } };
+}
+export function zoneHull(route, z) { const [s, h] = SIZES[z.id], { base, top } = isoCorners(route.at((z.from + z.to) / 2), s, h); return [base[0], base[1], top[1], top[2], top[3], base[3]]; }
+
+// draws things and breaks the route with a paper gap under every object (mask, no filter)
+export function addThings(world, route, zones, things = [], hide = []) {
+  for (const z of world.querySelectorAll('.zone')) if (hide.includes(z.dataset.zone)) z.remove();
+  for (const t of things) {
+    const g = el('g', { 'data-thing-id': t.id, class: 'thing' + (t.red ? ' red' : '') });
+    if (t.red) g.dataset.thing = 'hero';
+    g.append(el('path', { d: thingGeom(route, t).d, 'data-stroke': 'object' }));
+    world.append(g);
+  }
+  const id = 'routegap' + Math.random().toString(36).slice(2, 7);
+  const mask = el('mask', { id, maskUnits: 'userSpaceOnUse', x: -20000, y: -20000, width: 60000, height: 60000 });
+  mask.append(el('rect', { x: -20000, y: -20000, width: 60000, height: 60000, fill: 'white' }));
+  const hulls = zones.filter((z) => !hide.includes(z.id)).map((z) => zoneHull(route, z)).concat(things.map((t) => thingGeom(route, t).hull).filter(Boolean));
+  for (const h of hulls) mask.append(el('path', { d: 'M' + h.map((q) => q.join(',')).join('L') + 'Z', fill: 'black', stroke: 'black', 'stroke-width': 16, 'vector-effect': 'non-scaling-stroke', 'stroke-linejoin': 'round' }));
+  world.prepend(mask);
+  world.querySelector('#route').setAttribute('mask', `url(#${id})`);
+}

@@ -19,7 +19,7 @@ const p = await b.newPage();
 const TOK = { grid: 1.5, leader: 2, object: 3, route: 4, locator: 1.5 }, TOL = 0.2;
 const FLOOR = { main: 32, mono: 28, source: 24, locator: 24, title: 32, hero: 32 };
 const SAFE = { x: 96, y: 54, r: 1824, b: 1026 };
-const g2 = [], g5 = [], g22 = [], keep = [], over = [];
+const g2 = [], g5 = [], g22 = [], keep = [], over = [], rgate = [], gap = [];
 
 async function load(url) {
   await p.goto(url, { waitUntil: 'networkidle0' });
@@ -56,6 +56,30 @@ for (let i = 1; i <= 9; i++) {
     const hit = A.x < C.r && C.x < A.r && A.y < C.b && C.y < A.b;
     over.push({ page: i, pair: T[a].anchor + ' × ' + T[c].anchor, pass: !hit });
   }
+  // Route gate: the visible route (clipped to the world area between header and caption bands)
+  // must not cross any title, hero, flag or label box. The paper halo does not count.
+  const rg = await p.evaluate(() => {
+    const rp = window.V31_ROUTE, head = +document.querySelector('[data-anchor=header-band]').getAttribute('height'), foot = 958;
+    const boxes = [...document.querySelectorAll('#ann [data-box]')].map((g) => { const [x, y, w, h] = g.dataset.box.split(',').map(Number); return { id: g.dataset.anchor, x, y, r: x + w, b: y + h }; });
+    for (const id of ['title', 'eyebrow', 'question']) { const e = document.querySelector('#ann [data-anchor=' + id + ']'); if (e) { const b = e.getBoundingClientRect(); boxes.push({ id, x: b.x, y: b.y, r: b.right, b: b.bottom }); } }
+    const out = [];
+    for (const bx of boxes) {
+      let hit = false;
+      for (let i = 0; i < rp.length - 1 && !hit; i++) for (let k = 0; k <= 400; k++) {
+        const x = rp[i][0] + (rp[i + 1][0] - rp[i][0]) * k / 400, y = rp[i][1] + (rp[i + 1][1] - rp[i][1]) * k / 400;
+        if (y < head || y > foot) continue;
+        if (x >= bx.x && x <= bx.r && y >= bx.y && y <= bx.b) { hit = true; break; }
+      }
+      out.push({ id: bx.id, pass: !hit });
+    }
+    const route = document.getElementById('route'), mask = route.getAttribute('mask');
+    const holes = mask ? document.querySelectorAll(mask.slice(4, -1) + ' path').length : 0;
+    const objs = [...document.querySelectorAll('#world .zone, #world .thing')].filter((g) => !/M[^M]*L[^M]*M[^M]*L[^M]*M/.test('') ).length;
+    const rulers = (window.V31_RULERS || 0);
+    return { out, gap: { holes, objs: objs - rulers } };
+  });
+  for (const x of rg.out) rgate.push({ page: i, ...x });
+  gap.push({ page: i, ...rg.gap, pass: rg.gap.holes >= rg.gap.objs });
   // G22: the same labels mid-hop (from the previous page's stop), t = 0.25, 0.5, 0.75
   if (i > 1) for (const t of [0.25, 0.5, 0.75]) {
     await load(`${base}index.html?print=1&page=${i}&from=${i - 1}&t=${t}`);
@@ -92,7 +116,9 @@ const table = ['| Gate | Passed | Result |', '| --- | --- | --- |',
   row('G22 label size constant (pages + hops at t .25/.5/.75)', g22, (x) => `${x.role} ${x.min}–${x.max}`),
   row('G24 map edge (cameras + panels)', g24, (x) => x.id),
   row('Keep-inside (text in 5% safe area)', keep, (x) => `p${x.page} ${x.anchor} "${x.s}"`),
-  row('No label overlaps (text boxes)', over, (x) => `p${x.page} ${x.pair}`)];
-writeFileSync(join(OUT, 'gates.json'), JSON.stringify({ g2, g5, g22, g24, keep, over }, null, 1));
+  row('No label overlaps (text boxes)', over, (x) => `p${x.page} ${x.pair}`),
+  row('Route clear of title, hero, flag boxes', rgate, (x) => `p${x.page} ${x.id}`),
+  row('Route paper gap under every object', gap, (x) => `p${x.page} ${x.holes}/${x.objs}`)];
+writeFileSync(join(OUT, 'gates.json'), JSON.stringify({ g2, g5, g22, g24, keep, over, rgate, gap }, null, 1));
 writeFileSync(join(OUT, 'gates.md'), table.join('\n') + '\n');
 console.log(table.join('\n'));
