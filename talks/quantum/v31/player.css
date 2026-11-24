@@ -1,0 +1,17 @@
+:root{--paper:#FBFBFC;--ink:#15171C;--muted:#5C6370;--context:#BBBEC4;--hair:#DADDE3;--qc-red:#C8321F}
+html,body{margin:0;background:var(--paper)}
+svg#page{display:block;width:1920px;height:1080px;background:var(--paper)}
+path{fill:none;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}
+rect[data-stroke]{vector-effect:non-scaling-stroke}
+[data-stroke=grid]{stroke:var(--hair);stroke-width:1.5}
+[data-stroke=object]{stroke:var(--ink);stroke-width:3}
+.zone.context [data-stroke=object]{stroke:var(--context)}
+.zone.red [data-stroke=object]{stroke:var(--qc-red)}
+[data-stroke=route]{stroke:var(--ink);stroke-width:4}
+[data-stroke=route].red{stroke:var(--qc-red)}
+[data-stroke=leader]{stroke:var(--ink);stroke-width:2}
+[data-stroke=locator]{stroke:var(--context);stroke-width:1.5}
+#ann text{fill:var(--ink)}
+#ann .red{fill:var(--qc-red)}
+#ann text{paint-order:stroke;stroke:var(--paper);stroke-width:10px;stroke-linejoin:round}
+#ann .band{fill:var(--paper)}

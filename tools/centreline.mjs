@@ -20,15 +20,18 @@ const rough = readFileSync(join(ROOT, 'node_modules/roughjs/bundled/rough.js'), 
 
 // Everything below runs in the page.
 function trace(img, opts) {
-  const { thr = 128, spur = 8, eps = 1.0 } = opts;
+  const { thr = 200, alpha = 64, spur = 8, eps = 1.0, close = 1, join = 6 } = opts;
   const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
   const g = c.getContext('2d'); g.drawImage(img, 0, 0);
   const W = c.width, H = c.height, d = g.getImageData(0, 0, W, H).data;
   const B = new Uint8Array(W * H);
   for (let i = 0; i < W * H; i++) {
     const a = d[i * 4 + 3], l = 0.299 * d[i * 4] + 0.587 * d[i * 4 + 1] + 0.114 * d[i * 4 + 2];
-    B[i] = a >= 128 && l < thr ? 1 : 0;
+    B[i] = a >= alpha && l < thr ? 1 : 0;
   }
+  // morphological closing (dilate, then erode) bridges small gaps before skeletonising
+  const morph = (src, grow) => { const o = new Uint8Array(W * H); for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { let v = grow ? 0 : 1; for (let dy = -close; dy <= close; dy++) for (let dx = -close; dx <= close; dx++) { const xx = x + dx, yy = y + dy, q = xx < 0 || yy < 0 || xx >= W || yy >= H ? 0 : src[yy * W + xx]; if (grow) v |= q; else v &= q; } o[y * W + x] = v; } return o; };
+  B.set(morph(morph(B, true), false));
   const ink = B.reduce((s, v) => s + v, 0);
   // Zhang–Suen
   const at = (x, y) => (x < 0 || y < 0 || x >= W || y >= H ? 0 : B[y * W + x]);
@@ -84,7 +87,18 @@ function trace(img, opts) {
     for (let i = 1; i < p.length - 1; i++) { const dd = Math.abs((b[0] - a[0]) * (a[1] - p[i][1]) - (a[0] - p[i][0]) * (b[1] - a[1])) / L; if (dd > m) { m = dd; k = i; } }
     return m > eps ? [...dp(p.slice(0, k + 1)).slice(0, -1), ...dp(p.slice(k))] : [a, b];
   };
-  const kept = lines.filter((l) => l.length >= 3).map(dp);
+  // join polylines whose ends nearly touch (< join px), then simplify
+  let ls = lines.filter((l) => l.length >= 3), merged = true;
+  const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+  while (merged) {
+    merged = false;
+    outer: for (let i = 0; i < ls.length; i++) for (let j = i + 1; j < ls.length; j++) {
+      const a = ls[i], b = ls[j], ra = [...a].reverse(), rb = [...b].reverse();
+      const opts2 = [[a, b], [a, rb], [ra, b], [ra, rb]];
+      for (const [x, y] of opts2) if (dist(x[x.length - 1], y[0]) < join) { ls[i] = [...x, ...y]; ls.splice(j, 1); merged = true; break outer; }
+    }
+  }
+  const kept = ls.map(dp);
   const cr = (p) => {
     let s = `M${p[0][0]},${p[0][1]}`;
     for (let i = 0; i < p.length - 1; i++) {
@@ -106,7 +120,7 @@ const p = await b.newPage();
 await p.setContent(html);
 const res = await p.evaluate(async (png) => {
   const img = new Image(); img.src = png; await img.decode();
-  const r = trace(img, { thr: 190, spur: 8, eps: 1.0 });
+  const r = trace(img, {});
   window.R = r; window.PNG = png;
   return { W: r.W, H: r.H, ink: r.ink, skel: r.skel, pruned: r.pruned, paths: r.paths.length, nodes: r.nodes, d: r.paths };
 }, png);

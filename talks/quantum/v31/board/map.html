@@ -14,7 +14,7 @@ const add = (s, tag, a, txt) => { const e = document.createElementNS(NS, tag); f
 for (const kind of ['chevron', 'strip']) {
   const box = document.createElement('div'); box.innerHTML = `<div>${kind}</div>`;
   const s = document.createElementNS(NS, 'svg'); s.setAttribute('viewBox', '0 0 9600 5400'); box.append(s); root.append(box);
-  const route = makeRoute(kind); buildWorld(s, route, P.zones, P.map, { overview: true });
+  const route = makeRoute(kind); buildWorld(s, route, P.zones, P.map, { overview: true, gridStep: 4 });
   const items = [];
   for (const [id, st] of Object.entries(P.stops)) {
     const r = rect(st, route, P.map); items.push({ id, kind: 'camera', ...r });

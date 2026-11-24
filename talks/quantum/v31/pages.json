@@ -1,32 +1,272 @@
 {
-  "map": [9600, 5400],
-  "frame": [1920, 1080],
-  "zones": [
-    { "id": "A", "name": "Cold box", "from": 0.00, "to": 0.20 },
-    { "id": "B", "name": "Chip", "from": 0.20, "to": 0.40 },
-    { "id": "C", "name": "Film", "from": 0.40, "to": 0.62 },
-    { "id": "D", "name": "Reader", "from": 0.62, "to": 0.82 },
-    { "id": "E", "name": "Results", "from": 0.82, "to": 1.00 }
-  ],
-  "stops": {
-    "overview": { "width": 9600, "at": null },
-    "A": { "width": 2400, "at": 0.10 },
-    "B": { "width": 1800, "at": 0.30 },
-    "BC": { "width": 2600, "at": 0.40 },
-    "CD-frame": { "width": 2200, "at": 0.60 },
-    "D": { "width": 2400, "at": 0.72 },
-    "CD": { "width": 3200, "at": 0.66 },
-    "E": { "width": 2000, "at": 0.91 }
+ "map": [
+  9600,
+  5400
+ ],
+ "frame": [
+  1920,
+  1080
+ ],
+ "zones": [
+  {
+   "id": "A",
+   "name": "Cold box",
+   "from": 0,
+   "to": 0.2
   },
-  "pages": [
-    { "beat": 0, "build": 0, "camera": "overview", "focus": null },
-    { "beat": 1, "build": 0, "camera": "A", "focus": "A" },
-    { "beat": 2, "build": 0, "camera": "B", "focus": "B" },
-    { "beat": 3, "build": 0, "camera": "BC", "focus": "C" },
-    { "beat": 4, "build": 0, "camera": "CD-frame", "focus": "C" },
-    { "beat": 5, "build": 0, "camera": "D", "focus": "D" },
-    { "beat": 6, "build": 0, "camera": "CD", "focus": "D" },
-    { "beat": 7, "build": 0, "camera": "E", "focus": "E" },
-    { "beat": 8, "build": 0, "camera": "overview", "focus": null }
-  ]
+  {
+   "id": "B",
+   "name": "Chip",
+   "from": 0.2,
+   "to": 0.4
+  },
+  {
+   "id": "C",
+   "name": "Film",
+   "from": 0.4,
+   "to": 0.62
+  },
+  {
+   "id": "D",
+   "name": "Reader",
+   "from": 0.62,
+   "to": 0.82
+  },
+  {
+   "id": "E",
+   "name": "Results",
+   "from": 0.82,
+   "to": 1
+  }
+ ],
+ "stops": {
+  "overview": {
+   "width": 9600,
+   "at": null
+  },
+  "A": {
+   "width": 2400,
+   "at": 0.1
+  },
+  "B": {
+   "width": 1800,
+   "at": 0.3
+  },
+  "BC": {
+   "width": 2600,
+   "at": 0.4
+  },
+  "CD-frame": {
+   "width": 2200,
+   "at": 0.6
+  },
+  "D": {
+   "width": 2400,
+   "at": 0.72
+  },
+  "CD": {
+   "width": 3200,
+   "at": 0.66
+  },
+  "E": {
+   "width": 2000,
+   "at": 0.91
+  }
+ },
+ "pages": [
+  {
+   "beat": 0,
+   "build": 0,
+   "camera": "overview",
+   "focus": null,
+   "eyebrow": "Beat 0 · the whole machine",
+   "title": "The other half of a quantum computer",
+   "question": "Same recording, two readers – which reads it right, and can it keep up?",
+   "zoneLabels": true,
+   "caption": "This talk is about the other half: the ordinary computer that reads the chip."
+  },
+  {
+   "beat": 1,
+   "build": 0,
+   "camera": "A",
+   "focus": "A",
+   "eyebrow": "Beat 1 · A cold box",
+   "title": "A qubit smears like water",
+   "hero": {
+    "zone": "A",
+    "parts": [
+     {
+      "fact": "qubit-life-85",
+      "red": true
+     }
+    ],
+    "tag": "median qubit lifetime",
+    "source": "Google 2024 chip – Nature 2025"
+   },
+   "caption": "The chip sits in a cold box; a qubit cannot be looked at without destroying it."
+  },
+  {
+   "beat": 2,
+   "build": 0,
+   "camera": "B",
+   "focus": "B",
+   "eyebrow": "Beat 2 · B chip",
+   "title": "Neighbours ask: even or odd?",
+   "hero": {
+    "zone": "B",
+    "parts": [
+     {
+      "fact": "d7-checks-48"
+     }
+    ],
+    "tag": "checks at distance 7",
+    "source": "surface code layout"
+   },
+   "flags": [
+    {
+     "zone": "B",
+     "fact": "round-1.1",
+     "tag": "one round of all checks",
+     "source": "Google 2024 chip – Nature 2025"
+    }
+   ],
+   "caption": "Helpers ask their neighbours even or odd, without looking at the value."
+  },
+  {
+   "beat": 3,
+   "build": 0,
+   "camera": "BC",
+   "focus": "C",
+   "eyebrow": "Beat 3 · C film",
+   "title": "Each round is one frame of a film",
+   "hero": {
+    "zone": "C",
+    "parts": [
+     {
+      "fact": "frames-per-0.1s",
+      "red": true
+     }
+    ],
+    "tag": "frames, one logical qubit",
+    "source": "our arithmetic, Google’s 1.1 µs"
+   },
+   "caption": "The thing that reads the film – the article calls it the decoder."
+  },
+  {
+   "beat": 4,
+   "build": 0,
+   "camera": "CD-frame",
+   "focus": "C",
+   "eyebrow": "Beat 4 · C newest frame",
+   "title": "Which errors made three checks fire?",
+   "flags": [
+    {
+     "zone": "C",
+     "fact": "puzzle-5pct",
+     "tag": "error chance, one round",
+     "source": "checks never wrong; far more than a real chip"
+    }
+   ],
+   "caption": "The smallest grid: 9 qubits, 8 checks, one round, checks never wrong."
+  },
+  {
+   "beat": 5,
+   "build": 0,
+   "camera": "D",
+   "focus": "D",
+   "eyebrow": "Beat 5 · D reader",
+   "title": "Same recording, another reader",
+   "hero": {
+    "zone": "D",
+    "parts": [
+     {
+      "fact": "d7-match-171"
+     },
+     {
+      "fact": "d7-net-143",
+      "red": true
+     }
+    ],
+    "tag": "errors per 100,000 rounds, d 7",
+    "source": "Google 2024 chip – Nature 2025"
+   },
+   "caption": "A neural network, a program that learns from examples, reads the same recording."
+  },
+  {
+   "beat": 6,
+   "build": 0,
+   "camera": "CD",
+   "focus": "D",
+   "eyebrow": "Beat 6 · C to D",
+   "title": "Accurate, or in time",
+   "hero": {
+    "zone": "D",
+    "parts": [
+     {
+      "fact": "net2024-24"
+     }
+    ],
+    "tag": "network time per round",
+    "source": "quoted from earlier work"
+   },
+   "flags": [
+    {
+     "zone": "C",
+     "fact": "round-1.1",
+     "tag": "a new frame every",
+     "source": "Google 2024 chip – Nature 2025"
+    }
+   ],
+   "caption": "Storing can wait; a calculation has steps that wait for the answer."
+  },
+  {
+   "beat": 7,
+   "build": 0,
+   "camera": "E",
+   "focus": "E",
+   "eyebrow": "Beat 7 · E results",
+   "title": "Ours, honestly",
+   "hero": {
+    "zone": "E",
+    "parts": [
+     {
+      "fact": "d5-corr-1.09",
+      "red": true
+     }
+    ],
+    "tag": "correlated matching, the one to beat",
+    "source": "simulated, distance 5, 0.5% noise"
+   },
+   "flags": [
+    {
+     "zone": "E",
+     "fact": "d5-net-1.33",
+     "tag": "our network, per run",
+     "source": "per run of 5 rounds; lower is better"
+    }
+   ],
+   "caption": "Better than plain matching, not than correlated matching."
+  },
+  {
+   "beat": 8,
+   "build": 0,
+   "camera": "overview",
+   "focus": null,
+   "eyebrow": "Beat 8 · the whole machine",
+   "title": "One run of a million rounds",
+   "hero": {
+    "zone": "D",
+    "parts": [
+     {
+      "fact": "net2024-run-24s",
+      "red": true
+     }
+    ],
+    "tag": "Google’s 2024 network, not ours",
+    "source": "our arithmetic; serial; read afterwards"
+   },
+   "redRoute": false,
+   "caption": "The chip is half the computer; the other half has to read it – right, and in time."
+  }
+ ]
 }
