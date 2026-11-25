@@ -5,10 +5,31 @@
 </head><body>
 <svg id="page" xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><g id="cam"></g><g id="ann"></g></svg>
 <script type="module">
-// Bare v3.1 player: ?page=N (1-based), ?print=1, ?from=K&t=0..1 (mid-hop still).
+// v3.1 player: ?page=N (1-based), ?print=1, ?from=K&t=0..1 (mid-hop still), ?p=0..1 (build progress).
+// Keys: → / ← next and back (hop, then the build's motion), M motion on/off, G go to page.
 import { start } from './main.js';
 const [P, F] = await Promise.all(['./pages.json', './facts.json'].map((u) => fetch(u).then((r) => r.json())));
 await document.fonts.ready;
 await Promise.all(['500 44px "Libre Franklin"', '600 44px "Libre Franklin"', '400 30px "Libre Franklin"', '400 56px "Newsreader"'].map((f) => document.fonts.load(f)));
-start(P, F);
+const q0 = new URLSearchParams(location.search);
+let n = Math.max(1, +q0.get('page') || 1), motion = !matchMedia('(prefers-reduced-motion: reduce)').matches, run = 0;
+const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const show = (extra = {}) => { const q = new URLSearchParams({ page: n, ...(q0.has('print') ? { print: 1 } : {}), ...extra }); start(P, F, q); };
+const tween = (dur, f) => new Promise((done) => { const id = ++run, t0 = performance.now(); const step = (now) => { if (id !== run) return done(); const t = Math.min(1, (now - t0) / dur); f(t); t < 1 ? requestAnimationFrame(step) : done(); }; requestAnimationFrame(step); });
+async function go(to) {
+  if (to < 1 || to > P.pages.length) return;
+  const from = n; n = to; history.replaceState(null, '', '?page=' + n + (q0.has('print') ? '&print=1' : ''));
+  const a = P.pages[from - 1], b = P.pages[n - 1], hop = a.camera !== b.camera && to === from + 1;
+  if (!motion || q0.has('print')) return show();
+  if (hop) await tween(1000, (t) => show({ from, t: ease(t), p: 0 }));
+  if (b.anim && to === from + 1) await tween(b.anim.dur, (t) => show({ p: b.anim.kind === 'fill' ? t : ease(t) }));
+  show();
+}
+addEventListener('keydown', (e) => {
+  if (['ArrowRight', 'ArrowDown', ' ', 'PageDown'].includes(e.key)) go(n + 1);
+  else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { run++; go(n - 1); }
+  else if (e.key === 'm' || e.key === 'M') motion = !motion;
+  else if (e.key === 'g' || e.key === 'G') { const k = +prompt('Go to page'); if (k) { run++; n = k; show(); } }
+});
+show(Object.fromEntries([...q0].filter(([k]) => ['from', 't', 'p', 'route'].includes(k))));
 </script></body></html>

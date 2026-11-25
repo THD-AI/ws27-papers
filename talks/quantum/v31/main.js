@@ -45,7 +45,7 @@ function edgePoint(b, p) {
 export function start(P, F, q = new URLSearchParams(location.search)) {
   const facts = Object.fromEntries(F.facts.map((f) => [f.id, f]));
   const n = Math.max(0, Math.min(P.pages.length - 1, (+q.get('page') || 1) - 1));
-  const page = P.pages[n], route = makeRoute(q.get('route') || 'chevron');
+  let page = P.pages[n]; const route = makeRoute(q.get('route') || 'chevron');
   let r = rect(P.stops[page.camera], route, P.map);
   if (q.has('from') && q.has('t')) r = hop(rect(P.stops[P.pages[+q.get('from') - 1].camera], route, P.map), r, +q.get('t'));
   const overview = page.camera === 'overview';
@@ -54,7 +54,18 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
   cam.replaceChildren(); ann.replaceChildren();
   const world = buildWorld(cam, route, P.zones, P.map, { overview, redRoute: page.redRoute ?? overview, gridStep: 9600 / r.w < 2 ? 4 : 1 });
   for (const t of page.things || []) if (t.kind === 'pile') t.count = Math.round(facts[t.fact].value / t.N);
-  addThings(world, route, P.zones, page.things || [], page.hide || []);
+  // motion (block 8): ?p=0..1 is the build's progress. Only the world copy moves; labels are
+  // placed from the final state, so within a build only the focus element changes (G12).
+  const prog = q.has('p') ? Math.max(0, Math.min(1, +q.get('p'))) : 1, A = page.anim;
+  const shown = (page.things || []).map((t) => ({ ...t, off: t.off ? [...t.off] : t.off }));
+  if (A && prog < 1) {
+    const t = shown.find((x) => x.id === A.focus);
+    if (A.kind === 'rings') t.rings = Math.floor(3 * prog + 1e-9);
+    if (A.kind === 'grow') t.count = Math.max(1, Math.round(t.count * prog));
+    if (A.kind === 'fill') t.len = Math.max(1, t.len * prog);
+    if (A.kind === 'slide') { const a = route.at(t.at - 0.001), b = route.at(t.at + 0.001), L = Math.hypot(b[0] - a[0], b[1] - a[1]); t.off[0] -= (b[0] - a[0]) / L * A.dist * (1 - prog); t.off[1] -= (b[1] - a[1]) / L * A.dist * (1 - prog); }
+  }
+  addThings(world, route, P.zones, shown, page.hide || []);
   cam.setAttribute('transform', `scale(${FRAME[0] / r.w}) translate(${-r.x},${-r.y})`);
   const heroZone = page.hero && page.hero.parts.some((p) => p.red) ? page.hero.zone : null;
   for (const z of world.querySelectorAll('.zone')) {
@@ -152,6 +163,9 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
   if (page.zoneLabels) {
     P.zones.forEach((z) => place('zone-' + z.id, z.id, [['zone', `${z.id} ${z.name}`]]));
   }
+  // mid-hop: only title, caption and locator; labels arrive when the camera lands
+  const hopping = q.has('from') && q.has('t') && +q.get('t') < 1;
+  if (hopping) { page = { ...page, flags: [], names: [], minis: [], joins: [], hero: null, zoneLabels: false }; }
   for (const [i, fl] of (page.flags || []).entries()) {
     const f = facts[fl.fact];
     const first = fl.inline ? ['tag', [{ t: fl.inline }, { t: num(f.display), a: { 'data-fact': fl.fact } }]] : ['num', [{ t: num(f.display), a: { 'data-fact': fl.fact } }]];
@@ -178,8 +192,10 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
     const pb = pts.length ? pts.reduce((u, v) => (Math.hypot(v[0] - pa[0], v[1] - pa[1]) < Math.hypot(u[0] - pa[0], u[1] - pa[1]) ? v : u)) : pa;
     ann.append(el('path', { d: `M${pa[0]},${pa[1]}L${pb[0]},${pb[1]}`, 'data-stroke': 'leader', 'stroke-dasharray': '10 8', 'data-anchor': 'join' }));
   }
+  // counter: the pile's flag is placed from its final text, then counts up during the build
+  if (A && A.kind === 'grow' && prog < 1) { const i = (page.flags || []).findIndex((x) => x.fact === A.counter), sp = ann.querySelector('[data-anchor=flag-' + i + '] tspan[data-fact]'); if (sp) { sp.textContent = Math.round(facts[A.counter].value * prog) + ' waiting'; sp.removeAttribute('data-fact'); } }
   window.V31_RULERS = (page.things || []).filter((t) => ['ruler', 'plane', 'planex', 'panel', 'flatruler', 'bar'].includes(t.kind)).length; // no hull, no route gap
-  window.V31 = { page: n + 1, camera: page.camera, rect: r, route: route.kind, ready: true };
+  window.V31 = { page: n + 1, camera: page.camera, rect: r, route: route.kind, anim: A || null, ready: true };
   return svg;
 }
 

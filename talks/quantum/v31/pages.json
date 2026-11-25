@@ -160,7 +160,12 @@
      "red": true,
      "anchor": "centre"
     }
-   ]
+   ],
+   "anim": {
+    "kind": "rings",
+    "focus": "qubit",
+    "dur": 1500
+   }
   },
   {
    "beat": 2,
@@ -229,7 +234,13 @@
      "V": 120,
      "red": true
     }
-   ]
+   ],
+   "anim": {
+    "kind": "slide",
+    "focus": "newest",
+    "dist": 540,
+    "dur": 1000
+   }
   },
   {
    "beat": 4,
@@ -568,7 +579,13 @@
      "U": 180,
      "V": 120
     }
-   ]
+   ],
+   "anim": {
+    "kind": "grow",
+    "focus": "pile",
+    "counter": "waiting-62-at-66",
+    "dur": 2500
+   }
   },
   {
    "beat": 7,
@@ -722,7 +739,12 @@
      "source": "Google’s live test, distance 5",
      "mode": "above"
     }
-   ]
+   ],
+   "anim": {
+    "kind": "fill",
+    "focus": "r24",
+    "dur": 24000
+   }
   },
   {
    "beat": "b1",

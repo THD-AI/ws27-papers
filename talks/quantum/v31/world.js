@@ -109,7 +109,7 @@ export function thingGeom(route, t, ov = false) {
   else if (t.kind === 'prism') paths = prism(p, t.h, t.s || 90, t.id);
   else if (t.kind === 'plane') { paths = backPlane(p, t.len, t.top, t.step, t.id); hull = false; }
   else if (t.kind === 'pile') paths = ov ? pileOverview(p, t.count * 14) : pile(p, t.count);
-  else if (t.kind === 'qubit') paths = ov ? qubitOverview(p) : qubit(p, t.r || 70, t.rings || 3);
+  else if (t.kind === 'qubit') paths = ov ? qubitOverview(p) : qubit(p, t.r || 70, t.rings ?? 3);
   else if (t.kind === 'tile') paths = checkTile(p, t.s || 180);
   else paths = frame(p, t.U || 160, t.V || 120, t.id);
   const box = bboxOf(paths);
