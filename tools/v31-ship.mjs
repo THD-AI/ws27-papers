@@ -46,6 +46,26 @@ const pdfPages = await pj.evaluate(async (b64, port) => {
   for (let i = 1; i <= doc.numPages; i++) { const pg = await doc.getPage(i), vp0 = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: 1920 / vp0.width }); const c = document.createElement('canvas'); c.width = 1920; c.height = Math.round(vp.height); await pg.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise; out.push(c.toDataURL('image/png')); }
   return out;
 }, pdfB64, port);
+// 3a. G16b text level: pdf.js text of sheets 3, 6 and 11 against the DOM text of those pages
+// (catches dropped glyphs, ligatures and doubled text)
+const g16t = [];
+{
+  const norm = (s) => s.normalize('NFKC').replace(/[\s ]+/g, '');
+  const pdfText = await pj.evaluate(async (b64, port) => {
+    const lib = await import(`http://127.0.0.1:${port}/node_modules/pdfjs-dist/build/pdf.mjs`);
+    lib.GlobalWorkerOptions.workerSrc = `http://127.0.0.1:${port}/node_modules/pdfjs-dist/build/pdf.worker.mjs`;
+    const doc = await lib.getDocument({ data: Uint8Array.from(atob(b64), (c) => c.charCodeAt(0)) }).promise, out = {};
+    for (const i of [3, 6, 11]) out[i] = (await (await doc.getPage(i)).getTextContent()).items.map((x) => x.str).join('');
+    return out;
+  }, pdfB64, port);
+  for (const n of [3, 6, 11]) {
+    await p.goto(URL0 + `?print=1&page=${n}`, { waitUntil: 'load' }); await ready(p);
+    const dom = await p.evaluate(() => [...document.querySelectorAll('#ann text:not(.halo)')].map((t) => t.textContent));
+    const P = norm(pdfText[n]), missing = dom.map(norm).filter((s) => s && !P.includes(s));
+    const D = norm(dom.join('')), doubled = P.length > D.length * 1.05;
+    g16t.push({ sheet: n, missing, doubled, pdfChars: P.length, domChars: D.length, pass: !missing.length && !doubled });
+  }
+}
 const g16 = [];
 const order = []; P.pages.forEach((pg, i) => { if (typeof pg.beat === 'string' && typeof P.pages[i - 1]?.beat === 'number') order.push(null); order.push(i + 1); });
 for (let k = 0; k < order.length; k++) {
@@ -109,6 +129,7 @@ const g18 = [
 ];
 const lines = ['| Gate | Result | Detail |', '| --- | --- | --- |',
   `| G16 print = screen (≤ 1% pixels differ beyond 2 px, caption band masked) | ${g16.filter((x) => x.pass).length}/${g16.length} ${g16.every((x) => x.pass) ? 'pass' : 'FAIL'} | worst ${Math.max(...g16.map((x) => x.pct))}% |`,
+  `| G16b text level, sheets 3, 6, 11 (pdf.js text = DOM text; no dropped glyphs, no doubling) | ${g16t.every((x) => x.pass) ? 'pass' : 'FAIL'} | ${g16t.map((x) => 'sheet ' + x.sheet + ': ' + x.pdfChars + '/' + x.domChars + ' chars' + (x.missing.length ? ', missing ' + JSON.stringify(x.missing) : '')).join('; ')} |`,
   `| G17 offline (0 network requests; deck and presenter follow keys) | ${g17.pass ? 'pass' : 'FAIL'} | ${g17.requests} requests; deck page ${g17.deckPage}, presenter page ${g17.presPage} |`,
   ...g18.map(([k, v, t, ok]) => `| G18 ${k} | ${ok ? 'pass' : 'FAIL'} | ${v} (budget ${t}) |`),
   '', `G18 measured on: ${machine}. Not the presenting laptop; repeat there (PLAYER.md).`,

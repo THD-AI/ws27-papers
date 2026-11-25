@@ -159,13 +159,14 @@ export function liftedTile(o, s = 420, fired = ['z2', 'x0', 'x1'], name = 'lifte
     points[k] = pts[0];
   }
   for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) { const p = m(c, r); points['q' + (r * 3 + c)] = [p[0] - 11, p[1]]; }
-  const E = pen(name + '-err');
+  const E = pen(name + '-err'), F = pen(name + '-faint');
   for (const [q, kind] of Object.entries(errs)) {
     const c = m(+q % 3, Math.floor(+q / 3)), d = 22;
     if (kind === 'X' || kind === 'Y') E.line([c[0] - d, c[1] + d * 0.8], [c[0] + d, c[1] - d * 0.8]);
     if (kind === 'Z' || kind === 'Y') E.line([c[0] - d, c[1]], [c[0] + d, c[1]]);
+    if (kind === 'z') F.line([c[0] - d, c[1]], [c[0] + d, c[1]]);
   }
-  const out = [...P.out, ...M.out.map((q) => ({ ...q, stroke: 'mark' })), ...E.out.map((q) => ({ ...q, stroke: 'mark', cls: 'ink' }))];
+  const out = [...P.out, ...M.out.map((q) => ({ ...q, stroke: 'mark' })), ...E.out.map((q) => ({ ...q, stroke: 'mark', cls: 'ink' })), ...F.out.map((q) => ({ ...q, stroke: 'mark', cls: 'context' }))];
   out.points = points;
   return out;
 }

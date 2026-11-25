@@ -45,3 +45,8 @@ body.presenter{margin:0;background:#15171C;color:#FBFBFC;font:400 22px 'Libre Fr
 .pv-clocks{display:flex;gap:24px;margin:8px 0}.pv-clocks b{display:block;font:600 44px 'Libre Franklin',sans-serif}
 .pv-k{color:#BBBEC4;font-size:18px}
 #pv-notes{overflow:auto;max-height:52vh;line-height:1.35}#pv-notes h2{font:400 30px 'Newsreader',serif;margin:6px 0}
+/* print: no stroked text at all (PDF renderers draw text strokes over the glyphs); knockouts carry the separation */
+body.print-all text.halo{display:none}
+body.print-all text{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0}
+.thing [data-stroke=mark].context,.thing.redmarks [data-stroke=mark].context{stroke:var(--context)}
+#pv-notes .pv-cur{background:#2A2D35;border-left:6px solid #C8321F;padding:6px 10px}

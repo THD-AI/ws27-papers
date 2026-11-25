@@ -29,7 +29,7 @@ const STOPNAME = { A: 'A cold box', B: 'B chip', BC: 'B–C chip to film', 'CD-f
 // numbers: a thin space between value and unit, as in the article
 const num = (s) => s.replace(/(\d) (?=(µs|ms|s)\b)/g, '$1\u2009');
 const ctx = document.createElement('canvas').getContext('2d');
-const width = (f, s) => { const [w, px, fam] = FONTS[f]; ctx.font = `${w} ${px}px "${fam}"`; return ctx.measureText(s).width; };
+const width = (f, s) => { const [w, px, fam] = FONTS[f]; ctx.font = `${w} ${px}px "${fam}"`; const n = (s.match(/\u2009/g) || []).length; return ctx.measureText(s.replace(/\u2009/g, '')).width + n * 0.17 * px; };
 const text = (f, x, y, s, extra = {}) => { const [w, px, fam, type] = FONTS[f]; return el('text', { x, y, 'font-family': fam, 'font-weight': w, 'font-size': px, 'data-type': type, 'data-role': f, ...extra }, s); };
 
 const overlap = (a, b, pad = 0) => a.x < b.x + b.w + pad && b.x < a.x + a.w + pad && a.y < b.y + b.h + pad && b.y < a.y + a.h + pad;
@@ -127,6 +127,7 @@ export function start(P, F, q = new URLSearchParams(location.search), svgEl = nu
     if (mode === 'aboveHigh') { for (const dy of [280, 360, 200]) for (const dx of [0, -0.3, 0.3]) cands.push({ x: cx - w / 2 + dx * w, y: ob.y - dy - h }); }
     if (mode === 'left') { cands.splice(0, cands.length); for (const dy of [-200, -100, 0, 100, 200]) cands.push({ x: ob.x - 40 - w, y: cy - h / 2 + dy }); }
     if (mode === 'under') cands.splice(0, cands.length, { x: cx - w / 2, y: ob.y + ob.h + 64 });
+    if (mode === 'at' && at) { const q = project(at, r); cands.splice(0, cands.length, { x: q[0] + 16, y: q[1] - h / 2 }, { x: q[0] - 16 - w, y: q[1] - h / 2 }, { x: q[0] - w / 2, y: q[1] + 14 }, { x: q[0] - w / 2, y: q[1] - 14 - h }); }
     const boxes = cands.map((c) => clampBox({ ...c, w, h }, free));
     const area = (a, u) => Math.max(0, Math.min(a.x + a.w, u.x + u.w + 16) - Math.max(a.x, u.x - 16)) * Math.max(0, Math.min(a.y + a.h, u.y + u.h + 16) - Math.max(a.y, u.y - 16));
     const onRoute = (b) => routePts.filter(([x, y]) => x > b.x - 12 && x < b.x + b.w + 12 && y > b.y - 12 && y < b.y + b.h + 12).length;
@@ -142,12 +143,12 @@ export function start(P, F, q = new URLSearchParams(location.search), svgEl = nu
     if (mode === 'under') { /* names sit under their object, no leader */ }
     const grow = (b, m) => ({ x: b.x - m, y: b.y - m, w: b.w + 2 * m, h: b.h + 2 * m });
     const p1 = outline || (mode && mode.startsWith('above')) ? edgePoint(grow({ x: best.x, y: best.y, w, h }, 8), p0) : edgePoint(grow(first, 8), p0);
-    if (mode !== 'under') {
+    if (mode !== 'under' && mode !== 'at') {
       g.append(el('path', { d: `M${p0[0]},${p0[1]}L${p1[0]},${p1[1]}`, 'data-stroke': 'leader' }));
       g.append(el('circle', { cx: p0[0], cy: p0[1], r: 3, fill: 'var(--ink)' }));
     }
     if (outline) g.append(el('rect', { x: best.x, y: best.y, width: w, height: h, 'data-stroke': 'leader', fill: 'var(--paper)' }));
-    if (!id.startsWith('hero')) g.append(el('rect', { x: best.x - 8, y: best.y - 4, width: w + 16, height: h + 8, class: 'knock' })); // the hero keeps only its text halo, so it never hides drawing
+    if (!id.startsWith('hero')) { let ky = best.y + pad; lines.forEach(([f], k) => { g.append(el('rect', { x: best.x + pad - 6, y: ky + FONTS[f][1] * 0.12, width: lw[k] + 12, height: FONTS[f][1] * 1.05, class: 'knock' })); ky += FONTS[f][1] * 1.15; }); } // per line; the hero keeps only its text halo
     let y = best.y + pad;
     for (const [f, s, a = {}] of lines) {
       y += FONTS[f][1];
@@ -167,9 +168,10 @@ export function start(P, F, q = new URLSearchParams(location.search), svgEl = nu
   // mid-hop: only title, caption and locator; labels arrive when the camera lands
   const hopping = q.has('from') && q.has('t') && +q.get('t') < 1;
   if (hopping) { page = { ...page, flags: [], names: [], minis: [], joins: [], hero: null, zoneLabels: false }; }
-  for (const [i, fl] of (page.flags || []).entries()) {
+  for (let [i, fl] of (page.flags || []).entries()) {
     const f = facts[fl.fact];
-    const first = fl.inline ? ['tag', [{ t: fl.inline }, { t: num(f.display), a: { 'data-fact': fl.fact } }]] : ['num', [{ t: num(f.display), a: { 'data-fact': fl.fact } }]];
+    if (fl.source && fl.source.includes('{N}')) { const pt = (page.things || []).find((t) => t.kind === 'pile'); fl = { ...fl, source: fl.source.replace('{N}', pt ? pt.N : '?') }; }
+    const first = fl.inline ? ['tag', [{ t: fl.inline.trim() }, { t: '\u2009\u2009' + num(f.display), a: { 'data-fact': fl.fact } }]] : ['num', [{ t: num(f.display), a: { 'data-fact': fl.fact } }]];
     place('flag-' + i, fl.zone, [first, ...(fl.inline || !fl.tag ? [] : [['tag', fl.tag]]), ...(fl.source ? [['source', fl.source, { fill: 'var(--muted)' }]] : [])], { mode: fl.mode });
   }
   if (page.hero) { // after the flags, so it steers around them
@@ -185,7 +187,7 @@ export function start(P, F, q = new URLSearchParams(location.search), svgEl = nu
   for (const [i, nm] of (page.names || []).entries()) place('name-' + i, nm.zone, [['name', nm.text]], { mode: nm.mode || 'under' });
   for (const [i, mi] of (page.minis || []).entries()) {
     const t = (page.things || []).find((q) => q.id === mi.zone), g = thingGeom(route, t);
-    place('mini-' + i, mi.zone, [[mi.big ? 'tag' : 'mini', mi.text]], { at: g.points?.[mi.point], mode: mi.mode });
+    place('mini-' + i, mi.zone, [[mi.big ? 'tag' : 'mini', mi.text]], { at: g.points?.[mi.point], mode: mi.mode || 'at' });
   }
   for (const j of page.joins || []) {
     const a = thingGeom(route, (page.things || []).find((q) => q.id === j.from)), zb = zoneGeom(route, P.zones.find((z) => z.id === j.to));
@@ -199,9 +201,9 @@ export function start(P, F, q = new URLSearchParams(location.search), svgEl = nu
   // U+2009 falls back to a wide glyph in the web subset of Libre Franklin (measured 51 px against a
   // 25 px space at 120 px), so the thin space is drawn as a 0.17 em gap instead.
   const walk = document.createTreeWalker(ann, NodeFilter.SHOW_TEXT), hits = [];
-  while (walk.nextNode()) if (walk.currentNode.nodeValue.includes(' ')) hits.push(walk.currentNode);
+  while (walk.nextNode()) if (walk.currentNode.nodeValue.includes(String.fromCharCode(0x2009))) hits.push(walk.currentNode);
   for (const tn of hits) {
-    const [a, ...rest] = tn.nodeValue.split(' '), par = tn.parentNode, frag = document.createDocumentFragment();
+    const [a, ...rest] = tn.nodeValue.split(String.fromCharCode(0x2009)), par = tn.parentNode, frag = document.createDocumentFragment();
     frag.append(el('tspan', {}, a)); for (const r2 of rest) frag.append(el('tspan', { dx: '0.17em' }, r2));
     par.replaceChild(frag, tn);
   }
@@ -239,5 +241,5 @@ function drawCrop(ann, route, P, id) {
   ann.append(g);
   const hero = ann.querySelector('[data-anchor=hero]');
   if (hero) { const [x, y, w, h] = hero.dataset.box.split(',').map(Number); const sx = LOC.x + (b.x + b.w / 2 - c[0] + W / 2) * s, sy = LOC.y + (b.y - c[1] + H / 2) * s;
-    ann.append(el('path', { d: `M${x + w},${y + h / 2}L${sx},${sy}`, 'data-stroke': 'hair', 'data-anchor': 'station-leader' })); }
+    void sx; void sy; void x; void w; void y; void h; }
 }

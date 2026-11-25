@@ -48,9 +48,13 @@ function presenter(P, N) {
   document.body.insertAdjacentHTML('beforeend', `<div id="pv">
     <div class="pv-now"><div class="pv-box"><iframe id="pv-cur"></iframe></div><div class="pv-lab">Now <span id="pv-n"></span></div></div>
     <div class="pv-side"><div class="pv-box"><iframe id="pv-next"></iframe></div><div class="pv-lab">Next</div>
-      <div class="pv-clocks"><div><span class="pv-k">Beat</span><b id="pv-beat">0:00</b><span id="pv-target"></span></div><div><span class="pv-k">Left of 13:00</span><b id="pv-left">13:00</b></div><div><span class="pv-k">Speaker</span><b id="pv-spk"></b></div></div>
+      <div class="pv-clocks"><div><span class="pv-k">Beat</span><b id="pv-beat">0:00</b><span id="pv-target"></span></div><div><span class="pv-k">Against plan</span><b id="pv-left">0:00</b></div><div><span class="pv-k">Build</span><b id="pv-build"></b></div><div><span class="pv-k">Speaker</span><b id="pv-spk"></b></div></div>
       <div id="pv-notes"></div></div></div>`);
   let page = 0, beatStart = performance.now(), talkStart = null, beat = null;
+  // planned start of every beat (s) from the notes' build times, and a flat list of builds
+  const order = Object.keys(N.beats).map(Number).sort((x, y) => x - y), plan = {}, flat = [];
+  { let t = 0; for (const b of order) { plan[b] = t; for (const bl of N.beats[b].builds) { flat.push({ beat: b, id: bl.id }); t += bl.secs; } } }
+  const buildIndex = (n) => { const pg = P.pages[n - 1]; if (typeof pg.beat !== 'number') return -1; const first = P.pages.findIndex((x) => x.beat === pg.beat); const k = n - 1 - first, list = N.beats[pg.beat].builds; return Math.min(k, list.length - 1); };
   const set = (n) => {
     if (n === page) return; page = n;
     const pg = P.pages[n - 1];
@@ -63,13 +67,18 @@ function presenter(P, N) {
     document.getElementById('pv-spk').textContent = nb ? `speaker ${nb.speaker}` : '–';
     document.getElementById('pv-target').textContent = nb ? ` / ${mmss(nb.target)}` : '';
     document.getElementById('pv-notes').innerHTML = nb
-      ? `<h2>${nb.title}</h2>` + nb.builds.map((b) => `<p><span class="pv-k">${b.id} · ${b.speaker} · ${b.secs} s${b.pause ? ' · pause ' + b.pause : ''}</span><br>${b.said || '<i>silence</i>'}</p>`).join('')
+      ? `<h2>${nb.title}</h2>` + nb.builds.map((b, k) => `<p class="${k === buildIndex(n) ? 'pv-cur' : ''}"><span class="pv-k">${b.id} · ${b.speaker} · ${b.secs} s${b.pause ? ' · pause ' + b.pause : ''}</span><br>${b.said || '<i>silence</i>'}</p>`).join('')
       : `<h2>Backup ${pg.beat}</h2><p>${pg.title}</p><p>${pg.caption || ''}</p><p class="pv-k">Spoken answer: QUESTIONS.md</p>`;
+    const bi = buildIndex(n), cur = document.querySelector('#pv-notes .pv-cur'); if (cur) cur.scrollIntoView({ block: 'center' });
+    const gi = bi < 0 ? -1 : flat.findIndex((x) => x.beat === pg.beat) + bi;
+    document.getElementById('pv-build').textContent = gi < 0 ? 'backup' : `${N.beats[pg.beat].builds[bi].id} of ${flat.length}`;
   };
-  addEventListener('message', (e) => { if (e.data && e.data.v31page) set(e.data.v31page); });
+  const set0 = set;
+  addEventListener('message', (e) => { if (e.data && e.data.v31page) set0(e.data.v31page); });
   setInterval(() => {
     document.getElementById('pv-beat').textContent = mmss((performance.now() - beatStart) / 1000);
-    document.getElementById('pv-left').textContent = mmss(13 * 60 - (talkStart ? (performance.now() - talkStart) / 1000 : 0));
+    const pg = P.pages[page - 1], el2 = document.getElementById('pv-left');
+    if (pg && typeof pg.beat === 'number' && talkStart) { const d = (performance.now() - talkStart) / 1000 - plan[pg.beat] - (performance.now() - beatStart) / 1000; el2.textContent = (d > 0 ? mmss(d) + ' late' : mmss(-d) + ' early'); el2.style.color = d > 15 ? '#E0705F' : ''; } else el2.textContent = '–';
   }, 250);
   set(+(location.hash.split('=')[1]) || 1);
   window.V31 = { ready: true, presenter: true, page: () => page };
