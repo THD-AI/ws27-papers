@@ -27,7 +27,7 @@ const FONTS = {
 };
 const STOPNAME = { A: 'A · cold box', B: 'B · chip', BC: 'B–C · chip to film', 'CD-frame': 'C · newest frame', D: 'D · reader', CD: 'C–D · film to reader', E: 'E · results' };
 // numbers: a thin space between value and unit, as in the article
-const num = (s) => s.replace(/(\d) (?=[µa-zA-Z%])/g, '$1\u2009');
+const num = (s) => s.replace(/(\d) (?=(µs|ms|s)\b)/g, '$1\u2009');
 const ctx = document.createElement('canvas').getContext('2d');
 const width = (f, s) => { const [w, px, fam] = FONTS[f]; ctx.font = `${w} ${px}px "${fam}"`; return ctx.measureText(s).width; };
 const text = (f, x, y, s, extra = {}) => { const [w, px, fam, type] = FONTS[f]; return el('text', { x, y, 'font-family': fam, 'font-weight': w, 'font-size': px, 'data-type': type, 'data-role': f, ...extra }, s); };
