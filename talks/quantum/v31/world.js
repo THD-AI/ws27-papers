@@ -24,7 +24,7 @@ export function panels(route, zones) {
 }
 
 // ---- real objects (block 5) ----
-import { chip, film, reader, prism, backPlane, pile, qubit, checkTile, ruler, frame,
+import { chip, film, reader, prism, backPlane, backPlaneX, liftedTile, pile, qubit, checkTile, ruler, frame,
   chipOverview, filmOverview, readerOverview, cryoOverview, pileOverview, qubitOverview } from './objects.js';
 
 const C30 = Math.cos(Math.PI / 6);
@@ -51,8 +51,8 @@ export function zoneGeom(route, z, ov = false) {
   else if (z.id === 'D') { const o = [p[0] + 40 * C30 - 0, p[1] + 170]; paths = ov ? readerOverview(o) : reader(o); }
   else { // E: the results row (beat 7 language), drawn as a context object off the route
     const o = [p[0] - 520, p[1] + 230]; paths = [];
-    [282, 266, 218].forEach((h, i) => paths.push(...prism([o[0] + i * 200 * C30, o[1] - i * 100], h, 90, 'E' + i)));
-    if (!ov) paths.push(...backPlane([o[0] - 90 * C30, o[1] - 50], 3 * 200, 340, 100, 'E-plane'));
+    [282, 266, 218].forEach((h, i) => paths.push(...prism([o[0] + i * 190, o[1]], h, 90, 'E' + i)));
+    if (!ov) paths.push(...backPlaneX([o[0] - 100, o[1] + 45], 3 * 190 + 60, 340, 100, 282, 'E-plane'));
     if (ov) paths.splice(0, paths.length, ...paths.slice(0, 20));
   }
   const box = bboxOf(paths);
@@ -84,7 +84,7 @@ export function buildWorld(svg, route, zones, map = [9600, 5400], { overview = f
   for (const z of zones) {
     const zg = el('g', { 'data-zone': z.id, class: 'zone' }), geo = zoneGeom(route, z, ov);
     if (geo.image) zg.append(el('image', { href: geo.image.href, x: geo.image.x, y: geo.image.y, width: geo.image.w, height: geo.image.h, 'data-raster': '1', preserveAspectRatio: 'none' }));
-    for (const q of geo.paths || []) zg.append(el('path', { d: q.d, 'stroke-width': q.w, 'data-stroke': 'object', ...(q.transform ? { transform: q.transform } : {}) }));
+    for (const q of geo.paths || []) zg.append(el('path', { d: q.d, 'stroke-width': q.w, 'data-stroke': 'object', ...(q.cls ? { class: q.cls } : {}), ...(q.transform ? { transform: q.transform } : {}) }));
     g.append(zg);
   }
   svg.append(g);
@@ -97,24 +97,29 @@ function dirAt(route, f) { const a = route.at(Math.max(0, f - 0.001)), b = route
 export function thingGeom(route, t, ov = false) {
   const [x, y] = route.at(t.at), p = [x + (t.off?.[0] || 0), y + (t.off?.[1] || 0)];
   let paths, hull = true;
-  if (t.kind === 'ruler') { paths = ruler(p, dirAt(route, t.at), t.len, t.every || 0); hull = false; }
+  if (t.kind === 'ruler') { paths = ruler(p, dirAt(route, t.at), t.len, t.every || 0, t.tick || 40); hull = false; }
+  else if (t.kind === 'planex') { paths = backPlaneX(p, t.len, t.top, t.step, t.tallest, t.id); hull = false; }
+  else if (t.kind === 'lifted') paths = liftedTile(p, t.s || 420, t.fired || [0, 1, 3]);
   else if (t.kind === 'prism') paths = prism(p, t.h, t.s || 90, t.id);
   else if (t.kind === 'plane') { paths = backPlane(p, t.len, t.top, t.step, t.id); hull = false; }
   else if (t.kind === 'pile') paths = ov ? pileOverview(p, t.count * 14) : pile(p, t.count);
   else if (t.kind === 'qubit') paths = ov ? qubitOverview(p) : qubit(p, t.r || 70, t.rings || 3);
   else if (t.kind === 'tile') paths = checkTile(p, t.s || 180);
-  else paths = frame(p);
+  else paths = frame(p, t.U || 160, t.V || 120, t.id);
   const box = bboxOf(paths);
-  return { paths, box, hull: hull ? rectHull(box) : null };
+  let anchor = null;
+  if (t.anchor === 'centre') anchor = p;
+  if (t.anchor === 'end') { const d = dirAt(route, t.at); anchor = [p[0] + d[0] * t.len, p[1] + d[1] * t.len]; }
+  return { paths, box, hull: hull ? rectHull(box) : null, anchor };
 }
 
 // draws things and breaks the route with a paper gap under every object (mask, no filter)
 export function addThings(world, route, zones, things = [], hide = []) {
   for (const z of world.querySelectorAll('.zone')) if (hide.includes(z.dataset.zone)) z.remove();
   for (const t of things) {
-    const g = el('g', { 'data-thing-id': t.id, class: 'thing' + (t.red ? ' red' : '') });
+    const g = el('g', { 'data-thing-id': t.id, 'data-kind': t.kind, class: 'thing' + (t.red ? ' red' : '') });
     if (t.red) g.dataset.thing = 'hero';
-    for (const q of thingGeom(route, t).paths) g.append(el('path', { d: q.d, 'stroke-width': q.w, 'data-stroke': 'object' }));
+    for (const q of thingGeom(route, t).paths) g.append(el('path', { d: q.d, 'stroke-width': q.w, 'data-stroke': 'object', ...(q.cls ? { class: q.cls } : {}) }));
     world.append(g);
   }
   const id = 'routegap' + Math.random().toString(36).slice(2, 7);
@@ -124,4 +129,11 @@ export function addThings(world, route, zones, things = [], hide = []) {
   for (const h of hulls) mask.append(el('path', { d: 'M' + h.map((q) => q.join(',')).join('L') + 'Z', fill: 'black', stroke: 'black', 'stroke-width': 16, 'vector-effect': 'non-scaling-stroke', 'stroke-linejoin': 'round' }));
   world.prepend(mask);
   world.querySelector('#route').setAttribute('mask', `url(#${id})`);
+}
+
+// screen-independent geometry points of an object (map units) – leaders end on these, not on a bbox
+export function geomPoints(paths) {
+  const pts = [];
+  for (const q of paths) { const n = (q.d || q).match(/-?\d+(\.\d+)?(e-?\d+)?/g).map(Number); for (let i = 0; i + 1 < n.length; i += 2) pts.push([n[i], n[i + 1]]); }
+  return pts;
 }

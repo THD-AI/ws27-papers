@@ -56,7 +56,8 @@
   "BC": {
    "width": 2600,
    "at": 0.4,
-   "dy": -340
+   "dy": -340,
+   "dx": 300
   },
   "CD-frame": {
    "width": 2200,
@@ -115,7 +116,8 @@
       -430,
       40
      ],
-     "red": true
+     "red": true,
+     "anchor": "centre"
     }
    ]
   },
@@ -167,7 +169,7 @@
    "eyebrow": "Beat 3 · C film",
    "title": "Each round is one frame of a film",
    "hero": {
-    "zone": "C",
+    "zone": "newest",
     "parts": [
      {
       "fact": "frames-per-0.1s",
@@ -177,7 +179,21 @@
     "tag": "frames, one logical qubit",
     "source": "our arithmetic, Google’s 1.1 µs"
    },
-   "caption": "The thing that reads the film – the article calls it the decoder."
+   "caption": "The thing that reads the film – the article calls it the decoder.",
+   "things": [
+    {
+     "id": "newest",
+     "kind": "frame",
+     "at": 0.51,
+     "off": [
+      242,
+      -80
+     ],
+     "U": 180,
+     "V": 120,
+     "red": true
+    }
+   ]
   },
   {
    "beat": 4,
@@ -188,13 +204,25 @@
    "title": "Which errors made three checks fire?",
    "flags": [
     {
-     "zone": "C",
+     "zone": "lifted",
      "fact": "puzzle-5pct",
      "tag": "error chance, one round",
      "source": "checks never wrong; far more than a real chip"
     }
    ],
-   "caption": "The smallest grid: 9 storing qubits, 8 checks, one round, checks never wrong."
+   "caption": "The smallest grid: 9 storing qubits, 8 checks, one round, checks never wrong.",
+   "things": [
+    {
+     "id": "lifted",
+     "kind": "lifted",
+     "at": 0.6,
+     "off": [
+      -780,
+      180
+     ],
+     "s": 420
+    }
+   ]
   },
   {
    "beat": 5,
@@ -222,7 +250,7 @@
      "at": 0.72,
      "off": [
       -950,
-      250
+      80
      ],
      "s": 90,
      "h": 342
@@ -232,8 +260,8 @@
      "kind": "prism",
      "at": 0.72,
      "off": [
-      -776.7949192431122,
-      150
+      -760,
+      80
      ],
      "s": 90,
      "h": 286,
@@ -241,15 +269,16 @@
     },
     {
      "id": "plane5",
-     "kind": "plane",
+     "kind": "planex",
      "at": 0.72,
      "off": [
-      -1027.9422863405994,
-      200
+      -1050,
+      125
      ],
-     "len": 400,
+     "len": 440,
      "top": 400,
-     "step": 50
+     "step": 50,
+     "tallest": 342
     }
    ],
    "flags": [
@@ -280,7 +309,7 @@
    },
    "flags": [
     {
-     "zone": "C",
+     "zone": "newest",
      "fact": "round-1.1",
      "tag": "a new frame every",
      "source": "Google 2024 chip – Nature 2025"
@@ -305,6 +334,17 @@
      "fact": "waiting-62-at-66",
      "N": 2,
      "red": true
+    },
+    {
+     "id": "newest",
+     "kind": "frame",
+     "at": 0.51,
+     "off": [
+      242,
+      -80
+     ],
+     "U": 180,
+     "V": 120
     }
    ]
   },
@@ -361,8 +401,8 @@
      "kind": "prism",
      "at": 0.91,
      "off": [
-      -386.79491924311225,
-      150
+      -370,
+      250
      ],
      "s": 90,
      "h": 266
@@ -372,8 +412,8 @@
      "kind": "prism",
      "at": 0.91,
      "off": [
-      -213.5898384862245,
-      50
+      -180,
+      250
      ],
      "s": 90,
      "h": 218,
@@ -381,15 +421,16 @@
     },
     {
      "id": "plane7",
-     "kind": "plane",
+     "kind": "planex",
      "at": 0.91,
      "off": [
-      -637.9422863405995,
-      200
+      -660,
+      295
      ],
-     "len": 600,
+     "len": 630,
      "top": 340,
-     "step": 100
+     "step": 100,
+     "tallest": 282
     }
    ]
   },
@@ -424,7 +465,8 @@
      ],
      "len": 2400,
      "red": true,
-     "every": 100
+     "every": 100,
+     "anchor": "end"
     },
     {
      "id": "r11",
@@ -434,7 +476,8 @@
       -450,
       780
      ],
-     "len": 110
+     "len": 110,
+     "tick": 20
     }
    ],
    "flags": [

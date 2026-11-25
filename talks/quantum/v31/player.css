@@ -16,3 +16,5 @@ rect[data-stroke]{vector-effect:non-scaling-stroke}
 #ann text{paint-order:stroke;stroke:var(--paper);stroke-width:10px;stroke-linejoin:round}
 #ann .band{fill:var(--paper)}
 .thing.red [data-stroke=object]{stroke:var(--qc-red)}
+
+#world path.context, .thing.red path.context{stroke:var(--context)}

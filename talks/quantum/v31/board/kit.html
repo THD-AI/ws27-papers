@@ -14,19 +14,20 @@ const F = await (await fetch('../facts.json')).json();
 const fact = (id) => F.facts.find((f) => f.id === id).value;
 const NS = 'http://www.w3.org/2000/svg', C = Math.cos(Math.PI / 6);
 const pileN = Math.round(fact('waiting-62-at-66') / 2);
-const rowPrisms = (hs, step = 200) => { const out = []; hs.forEach((h, i) => out.push(...K.prism([i * step * C, -i * step / 2], h, 90, 'k' + i))); out.push(...K.backPlane([-90 * C, -50], hs.length * step, Math.max(...hs) + 60, hs.length === 2 ? 50 : 100, 'kp')); return out; };
+const rowPrisms = (hs, step = 190) => { const out = []; hs.forEach((h, i) => out.push(...K.prism([i * step, 0], h, 90, 'k' + i))); out.push(...K.backPlaneX([-100, 45], hs.length * step + 60, Math.max(...hs) + 60, hs.length === 2 ? 50 : 100, Math.max(...hs), 'kp')); return out; };
 const OBJ = [
   ['cryostat (forged, raster)', { image: true }, { paths: K.cryoOverview(), k: CRYO.h / CRYO.H }],
   ['chip (sample holder, SMP)', K.chip([0, 0]), K.chipOverview([0, 0])],
   ['film strip', K.film([0, 0]), K.filmOverview([0, 0])],
   ['reader (19-inch rack)', K.reader([0, 0]), K.readerOverview([0, 0])],
   ['check tile', K.checkTile([0, 0]), K.checkTile([0, 0], 180)],
+  ['lifted tile, beat 4 (3 fired)', K.liftedTile([0, 0]), K.checkTile([0, 0], 420)],
   ['qubit + smear', K.qubit([0, 0]), K.qubitOverview([0, 0])],
   ['frame', K.frame([0, 0]), K.frame([0, 0])],
   [`pile, ${pileN} frames (62 / N = 2)`, K.pile([0, 0], pileN), K.pileOverview([0, 0], pileN * 14)],
   ['prisms + back plane, beat 5', rowPrisms([342, 286]), rowPrisms([342, 286]).slice(0, 20)],
   ['prisms + back plane, beat 7', rowPrisms([282, 266, 218]), rowPrisms([282, 266, 218]).slice(0, 20)],
-  ['rulers, beat 8 (24 s, 1.1 s)', [...K.ruler([0, 0], [C, 0.5], 2400, 100), ...K.ruler([0, 120], [C, 0.5], 110)], [...K.ruler([0, 0], [C, 0.5], 2400), ...K.ruler([0, 120], [C, 0.5], 110)]],
+  ['rulers, beat 8 (24 s, 1.1 s)', [...K.ruler([0, 0], [C, 0.5], 2400, 100), ...K.ruler([0, 120], [C, 0.5], 110, 0, 20)], [...K.ruler([0, 0], [C, 0.5], 2400), ...K.ruler([0, 120], [C, 0.5], 110)]],
 ];
 const root = document.getElementById('root');
 for (const [title, s, which] of [['Reading zoom (beat 1, 0.8 px per unit)', 0.8, 1], ['Overview variants (beat 0, 0.2 px per unit)', 0.2, 2]]) {

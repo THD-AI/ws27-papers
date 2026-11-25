@@ -19,7 +19,7 @@ const p = await b.newPage();
 const TOK = { grid: 1.5, leader: 2, object: 3, route: 4, locator: 1.5 }, TOL = 0.2;
 const FLOOR = { main: 32, mono: 28, source: 24, locator: 24, title: 32, hero: 32 };
 const SAFE = { x: 96, y: 54, r: 1824, b: 1026 };
-const g1 = [], g3 = [], g2 = [], g5 = [], g22 = [], keep = [], over = [], rgate = [], gap = [];
+const lead = [], baseRows = [], focus = [], g1 = [], g3 = [], g2 = [], g5 = [], g22 = [], keep = [], over = [], rgate = [], gap = [];
 
 async function load(url) {
   await p.goto(url, { waitUntil: 'networkidle0' });
@@ -60,6 +60,34 @@ for (let i = 1; i <= 9; i++) {
     for (const t of document.querySelectorAll('#ann tspan.red')) redGroups.add(t.dataset.thing || 'loose');
     return { bad: [...new Set(bad)], red: [...redGroups], fills: [...new Set(fills)] };
   });
+  // leaders end on the target's drawn geometry (≤ 12 px), prism rows share one screen baseline,
+  // and every leader target that the route could cross has a paper gap (mask hole) under it
+  const geo = await p.evaluate(() => {
+    const out = { lead: [], base: [], focus: [] };
+    const target = (id) => document.querySelector('#world [data-zone="' + id + '"]') || document.querySelector('#world [data-thing-id="' + id + '"]');
+    for (const g of document.querySelectorAll('#ann [data-target]')) {
+      const id = g.dataset.target, dot = g.querySelector('circle'), T = target(id); if (!dot || !T) continue;
+      const d0 = [+dot.getAttribute('cx'), +dot.getAttribute('cy')]; let best = Infinity;
+      for (const e of T.querySelectorAll('path, image')) {
+        if (e.tagName === 'image') { const b = e.getBoundingClientRect(); const dx = Math.max(b.x - d0[0], 0, d0[0] - b.right), dy = Math.max(b.y - d0[1], 0, d0[1] - b.bottom); best = Math.min(best, Math.hypot(dx, dy)); continue; }
+        const m = e.getScreenCTM(), L = e.getTotalLength();
+        for (let s = 0; s <= L; s += Math.max(0.5, L / 400)) { const q = e.getPointAtLength(s); best = Math.min(best, Math.hypot(m.a * q.x + m.c * q.y + m.e - d0[0], m.b * q.x + m.d * q.y + m.f - d0[1])); }
+      }
+      out.lead.push({ id: g.dataset.anchor, target: id, d: +best.toFixed(1) });
+      if (!['ruler', 'plane', 'planex'].includes(T.dataset.kind)) {
+        const b = T.getBBox(), c = [b.x + b.width / 2, b.y + b.height / 2]; // map units
+        const mask = document.querySelector('#route').getAttribute('mask');
+        const holes = [...document.querySelectorAll(mask.slice(4, -1) + ' path')].map((h) => { const n = h.getAttribute('d').match(/-?[0-9.]+(e-?[0-9]+)?/g).map(Number), xs = n.filter((_, i) => i % 2 === 0), ys = n.filter((_, i) => i % 2); return { x: Math.min(...xs), r: Math.max(...xs), y: Math.min(...ys), b: Math.max(...ys) }; });
+        out.focus.push({ id, pass: holes.some((h) => c[0] >= h.x && c[0] <= h.r && c[1] >= h.y && c[1] <= h.b) });
+      }
+    }
+    const prisms = [...document.querySelectorAll('#world [data-kind=prism]')].map((e) => e.getBoundingClientRect().bottom);
+    if (prisms.length) out.base.push({ n: prisms.length, spread: +(Math.max(...prisms) - Math.min(...prisms)).toFixed(1) });
+    return out;
+  });
+  for (const x of geo.lead) lead.push({ page: i, ...x, pass: x.d <= 12 });
+  for (const x of geo.base) baseRows.push({ page: i, ...x, pass: x.spread <= 2 });
+  for (const x of geo.focus) focus.push({ page: i, ...x });
   g1.push({ page: i, red: col.red.join(' '), bad: col.bad.join('; '), pass: !col.bad.length && col.red.length <= 1 });
   g3.push({ page: i, fills: col.fills.join('; '), pass: !col.fills.length });
   for (const s of m.strokes) g2.push({ page: i, ...s, pass: Math.abs(s.w - TOK[s.role]) <= TOL && s.ns === 'non-scaling-stroke' });
@@ -138,8 +166,11 @@ const table = ['| Gate | Passed | Result |', '| --- | --- | --- |',
   row('G24 map edge (cameras + panels)', g24, (x) => x.id),
   row('Keep-inside (text in 5% safe area)', keep, (x) => `p${x.page} ${x.anchor} "${x.s}"`),
   row('No label overlaps (text boxes)', over, (x) => `p${x.page} ${x.pair}`),
+  row('Leader ends on target geometry (≤ 12 px)', lead, (x) => `p${x.page} ${x.id}→${x.target} ${x.d}px`),
+  row('Prism rows on one screen baseline (≤ 2 px)', baseRows, (x) => `p${x.page} spread ${x.spread}`),
+  row('Route gap under every leader target', focus, (x) => `p${x.page} ${x.id}`),
   row('Route clear of title, hero, flag boxes', rgate, (x) => `p${x.page} ${x.id}`),
   row('Route paper gap under every object', gap, (x) => `p${x.page} ${x.holes}/${x.objs}`)];
-writeFileSync(join(OUT, 'gates.json'), JSON.stringify({ g1, g3, g2, g5, g22, g24, keep, over, rgate, gap }, null, 1));
+writeFileSync(join(OUT, 'gates.json'), JSON.stringify({ lead, baseRows, focus, g1, g3, g2, g5, g22, g24, keep, over, rgate, gap }, null, 1));
 writeFileSync(join(OUT, 'gates.md'), table.join('\n') + '\n');
 console.log(table.join('\n'));

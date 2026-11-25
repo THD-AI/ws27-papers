@@ -139,6 +139,21 @@ export function checkTile(o, s = 180) {
   return P.out;
 }
 
+// Lifted tile for beat 4: the smallest grid, 3 × 3 storing qubits, its four inner checks;
+// the fired checks carry an inner diamond (reference: the article's lattice.js puzzle).
+export function liftedTile(o, s = 420, fired = [0, 1, 3]) {
+  const P = pen('lifted');
+  P.poly([[0, 0], [s, 0], [s, s], [0, s]].map(([u, v]) => iso(o, u, v, 0)));
+  const m = (i, j) => iso(o, s * (i + 0.5) / 3, s * (j + 0.5) / 3, 0);
+  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) P.ellipse(m(i, j), 22, 13);
+  [[0.5, 0.5], [1.5, 0.5], [0.5, 1.5], [1.5, 1.5]].forEach(([ci, cj], k) => {
+    const d = (r) => [[ci - r, cj], [ci, cj - r], [ci + r, cj], [ci, cj + r]].map(([a, b]) => m(a, b));
+    P.poly(d(0.42));
+    if (fired.includes(k)) P.poly(d(0.22));
+  });
+  return P.out;
+}
+
 // Qubit with its smear: a dot and iso ripples (ratio 0.577), the water image of beat 1.
 export function qubit(o, r = 70, rings = 3) {
   const P = pen('qubit');
@@ -148,7 +163,7 @@ export function qubit(o, r = 70, rings = 3) {
 }
 
 // One film frame, flat on the ground (the sprite of the pile and the film strip).
-export function frame(o, U = 160, V = 120, name = 'frame') {
+export function frame(o, U = 160, V = 120, name = 'frame') { // U, V: frame size along the strip
   const P = pen(name);
   P.poly([[0, 0], [U, 0], [U, V], [0, V]].map(([u, v]) => iso(o, u, v, 0)));
   P.line(iso(o, 20, V / 2, 0), iso(o, 20 + DASH, V / 2, 0));
@@ -157,14 +172,14 @@ export function frame(o, U = 160, V = 120, name = 'frame') {
 
 // Pile of unread frames: one frame per N unread, stacked; spacing in map units chosen so
 // it is ≥ 8 px at the CD camera (0.6 px per unit → 14 units).
-export function pile(o, count, gap = 14) {
+export function pile(o, count, gap = 21, grey = 4) {
   const out = [];
   for (let i = 0; i < count; i++) {
-    const j = ((i * 7919) % 5) - 2; // ±2 units of jitter, stable
+    const j = ((i * 7919) % 5) - 2 + i * 1.6; // stable jitter plus a slight lean
     const P = pen('pile-' + i);
     const p = [o[0] + j, o[1] - i * gap];
     P.path([[0, 0], [160, 0], [160, 120], [0, 120]].map(([u, v]) => iso(p, u, v, 0))); // one stroke per frame
-    out.push(...P.out);
+    out.push(...P.out.map((q) => (i < grey ? { ...q, cls: 'context' } : q)));
   }
   return out;
 }
@@ -187,15 +202,27 @@ export function backPlane(o, len, top, step, name = 'plane') {
   return P.out;
 }
 
+// Back plane for a row standing on one screen baseline (x-axis): baseline, end posts,
+// height ticks on the left post, and a faint top line at the tallest value.
+export function backPlaneX(o, len, top, step, tallest, name = 'planex') {
+  const P = pen(name);
+  P.line(o, [o[0] + len, o[1]]);
+  P.line(o, [o[0], o[1] - top]);
+  for (let z = step; z <= top; z += step) P.line([o[0], o[1] - z], [o[0] + DASH * 1.2, o[1] - z]);
+  const out = P.out, Q = pen(name + '-top');
+  Q.line([o[0], o[1] - tallest], [o[0] + len, o[1] - tallest]);
+  return [...out, ...Q.out.map((q) => ({ ...q, cls: 'context' }))];
+}
+
 // Ruler (beat 8): a straight line with end ticks and second ticks along it.
-export function ruler(p, dir, len, every = 0) {
+export function ruler(p, dir, len, every = 0, tick = 40) {
   const P = pen('ruler-' + Math.round(len));
-  const q = [p[0] + dir[0] * len, p[1] + dir[1] * len], n = [-dir[1] * 40, dir[0] * 40];
+  const q = [p[0] + dir[0] * len, p[1] + dir[1] * len], n = [-dir[1] * tick, dir[0] * tick];
   P.line(p, q); P.line([p[0] - n[0], p[1] - n[1]], [p[0] + n[0], p[1] + n[1]]); P.line([q[0] - n[0], q[1] - n[1]], [q[0] + n[0], q[1] + n[1]]);
   if (every) for (let s = every; s < len - 1; s += every) { const m = [p[0] + dir[0] * s, p[1] + dir[1] * s]; P.line(m, [m[0] + n[0] / 2, m[1] + n[1] / 2]); }
   return P.out;
 }
 
 // overview variants for the kit (≤ 20 strokes)
-export function pileOverview(o, h) { const P = pen('pile-ov'); P.poly([[0, 0], [160, 0], [160, 120], [0, 120]].map(([u, v]) => iso(o, u, v, 0))); P.line(iso(o, 0, 0, 0), iso(o, 0, 0, h)); P.line(iso(o, 160, 0, 0), iso(o, 160, 0, h)); P.poly([[0, 0], [160, 0], [160, 120], [0, 120]].map(([u, v]) => iso(o, u, v, h))); return P.out; }
+export function pileOverview(o, h) { h = h * 1.5; const P = pen('pile-ov'); P.poly([[0, 0], [160, 0], [160, 120], [0, 120]].map(([u, v]) => iso(o, u, v, 0))); P.line(iso(o, 0, 0, 0), iso(o, 0, 0, h)); P.line(iso(o, 160, 0, 0), iso(o, 160, 0, h)); P.poly([[0, 0], [160, 0], [160, 120], [0, 120]].map(([u, v]) => iso(o, u, v, h))); return P.out; }
 export function qubitOverview(o) { return qubit(o, 70, 1); }

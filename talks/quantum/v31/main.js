@@ -2,7 +2,7 @@
 // start(P, F) is called by index.html (fetches pages.json and facts.json) or by
 // offline.js (the esbuild bundle, JSON inlined). Annotations are placed by camera
 // maths (project()); getScreenCTM is only used by the gates to measure.
-import { makeRoute, buildWorld, objectBox, addThings, thingGeom } from './world.js';
+import { makeRoute, buildWorld, objectBox, addThings, thingGeom, zoneGeom, geomPoints } from './world.js';
 import { rect, project, hop, FRAME } from './camera.js';
 
 const NS = 'http://www.w3.org/2000/svg';
@@ -81,6 +81,14 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
     const [x0, y0] = project([ob.x, ob.y], r), [x1, y1] = project([ob.x + ob.w, ob.y + ob.h], r);
     return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
   };
+  const targetPts = (id) => {
+    const z = P.zones.find((q) => q.id === id), t = (page.things || []).find((q) => q.id === id);
+    const g = z ? zoneGeom(route, z, overview) : thingGeom(route, t);
+    if (g.anchor) return [project(g.anchor, r)];
+    if (g.paths && g.paths.some((q) => q.transform)) { const pts = []; for (const q of g.paths) { const [tx, ty, k] = q.transform.match(/-?[0-9.]+(e-?[0-9]+)?/g).map(Number); for (const [x, y] of geomPoints([q])) pts.push(project([tx + x * k, ty + y * k], r)); } return pts; }
+    if (!g.paths) { const b = g.box; return [[b.x, b.y], [b.x + b.w, b.y], [b.x, b.y + b.h], [b.x + b.w, b.y + b.h], [b.x + b.w / 2, b.y + b.h]].map((q) => project(q, r)); }
+    return geomPoints(g.paths).map((q) => project(q, r));
+  };
   const onScreen = (b) => b.x + b.w > 0 && b.x < FRAME[0] && b.y + b.h > 0 && b.y < FRAME[1];
   for (const id of [...P.zones.map((z) => z.id), ...(page.things || []).map((t) => t.id)]) { if ((page.hide || []).includes(id)) continue; const o = objScreen(id); if (onScreen(o)) used.push(o); }
 
@@ -106,10 +114,12 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
     const score = (b) => used.reduce((s, u) => s + area(b, u), 0) + onRoute(b) * 5000 + dist(b) * 20;
     const best = boxes.reduce((a, b) => (score(b) < score(a) ? b : a));
     used.push(best);
-    const g = el('g', { 'data-anchor': id, 'data-zone': zoneId, 'data-box': [best.x, best.y, w, h].map(Math.round).join(',') });
+    const g = el('g', { 'data-anchor': id, 'data-zone': zoneId, 'data-target': zoneId, 'data-box': [best.x, best.y, w, h].map(Math.round).join(',') });
     const first = { x: best.x + pad, y: best.y + pad, w: lw[0], h: lh(lines[0][0]) };
-    const p0 = edgePoint(ob, [first.x + first.w / 2, first.y + first.h / 2]);
-    const p1 = outline ? edgePoint(best, p0) : edgePoint(first, p0);
+    const fc = [first.x + first.w / 2, first.y + first.h / 2], tp = targetPts(zoneId).filter(([x, y]) => x >= 0 && x <= FRAME[0] && y >= 0 && y <= FRAME[1]);
+    const p0 = tp.length ? tp.reduce((a, q) => (Math.hypot(q[0] - fc[0], q[1] - fc[1]) < Math.hypot(a[0] - fc[0], a[1] - fc[1]) ? q : a)) : edgePoint(ob, fc);
+    const grow = (b, m) => ({ x: b.x - m, y: b.y - m, w: b.w + 2 * m, h: b.h + 2 * m });
+    const p1 = outline ? edgePoint(best, p0) : edgePoint(grow(first, 8), p0);
     g.append(el('path', { d: `M${p0[0]},${p0[1]}L${p1[0]},${p1[1]}`, 'data-stroke': 'leader' }));
     g.append(el('circle', { cx: p0[0], cy: p0[1], r: 3, fill: 'var(--ink)' }));
     if (outline) g.append(el('rect', { x: best.x, y: best.y, width: w, height: h, 'data-stroke': 'leader', fill: 'var(--paper)' }));
@@ -134,16 +144,16 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
     page.hero.parts.forEach((p, i) => {
       if (i) parts.push({ t: ' / ' });
       const f = facts[p.fact];
-      parts.push({ t: f.display, a: { 'data-fact': p.fact, ...(p.red ? { class: 'red', 'data-thing': 'hero' } : {}) } });
+      parts.push({ t: f.display.replace(/[\u2009\u202F\u00A0]/g, ' '), a: { 'data-fact': p.fact, ...(p.red ? { class: 'red', 'data-thing': 'hero' } : {}) } });
     });
     const long = parts.reduce((a, p) => a + p.t.length, 0) > 8;
     place('hero', page.hero.zone, [[long ? 'heroS' : 'hero', parts], ['tag', page.hero.tag], ['source', page.hero.source, { fill: 'var(--muted)' }]]);
   }
   for (const [i, fl] of (page.flags || []).entries()) {
     const f = facts[fl.fact];
-    place('flag-' + i, fl.zone, [['num', [{ t: f.display, a: { 'data-fact': fl.fact } }]], ['tag', fl.tag], ['source', fl.source, { fill: 'var(--muted)' }]], { outline: true });
+    place('flag-' + i, fl.zone, [['num', [{ t: f.display.replace(/[\u2009\u202F\u00A0]/g, ' '), a: { 'data-fact': fl.fact } }]], ['tag', fl.tag], ['source', fl.source, { fill: 'var(--muted)' }]], { outline: true });
   }
-  window.V31_RULERS = (page.things || []).filter((t) => t.kind === 'ruler' || t.kind === 'plane').length; // no hull, no route gap
+  window.V31_RULERS = (page.things || []).filter((t) => ['ruler', 'plane', 'planex'].includes(t.kind)).length; // no hull, no route gap
   window.V31 = { page: n + 1, camera: page.camera, rect: r, route: route.kind, ready: true };
   return svg;
 }
