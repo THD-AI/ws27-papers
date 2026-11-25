@@ -19,7 +19,7 @@ const p = await b.newPage();
 const TOK = { grid: 1.5, leader: 2, object: 4, route: 4, locator: 1.5, mark: 8, bar: 12, hair: 1.5 }, TOL = 0.2; // P4: object strokes 4 px
 const FLOOR = { label: 44, qualifier: 30, caption: 32, title: 56, hero: 96 }; // P4: labels ≥ 44, qualifiers ≥ 30
 const SAFE = { x: 96, y: 54, r: 1824, b: 1026 };
-const lead = [], baseRows = [], focus = [], g1 = [], g3 = [], g2 = [], g5 = [], g22 = [], keep = [], over = [], rgate = [], gap = [];
+const clear = [], lead = [], baseRows = [], focus = [], g1 = [], g3 = [], g2 = [], g5 = [], g22 = [], keep = [], over = [], rgate = [], gap = [];
 
 async function load(url) {
   await p.goto(url, { waitUntil: 'networkidle0' });
@@ -86,6 +86,23 @@ for (let i = 1; i <= NPAGES; i++) {
     if (prisms.length) out.base.push({ n: prisms.length, spread: +(Math.max(...prisms) - Math.min(...prisms)).toFixed(1) });
     return out;
   });
+  // clearance: no leader crosses a text line (its own or another's), and no text line covers drawn
+  // ink of the frame's focus (red) object
+  const clr = await p.evaluate(() => {
+    const lines = [...document.querySelectorAll('#ann text:not(.halo)')].map((t) => { const b = t.getBoundingClientRect(); return { id: t.closest('[data-anchor]')?.dataset.anchor || '', x: b.x + 2, y: b.y + b.height * 0.2, r: b.right - 2, b: b.bottom - b.height * 0.15 }; });
+    const out = [];
+    for (const lp of document.querySelectorAll('#ann [data-stroke=leader]')) {
+      if (lp.tagName !== 'path') continue; const g = lp.closest('[data-anchor]'), L = lp.getTotalLength(), m = lp.getScreenCTM();
+      for (const ln of lines) { let hit = false; for (let s = 6; s < L - 6 && !hit; s += 2) { const q = lp.getPointAtLength(s), x = m.a * q.x + m.e, y = m.d * q.y + m.f; if (x > ln.x && x < ln.r && y > ln.y && y < ln.b) hit = true; } if (hit) out.push('leader ' + (g?.dataset.anchor || '') + ' × text ' + ln.id); }
+    }
+    // words set on purpose onto an object (mini labels) may sit on its drawing, but never on its red marks
+    for (const fp of document.querySelectorAll('#world [data-thing=hero] path')) {
+      const L = fp.getTotalLength(), m = fp.getScreenCTM(), isMark = fp.dataset.stroke === 'mark' && !fp.classList.contains('ink') && !fp.classList.contains('dashed');
+      for (const ln of lines) { if (ln.id.startsWith('mini-') && !isMark) continue; for (let s = 0; s < L; s += 4) { const q = fp.getPointAtLength(s), x = m.a * q.x + m.c * q.y + m.e, y = m.b * q.x + m.d * q.y + m.f; if (x > ln.x && x < ln.r && y > ln.y && y < ln.b) { out.push('focus ink × text ' + ln.id); break; } } }
+    }
+    return [...new Set(out)];
+  });
+  clear.push({ page: i, hits: clr.join('; '), pass: !clr.length });
   for (const x of geo.lead) lead.push({ page: i, ...x, pass: x.d <= 12 });
   for (const x of geo.base) baseRows.push({ page: i, ...x, pass: x.spread <= 2 });
   for (const x of geo.focus) focus.push({ page: i, ...x });
@@ -175,6 +192,7 @@ const table = ['| Gate | Passed | Result |', '| --- | --- | --- |',
   row('G24 map edge (cameras + panels)', g24, (x) => x.id),
   row('Keep-inside (text in 5% safe area)', keep, (x) => `p${x.page} ${x.anchor} "${x.s}"`),
   row('No label overlaps (text boxes)', over, (x) => `p${x.page} ${x.pair}`),
+  row('Clearance: no leader through text, no text over focus ink', clear, (x) => `p${x.page} ${x.hits}`),
   row('Leader ends on target geometry (≤ 12 px)', lead, (x) => `p${x.page} ${x.id}→${x.target} ${x.d}px`),
   row('Prism rows on one screen baseline (≤ 2 px)', baseRows, (x) => `p${x.page} spread ${x.spread}`),
   row('Route gap under every leader target', focus, (x) => `p${x.page} ${x.id}`),

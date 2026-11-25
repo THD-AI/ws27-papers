@@ -109,7 +109,7 @@ export function start(P, F, q = new URLSearchParams(location.search), svgEl = nu
   for (const id of [...P.zones.map((z) => z.id), ...(page.things || []).map((t) => t.id)]) { if ((page.hide || []).includes(id)) continue; const o = objScreen(id); if (onScreen(o)) used.push(o); }
 
   // a block = lines of [font, string, attrs]; placed beside its object, leader from the object's edge to the first line
-  function place(id, zoneId, lines, { outline = false, mode = null, at = null } = {}) {
+  function place(id, zoneId, lines, { outline = false, mode = null, at = null, pos = null, knock = false, side = null } = {}) {
     const ob = objScreen(zoneId);
     if (!onScreen(ob)) return;
     const lh = (f) => FONTS[f][1] * 1.15;
@@ -127,7 +127,8 @@ export function start(P, F, q = new URLSearchParams(location.search), svgEl = nu
     if (mode === 'aboveHigh') { for (const dy of [280, 360, 200]) for (const dx of [0, -0.3, 0.3]) cands.push({ x: cx - w / 2 + dx * w, y: ob.y - dy - h }); }
     if (mode === 'left') { cands.splice(0, cands.length); for (const dy of [-200, -100, 0, 100, 200]) cands.push({ x: ob.x - 40 - w, y: cy - h / 2 + dy }); }
     if (mode === 'under') cands.splice(0, cands.length, { x: cx - w / 2, y: ob.y + ob.h + 64 });
-    if (mode === 'at' && at) { const q = project(at, r); cands.splice(0, cands.length, { x: q[0] + 16, y: q[1] - h / 2 }, { x: q[0] - 16 - w, y: q[1] - h / 2 }, { x: q[0] - w / 2, y: q[1] + 14 }, { x: q[0] - w / 2, y: q[1] - 14 - h }); }
+    if (pos) cands.splice(0, cands.length, { x: pos[0], y: pos[1] });
+    if (mode === 'at' && at) { const q = project(at, r), all = { right: { x: q[0] + 22, y: q[1] - h / 2 }, left: { x: q[0] - 22 - w, y: q[1] - h / 2 }, below: { x: q[0] - w / 2, y: q[1] + 20 }, above: { x: q[0] - w / 2, y: q[1] - 20 - h } }; cands.splice(0, cands.length, ...(side ? [all[side]] : Object.values(all))); }
     const boxes = cands.map((c) => clampBox({ ...c, w, h }, free));
     const area = (a, u) => Math.max(0, Math.min(a.x + a.w, u.x + u.w + 16) - Math.max(a.x, u.x - 16)) * Math.max(0, Math.min(a.y + a.h, u.y + u.h + 16) - Math.max(a.y, u.y - 16));
     const onRoute = (b) => routePts.filter(([x, y]) => x > b.x - 12 && x < b.x + b.w + 12 && y > b.y - 12 && y < b.y + b.h + 12).length;
@@ -142,13 +143,13 @@ export function start(P, F, q = new URLSearchParams(location.search), svgEl = nu
     const p0 = tq.length ? tq.reduce((a, q) => (Math.hypot(q[0] - fc[0], q[1] - fc[1]) < Math.hypot(a[0] - fc[0], a[1] - fc[1]) ? q : a)) : edgePoint(ob, fc);
     if (mode === 'under') { /* names sit under their object, no leader */ }
     const grow = (b, m) => ({ x: b.x - m, y: b.y - m, w: b.w + 2 * m, h: b.h + 2 * m });
-    const p1 = outline || (mode && mode.startsWith('above')) ? edgePoint(grow({ x: best.x, y: best.y, w, h }, 8), p0) : edgePoint(grow(first, 8), p0);
+    const p1 = edgePoint(grow({ x: best.x, y: best.y, w, h }, 8), p0);
     if (mode !== 'under' && mode !== 'at') {
       g.append(el('path', { d: `M${p0[0]},${p0[1]}L${p1[0]},${p1[1]}`, 'data-stroke': 'leader' }));
       g.append(el('circle', { cx: p0[0], cy: p0[1], r: 3, fill: 'var(--ink)' }));
     }
     if (outline) g.append(el('rect', { x: best.x, y: best.y, width: w, height: h, 'data-stroke': 'leader', fill: 'var(--paper)' }));
-    if (!id.startsWith('hero')) { let ky = best.y + pad; lines.forEach(([f], k) => { g.append(el('rect', { x: best.x + pad - 6, y: ky + FONTS[f][1] * 0.12, width: lw[k] + 12, height: FONTS[f][1] * 1.05, class: 'knock' })); ky += FONTS[f][1] * 1.15; }); } // per line; the hero keeps only its text halo
+    if (!id.startsWith('hero') || knock) { let ky = best.y + pad; lines.forEach(([f], k) => { g.append(el('rect', { x: best.x + pad - 6, y: ky + FONTS[f][1] * 0.12, width: lw[k] + 12, height: FONTS[f][1] * 1.05, class: 'knock' })); ky += FONTS[f][1] * 1.15; }); } // per line; the hero keeps only its text halo
     let y = best.y + pad;
     for (const [f, s, a = {}] of lines) {
       y += FONTS[f][1];
@@ -171,8 +172,8 @@ export function start(P, F, q = new URLSearchParams(location.search), svgEl = nu
   for (let [i, fl] of (page.flags || []).entries()) {
     const f = facts[fl.fact];
     if (fl.source && fl.source.includes('{N}')) { const pt = (page.things || []).find((t) => t.kind === 'pile'); fl = { ...fl, source: fl.source.replace('{N}', pt ? pt.N : '?') }; }
-    const first = fl.inline ? ['tag', [{ t: fl.inline.trim() }, { t: '\u2009\u2009' + num(f.display), a: { 'data-fact': fl.fact } }]] : ['num', [{ t: num(f.display), a: { 'data-fact': fl.fact } }]];
-    place('flag-' + i, fl.zone, [first, ...(fl.inline || !fl.tag ? [] : [['tag', fl.tag]]), ...(fl.source ? [['source', fl.source, { fill: 'var(--muted)' }]] : [])], { mode: fl.mode });
+    const first = fl.inline ? ['tag', [{ t: fl.inline.trim() }, { t: String.fromCharCode(0xA0) + num(f.display), a: { 'data-fact': fl.fact } }]] : ['num', [{ t: num(f.display), a: { 'data-fact': fl.fact } }]];
+    place('flag-' + i, fl.zone, [first, ...(fl.inline || !fl.tag ? [] : [['tag', fl.tag]]), ...(fl.source ? [['source', fl.source, { fill: 'var(--muted)' }]] : [])], { mode: fl.point ? 'at' : fl.mode, side: fl.side, at: fl.point ? thingGeom(route, (page.things || []).find((t) => t.id === fl.zone)).points?.[fl.point] : null });
   }
   if (page.hero) { // after the flags, so it steers around them
     const parts = [];
@@ -182,12 +183,13 @@ export function start(P, F, q = new URLSearchParams(location.search), svgEl = nu
       parts.push({ t: num(f.display), a: { 'data-fact': p.fact, ...(p.red ? { class: 'red', 'data-thing': 'hero' } : {}) } });
     });
     const long = parts.reduce((a, p) => a + p.t.length, 0) > 8;
-    place('hero', page.hero.zone, [[long ? 'heroS' : 'hero', parts], ...(page.hero.tag ? [['tag', page.hero.tag]] : []), ...(page.hero.source ? [['source', page.hero.source, { fill: 'var(--muted)' }]] : [])], { mode: page.hero.mode });
+    const heroLines = page.hero.stack ? parts.filter((p) => p.t !== ' / ').map((p) => ['heroS', [p]]) : [[long ? 'heroS' : 'hero', parts]];
+    place('hero', page.hero.zone, [...heroLines, ...(page.hero.tag ? [['tag', page.hero.tag]] : []), ...(page.hero.source ? [['source', page.hero.source, { fill: 'var(--muted)' }]] : [])], { mode: page.hero.mode, pos: page.hero.pos, knock: page.hero.knock });
   }
   for (const [i, nm] of (page.names || []).entries()) place('name-' + i, nm.zone, [['name', nm.text]], { mode: nm.mode || 'under' });
   for (const [i, mi] of (page.minis || []).entries()) {
     const t = (page.things || []).find((q) => q.id === mi.zone), g = thingGeom(route, t);
-    place('mini-' + i, mi.zone, [[mi.big ? 'tag' : 'mini', mi.text]], { at: g.points?.[mi.point], mode: mi.mode || 'at' });
+    place('mini-' + i, mi.zone, [[mi.big ? 'tag' : 'mini', mi.text]], { at: g.points?.[mi.point], mode: mi.mode || 'at', side: mi.side });
   }
   for (const j of page.joins || []) {
     const a = thingGeom(route, (page.things || []).find((q) => q.id === j.from)), zb = zoneGeom(route, P.zones.find((z) => z.id === j.to));
@@ -197,7 +199,7 @@ export function start(P, F, q = new URLSearchParams(location.search), svgEl = nu
   }
   // counter: the pile's flag is placed from its final text, then counts up during the build
   if (A && A.kind === 'grow' && prog < 1) { const i = (page.flags || []).findIndex((x) => x.fact === A.counter), sp = ann.querySelector('[data-anchor=flag-' + i + '] tspan[data-fact]'); if (sp) { sp.textContent = Math.round(facts[A.counter].value * prog) + ' waiting'; sp.removeAttribute('data-fact'); } }
-  if (page.station) drawCrop(ann, route, P, page.station);
+  // backups carry no minimap (P7 round 2); the station is named in the row note
   // U+2009 falls back to a wide glyph in the web subset of Libre Franklin (measured 51 px against a
   // 25 px space at 120 px), so the thin space is drawn as a 0.17 em gap instead.
   const walk = document.createTreeWalker(ann, NodeFilter.SHOW_TEXT), hits = [];

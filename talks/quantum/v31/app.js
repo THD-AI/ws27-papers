@@ -60,7 +60,7 @@ function presenter(P, N) {
     const pg = P.pages[n - 1];
     document.getElementById('pv-cur').src = `${base}?print=1&page=${n}`;
     document.getElementById('pv-next').src = n < P.pages.length ? `${base}?print=1&page=${n + 1}` : 'about:blank';
-    document.getElementById('pv-n').textContent = `page ${n} of ${P.pages.length}`;
+    document.getElementById('pv-n').textContent = '';
     if (pg.beat !== beat) { beat = pg.beat; beatStart = performance.now(); }
     if (talkStart == null && n > 1) talkStart = performance.now();
     const nb = N.beats[pg.beat];
@@ -71,7 +71,9 @@ function presenter(P, N) {
       : `<h2>Backup ${pg.beat}</h2><p>${pg.title}</p><p>${pg.caption || ''}</p><p class="pv-k">Spoken answer: QUESTIONS.md</p>`;
     const bi = buildIndex(n), cur = document.querySelector('#pv-notes .pv-cur'); if (cur) cur.scrollIntoView({ block: 'center' });
     const gi = bi < 0 ? -1 : flat.findIndex((x) => x.beat === pg.beat) + bi;
-    document.getElementById('pv-build').textContent = gi < 0 ? 'backup' : `${N.beats[pg.beat].builds[bi].id} of ${flat.length}`;
+    const bc = gi < 0 ? `backup ${pg.beat}` : `build ${N.beats[pg.beat].builds[bi].id} · ${gi + 1} of ${flat.length}`;
+    document.getElementById('pv-build').textContent = gi < 0 ? 'backup' : `${gi + 1} of ${flat.length}`;
+    document.getElementById('pv-n').textContent = bc;
   };
   const set0 = set;
   addEventListener('message', (e) => { if (e.data && e.data.v31page) set0(e.data.v31page); });

@@ -106,10 +106,10 @@ export function thingGeom(route, t, ov = false) {
   else if (t.kind === 'bar') { const d = dirAt(route, t.at); paths = [...bar(p, d, t.len, t.id), ...(t.tick ? startTick(p, d, t.id + '-t') : [])]; hull = false; }
   else if (t.kind === 'panel') { paths = panel(p, t.w, t.h, t.id); hull = false; }
   else if (t.kind === 'flatruler') { paths = flatRuler(p, t.len, t.ticks || [], t.id); hull = false; var points = { start: p, end: [p[0] + t.len, p[1]] }; }
-  else if (t.kind === 'whisker') { paths = whisker(p, t.len, t.dir || [1, 0], t.cap || 18, t.id); hull = false; }
+  else if (t.kind === 'whisker') { paths = whisker(p, t.len, t.dir || [1, 0], t.cap || 18, t.id); if (t.thick) paths = paths.map((q) => ({ ...q, stroke: 'mark' })); hull = false; var points = { mid: [p[0] + (t.dir || [1, 0])[0] * t.len / 2, p[1] + (t.dir || [1, 0])[1] * t.len / 2] }; }
   else if (t.kind === 'prism') paths = prism(p, t.h, t.s || 90, t.id);
   else if (t.kind === 'plane') { paths = backPlane(p, t.len, t.top, t.step, t.id); hull = false; }
-  else if (t.kind === 'pile') paths = ov ? pileOverview(p, t.count * 34) : pile(p, t.count);
+  else if (t.kind === 'pile') paths = ov ? pileOverview(p, t.count * 18) : pile(p, t.count);
   else if (t.kind === 'qubit') paths = ov ? qubitOverview(p) : qubit(p, t.r || 70, t.rings ?? 3);
   else if (t.kind === 'tile') paths = checkTile(p, t.s || 180);
   else paths = frame(p, t.U || 160, t.V || 120, t.id);

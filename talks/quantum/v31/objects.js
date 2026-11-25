@@ -166,7 +166,7 @@ export function liftedTile(o, s = 420, fired = ['z2', 'x0', 'x1'], name = 'lifte
     if (kind === 'Z' || kind === 'Y') E.line([c[0] - d, c[1]], [c[0] + d, c[1]]);
     if (kind === 'z') F.line([c[0] - d, c[1]], [c[0] + d, c[1]]);
   }
-  const out = [...P.out, ...M.out.map((q) => ({ ...q, stroke: 'mark' })), ...E.out.map((q) => ({ ...q, stroke: 'mark', cls: 'ink' })), ...F.out.map((q) => ({ ...q, stroke: 'mark', cls: 'context' }))];
+  const out = [...P.out, ...M.out.map((q) => ({ ...q, stroke: 'mark' })), ...E.out.map((q) => ({ ...q, stroke: 'mark', cls: 'ink' })), ...F.out.map((q) => ({ ...q, stroke: 'mark', cls: 'ink dashed' }))];
   out.points = points;
   return out;
 }
@@ -192,13 +192,13 @@ export function frame(o, U = 160, V = 120, name = 'frame') { // U, V: frame size
 
 // Pile of unread frames: one frame per N unread, stacked; spacing in map units chosen so
 // it is ≥ 8 px at the CD camera (0.6 px per unit → 14 units).
-export function pile(o, count, gap = 34, grey = 2) {
+export function pile(o, count, gap = 18, grey = 3) {
   const out = [];
   for (let i = 0; i < count; i++) {
     const j = ((i * 7919) % 5) - 2 + i * 1.6; // stable jitter plus a slight lean
     const P = pen('pile-' + i);
     const p = [o[0] + j, o[1] - i * gap];
-    P.path([[160, 0, 12], [160, 0, 0], [0, 0, 0], [0, 120, 0], [0, 120, 12], [0, 0, 12], [160, 0, 12], [160, 120, 12], [0, 120, 12]].map(([u, v, z]) => iso(p, u, v, z)), false); // a plate: front corner and its 12-unit edge
+    P.path([[0, 120], [0, 0], [160, 0]].map(([u, v]) => iso(p, u, v, 0)), false); // one sheet: its front corner, one stroke // a plate: front corner and its 12-unit edge
     out.push(...P.out.map((q) => (i < grey ? { ...q, cls: 'context' } : q)));
   }
   return out;

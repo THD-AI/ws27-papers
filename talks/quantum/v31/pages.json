@@ -361,10 +361,10 @@
      "kind": "lifted",
      "at": 0.6,
      "off": [
-      180,
+      170,
       -40
      ],
-     "s": 330,
+     "s": 300,
      "fired": [
       "z2",
       "x0",
@@ -381,10 +381,10 @@
      "kind": "lifted",
      "at": 0.6,
      "off": [
-      700,
+      740,
       -40
      ],
-     "s": 330,
+     "s": 300,
      "fired": [
       "z2",
       "x0",
@@ -402,27 +402,32 @@
     {
      "zone": "ans1",
      "point": "q0",
-     "text": "flip"
+     "text": "flip",
+     "side": "below"
     },
     {
      "zone": "ans1",
      "point": "q4",
-     "text": "phase"
+     "text": "phase",
+     "side": "right"
     },
     {
      "zone": "ans2",
      "point": "q0",
-     "text": "Y"
+     "text": "Y",
+     "side": "below"
     },
     {
      "zone": "ans2",
      "point": "q8",
-     "text": "phase"
+     "text": "phase",
+     "side": "above"
     },
     {
      "zone": "ans2",
      "point": "q5",
-     "text": "or here"
+     "text": "or here",
+     "side": "right"
     }
    ],
    "names": [
@@ -447,7 +452,7 @@
    "camera": "CD-frame",
    "focus": "C",
    "title": "Which errors made three checks fire?",
-   "caption": "Matching picks answer one: right in 10 of 30. Answer two is right in 19.",
+   "caption": "Matching picks answer one: right in 10 of 30; answer two in 19 (5% per storing qubit, one round).",
    "things": [
     {
      "id": "newest",
@@ -492,10 +497,10 @@
      "kind": "lifted",
      "at": 0.6,
      "off": [
-      180,
+      170,
       -40
      ],
-     "s": 330,
+     "s": 300,
      "fired": [
       "z2",
       "x0",
@@ -512,10 +517,10 @@
      "kind": "lifted",
      "at": 0.6,
      "off": [
-      700,
+      740,
       -40
      ],
-     "s": 330,
+     "s": 300,
      "fired": [
       "z2",
       "x0",
@@ -542,8 +547,11 @@
      }
     ],
     "tag": "one / two right",
-    "source": "5% per storing qubit; one round; our own count",
-    "mode": "above"
+    "stack": true,
+    "pos": [
+     860,
+     670
+    ]
    },
    "names": [],
    "hide": [
@@ -566,7 +574,8 @@
     ],
     "tag": "network",
     "mode": "above",
-    "source": "fine-tuned on the chip"
+    "source": "fine-tuned on the chip",
+    "knock": true
    },
    "caption": "A neural network, a program that learns from examples, reads the same recording.",
    "things": [
@@ -678,7 +687,7 @@
       560
      ],
      "fact": "waiting-62-at-66",
-     "N": 5,
+     "N": 2,
      "red": true
     },
     {
@@ -775,10 +784,10 @@
      "kind": "planex",
      "at": 0.91,
      "off": [
-      -1370,
+      -1430,
       355
      ],
-     "len": 940,
+     "len": 1000,
      "top": 280,
      "step": 80,
      "tallest": null
@@ -919,7 +928,7 @@
     "source": "Google’s 2024 network; quoted"
    },
    "caption": "Windows in parallel could stop the pile growing; each answer still arrives late.",
-   "rowNote": "Our reasoning, not a result: not in our article.",
+   "rowNote": "Our reasoning, not a result: not in our article. · station: D reader",
    "station": "D"
   },
   {
@@ -933,8 +942,8 @@
      "id": "bp",
      "kind": "prism",
      "pos": [
-      3440,
-      1180
+      3250,
+      1110
      ],
      "s": 90,
      "h": 212
@@ -944,7 +953,7 @@
      "kind": "prism",
      "pos": [
       3630,
-      1180
+      1110
      ],
      "s": 90,
      "h": 200,
@@ -954,8 +963,8 @@
      "id": "bc",
      "kind": "prism",
      "pos": [
-      3820,
-      1180
+      4010,
+      1110
      ],
      "s": 90,
      "h": 164
@@ -964,10 +973,10 @@
      "id": "bpl",
      "kind": "planex",
      "pos": [
-      3340,
-      1225
+      3150,
+      1155
      ],
-     "len": 630,
+     "len": 960,
      "top": 225,
      "step": 1000000,
      "tallest": null
@@ -976,8 +985,8 @@
      "id": "wbp",
      "kind": "whisker",
      "pos": [
-      3535,
-      924.4
+      3345,
+      854.4
      ],
      "len": 2.100000000000002,
      "dir": [
@@ -991,7 +1000,7 @@
      "kind": "whisker",
      "pos": [
       3725,
-      936.4
+      866.4
      ],
      "len": 2.2499999999999853,
      "dir": [
@@ -1004,8 +1013,8 @@
      "id": "wbc",
      "kind": "whisker",
      "pos": [
-      3915,
-      972.4
+      4105,
+      902.4
      ],
      "len": 1.949999999999985,
      "dir": [
@@ -1018,15 +1027,16 @@
      "id": "seeds",
      "kind": "whisker",
      "pos": [
-      3535,
-      941.5
+      3480,
+      871.5
      ],
      "len": 10.500000000000002,
      "dir": [
       0,
       -1
      ],
-     "cap": 22
+     "cap": 22,
+     "thick": true
     }
    ],
    "hero": {
@@ -1047,23 +1057,25 @@
      "fact": "d5-plain-pooled",
      "tag": "plain matching",
      "source": "10 million runs",
-     "mode": "left"
+     "mode": "above"
     },
     {
      "zone": "bc",
      "fact": "d5-corr-pooled",
      "tag": "correlated matching",
-     "source": "10 million runs"
+     "source": "10 million runs",
+     "mode": "above"
     },
     {
      "zone": "seeds",
      "fact": "d5-net-seeds",
-     "tag": "five seeds, lowest to highest",
-     "mode": "under"
+     "tag": "",
+     "point": "mid",
+     "side": "left"
     }
    ],
    "caption": "No overlap; the pooled interval counts only test-run chance, the five networks differ more.",
-   "rowNote": "Per run of 5 rounds · distance 5 · 0.5% noise · whiskers: 95% intervals beside each prism, seed range on the red one",
+   "rowNote": "Per run of 5 rounds · distance 5 · 0.5% noise · 95% whiskers beside each prism · station: E results",
    "station": "E"
   },
   {
@@ -1133,7 +1145,7 @@
     }
    ],
    "caption": "The 24 µs has no distance in the source; live matching waited about 63 µs at distance 5.",
-   "rowNote": "Two different measures: network time per round, and live matching’s delay after the last round.",
+   "rowNote": "Two different measures: network time per round, and live matching’s delay after the last round. · station: D reader",
    "station": "D",
    "minis": [
     {
@@ -1152,7 +1164,7 @@
    "names": [
     {
      "zone": "w63",
-     "text": "± 17 µs"
+     "text": "63 ± 17 µs"
     }
    ]
   },
@@ -1260,7 +1272,7 @@
     }
    ],
    "caption": "Not comparable: per round against per run, distance 7 against 5, chip against simulation.",
-   "rowNote": "Two axes, two units, never one scale.",
+   "rowNote": "Two axes, two units, never one scale. · station: E results",
    "names": [
     {
      "zone": "r5a",
@@ -1285,16 +1297,10 @@
    ],
    "minis": [
     {
-     "zone": "pl5",
-     "point": "top",
-     "text": "per 100,000 rounds",
-     "mode": "at"
-    },
-    {
      "zone": "pl7",
-     "point": "top",
+     "point": "base",
      "text": "% of runs of 5 rounds",
-     "mode": "at"
+     "side": "left"
     }
    ],
    "station": "E"
@@ -1380,7 +1386,7 @@
     }
    ],
    "caption": "From 0.8% noise the network is behind plain matching in every seed.",
-   "rowNote": "Distance 5 · about 250 million examples",
+   "rowNote": "Distance 5 · about 250 million examples · station: E results",
    "station": "E",
    "minis": [
     {

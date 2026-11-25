@@ -50,3 +50,4 @@ body.print-all text.halo{display:none}
 body.print-all text{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0}
 .thing [data-stroke=mark].context,.thing.redmarks [data-stroke=mark].context{stroke:var(--context)}
 #pv-notes .pv-cur{background:#2A2D35;border-left:6px solid #C8321F;padding:6px 10px}
+.thing [data-stroke=mark].dashed{stroke:var(--ink);stroke-dasharray:6 5}
