@@ -3,7 +3,7 @@
 // constant across pages and hops), G24 (map edge) and two layout checks
 // (labels inside the safe area, no label overlaps).
 //   node tools/v31-board.mjs [out-dir]
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import puppeteer from 'puppeteer-core';
@@ -39,7 +39,8 @@ const measure = () => p.evaluate(() => {
 
 await p.setViewport({ width: 1920, height: 1080 });
 const sizes = {};
-for (let i = 1; i <= 9; i++) {
+const NPAGES = JSON.parse(readFileSync(join(ROOT, 'talks/quantum/v31/pages.json'), 'utf8')).pages.length;
+for (let i = 1; i <= NPAGES; i++) {
   await load(`${base}index.html?print=1&page=${i}`);
   await p.screenshot({ path: join(OUT, `frame-${i}.png`) });
   const m = await measure();
@@ -74,7 +75,7 @@ for (let i = 1; i <= 9; i++) {
         for (let s = 0; s <= L; s += Math.max(0.5, L / 400)) { const q = e.getPointAtLength(s); best = Math.min(best, Math.hypot(m.a * q.x + m.c * q.y + m.e - d0[0], m.b * q.x + m.d * q.y + m.f - d0[1])); }
       }
       out.lead.push({ id: g.dataset.anchor, target: id, d: +best.toFixed(1) });
-      if (!['ruler', 'plane', 'planex'].includes(T.dataset.kind)) {
+      if (!['ruler', 'plane', 'planex', 'panel', 'flatruler'].includes(T.dataset.kind)) {
         const b = T.getBBox(), c = [b.x + b.width / 2, b.y + b.height / 2]; // map units
         const mask = document.querySelector('#route').getAttribute('mask');
         const holes = [...document.querySelectorAll(mask.slice(4, -1) + ' path')].map((h) => { const n = h.getAttribute('d').match(/-?[0-9.]+(e-?[0-9]+)?/g).map(Number), xs = n.filter((_, i) => i % 2 === 0), ys = n.filter((_, i) => i % 2); return { x: Math.min(...xs), r: Math.max(...xs), y: Math.min(...ys), b: Math.max(...ys) }; });
@@ -138,10 +139,17 @@ for (const [role, list] of Object.entries(sizes)) {
   g22.push({ role, n: list.length, min: Math.min(...px), max: Math.max(...px), pass: spread <= 1 });
 }
 
-await p.setViewport({ width: 2040, height: 1260 });
-await p.goto(`${base}board/grid.html`, { waitUntil: 'networkidle0' });
+await p.setViewport({ width: 2040, height: 900 });
+await p.goto(`${base}board/backups.html`, { waitUntil: 'networkidle0' });
 await new Promise((r) => setTimeout(r, 1500));
-await p.screenshot({ path: join(OUT, 'board-grid.png'), fullPage: true });
+await p.screenshot({ path: join(OUT, 'board-backups.png'), fullPage: true });
+// main grid last (NOGRID=1 skips it while a review reads the current one)
+if (!process.env.NOGRID) {
+  await p.setViewport({ width: 2040, height: 1260 });
+  await p.goto(`${base}board/grid.html`, { waitUntil: 'networkidle0' });
+  await new Promise((r) => setTimeout(r, 1500));
+  await p.screenshot({ path: join(OUT, 'board-grid.png'), fullPage: true });
+}
 await p.setViewport({ width: 3000, height: 900 });
 await p.goto(base + 'board/map.html', { waitUntil: 'networkidle0' });
 await p.waitForFunction('window.MAP');

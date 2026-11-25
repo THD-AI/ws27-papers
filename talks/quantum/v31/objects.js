@@ -104,8 +104,8 @@ export function reader(o) {
   // vent grille: parallel dash rows across the lid
   for (let v = 70; v < V - 50; v += 34) for (let u = 60; u < U - 60; u += 50) P.line(iso(o, u, v, H), iso(o, u + DASH, v, H));
   // cable run leaving the top towards the film
-  // cable: leaves the rear of the lid sideways and drops to the floor beside the cabinet
-  for (const d of [0, 22]) P.curve([iso(o, U - 40, V - 40 - d, H), iso(o, U + 40, V - 40 - d, H - 10), iso(o, U + 90, V - 50 - d, H - 120), iso(o, U + 100, V - 60 - d, 0)]);
+  // cable: leaves the hidden rear face low and runs out along the floor
+  for (const d of [0, 22]) P.curve([iso(o, U, V - 120 - d, 120), iso(o, U + 70, V - 120 - d, 100), iso(o, U + 130, V - 140 - d, 40), iso(o, U + 200, V - 160 - d, 0)]);
   return P.out;
 }
 
@@ -147,7 +147,7 @@ export function liftedTile(o, s = 420, fired = [0, 1, 3]) {
   const m = (i, j) => iso(o, s * (i + 0.5) / 3, s * (j + 0.5) / 3, 0);
   for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) P.ellipse(m(i, j), 22, 13);
   [[0.5, 0.5], [1.5, 0.5], [0.5, 1.5], [1.5, 1.5]].forEach(([ci, cj], k) => {
-    const d = (r) => [[ci - r, cj], [ci, cj - r], [ci + r, cj], [ci, cj + r]].map(([a, b]) => m(a, b));
+    const c0 = m(ci, cj), R = s / 3 * 0.42, d = (r) => [[-r, 0], [0, -r * 0.62], [r, 0], [0, r * 0.62]].map(([a, b]) => [c0[0] + a * R / 0.42, c0[1] + b * R / 0.42]);
     P.poly(d(0.42));
     if (fired.includes(k)) P.poly(d(0.22));
   });
@@ -226,3 +226,15 @@ export function ruler(p, dir, len, every = 0, tick = 40) {
 // overview variants for the kit (≤ 20 strokes)
 export function pileOverview(o, h) { h = h * 1.5; const P = pen('pile-ov'); P.poly([[0, 0], [160, 0], [160, 120], [0, 120]].map(([u, v]) => iso(o, u, v, 0))); P.line(iso(o, 0, 0, 0), iso(o, 0, 0, h)); P.line(iso(o, 160, 0, 0), iso(o, 160, 0, h)); P.poly([[0, 0], [160, 0], [160, 120], [0, 120]].map(([u, v]) => iso(o, u, v, h))); return P.out; }
 export function qubitOverview(o) { return qubit(o, 70, 1); }
+
+// Tie lines from a frame on the ground up to a lifted tile: the tile is that frame, pulled up.
+export function tie(frameO, FU, FV, tileO, s) {
+  const P = pen('tie'), fc = [[0, 0], [FU, 0], [FU, FV], [0, FV]].map(([u, v]) => iso(frameO, u, v, 0)), tc = [[0, 0], [s, 0], [s, s], [0, s]].map(([u, v]) => iso(tileO, u, v, 0));
+  for (let i = 0; i < 4; i++) { const a = fc[i], b = tc[i], L = Math.hypot(b[0] - a[0], b[1] - a[1]); for (let t = 0; t < L - 10; t += 2 * DASH) { const p0 = [a[0] + (b[0] - a[0]) * t / L, a[1] + (b[1] - a[1]) * t / L], p1 = [a[0] + (b[0] - a[0]) * Math.min(L, t + DASH) / L, a[1] + (b[1] - a[1]) * Math.min(L, t + DASH) / L]; P.line(p0, p1); } }
+  return P.out;
+}
+
+// Backup panel: a flat lifted panel (elevation, allowed on lifted panels) framing its content.
+export function panel(c, w, h, name = 'panel') { const P = pen(name); P.poly([[c[0] - w / 2, c[1] - h / 2], [c[0] + w / 2, c[1] - h / 2], [c[0] + w / 2, c[1] + h / 2], [c[0] - w / 2, c[1] + h / 2]]); return P.out; }
+// flat (screen-x) ruler for panels, with optional marks [[pos, len]]
+export function flatRuler(p, len, ticks = [], name = 'fr') { const P = pen(name); P.line(p, [p[0] + len, p[1]]); P.line([p[0], p[1] - 24], [p[0], p[1] + 24]); P.line([p[0] + len, p[1] - 24], [p[0] + len, p[1] + 24]); for (const [x, l] of ticks) P.line([p[0] + x, p[1] - l], [p[0] + x, p[1] + l]); return P.out; }

@@ -111,7 +111,7 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
     const area = (a, u) => Math.max(0, Math.min(a.x + a.w, u.x + u.w + 16) - Math.max(a.x, u.x - 16)) * Math.max(0, Math.min(a.y + a.h, u.y + u.h + 16) - Math.max(a.y, u.y - 16));
     const onRoute = (b) => routePts.filter(([x, y]) => x > b.x - 12 && x < b.x + b.w + 12 && y > b.y - 12 && y < b.y + b.h + 12).length;
     const dist = (b) => Math.hypot(b.x + b.w / 2 - cx, b.y + b.h / 2 - cy);
-    const score = (b) => used.reduce((s, u) => s + area(b, u), 0) + onRoute(b) * 5000 + dist(b) * 20;
+    const score = (b) => used.reduce((s, u) => s + area(b, u), 0) + onRoute(b) * 5000 + dist(b) * 40;
     const best = boxes.reduce((a, b) => (score(b) < score(a) ? b : a));
     used.push(best);
     const g = el('g', { 'data-anchor': id, 'data-zone': zoneId, 'data-target': zoneId, 'data-box': [best.x, best.y, w, h].map(Math.round).join(',') });
@@ -153,7 +153,7 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
     const f = facts[fl.fact];
     place('flag-' + i, fl.zone, [['num', [{ t: f.display.replace(/[\u2009\u202F\u00A0]/g, ' '), a: { 'data-fact': fl.fact } }]], ['tag', fl.tag], ['source', fl.source, { fill: 'var(--muted)' }]], { outline: true });
   }
-  window.V31_RULERS = (page.things || []).filter((t) => ['ruler', 'plane', 'planex'].includes(t.kind)).length; // no hull, no route gap
+  window.V31_RULERS = (page.things || []).filter((t) => ['ruler', 'plane', 'planex', 'panel', 'flatruler'].includes(t.kind)).length; // no hull, no route gap
   window.V31 = { page: n + 1, camera: page.camera, rect: r, route: route.kind, ready: true };
   return svg;
 }

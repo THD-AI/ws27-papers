@@ -24,7 +24,7 @@ export function panels(route, zones) {
 }
 
 // ---- real objects (block 5) ----
-import { chip, film, reader, prism, backPlane, backPlaneX, liftedTile, pile, qubit, checkTile, ruler, frame,
+import { chip, film, reader, prism, backPlane, backPlaneX, liftedTile, tie, panel, flatRuler, pile, qubit, checkTile, ruler, frame,
   chipOverview, filmOverview, readerOverview, cryoOverview, pileOverview, qubitOverview } from './objects.js';
 
 const C30 = Math.cos(Math.PI / 6);
@@ -95,11 +95,16 @@ export function buildWorld(svg, route, zones, map = [9600, 5400], { overview = f
 // spec: { id, kind, at (route fraction), off: [dx, dy] map units, red, ... }
 function dirAt(route, f) { const a = route.at(Math.max(0, f - 0.001)), b = route.at(Math.min(1, f + 0.001)); const L = Math.hypot(b[0] - a[0], b[1] - a[1]); return [(b[0] - a[0]) / L, (b[1] - a[1]) / L]; }
 export function thingGeom(route, t, ov = false) {
-  const [x, y] = route.at(t.at), p = [x + (t.off?.[0] || 0), y + (t.off?.[1] || 0)];
+  const [x, y] = t.pos ? t.pos : route.at(t.at), p = [x + (t.off?.[0] || 0), y + (t.off?.[1] || 0)];
   let paths, hull = true;
   if (t.kind === 'ruler') { paths = ruler(p, dirAt(route, t.at), t.len, t.every || 0, t.tick || 40); hull = false; }
   else if (t.kind === 'planex') { paths = backPlaneX(p, t.len, t.top, t.step, t.tallest, t.id); hull = false; }
-  else if (t.kind === 'lifted') paths = liftedTile(p, t.s || 420, t.fired || [0, 1, 3]);
+  else if (t.kind === 'lifted') {
+    paths = liftedTile(p, t.s || 420, t.fired || [0, 1, 3]);
+    if (t.from) { const f = thingGeom(route, t.from); const fo = t.from.pos ? t.from.pos : route.at(t.from.at); paths = [...paths, ...tie([fo[0] + t.from.off[0], fo[1] + t.from.off[1]], t.from.U || 160, t.from.V || 120, p, t.s || 420)]; }
+  }
+  else if (t.kind === 'panel') { paths = panel(p, t.w, t.h, t.id); hull = false; }
+  else if (t.kind === 'flatruler') { paths = flatRuler(p, t.len, t.ticks || [], t.id); hull = false; }
   else if (t.kind === 'prism') paths = prism(p, t.h, t.s || 90, t.id);
   else if (t.kind === 'plane') { paths = backPlane(p, t.len, t.top, t.step, t.id); hull = false; }
   else if (t.kind === 'pile') paths = ov ? pileOverview(p, t.count * 14) : pile(p, t.count);

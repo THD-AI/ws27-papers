@@ -74,6 +74,41 @@
   "E": {
    "width": 2000,
    "at": 0.91
+  },
+  "b1": {
+   "width": 2000,
+   "c": [
+    1600,
+    800
+   ]
+  },
+  "b2": {
+   "width": 2000,
+   "c": [
+    4000,
+    760
+   ]
+  },
+  "b3": {
+   "width": 2000,
+   "c": [
+    7600,
+    4650
+   ]
+  },
+  "b4": {
+   "width": 2000,
+   "c": [
+    4700,
+    4700
+   ]
+  },
+  "b5": {
+   "width": 2000,
+   "c": [
+    2200,
+    4750
+   ]
   }
  },
  "pages": [
@@ -213,14 +248,36 @@
    "caption": "The smallest grid: 9 storing qubits, 8 checks, one round, checks never wrong.",
    "things": [
     {
+     "id": "newest",
+     "kind": "frame",
+     "at": 0.51,
+     "off": [
+      242,
+      -80
+     ],
+     "U": 180,
+     "V": 120
+    },
+    {
      "id": "lifted",
      "kind": "lifted",
-     "at": 0.6,
+     "at": 0.51,
      "off": [
-      -780,
-      180
+      150,
+      -480
      ],
-     "s": 420
+     "s": 320,
+     "from": {
+      "id": "newest",
+      "kind": "frame",
+      "at": 0.51,
+      "off": [
+       242,
+       -80
+      ],
+      "U": 180,
+      "V": 120
+     }
     }
    ]
   },
@@ -488,6 +545,368 @@
      "source": "our arithmetic, Google’s times"
     }
    ]
+  },
+  {
+   "beat": "b1",
+   "build": 0,
+   "camera": "b1",
+   "focus": null,
+   "eyebrow": "Backup b1 · not in our article",
+   "title": "Run copies in parallel?",
+   "things": [
+    {
+     "id": "w1",
+     "kind": "frame",
+     "pos": [
+      1000,
+      980
+     ],
+     "U": 300,
+     "V": 160
+    },
+    {
+     "id": "w2",
+     "kind": "frame",
+     "pos": [
+      1000,
+      810
+     ],
+     "U": 300,
+     "V": 160
+    },
+    {
+     "id": "w3",
+     "kind": "frame",
+     "pos": [
+      1000,
+      640
+     ],
+     "U": 300,
+     "V": 160
+    },
+    {
+     "id": "late",
+     "kind": "flatruler",
+     "pos": [
+      1560,
+      740
+     ],
+     "len": 480,
+     "ticks": [],
+     "red": true
+    }
+   ],
+   "hero": {
+    "zone": "late",
+    "parts": [
+     {
+      "fact": "net2024-24",
+      "red": true
+     }
+    ],
+    "tag": "each answer still that late",
+    "source": "Google’s 2024 network; quoted"
+   },
+   "caption": "Windows in parallel could stop the pile growing; each answer still arrives late."
+  },
+  {
+   "beat": "b2",
+   "build": 0,
+   "camera": "b2",
+   "focus": null,
+   "eyebrow": "Backup b2 · 10 million runs per decoder",
+   "title": "Is 1.33 against 1.41 noise?",
+   "things": [
+    {
+     "id": "bp",
+     "kind": "prism",
+     "pos": [
+      3440,
+      1060
+     ],
+     "s": 90,
+     "h": 353
+    },
+    {
+     "id": "bn",
+     "kind": "prism",
+     "pos": [
+      3630,
+      1060
+     ],
+     "s": 90,
+     "h": 333,
+     "red": true
+    },
+    {
+     "id": "bc",
+     "kind": "prism",
+     "pos": [
+      3820,
+      1060
+     ],
+     "s": 90,
+     "h": 273
+    },
+    {
+     "id": "bpl",
+     "kind": "planex",
+     "pos": [
+      3340,
+      1105
+     ],
+     "len": 630,
+     "top": 400,
+     "step": 50,
+     "tallest": 353
+    }
+   ],
+   "hero": {
+    "zone": "bn",
+    "parts": [
+     {
+      "fact": "d5-net-pooled",
+      "red": true
+     }
+    ],
+    "tag": "our network, five seeds pooled",
+    "source": "95% interval counts only test-run chance"
+   },
+   "flags": [
+    {
+     "zone": "bp",
+     "fact": "d5-plain-pooled",
+     "tag": "plain matching",
+     "source": "10 million runs"
+    },
+    {
+     "zone": "bc",
+     "fact": "d5-corr-pooled",
+     "tag": "correlated matching",
+     "source": "10 million runs"
+    }
+   ],
+   "caption": "No overlap; the pooled interval counts only test-run chance, the five networks differ more."
+  },
+  {
+   "beat": "b3",
+   "build": 0,
+   "camera": "b3",
+   "focus": null,
+   "eyebrow": "Backup b3 · times, not distances",
+   "title": "24 µs at which distance?",
+   "things": [
+    {
+     "id": "t24",
+     "kind": "flatruler",
+     "pos": [
+      6900,
+      4530
+     ],
+     "len": 288,
+     "red": true
+    },
+    {
+     "id": "t63",
+     "kind": "flatruler",
+     "pos": [
+      6900,
+      4810
+     ],
+     "len": 756,
+     "ticks": [
+      [
+       552,
+       30
+      ],
+      [
+       960,
+       30
+      ]
+     ]
+    }
+   ],
+   "hero": {
+    "zone": "t24",
+    "parts": [
+     {
+      "fact": "net2024-24",
+      "red": true
+     }
+    ],
+    "tag": "no distance in the source",
+    "source": "read afterwards; serial; quoted"
+   },
+   "flags": [
+    {
+     "zone": "t63",
+     "fact": "live-match-delay-63",
+     "tag": "live matching, delay after last round",
+     "source": "distance 5; 72-qubit chip"
+    }
+   ],
+   "caption": "The 24 µs has no distance in the source; live matching waited about 63 µs at distance 5."
+  },
+  {
+   "beat": "b4",
+   "build": 0,
+   "camera": "b4",
+   "focus": null,
+   "eyebrow": "Backup b4 · two scales, never one",
+   "title": "Yours is ten times worse?",
+   "things": [
+    {
+     "id": "r5a",
+     "kind": "prism",
+     "pos": [
+      4050,
+      4980
+     ],
+     "s": 80,
+     "h": 342
+    },
+    {
+     "id": "r5b",
+     "kind": "prism",
+     "pos": [
+      4220,
+      4980
+     ],
+     "s": 80,
+     "h": 286
+    },
+    {
+     "id": "pl5",
+     "kind": "planex",
+     "pos": [
+      3960,
+      5020
+     ],
+     "len": 400,
+     "top": 400,
+     "step": 50,
+     "tallest": 342
+    },
+    {
+     "id": "r7a",
+     "kind": "prism",
+     "pos": [
+      4900,
+      4980
+     ],
+     "s": 80,
+     "h": 282
+    },
+    {
+     "id": "r7b",
+     "kind": "prism",
+     "pos": [
+      5070,
+      4980
+     ],
+     "s": 80,
+     "h": 266,
+     "red": true
+    },
+    {
+     "id": "r7c",
+     "kind": "prism",
+     "pos": [
+      5240,
+      4980
+     ],
+     "s": 80,
+     "h": 218
+    },
+    {
+     "id": "pl7",
+     "kind": "planex",
+     "pos": [
+      4810,
+      5020
+     ],
+     "len": 560,
+     "top": 340,
+     "step": 100,
+     "tallest": 282
+    }
+   ],
+   "hero": {
+    "zone": "r7b",
+    "parts": [
+     {
+      "fact": "d5-net-1.33",
+      "red": true
+     }
+    ],
+    "tag": "per run of 5 rounds, simulated",
+    "source": "distance 5; uniform 0.5% noise"
+   },
+   "flags": [
+    {
+     "zone": "r5b",
+     "fact": "d7-net-143",
+     "tag": "per 100,000 rounds, on the chip",
+     "source": "distance 7; Google 2024 chip – Nature 2025"
+    }
+   ],
+   "caption": "Not comparable: per round against per run, distance 7 against 5, chip against simulation."
+  },
+  {
+   "beat": "b5",
+   "build": 0,
+   "camera": "b5",
+   "focus": null,
+   "eyebrow": "Backup b5 · the noise table",
+   "title": "A flattering noise level?",
+   "things": [
+    {
+     "id": "axis",
+     "kind": "flatruler",
+     "pos": [
+      1600,
+      4810
+     ],
+     "len": 1100,
+     "ticks": [
+      [
+       500,
+       30
+      ]
+     ]
+    },
+    {
+     "id": "m08",
+     "kind": "flatruler",
+     "pos": [
+      2400,
+      4810
+     ],
+     "len": 300,
+     "ticks": [],
+     "red": true
+    }
+   ],
+   "hero": {
+    "zone": "m08",
+    "parts": [
+     {
+      "fact": "behind-plain-0.8",
+      "red": true
+     }
+    ],
+    "tag": "behind plain matching, every seed",
+    "source": "distance 5; about 250 million examples"
+   },
+   "flags": [
+    {
+     "zone": "axis",
+     "fact": "sim-noise-0.5",
+     "tag": "the level we trained at",
+     "source": "uniform, every operation; simulated"
+    }
+   ],
+   "caption": "From 0.8% noise the network is behind plain matching in every seed."
   }
  ]
 }
