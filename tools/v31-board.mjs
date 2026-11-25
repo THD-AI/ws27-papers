@@ -19,7 +19,7 @@ const p = await b.newPage();
 const TOK = { grid: 1.5, leader: 2, object: 3, route: 4, locator: 1.5 }, TOL = 0.2;
 const FLOOR = { main: 32, mono: 28, source: 24, locator: 24, title: 32, hero: 32 };
 const SAFE = { x: 96, y: 54, r: 1824, b: 1026 };
-const g2 = [], g5 = [], g22 = [], keep = [], over = [], rgate = [], gap = [];
+const g1 = [], g3 = [], g2 = [], g5 = [], g22 = [], keep = [], over = [], rgate = [], gap = [];
 
 async function load(url) {
   await p.goto(url, { waitUntil: 'networkidle0' });
@@ -43,6 +43,25 @@ for (let i = 1; i <= 9; i++) {
   await load(`${base}index.html?print=1&page=${i}`);
   await p.screenshot({ path: join(OUT, `frame-${i}.png`) });
   const m = await measure();
+  // G1 colours and G3 fills, computed
+  const col = await p.evaluate(() => {
+    const ok = ['none', 'rgb(251, 251, 252)', 'rgb(21, 23, 28)', 'rgb(92, 99, 112)', 'rgb(187, 190, 196)', 'rgb(218, 221, 227)', 'rgb(200, 50, 31)'], RED = 'rgb(200, 50, 31)';
+    const bad = [], redGroups = new Set(), fills = [];
+    for (const e of document.querySelectorAll('#page *')) {
+      if (e.closest('mask, clipPath') || ['g', 'mask', 'clipPath', 'image', 'tspan'].includes(e.tagName)) continue;
+      const cs = getComputedStyle(e), st = cs.stroke, fi = cs.fill;
+      if (e.tagName === 'text' || e.closest('text')) { if (!ok.includes(fi)) bad.push(e.tagName + ' fill ' + fi); if (fi === RED) redGroups.add(e.closest('[data-thing]')?.dataset.thing || 'text'); }
+      else {
+        for (const c of [st, fi]) if (!ok.includes(c)) bad.push(e.tagName + ' ' + c);
+        if (st === RED || fi === RED) redGroups.add(e.id === 'route' ? 'route' : (e.closest('[data-thing]')?.dataset.thing || 'loose'));
+        if (fi !== 'none' && fi !== 'rgb(251, 251, 252)' && e.tagName !== 'circle') fills.push(e.tagName + ' ' + fi);
+      }
+    }
+    for (const t of document.querySelectorAll('#ann tspan.red')) redGroups.add(t.dataset.thing || 'loose');
+    return { bad: [...new Set(bad)], red: [...redGroups], fills: [...new Set(fills)] };
+  });
+  g1.push({ page: i, red: col.red.join(' '), bad: col.bad.join('; '), pass: !col.bad.length && col.red.length <= 1 });
+  g3.push({ page: i, fills: col.fills.join('; '), pass: !col.fills.length });
   for (const s of m.strokes) g2.push({ page: i, ...s, pass: Math.abs(s.w - TOK[s.role]) <= TOL && s.ns === 'non-scaling-stroke' });
   for (const t of m.texts) {
     g5.push({ page: i, anchor: t.anchor, role: t.role, px: t.px, pass: t.px >= FLOOR[t.type] - 0.01 });
@@ -111,6 +130,8 @@ for (const it of MAP.chevron) {
 }
 const row = (name, rows, fail) => { const bad = rows.filter((x) => !x.pass); return `| ${name} | ${rows.length - bad.length}/${rows.length} | ${bad.length ? 'FAIL: ' + bad.slice(0, 6).map(fail).join('; ') : 'pass'} |`; };
 const table = ['| Gate | Passed | Result |', '| --- | --- | --- |',
+  row('G1 colours (tokens only; red on ≤ 1 group per frame)', g1, (x) => `p${x.page} red=[${x.red}] ${x.bad}`),
+  row('G3 fills (paper only, except text and dots)', g3, (x) => `p${x.page} ${x.fills}`),
   row('G2 stroke weight', g2, (x) => `p${x.page} ${x.role} ${x.w}`),
   row('G5 type floor (main 32, mono 28, sources/locator 24)', g5, (x) => `p${x.page} ${x.anchor}/${x.role} ${x.px}px`),
   row('G22 label size constant (pages + hops at t .25/.5/.75)', g22, (x) => `${x.role} ${x.min}–${x.max}`),
@@ -119,6 +140,6 @@ const table = ['| Gate | Passed | Result |', '| --- | --- | --- |',
   row('No label overlaps (text boxes)', over, (x) => `p${x.page} ${x.pair}`),
   row('Route clear of title, hero, flag boxes', rgate, (x) => `p${x.page} ${x.id}`),
   row('Route paper gap under every object', gap, (x) => `p${x.page} ${x.holes}/${x.objs}`)];
-writeFileSync(join(OUT, 'gates.json'), JSON.stringify({ g2, g5, g22, g24, keep, over, rgate, gap }, null, 1));
+writeFileSync(join(OUT, 'gates.json'), JSON.stringify({ g1, g3, g2, g5, g22, g24, keep, over, rgate, gap }, null, 1));
 writeFileSync(join(OUT, 'gates.md'), table.join('\n') + '\n');
 console.log(table.join('\n'));

@@ -95,7 +95,7 @@
    "eyebrow": "Beat 1 · A cold box",
    "title": "A qubit smears like water",
    "hero": {
-    "zone": "A",
+    "zone": "qubit",
     "parts": [
      {
       "fact": "qubit-life-85",
@@ -105,7 +105,19 @@
     "tag": "median lifetime, largest grid",
     "source": "Google 2024 chip – Nature 2025"
    },
-   "caption": "The chip sits in a cold box; a qubit cannot be looked at without destroying it."
+   "caption": "The chip sits in a cold box; a qubit cannot be looked at without destroying it.",
+   "things": [
+    {
+     "id": "qubit",
+     "kind": "qubit",
+     "at": 0.1,
+     "off": [
+      -430,
+      40
+     ],
+     "red": true
+    }
+   ]
   },
   {
    "beat": 2,
@@ -132,7 +144,20 @@
      "source": "Google 2024 chip – Nature 2025"
     }
    ],
-   "caption": "Helpers ask their neighbours even or odd, without looking at the value."
+   "caption": "Helpers ask their neighbours even or odd, without looking at the value.",
+   "things": [
+    {
+     "id": "tile",
+     "kind": "tile",
+     "at": 0.3,
+     "off": [
+      -60,
+      -80
+     ],
+     "s": 150,
+     "red": true
+    }
+   ]
   },
   {
    "beat": 3,
@@ -196,8 +221,8 @@
      "kind": "prism",
      "at": 0.72,
      "off": [
-      -725,
-      425
+      -950,
+      250
      ],
      "s": 90,
      "h": 342
@@ -207,12 +232,24 @@
      "kind": "prism",
      "at": 0.72,
      "off": [
-      -500,
-      325
+      -776.7949192431122,
+      150
      ],
      "s": 90,
      "h": 286,
      "red": true
+    },
+    {
+     "id": "plane5",
+     "kind": "plane",
+     "at": 0.72,
+     "off": [
+      -1027.9422863405994,
+      200
+     ],
+     "len": 400,
+     "top": 400,
+     "step": 50
     }
    ],
    "flags": [
@@ -259,14 +296,14 @@
    "things": [
     {
      "id": "pile",
-     "kind": "box",
+     "kind": "pile",
      "at": 0.63,
      "off": [
       0,
-      520
+      560
      ],
-     "s": 110,
-     "h": 300,
+     "fact": "waiting-62-at-66",
+     "N": 2,
      "red": true
     }
    ]
@@ -313,8 +350,8 @@
      "kind": "prism",
      "at": 0.91,
      "off": [
-      -520,
-      230
+      -560,
+      250
      ],
      "s": 90,
      "h": 282
@@ -324,8 +361,8 @@
      "kind": "prism",
      "at": 0.91,
      "off": [
-      -260,
-      80
+      -386.79491924311225,
+      150
      ],
      "s": 90,
      "h": 266
@@ -335,12 +372,24 @@
      "kind": "prism",
      "at": 0.91,
      "off": [
-      0,
-      -70
+      -213.5898384862245,
+      50
      ],
      "s": 90,
      "h": 218,
      "red": true
+    },
+    {
+     "id": "plane7",
+     "kind": "plane",
+     "at": 0.91,
+     "off": [
+      -637.9422863405995,
+      200
+     ],
+     "len": 600,
+     "top": 340,
+     "step": 100
     }
    ]
   },
@@ -374,7 +423,8 @@
       433
      ],
      "len": 2400,
-     "red": true
+     "red": true,
+     "every": 100
     },
     {
      "id": "r11",

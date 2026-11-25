@@ -1,4 +1,4 @@
-// v3.1 world: map units only, no text. Bare stand-ins (blocks 2–3).
+// v3.1 world: map units only, no text. Real objects since block 5 (objects.js, forged cryostat raster).
 // Route: chevron (+30° through A–C, −30° through D–E); strip kept for the block-2 comparison.
 const T30 = Math.tan(Math.PI / 6);
 
@@ -23,36 +23,53 @@ export function panels(route, zones) {
   return zones.map((z) => { const [x, y] = route.at((z.from + z.to) / 2); return { id: 'panel-' + z.id, x: x - 350, y: y - 1300, w: 700, h: 450 }; });
 }
 
-// Stand-in sizes per zone: [iso half-size, height] in map units.
-// Cold box kept under half of frame A's height (1350) so it sits whole in its frame.
-const SIZES = { A: [240, 480], B: [420, 60], C: [300, 120], D: [320, 260], E: [380, 200] };
+// ---- real objects (block 5) ----
+import { chip, film, reader, prism, backPlane, pile, qubit, checkTile, ruler, frame,
+  chipOverview, filmOverview, readerOverview, cryoOverview, pileOverview, qubitOverview } from './objects.js';
 
-// iso box corners (strict 30°) centred on p.
-function isoCorners([x, y], s, hgt) {
-  const c = Math.cos(Math.PI / 6) * s, d = Math.sin(Math.PI / 6) * s;
-  const base = [[x, y + d], [x + c, y], [x, y - d], [x - c, y]];
-  return { base, top: base.map(([a, b]) => [a, b - hgt]) };
+const C30 = Math.cos(Math.PI / 6);
+// cryostat: forged raster, 700 map units tall, ground point at the bottom of the drawing
+export const CRYO = { src: new URL('./art/cryostat-world.png', import.meta.url).href, W: 1024, H: 1536, h: 700, foot: 1460 };
+const bboxOf = (paths) => {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const p of paths) { const n = (p.d || p).match(/-?\d+(\.\d+)?(e-?\d+)?/g).map(Number); for (let i = 0; i + 1 < n.length; i += 2) { x0 = Math.min(x0, n[i]); x1 = Math.max(x1, n[i]); y0 = Math.min(y0, n[i + 1]); y1 = Math.max(y1, n[i + 1]); } }
+  return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+};
+const rectHull = (b) => [[b.x, b.y], [b.x + b.w, b.y], [b.x + b.w, b.y + b.h], [b.x, b.y + b.h]];
+
+// a zone's object at a point p (route point), full or overview variant
+export function zoneGeom(route, z, ov = false) {
+  const p = route.at((z.from + z.to) / 2);
+  if (z.id === 'A') {
+    const k = CRYO.h / CRYO.H, wpx = CRYO.W * k, box = { x: p[0] - wpx / 2, y: p[1] - CRYO.foot * k, w: wpx, h: CRYO.h };
+    if (ov) { const paths = cryoOverview().map((q) => ({ ...q, transform: `translate(${box.x},${box.y}) scale(${k})` })); return { paths, box, hull: rectHull(box) }; }
+    return { image: { href: CRYO.src, ...box }, box, hull: rectHull(box) };
+  }
+  let paths;
+  if (z.id === 'B') { const o = [p[0], p[1] + 280]; paths = ov ? chipOverview(o) : chip(o); }
+  else if (z.id === 'C') { const o = [p[0] - 500 * C30 + 100 * C30, p[1] + 300]; paths = ov ? filmOverview(o) : film(o); }
+  else if (z.id === 'D') { const o = [p[0] + 40 * C30 - 0, p[1] + 170]; paths = ov ? readerOverview(o) : reader(o); }
+  else { // E: the results row (beat 7 language), drawn as a context object off the route
+    const o = [p[0] - 520, p[1] + 230]; paths = [];
+    [282, 266, 218].forEach((h, i) => paths.push(...prism([o[0] + i * 200 * C30, o[1] - i * 100], h, 90, 'E' + i)));
+    if (!ov) paths.push(...backPlane([o[0] - 90 * C30, o[1] - 50], 3 * 200, 340, 100, 'E-plane'));
+    if (ov) paths.splice(0, paths.length, ...paths.slice(0, 20));
+  }
+  const box = bboxOf(paths);
+  return { paths, box, hull: rectHull(box) };
 }
 
-// The object's box in map units – annotations start their leaders on its edge.
-export function objectBox(route, z) {
-  const [s, h] = SIZES[z.id], { base, top } = isoCorners(route.at((z.from + z.to) / 2), s, h);
-  const pts = [...base, ...top], xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
-  return { x: Math.min(...xs), y: Math.min(...ys), w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys) };
-}
+export function objectBox(route, z) { return zoneGeom(route, z).box; }
+export function zoneHull(route, z) { return zoneGeom(route, z).hull; }
+
 
 const NS = 'http://www.w3.org/2000/svg';
 const el = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
 
-function isoBox(p, s, hgt) {
-  const { base, top } = isoCorners(p, s, hgt), P = (q) => q.join(',');
-  return `M${P(base[0])}L${P(base[1])}L${P(top[1])}L${P(top[0])}L${P(top[3])}L${P(base[3])}Z` +
-    `M${P(base[0])}L${P(top[0])}M${P(top[0])}L${P(top[1])}L${P(top[2])}L${P(top[3])}Z`;
-}
 
 // gridStep: grid module multiple. The overview uses 4 (module 480) so the ground
 // stays a light hairline field instead of a grey tone (G25 intent).
-export function buildWorld(svg, route, zones, map = [9600, 5400], { overview = false, redRoute = overview, gridStep = 1 } = {}) {
+export function buildWorld(svg, route, zones, map = [9600, 5400], { overview = false, redRoute = overview, gridStep = 1, ov = overview } = {}) {
   const g = el('g', { id: 'world' });
   const grid = el('g', { class: 'grid' });
   let d = '';
@@ -65,34 +82,31 @@ export function buildWorld(svg, route, zones, map = [9600, 5400], { overview = f
   g.append(grid);
   g.append(el('path', { id: 'route', d: 'M' + route.pts.map((p) => p.join(',')).join('L'), 'data-stroke': 'route', class: redRoute ? 'red' : '' }));
   for (const z of zones) {
-    const zg = el('g', { 'data-zone': z.id, class: 'zone' });
-    const [s, h] = SIZES[z.id];
-    zg.append(el('path', { d: isoBox(route.at((z.from + z.to) / 2), s, h), 'data-stroke': 'object' }));
+    const zg = el('g', { 'data-zone': z.id, class: 'zone' }), geo = zoneGeom(route, z, ov);
+    if (geo.image) zg.append(el('image', { href: geo.image.href, x: geo.image.x, y: geo.image.y, width: geo.image.w, height: geo.image.h, 'data-raster': '1', preserveAspectRatio: 'none' }));
+    for (const q of geo.paths || []) zg.append(el('path', { d: q.d, 'stroke-width': q.w, 'data-stroke': 'object', ...(q.transform ? { transform: q.transform } : {}) }));
     g.append(zg);
   }
   svg.append(g);
   return g;
 }
 
-// ---- block 3b: stand-in "things" (prisms, pile box, rulers) beside the route ----
-// spec: { id, kind: 'box'|'prism'|'ruler', at (route fraction), off: [dx, dy] map units,
-//         s (iso half-size), h (height), len (ruler length, map units), red }
+// ---- things beside the route: prisms, back planes, pile, rulers, qubit, check tile ----
+// spec: { id, kind, at (route fraction), off: [dx, dy] map units, red, ... }
 function dirAt(route, f) { const a = route.at(Math.max(0, f - 0.001)), b = route.at(Math.min(1, f + 0.001)); const L = Math.hypot(b[0] - a[0], b[1] - a[1]); return [(b[0] - a[0]) / L, (b[1] - a[1]) / L]; }
-export function thingGeom(route, t) {
+export function thingGeom(route, t, ov = false) {
   const [x, y] = route.at(t.at), p = [x + (t.off?.[0] || 0), y + (t.off?.[1] || 0)];
-  if (t.kind === 'ruler') {
-    const [dx, dy] = dirAt(route, t.at), q = [p[0] + dx * t.len, p[1] + dy * t.len], n = [-dy * 40, dx * 40];
-    const d = `M${p[0]},${p[1]}L${q[0]},${q[1]}M${p[0] - n[0]},${p[1] - n[1]}L${p[0] + n[0]},${p[1] + n[1]}M${q[0] - n[0]},${q[1] - n[1]}L${q[0] + n[0]},${q[1] + n[1]}`;
-    const xs = [p[0], q[0]], ys = [p[1], q[1]];
-    return { d, box: { x: Math.min(...xs) - 40, y: Math.min(...ys) - 40, w: Math.abs(q[0] - p[0]) + 80, h: Math.abs(q[1] - p[1]) + 80 }, hull: null };
-  }
-  const { base, top } = isoCorners(p, t.s, t.h), P = (q) => q.join(',');
-  const d = `M${P(base[0])}L${P(base[1])}L${P(top[1])}L${P(top[0])}L${P(top[3])}L${P(base[3])}Z` + `M${P(base[0])}L${P(top[0])}M${P(top[0])}L${P(top[1])}L${P(top[2])}L${P(top[3])}Z`;
-  const hull = [base[0], base[1], top[1], top[2], top[3], base[3]];
-  const xs = hull.map((q) => q[0]), ys = hull.map((q) => q[1]);
-  return { d, hull, box: { x: Math.min(...xs), y: Math.min(...ys), w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys) } };
+  let paths, hull = true;
+  if (t.kind === 'ruler') { paths = ruler(p, dirAt(route, t.at), t.len, t.every || 0); hull = false; }
+  else if (t.kind === 'prism') paths = prism(p, t.h, t.s || 90, t.id);
+  else if (t.kind === 'plane') { paths = backPlane(p, t.len, t.top, t.step, t.id); hull = false; }
+  else if (t.kind === 'pile') paths = ov ? pileOverview(p, t.count * 14) : pile(p, t.count);
+  else if (t.kind === 'qubit') paths = ov ? qubitOverview(p) : qubit(p, t.r || 70, t.rings || 3);
+  else if (t.kind === 'tile') paths = checkTile(p, t.s || 180);
+  else paths = frame(p);
+  const box = bboxOf(paths);
+  return { paths, box, hull: hull ? rectHull(box) : null };
 }
-export function zoneHull(route, z) { const [s, h] = SIZES[z.id], { base, top } = isoCorners(route.at((z.from + z.to) / 2), s, h); return [base[0], base[1], top[1], top[2], top[3], base[3]]; }
 
 // draws things and breaks the route with a paper gap under every object (mask, no filter)
 export function addThings(world, route, zones, things = [], hide = []) {
@@ -100,7 +114,7 @@ export function addThings(world, route, zones, things = [], hide = []) {
   for (const t of things) {
     const g = el('g', { 'data-thing-id': t.id, class: 'thing' + (t.red ? ' red' : '') });
     if (t.red) g.dataset.thing = 'hero';
-    g.append(el('path', { d: thingGeom(route, t).d, 'data-stroke': 'object' }));
+    for (const q of thingGeom(route, t).paths) g.append(el('path', { d: q.d, 'stroke-width': q.w, 'data-stroke': 'object' }));
     world.append(g);
   }
   const id = 'routegap' + Math.random().toString(36).slice(2, 7);

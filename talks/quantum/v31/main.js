@@ -49,6 +49,7 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
   const cam = document.getElementById('cam'), ann = document.getElementById('ann');
   cam.replaceChildren(); ann.replaceChildren();
   const world = buildWorld(cam, route, P.zones, P.map, { overview, redRoute: page.redRoute ?? overview, gridStep: 9600 / r.w < 2 ? 4 : 1 });
+  for (const t of page.things || []) if (t.kind === 'pile') t.count = Math.round(facts[t.fact].value / t.N);
   addThings(world, route, P.zones, page.things || [], page.hide || []);
   cam.setAttribute('transform', `scale(${FRAME[0] / r.w}) translate(${-r.x},${-r.y})`);
   const heroZone = page.hero && page.hero.parts.some((p) => p.red) ? page.hero.zone : null;
@@ -142,7 +143,7 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
     const f = facts[fl.fact];
     place('flag-' + i, fl.zone, [['num', [{ t: f.display, a: { 'data-fact': fl.fact } }]], ['tag', fl.tag], ['source', fl.source, { fill: 'var(--muted)' }]], { outline: true });
   }
-  window.V31_RULERS = (page.things || []).filter((t) => t.kind === 'ruler').length;
+  window.V31_RULERS = (page.things || []).filter((t) => t.kind === 'ruler' || t.kind === 'plane').length; // no hull, no route gap
   window.V31 = { page: n + 1, camera: page.camera, rect: r, route: route.kind, ready: true };
   return svg;
 }

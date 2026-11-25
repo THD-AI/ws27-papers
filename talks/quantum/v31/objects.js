@@ -29,6 +29,8 @@ export function pen(name) {
     poly(pts, close = true) { for (let i = 0; i < pts.length - (close ? 0 : 1); i++) this.line(pts[i], pts[(i + 1) % pts.length]); },
     ellipse([cx, cy], ew, eh) { push(gen.ellipse(cx, cy, ew, eh, { ...opt(false), roughness: 0.4 })); },
     curve(pts) { push(gen.curve(pts, opt(true))); },
+    // one stroke through all points (hand jitter ≤ 0.5 px per vertex)
+    path(pts, close = true) { const q = pts.map(([x, y]) => [x + (r() - 0.5) * PX, y + (r() - 0.5) * PX]); out.push({ d: 'M' + q.map((p) => p.map((v) => v.toFixed(1)).join(',')).join('L') + (close ? 'Z' : ''), w: w() }); },
   };
 }
 
@@ -45,7 +47,7 @@ function slab(P, o, U, V, z0, H) {
 
 // SMP-style connector: a hex-nut collar on the carrier, a slim body, a cable leaving outwards
 function coax(P, o, u, v, z, dir) {
-  const b = iso(o, u, v, z), n = iso(o, u, v, z + 18), t = iso(o, u, v, z + 46);
+  const b = iso(o, u, v, z), n = iso(o, u, v, z + 10), t = iso(o, u, v, z + 26);
   P.ellipse(n, 52, 30); P.line([b[0] - 26, b[1]], [n[0] - 26, n[1]]); P.line([b[0] + 26, b[1]], [n[0] + 26, n[1]]);
   P.ellipse(t, 30, 17); P.line([n[0] - 15, n[1]], [t[0] - 15, t[1]]); P.line([n[0] + 15, n[1]], [t[0] + 15, t[1]]);
   P.curve([t, [t[0] + dir[0] * 30, t[1] + dir[1] * 50], [t[0] + dir[0] * 120, t[1] + dir[1] * 90], [t[0] + dir[0] * 250, t[1] + dir[1] * 100]]);
@@ -97,13 +99,13 @@ export function reader(o) {
   }
   // vents on the side face, near the top
   for (let v = 60; v < V - 60; v += 56) for (let z = 90; z < H - 60; z += 70) P.line(iso(o, 0, v, z), iso(o, 0, v + DASH, z));
-  // top: inset lid, vent grille, cable run
+  // top: inset lid and vent grille
   P.poly([[30, 30], [U - 30, 30], [U - 30, V - 30], [30, V - 30]].map(([u, v]) => iso(o, u, v, H)));
   // vent grille: parallel dash rows across the lid
   for (let v = 70; v < V - 50; v += 34) for (let u = 60; u < U - 60; u += 50) P.line(iso(o, u, v, H), iso(o, u + DASH, v, H));
   // cable run leaving the top towards the film
-  P.curve([iso(o, 60, 200, H), iso(o, 40, 260, H + 80), iso(o, -60, 320, H + 120), iso(o, -200, 360, H + 100)]);
-  P.curve([iso(o, 80, 210, H), iso(o, 62, 274, H + 72), iso(o, -40, 336, H + 108), iso(o, -190, 380, H + 86)]);
+  // cable: leaves the rear of the lid sideways and drops to the floor beside the cabinet
+  for (const d of [0, 22]) P.curve([iso(o, U - 40, V - 40 - d, H), iso(o, U + 40, V - 40 - d, H - 10), iso(o, U + 90, V - 50 - d, H - 120), iso(o, U + 100, V - 60 - d, 0)]);
   return P.out;
 }
 
@@ -123,3 +125,77 @@ export function cryoOverview() {
   return P.out;
 }
 export const countStrokes = (ds) => ds.reduce((a, d) => a + (d.d || d).split(/(?=M)/).length, 0);
+
+// ---- block 5 kit: check tile, qubit, film piece, pile, prism, back plane, ruler ----
+
+// Check tile (reference: surface-code layout figures): a square tile with a 3 × 3 dot grid
+// of storing qubits and a diamond (the check) joining four of them.
+export function checkTile(o, s = 180) {
+  const P = pen('tile');
+  P.poly([[0, 0], [s, 0], [s, s], [0, s]].map(([u, v]) => iso(o, u, v, 0)));
+  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) { const c = iso(o, s * (i + 0.5) / 3, s * (j + 0.5) / 3, 0); P.ellipse(c, 14, 8); }
+  const m = (i, j) => iso(o, s * (i + 0.5) / 3, s * (j + 0.5) / 3, 0);
+  P.poly([m(1, 0), m(2, 1), m(1, 2), m(0, 1)]); // the check: a diamond on its four neighbours
+  return P.out;
+}
+
+// Qubit with its smear: a dot and iso ripples (ratio 0.577), the water image of beat 1.
+export function qubit(o, r = 70, rings = 3) {
+  const P = pen('qubit');
+  P.ellipse(o, 18, 10);
+  for (let i = 1; i <= rings; i++) P.ellipse(o, 2 * r * i, 2 * r * i * 0.577);
+  return P.out;
+}
+
+// One film frame, flat on the ground (the sprite of the pile and the film strip).
+export function frame(o, U = 160, V = 120, name = 'frame') {
+  const P = pen(name);
+  P.poly([[0, 0], [U, 0], [U, V], [0, V]].map(([u, v]) => iso(o, u, v, 0)));
+  P.line(iso(o, 20, V / 2, 0), iso(o, 20 + DASH, V / 2, 0));
+  return P.out;
+}
+
+// Pile of unread frames: one frame per N unread, stacked; spacing in map units chosen so
+// it is ≥ 8 px at the CD camera (0.6 px per unit → 14 units).
+export function pile(o, count, gap = 14) {
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    const j = ((i * 7919) % 5) - 2; // ±2 units of jitter, stable
+    const P = pen('pile-' + i);
+    const p = [o[0] + j, o[1] - i * gap];
+    P.path([[0, 0], [160, 0], [160, 120], [0, 120]].map(([u, v]) => iso(p, u, v, 0))); // one stroke per frame
+    out.push(...P.out);
+  }
+  return out;
+}
+
+// Prism: one rate as an iso column on a zero baseline.
+export function prism(o, h, s = 90, name = 'prism') {
+  const P = pen(name);
+  slab(P, o, s, s, 0, h);
+  return P.out;
+}
+
+// Back plane for a prism row: vertical wall behind the row, zero baseline along the
+// front, height ticks up the wall every 'step' units (the grid as the axis).
+export function backPlane(o, len, top, step, name = 'plane') {
+  const P = pen(name);
+  const a = iso(o, 0, 0, 0), b = iso(o, len, 0, 0);
+  P.line(a, b);                                         // zero baseline
+  P.line(a, iso(o, 0, 0, top)); P.line(b, iso(o, len, 0, top)); P.line(iso(o, 0, 0, top), iso(o, len, 0, top));
+  for (let z = step; z <= top; z += step) P.line(iso(o, 0, 0, z), iso(o, DASH * 1.4, 0, z)); // ticks
+  return P.out;
+}
+
+// Ruler (beat 8): a straight line with end ticks and second ticks along it.
+export function ruler(p, dir, len, every = 0) {
+  const P = pen('ruler-' + Math.round(len));
+  const q = [p[0] + dir[0] * len, p[1] + dir[1] * len], n = [-dir[1] * 40, dir[0] * 40];
+  P.line(p, q); P.line([p[0] - n[0], p[1] - n[1]], [p[0] + n[0], p[1] + n[1]]); P.line([q[0] - n[0], q[1] - n[1]], [q[0] + n[0], q[1] + n[1]]);
+  if (every) for (let s = every; s < len - 1; s += every) { const m = [p[0] + dir[0] * s, p[1] + dir[1] * s]; P.line(m, [m[0] + n[0] / 2, m[1] + n[1] / 2]); }
+  return P.out;
+}
+
+// overview variants for the kit (≤ 20 strokes)
+export function pileOverview(o, h) { const P = pen('pile-ov'); P.poly([[0, 0], [160, 0], [160, 120], [0, 120]].map(([u, v]) => iso(o, u, v, 0))); P.line(iso(o, 0, 0, 0), iso(o, 0, 0, h)); P.line(iso(o, 160, 0, 0), iso(o, 160, 0, h)); P.poly([[0, 0], [160, 0], [160, 120], [0, 120]].map(([u, v]) => iso(o, u, v, h))); return P.out; }
+export function qubitOverview(o) { return qubit(o, 70, 1); }
