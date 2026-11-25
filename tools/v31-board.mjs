@@ -16,7 +16,7 @@ const { server, port } = await startServer(ROOT, 0);
 const base = `http://127.0.0.1:${port}/talks/quantum/v31/`;
 const b = await puppeteer.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: 'new' });
 const p = await b.newPage();
-const TOK = { grid: 1.5, leader: 2, object: 4, route: 4, locator: 1.5, mark: 8, bar: 12 }, TOL = 0.2; // P4: object strokes 4 px
+const TOK = { grid: 1.5, leader: 2, object: 4, route: 4, locator: 1.5, mark: 8, bar: 12, hair: 1.5 }, TOL = 0.2; // P4: object strokes 4 px
 const FLOOR = { label: 44, qualifier: 30, caption: 32, title: 56, hero: 96 }; // P4: labels ≥ 44, qualifiers ≥ 30
 const SAFE = { x: 96, y: 54, r: 1824, b: 1026 };
 const lead = [], baseRows = [], focus = [], g1 = [], g3 = [], g2 = [], g5 = [], g22 = [], keep = [], over = [], rgate = [], gap = [];
@@ -75,7 +75,7 @@ for (let i = 1; i <= NPAGES; i++) {
         for (let s = 0; s <= L; s += Math.max(0.5, L / 400)) { const q = e.getPointAtLength(s); best = Math.min(best, Math.hypot(m.a * q.x + m.c * q.y + m.e - d0[0], m.b * q.x + m.d * q.y + m.f - d0[1])); }
       }
       out.lead.push({ id: g.dataset.anchor, target: id, d: +best.toFixed(1) });
-      if (!['ruler', 'plane', 'planex', 'panel', 'flatruler', 'bar'].includes(T.dataset.kind)) {
+      if (!['ruler', 'plane', 'planex', 'panel', 'flatruler', 'bar', 'whisker'].includes(T.dataset.kind)) {
         const b = T.getBBox(), c = [b.x + b.width / 2, b.y + b.height / 2]; // map units
         const mask = document.querySelector('#route').getAttribute('mask');
         const holes = [...document.querySelectorAll(mask.slice(4, -1) + ' path')].map((h) => { const n = h.getAttribute('d').match(/-?[0-9.]+(e-?[0-9]+)?/g).map(Number), xs = n.filter((_, i) => i % 2 === 0), ys = n.filter((_, i) => i % 2); return { x: Math.min(...xs), r: Math.max(...xs), y: Math.min(...ys), b: Math.max(...ys) }; });

@@ -24,3 +24,5 @@ rect[data-stroke]{vector-effect:non-scaling-stroke}
 
 #world path.context, .thing.red path.context{stroke:var(--context)}
 #ann .knock{fill:var(--paper);stroke:none}
+.thing.redmarks [data-stroke=mark].ink,.thing [data-stroke=mark].ink{stroke:var(--ink)}
+[data-stroke=hair]{stroke:var(--muted);stroke-width:1.5}

@@ -182,7 +182,7 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
     const long = parts.reduce((a, p) => a + p.t.length, 0) > 8;
     place('hero', page.hero.zone, [[long ? 'heroS' : 'hero', parts], ...(page.hero.tag ? [['tag', page.hero.tag]] : []), ...(page.hero.source ? [['source', page.hero.source, { fill: 'var(--muted)' }]] : [])], { mode: page.hero.mode });
   }
-  for (const [i, nm] of (page.names || []).entries()) place('name-' + i, nm.zone, [['name', nm.text]], { mode: 'under' });
+  for (const [i, nm] of (page.names || []).entries()) place('name-' + i, nm.zone, [['name', nm.text]], { mode: nm.mode || 'under' });
   for (const [i, mi] of (page.minis || []).entries()) {
     const t = (page.things || []).find((q) => q.id === mi.zone), g = thingGeom(route, t);
     place('mini-' + i, mi.zone, [[mi.big ? 'tag' : 'mini', mi.text]], { at: g.points?.[mi.point], mode: mi.mode });
@@ -195,7 +195,17 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
   }
   // counter: the pile's flag is placed from its final text, then counts up during the build
   if (A && A.kind === 'grow' && prog < 1) { const i = (page.flags || []).findIndex((x) => x.fact === A.counter), sp = ann.querySelector('[data-anchor=flag-' + i + '] tspan[data-fact]'); if (sp) { sp.textContent = Math.round(facts[A.counter].value * prog) + ' waiting'; sp.removeAttribute('data-fact'); } }
-  window.V31_RULERS = (page.things || []).filter((t) => ['ruler', 'plane', 'planex', 'panel', 'flatruler', 'bar'].includes(t.kind)).length; // no hull, no route gap
+  if (page.station) drawCrop(ann, route, P, page.station);
+  // U+2009 falls back to a wide glyph in the web subset of Libre Franklin (measured 51 px against a
+  // 25 px space at 120 px), so the thin space is drawn as a 0.17 em gap instead.
+  const walk = document.createTreeWalker(ann, NodeFilter.SHOW_TEXT), hits = [];
+  while (walk.nextNode()) if (walk.currentNode.nodeValue.includes(' ')) hits.push(walk.currentNode);
+  for (const tn of hits) {
+    const [a, ...rest] = tn.nodeValue.split(' '), par = tn.parentNode, frag = document.createDocumentFragment();
+    frag.append(el('tspan', {}, a)); for (const r2 of rest) frag.append(el('tspan', { dx: '0.17em' }, r2));
+    par.replaceChild(frag, tn);
+  }
+  window.V31_RULERS = (page.things || []).filter((t) => ['ruler', 'plane', 'planex', 'panel', 'flatruler', 'bar', 'whisker'].includes(t.kind)).length; // no hull, no route gap
   window.V31 = { page: n + 1, camera: page.camera, rect: r, route: route.kind, anim: A || null, ready: true };
   return svg;
 }
@@ -209,4 +219,22 @@ function drawLocator(ann, route, P, r, prev, name) {
   g.append(el('rect', { x: r.x * s, y: r.y * s, width: r.w * s, height: r.h * s, fill: 'none', 'data-stroke': 'leader' }));
   g.append(text('loc', 0, H + 34, name, { fill: 'var(--muted)' }));
   ann.append(g);
+}
+
+// Backups: a small crop of the map around the station they hang off, and a hairline leader
+// from the panel's hero block into it.
+function drawCrop(ann, route, P, id) {
+  const z = P.zones.find((q) => q.id === id), c = route.at((z.from + z.to) / 2), W = 2400, H = W * LOC.h / LOC.w, s = LOC.w / W;
+  const g = el('g', { 'data-anchor': 'crop', transform: `translate(${LOC.x},${LOC.y})` });
+  const clip = el('clipPath', { id: 'cropclip' }); clip.append(el('rect', { x: 0, y: 0, width: LOC.w, height: LOC.h })); g.append(clip);
+  g.append(el('rect', { x: 0, y: 0, width: LOC.w, height: LOC.h, fill: 'var(--paper)', 'data-stroke': 'locator' }));
+  const inner = el('g', { 'clip-path': 'url(#cropclip)' });
+  inner.append(el('path', { d: 'M' + route.pts.map(([x, y]) => `${(x - c[0] + W / 2) * s},${(y - c[1] + H / 2) * s}`).join('L'), 'data-stroke': 'locator' }));
+  const b = objectBox(route, z); inner.append(el('rect', { x: (b.x - c[0] + W / 2) * s, y: (b.y - c[1] + H / 2) * s, width: b.w * s, height: b.h * s, fill: 'none', 'data-stroke': 'leader' }));
+  g.append(inner);
+  g.append(text('loc', 0, LOC.h + 34, z.id + ' ' + z.name.toLowerCase(), { fill: 'var(--muted)' }));
+  ann.append(g);
+  const hero = ann.querySelector('[data-anchor=hero]');
+  if (hero) { const [x, y, w, h] = hero.dataset.box.split(',').map(Number); const sx = LOC.x + (b.x + b.w / 2 - c[0] + W / 2) * s, sy = LOC.y + (b.y - c[1] + H / 2) * s;
+    ann.append(el('path', { d: `M${x + w},${y + h / 2}L${sx},${sy}`, 'data-stroke': 'hair', 'data-anchor': 'station-leader' })); }
 }

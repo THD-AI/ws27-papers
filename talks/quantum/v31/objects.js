@@ -50,7 +50,7 @@ function coax(P, o, u, v, z, dir) {
   const b = iso(o, u, v, z), n = iso(o, u, v, z + 10), t = iso(o, u, v, z + 26);
   P.ellipse(n, 52, 30); P.line([b[0] - 26, b[1]], [n[0] - 26, n[1]]); P.line([b[0] + 26, b[1]], [n[0] + 26, n[1]]);
   P.ellipse(t, 30, 17); P.line([n[0] - 15, n[1]], [t[0] - 15, t[1]]); P.line([n[0] + 15, n[1]], [t[0] + 15, t[1]]);
-  P.curve([t, [t[0] + dir[0] * 30, t[1] + dir[1] * 50], [t[0] + dir[0] * 120, t[1] + dir[1] * 90], [t[0] + dir[0] * 250, t[1] + dir[1] * 100]]);
+  P.curve([t, [t[0] + dir[0] * 20, t[1] + dir[1] * 35], [t[0] + dir[0] * 70, t[1] + dir[1] * 60], [t[0] + dir[0] * 130, t[1] + dir[1] * 65]]);
 }
 
 // Chip: flip-chip die on a carrier, pad ring with bond wires, four coax connectors with cables.
@@ -64,7 +64,9 @@ export function chip(o) {
     P.line(iso(o, pu, pv, 40), iso(o, du, dv, 66));
   }
   coax(P, o, 60, 60, 40, [0.5, 1]); coax(P, o, U - 60, 60, 40, [1, -0.6]); coax(P, o, 60, V - 60, 40, [-1, -0.6]); coax(P, o, U - 60, V - 60, 40, [-0.5, -1]);
-  // carrier markings: ground-via rows inside the edges
+  // die outline inset on the die face, and the bond-pad ring on the carrier around the die
+  P.poly([[185, 185], [375, 185], [375, 375], [185, 375]].map(([u, v]) => iso(o, u, v, 66)));
+  P.poly([[120, 120], [440, 120], [440, 440], [120, 440]].map(([u, v]) => iso(o, u, v, 40)));
   return P.out;
 }
 
@@ -142,7 +144,7 @@ export function checkTile(o, s = 180) {
 // Lifted tile (beat 4), distance 3 as in the article's lattice.json: q = row * 3 + col,
 // squares x0 (r0 c0), z0 (r0 c1), z1 (r1 c0), x1 (r1 c1); halves x2 top, x3 bottom, z2 left, z3 right.
 // Fired checks (lattice.json example: z2, x0, x1) carry a thick inner mark. Half-checks are closed.
-export function liftedTile(o, s = 420, fired = ['z2', 'x0', 'x1'], name = 'lifted') {
+export function liftedTile(o, s = 420, fired = ['z2', 'x0', 'x1'], name = 'lifted', errs = {}) {
   const P = pen(name), M = pen(name + '-mark');
   P.poly([[0, 0], [s, 0], [s, s], [0, s]].map(([u, v]) => iso(o, u, v, 0)));
   const m = (col, row) => iso(o, s * (col + 0.5) / 3, s * (row + 0.5) / 3, 0);
@@ -157,10 +159,19 @@ export function liftedTile(o, s = 420, fired = ['z2', 'x0', 'x1'], name = 'lifte
     points[k] = pts[0];
   }
   for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) { const p = m(c, r); points['q' + (r * 3 + c)] = [p[0] - 11, p[1]]; }
-  const out = [...P.out, ...M.out.map((q) => ({ ...q, stroke: 'mark' }))];
+  const E = pen(name + '-err');
+  for (const [q, kind] of Object.entries(errs)) {
+    const c = m(+q % 3, Math.floor(+q / 3)), d = 22;
+    if (kind === 'X' || kind === 'Y') E.line([c[0] - d, c[1] + d * 0.8], [c[0] + d, c[1] - d * 0.8]);
+    if (kind === 'Z' || kind === 'Y') E.line([c[0] - d, c[1]], [c[0] + d, c[1]]);
+  }
+  const out = [...P.out, ...M.out.map((q) => ({ ...q, stroke: 'mark' })), ...E.out.map((q) => ({ ...q, stroke: 'mark', cls: 'ink' }))];
   out.points = points;
   return out;
 }
+
+// Whisker: an interval as a line with end caps (vertical when dir = [0, -1]).
+export function whisker(p, len, dir = [1, 0], cap = 18, name = 'wh') { const P = pen(name), q = [p[0] + dir[0] * len, p[1] + dir[1] * len], n = [-dir[1] * cap, dir[0] * cap]; P.line(p, q); P.line([p[0] - n[0], p[1] - n[1]], [p[0] + n[0], p[1] + n[1]]); P.line([q[0] - n[0], q[1] - n[1]], [q[0] + n[0], q[1] + n[1]]); return P.out; }
 
 // Qubit with its smear: a dot and iso ripples (ratio 0.577), the water image of beat 1.
 export function qubit(o, r = 70, rings = 3) {

@@ -361,36 +361,46 @@
      "kind": "lifted",
      "at": 0.6,
      "off": [
-      420,
-      -200
+      60,
+      -60
      ],
-     "s": 240,
-     "fired": []
+     "s": 200,
+     "fired": [],
+     "errs": {
+      "0": "X",
+      "4": "Z"
+     }
     },
     {
      "id": "ans2",
      "kind": "lifted",
      "at": 0.6,
      "off": [
-      860,
-      -200
+      460,
+      -60
      ],
-     "s": 240,
-     "fired": []
+     "s": 200,
+     "fired": [],
+     "errs": {
+      "0": "Y",
+      "8": "Z"
+     }
     }
    ],
    "minis": [],
    "names": [
     {
      "zone": "ans1",
-     "text": "answer one"
+     "text": "one",
+     "mode": "above"
     },
     {
      "zone": "ans2",
-     "text": "answer two"
+     "text": "two",
+     "mode": "above"
     }
    ],
-   "rowNote": "One: flip in the corner, phase in the centre · Two: Y in the corner, phase far corner or one above"
+   "rowNote": "One: flip (/) in the corner, phase (–) in the centre · Two: Y in the corner, phase in the far corner or one above"
   },
   {
    "beat": 4,
@@ -443,27 +453,35 @@
      "kind": "lifted",
      "at": 0.6,
      "off": [
-      420,
-      -200
+      60,
+      -60
      ],
-     "s": 240,
-     "fired": []
+     "s": 200,
+     "fired": [],
+     "errs": {
+      "0": "X",
+      "4": "Z"
+     }
     },
     {
      "id": "ans2",
      "kind": "lifted",
      "at": 0.6,
      "off": [
-      860,
-      -200
+      460,
+      -60
      ],
-     "s": 240,
-     "fired": []
+     "s": 200,
+     "fired": [],
+     "errs": {
+      "0": "Y",
+      "8": "Z"
+     }
     }
    ],
    "minis": [],
    "hero": {
-    "zone": "lifted",
+    "zone": "ans2",
     "parts": [
      {
       "fact": "match-10of30"
@@ -473,19 +491,11 @@
       "red": true
      }
     ],
-    "tag": "answer one / answer two right",
-    "source": "5% per storing qubit; one round; our own count"
+    "tag": "one / two right",
+    "source": "5% per storing qubit; one round; our own count",
+    "mode": "above"
    },
-   "names": [
-    {
-     "zone": "ans1",
-     "text": "answer one"
-    },
-    {
-     "zone": "ans2",
-     "text": "answer two"
-    }
-   ]
+   "names": []
   },
   {
    "beat": 5,
@@ -853,7 +863,8 @@
     "source": "Google’s 2024 network; quoted"
    },
    "caption": "Windows in parallel could stop the pile growing; each answer still arrives late.",
-   "rowNote": "Our reasoning, not a result: not in our article. Hangs off D reader."
+   "rowNote": "Our reasoning, not a result: not in our article.",
+   "station": "D"
   },
   {
    "beat": "b2",
@@ -904,6 +915,48 @@
      "top": 400,
      "step": 1000000,
      "tallest": null
+    },
+    {
+     "id": "wbp",
+     "kind": "whisker",
+     "pos": [
+      3440,
+      664
+     ],
+     "len": 3.500000000000003,
+     "dir": [
+      0,
+      -1
+     ],
+     "cap": 30
+    },
+    {
+     "id": "wbn",
+     "kind": "whisker",
+     "pos": [
+      3630,
+      684
+     ],
+     "len": 3.7499999999999756,
+     "dir": [
+      0,
+      -1
+     ],
+     "cap": 30
+    },
+    {
+     "id": "wbc",
+     "kind": "whisker",
+     "pos": [
+      3820,
+      744
+     ],
+     "len": 3.249999999999975,
+     "dir": [
+      0,
+      -1
+     ],
+     "cap": 30
     }
    ],
    "hero": {
@@ -938,7 +991,8 @@
     }
    ],
    "caption": "No overlap; the pooled interval counts only test-run chance, the five networks differ more.",
-   "rowNote": "Per run of 5 rounds · distance 5 · 0.5% noise · 95% whiskers thinner than the line at this scale · hangs off E results"
+   "rowNote": "Per run of 5 rounds · distance 5 · 0.5% noise · 95% whiskers thinner than the line at this scale",
+   "station": "E"
   },
   {
    "beat": "b3",
@@ -965,16 +1019,17 @@
       4810
      ],
      "len": 756,
-     "ticks": [
-      [
-       552,
-       30
-      ],
-      [
-       960,
-       30
-      ]
-     ]
+     "ticks": []
+    },
+    {
+     "id": "w63",
+     "kind": "whisker",
+     "pos": [
+      7452,
+      4750
+     ],
+     "len": 408,
+     "cap": 18
     }
    ],
    "hero": {
@@ -997,7 +1052,8 @@
     }
    ],
    "caption": "The 24 µs has no distance in the source; live matching waited about 63 µs at distance 5.",
-   "rowNote": "Two different measures: network time per round, and live matching’s delay after the last round. Hangs off D reader."
+   "rowNote": "Two different measures: network time per round, and live matching’s delay after the last round.",
+   "station": "D"
   },
   {
    "beat": "b4",
@@ -1042,7 +1098,7 @@
      "id": "r7a",
      "kind": "prism",
      "pos": [
-      4780,
+      4610,
       4980
      ],
      "s": 80,
@@ -1052,7 +1108,7 @@
      "id": "r7b",
      "kind": "prism",
      "pos": [
-      5040,
+      4870,
       4980
      ],
      "s": 80,
@@ -1063,7 +1119,7 @@
      "id": "r7c",
      "kind": "prism",
      "pos": [
-      5300,
+      5130,
       4980
      ],
      "s": 80,
@@ -1073,7 +1129,7 @@
      "id": "pl7",
      "kind": "planex",
      "pos": [
-      4690,
+      4520,
       5020
      ],
      "len": 700,
@@ -1102,7 +1158,7 @@
     }
    ],
    "caption": "Not comparable: per round against per run, distance 7 against 5, chip against simulation.",
-   "rowNote": "Two axes, two units, never one scale. Hangs off E results.",
+   "rowNote": "Two axes, two units, never one scale.",
    "names": [
     {
      "zone": "r5a",
@@ -1136,7 +1192,8 @@
      "point": "top",
      "text": "% of runs of 5 rounds"
     }
-   ]
+   ],
+   "station": "E"
   },
   {
    "beat": "b5",
@@ -1219,7 +1276,20 @@
     }
    ],
    "caption": "From 0.8% noise the network is behind plain matching in every seed.",
-   "rowNote": "Distance 5 · about 250 million examples · hangs off E results"
+   "rowNote": "Distance 5 · about 250 million examples",
+   "station": "E",
+   "minis": [
+    {
+     "zone": "axis",
+     "point": "start",
+     "text": "0.2%"
+    },
+    {
+     "zone": "axis",
+     "point": "end",
+     "text": "1%"
+    }
+   ]
   }
  ]
 }

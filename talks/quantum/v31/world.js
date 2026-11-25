@@ -24,7 +24,7 @@ export function panels(route, zones) {
 }
 
 // ---- real objects (block 5) ----
-import { chip, film, reader, prism, backPlane, backPlaneX, liftedTile, tie, panel, flatRuler, bar, startTick, pile, qubit, checkTile, ruler, frame,
+import { whisker, chip, film, reader, prism, backPlane, backPlaneX, liftedTile, tie, panel, flatRuler, bar, startTick, pile, qubit, checkTile, ruler, frame,
   chipOverview, filmOverview, readerOverview, cryoOverview, pileOverview, qubitOverview } from './objects.js';
 
 const C30 = Math.cos(Math.PI / 6);
@@ -100,12 +100,13 @@ export function thingGeom(route, t, ov = false) {
   if (t.kind === 'ruler') { paths = ruler(p, dirAt(route, t.at), t.len, t.every || 0, t.tick || 40); hull = false; }
   else if (t.kind === 'planex') { paths = backPlaneX(p, t.len, t.top, t.step, t.tallest, t.id); hull = false; var points = { top: [p[0], p[1] - t.top], base: p }; }
   else if (t.kind === 'lifted') {
-    paths = liftedTile(p, t.s || 420, t.fired ?? ['z2', 'x0', 'x1'], t.id); var points = paths.points;
+    paths = liftedTile(p, t.s || 420, t.fired ?? ['z2', 'x0', 'x1'], t.id, t.errs || {}); var points = paths.points;
     if (t.from) { const f = thingGeom(route, t.from); const fo = t.from.pos ? t.from.pos : route.at(t.from.at); paths = [...paths, ...tie([fo[0] + t.from.off[0], fo[1] + t.from.off[1]], t.from.U || 160, t.from.V || 120, p, t.s || 420)]; }
   }
   else if (t.kind === 'bar') { const d = dirAt(route, t.at); paths = [...bar(p, d, t.len, t.id), ...(t.tick ? startTick(p, d, t.id + '-t') : [])]; hull = false; }
   else if (t.kind === 'panel') { paths = panel(p, t.w, t.h, t.id); hull = false; }
-  else if (t.kind === 'flatruler') { paths = flatRuler(p, t.len, t.ticks || [], t.id); hull = false; }
+  else if (t.kind === 'flatruler') { paths = flatRuler(p, t.len, t.ticks || [], t.id); hull = false; var points = { start: p, end: [p[0] + t.len, p[1]] }; }
+  else if (t.kind === 'whisker') { paths = whisker(p, t.len, t.dir || [1, 0], t.cap || 18, t.id); hull = false; }
   else if (t.kind === 'prism') paths = prism(p, t.h, t.s || 90, t.id);
   else if (t.kind === 'plane') { paths = backPlane(p, t.len, t.top, t.step, t.id); hull = false; }
   else if (t.kind === 'pile') paths = ov ? pileOverview(p, t.count * 34) : pile(p, t.count);
