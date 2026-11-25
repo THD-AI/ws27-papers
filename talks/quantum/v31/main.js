@@ -42,15 +42,15 @@ function edgePoint(b, p) {
   return [cx + dx * s, cy + dy * s];
 }
 
-export function start(P, F, q = new URLSearchParams(location.search)) {
+export function start(P, F, q = new URLSearchParams(location.search), svgEl = null) {
   const facts = Object.fromEntries(F.facts.map((f) => [f.id, f]));
   const n = Math.max(0, Math.min(P.pages.length - 1, (+q.get('page') || 1) - 1));
   let page = P.pages[n]; const route = makeRoute(q.get('route') || 'chevron');
   let r = rect(P.stops[page.camera], route, P.map);
   if (q.has('from') && q.has('t')) r = hop(rect(P.stops[P.pages[+q.get('from') - 1].camera], route, P.map), r, +q.get('t'));
   const overview = page.camera === 'overview';
-  const svg = document.getElementById('page');
-  const cam = document.getElementById('cam'), ann = document.getElementById('ann');
+  const svg = svgEl || document.getElementById('page');
+  const cam = svg.querySelector('[data-layer=cam], #cam'), ann = svg.querySelector('[data-layer=ann], #ann');
   cam.replaceChildren(); ann.replaceChildren();
   const world = buildWorld(cam, route, P.zones, P.map, { overview, redRoute: page.redRoute ?? overview, gridStep: 9600 / r.w < 2 ? 4 : 1 });
   for (const t of page.things || []) if (t.kind === 'pile') t.count = Math.round(facts[t.fact].value / t.N);
@@ -147,7 +147,7 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
       g.append(el('circle', { cx: p0[0], cy: p0[1], r: 3, fill: 'var(--ink)' }));
     }
     if (outline) g.append(el('rect', { x: best.x, y: best.y, width: w, height: h, 'data-stroke': 'leader', fill: 'var(--paper)' }));
-    g.append(el('rect', { x: best.x - 8, y: best.y - 4, width: w + 16, height: h + 8, class: 'knock' }));
+    if (!id.startsWith('hero')) g.append(el('rect', { x: best.x - 8, y: best.y - 4, width: w + 16, height: h + 8, class: 'knock' })); // the hero keeps only its text halo, so it never hides drawing
     let y = best.y + pad;
     for (const [f, s, a = {}] of lines) {
       y += FONTS[f][1];
@@ -205,6 +205,9 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
     frag.append(el('tspan', {}, a)); for (const r2 of rest) frag.append(el('tspan', { dx: '0.17em' }, r2));
     par.replaceChild(frag, tn);
   }
+  // text halo as a separate paper copy behind each label: PDF output ignores paint-order and would
+  // draw the halo stroke over the letters
+  for (const t of [...ann.querySelectorAll("text")]) { const h = t.cloneNode(true); h.setAttribute("class", "halo"); h.removeAttribute("data-fact"); h.setAttribute("aria-hidden", "true"); h.removeAttribute("data-role"); h.removeAttribute("data-type"); h.removeAttribute("data-anchor"); h.querySelectorAll("[data-fact],[data-thing],.red").forEach((s) => { s.removeAttribute("data-fact"); s.removeAttribute("data-thing"); s.removeAttribute("class"); }); t.parentNode.insertBefore(h, t); }
   window.V31_RULERS = (page.things || []).filter((t) => ['ruler', 'plane', 'planex', 'panel', 'flatruler', 'bar', 'whisker'].includes(t.kind)).length; // no hull, no route gap
   window.V31 = { page: n + 1, camera: page.camera, rect: r, route: route.kind, anim: A || null, ready: true };
   return svg;
@@ -226,9 +229,9 @@ function drawLocator(ann, route, P, r, prev, name) {
 function drawCrop(ann, route, P, id) {
   const z = P.zones.find((q) => q.id === id), c = route.at((z.from + z.to) / 2), W = 2400, H = W * LOC.h / LOC.w, s = LOC.w / W;
   const g = el('g', { 'data-anchor': 'crop', transform: `translate(${LOC.x},${LOC.y})` });
-  const clip = el('clipPath', { id: 'cropclip' }); clip.append(el('rect', { x: 0, y: 0, width: LOC.w, height: LOC.h })); g.append(clip);
+  const cid = 'crop' + Math.random().toString(36).slice(2, 7), clip = el('clipPath', { id: cid }); clip.append(el('rect', { x: 0, y: 0, width: LOC.w, height: LOC.h })); g.append(clip);
   g.append(el('rect', { x: 0, y: 0, width: LOC.w, height: LOC.h, fill: 'var(--paper)', 'data-stroke': 'locator' }));
-  const inner = el('g', { 'clip-path': 'url(#cropclip)' });
+  const inner = el('g', { 'clip-path': `url(#${cid})` });
   inner.append(el('path', { d: 'M' + route.pts.map(([x, y]) => `${(x - c[0] + W / 2) * s},${(y - c[1] + H / 2) * s}`).join('L'), 'data-stroke': 'locator' }));
   const b = objectBox(route, z); inner.append(el('rect', { x: (b.x - c[0] + W / 2) * s, y: (b.y - c[1] + H / 2) * s, width: b.w * s, height: b.h * s, fill: 'none', 'data-stroke': 'leader' }));
   g.append(inner);

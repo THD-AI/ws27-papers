@@ -16,13 +16,32 @@ rect[data-stroke]{vector-effect:non-scaling-stroke}
 [data-stroke=route].red{stroke:var(--qc-red)}
 [data-stroke=leader]{stroke:var(--ink);stroke-width:2}
 [data-stroke=locator]{stroke:var(--context);stroke-width:1.5}
-#ann text{fill:var(--ink)}
-#ann .red{fill:var(--qc-red)}
-#ann text{paint-order:stroke;stroke:var(--paper);stroke-width:10px;stroke-linejoin:round}
-#ann .band{fill:var(--paper)}
+:is(#ann,[data-layer=ann]) text{fill:var(--ink)}
+:is(#ann,[data-layer=ann]) .red{fill:var(--qc-red)}
+:is(#ann,[data-layer=ann]) text.halo{stroke:var(--paper);fill:var(--paper);stroke-width:10px;stroke-linejoin:round}
+:is(#ann,[data-layer=ann]) text.halo tspan{fill:var(--paper)}
+:is(#ann,[data-layer=ann]) .band{fill:var(--paper)}
 .thing.red [data-stroke=object]{stroke:var(--qc-red)}
 
 #world path.context, .thing.red path.context{stroke:var(--context)}
-#ann .knock{fill:var(--paper);stroke:none}
+:is(#ann,[data-layer=ann]) .knock{fill:var(--paper);stroke:none}
 .thing.redmarks [data-stroke=mark].ink,.thing [data-stroke=mark].ink{stroke:var(--ink)}
 [data-stroke=hair]{stroke:var(--muted);stroke-width:1.5}
+
+/* print: one 16:9 sheet per page */
+body.print-all{margin:0}
+body.print-all svg.sheet{display:block;width:1920px;height:1080px;background:var(--paper);break-after:page}
+.divider-text{font:400 96px 'Newsreader',serif;fill:var(--ink)}
+@page{size:13.333in 7.5in;margin:0}
+@media print{body.print-all svg.sheet{zoom:0.66667} /* 1920 CSS px laid out, then scaled as a whole: print weight = screen weight */}
+/* presenter */
+body.presenter{margin:0;background:#15171C;color:#FBFBFC;font:400 22px 'Libre Franklin',sans-serif}
+#pv{display:grid;grid-template-columns:960px 1fr;gap:20px;padding:20px;height:calc(100vh - 40px);box-sizing:border-box}
+#pv iframe{border:0;background:var(--paper);display:block}
+.pv-box{overflow:hidden;position:relative}.pv-now .pv-box{width:960px;height:540px}.pv-side .pv-box{width:557px;height:313px}
+.pv-now iframe{width:1920px;height:1080px;transform:scale(.5);transform-origin:0 0}
+.pv-side iframe{width:1920px;height:1080px;transform:scale(.29);transform-origin:0 0}
+.pv-lab{margin:8px 0 14px;color:#BBBEC4}
+.pv-clocks{display:flex;gap:24px;margin:8px 0}.pv-clocks b{display:block;font:600 44px 'Libre Franklin',sans-serif}
+.pv-k{color:#BBBEC4;font-size:18px}
+#pv-notes{overflow:auto;max-height:52vh;line-height:1.35}#pv-notes h2{font:400 30px 'Newsreader',serif;margin:6px 0}

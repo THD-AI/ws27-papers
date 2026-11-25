@@ -1,0 +1,257 @@
+{
+ "from": "notes.md",
+ "beats": {
+  "0": {
+   "title": "The other half of a quantum computer",
+   "target": 20,
+   "speaker": "A",
+   "builds": [
+    {
+     "id": "0.1",
+     "speaker": "A",
+     "secs": 19.6,
+     "said": "This talk is about the other half of a quantum computer: the ordinary computer that sits beside the chip and reads it. One question carries the talk. Same recording, two readers – which reads it right, and can it keep up?\r",
+     "pause": "1 s: let the question stand"
+    }
+   ]
+  },
+  "1": {
+   "title": "A qubit smears like water – and the chip cannot look at it",
+   "target": 60,
+   "speaker": "A",
+   "builds": [
+    {
+     "id": "1.1",
+     "speaker": "A",
+     "secs": 27.2,
+     "said": "The chip sits in a cold box, a cryostat; the other half is an ordinary computer beside it. On the chip are qubits, the quantum version of a bit. A qubit smears like a pattern on water – and the chip cannot look at it without destroying it. Making a qubit is the easy part; keeping it is the hard part.\r",
+     "pause": ""
+    },
+    {
+     "id": "1.2",
+     "speaker": "A",
+     "secs": 32.5,
+     "said": "How fast does it smear? On Google's 2024 chip, the qubits of the largest grid have a median lifetime of 85 millionths of a second, about a thousandth of a blink. And every operation on them adds a small chance of error of its own. So no single qubit can keep a value for long, and nobody can check it by looking. The next stop shows the way around that.\r",
+     "pause": "1 s: after the number"
+    }
+   ]
+  },
+  "2": {
+   "title": "Neighbours ask \"even or odd?\" every round",
+   "target": 91,
+   "speaker": "A",
+   "builds": [
+    {
+     "id": "2.1",
+     "speaker": "A",
+     "secs": 21.6,
+     "said": "The way around it: one value is stored across the whole grid. No single qubit holds it, and no copy of it exists anywhere. The size of the grid is called its distance – here 7. A bigger grid can protect better, if each qubit is good enough.\r",
+     "pause": ""
+    },
+    {
+     "id": "2.2",
+     "speaker": "A",
+     "secs": 24.6,
+     "said": "Between the storing qubits sit helpers. The helpers between its qubits ask their neighbours one question: is the number of errors among you even or odd? The answer is the same whatever is stored, so asking does not touch the value. These questions are called checks. At distance 7 there are 48 of them.\r",
+     "pause": ""
+    },
+    {
+     "id": "2.3",
+     "speaker": "A",
+     "secs": 22.9,
+     "said": "While nothing goes wrong, a check gives the same answer every time. When a neighbour is hit, its answer changes, and we say the check fires. Here, one check fires. It doesn't say which neighbour was hit, and it says nothing about the stored value – only that something changed nearby.\r",
+     "pause": ""
+    },
+    {
+     "id": "2.4",
+     "speaker": "A",
+     "secs": 20.5,
+     "said": "All the checks are asked together, once every 1.1 millionths of a second. That is one round. But a check can also just report wrongly, and then switch back. So a single round is never enough: rounds are read as a sequence.\r",
+     "pause": "1 s: before the hop"
+    }
+   ]
+  },
+  "3": {
+   "title": "Each round is one frame of a film",
+   "target": 60,
+   "speaker": "A",
+   "builds": [
+    {
+     "id": "3.1",
+     "speaker": "A",
+     "secs": 13.5,
+     "said": "Each round is one frame of a film. [cut 1 starts] While the computer runs, this film is all that comes out of it, a few lit points in most frames. [cut 1 ends]\r",
+     "pause": ""
+    },
+    {
+     "id": "3.2",
+     "speaker": "A",
+     "secs": 15.4,
+     "said": "And the film runs fast. One round every 1.1 millionths of a second makes about 90,000 frames in a tenth of a second, roughly one blink – for one stored value.\r",
+     "pause": "1 s: after the number"
+    },
+    {
+     "id": "3.3",
+     "speaker": "A",
+     "secs": 30.6,
+     "said": "The lit points say roughly where something went wrong, and of which kind. They don't say which qubits were hit; many different sets of errors light up the same points. So something has to watch the film and decide what happened. The thing that reads the film – the article calls it the decoder. It runs on the ordinary computer beside the cold box. It is the other half.\r",
+     "pause": ""
+    }
+   ]
+  },
+  "4": {
+   "title": "Which errors made these three checks fire? The room votes",
+   "target": 128,
+   "speaker": "B",
+   "builds": [
+    {
+     "id": "4.1",
+     "speaker": "B",
+     "secs": 31.1,
+     "said": "Let's be the decoder for one frame. To count it, we lift out the smallest grid: 9 storing qubits, 8 checks, one round, and checks that never report wrongly. Two kinds of error – a flip, and a phase error; Y is both at once; half the checks watch each kind. A flip swaps 0 and 1; a phase error keeps the pattern on the water and shifts its rhythm.\r",
+     "pause": ""
+    },
+    {
+     "id": "4.2",
+     "speaker": "B",
+     "secs": 16.9,
+     "said": "Here three checks fire. We give every storing qubit a 5% chance of an error, far more than a real chip has, so the effect is easy to count. Which errors made these three checks fire?\r",
+     "pause": ""
+    },
+    {
+     "id": "4.3",
+     "speaker": "B",
+     "secs": 31.2,
+     "said": "Two answers fit. Answer one: a flip in this corner and a phase error in the centre. Answer two: both at once in the corner, a Y, and one phase error on the right. Which would you bet on? Hands up for one … and for two.\r",
+     "pause": "15–20 s: the room votes (open Q3: aloud or a volunteer; length to confirm at rehearsal"
+    },
+    {
+     "id": "4.4",
+     "speaker": "B",
+     "secs": 32.1,
+     "said": "The standard decoder is called matching. It joins fired checks along the shortest lines and solves flips and phase errors separately, so a Y costs it two. It picks answer one. Of 30 times this pattern shows up, answer one is right in 10. Answer two is right in 19, because it can happen in two ways: the phase error in the far corner, or one place above it.\r",
+     "pause": "1 s: after the count"
+    },
+    {
+     "id": "4.5",
+     "speaker": "B",
+     "secs": 22.2,
+     "said": "Why does that matter? Errors and correction together cross the grid; the stored value flips and no check fires – a logical error. Here, that happens whenever matching picks answer one and the truth was answer two. This silent failure is what every decoder is measured by.\r",
+     "pause": "1 s: before the hop"
+    }
+   ]
+  },
+  "5": {
+   "title": "Same recording, another reader: a neural network",
+   "target": 87,
+   "speaker": "B",
+   "builds": [
+    {
+     "id": "5.1",
+     "speaker": "B",
+     "secs": 54.2,
+     "said": "Now the real chip. In Google's 2024 experiment, one recording was read by two readers. The first was Google's best matching decoder. Google's matching already links the two kinds of check, in a limited way, with weights tuned on the chip's data. The second was a neural network, a program that learns from examples: trained first on simulated errors, then on the chip's own data. Nobody writes its rules. It picks up whatever patterns are there, including ones matching leaves out. Real chips have plenty of those: errors that hit two neighbouring qubits at once, and qubits that slip into a third state they should never be in. Matching's picture has no place for either; a reader that learns can take them in.\r",
+     "pause": ""
+    },
+    {
+     "id": "5.2",
+     "speaker": "B",
+     "secs": 32.6,
+     "said": "We measure a decoder by its error rate: how often, per round, the stored value is lost. At distance 7, matching lost it 171 times per 100,000 rounds. The network: 143. Same chip, same data; only the reader changed. That is about one in six fewer failures, and the smaller grids on the chip show the same order. But note one thing: both readers worked afterwards, on the recording.\r",
+     "pause": "1.5 s: after 143"
+    }
+   ]
+  },
+  "6": {
+   "title": "Accurate, or in time: in 2024, the network could not keep up",
+   "target": 110,
+   "speaker": "B",
+   "builds": [
+    {
+     "id": "6.1",
+     "speaker": "B",
+     "secs": 17.8,
+     "said": "Why does afterwards matter? A calculation cannot wait for the recording to end. The chip delivers a round every 1.1 millionths of a second, and a reader that runs live has to finish each round in that time.\r",
+     "pause": ""
+    },
+    {
+     "id": "6.2",
+     "speaker": "B",
+     "secs": 35.6,
+     "said": "Google's paper quotes 24 millionths of a second per round for its network. In that time the chip finishes about 22 more rounds. Watch the pile. When the network has answered round 3, the chip is at round 66, and 62 rounds wait. An interpreter who needs twenty-two seconds for every second of speech is more than twenty minutes behind after one minute. Storing can wait; a calculation has steps that wait for the answer.\r",
+     "pause": "2 s: let the pile grow"
+    },
+    {
+     "id": "6.3",
+     "speaker": "B",
+     "secs": 24.2,
+     "said": "So in 2024 the network's results were worked out afterwards. The reader that ran live was a fast, plain version of matching, and it kept pace: its answer came shortly after the last round, and that delay did not grow. More accurate, or in time – in 2024 you got one or the other.\r",
+     "pause": ""
+    },
+    {
+     "id": "6.4",
+     "speaker": "B",
+     "secs": 25.9,
+     "said": "Is that solved now? A preprint from December 2025 claims a network under one millionth of a second per round, for grids up to distance 11. As of the date on the slide, nobody else has reviewed it, and we can't test it. A claim nobody has checked yet – so in 2024, still one or the other.\r",
+     "pause": ""
+    }
+   ]
+  },
+  "7": {
+   "title": "Ours, honestly: better than plain matching, not than correlated matching",
+   "target": 100,
+   "speaker": "B",
+   "builds": [
+    {
+     "id": "7.1",
+     "speaker": "B",
+     "secs": 46.9,
+     "said": "And our own part. We can't build a chip, so we simulated one: a grid of distance 5, five rounds per run, every operation going wrong with a chance of 0.5%. We trained a small neural network on about 250 million simulated examples and compared it with two kinds of matching. Correlated matching links the two kinds of error and needs no training: it solves the puzzle in two passes, and the first informs the second. Our first try, 66 million examples, lost to both matchers. The curves were still falling, so we trained again from scratch on nearly four times as many, five times over.\r",
+     "pause": ""
+    },
+    {
+     "id": "7.2",
+     "speaker": "B",
+     "secs": 26.6,
+     "said": "Each reader read the same 10 million fresh runs. The share it got wrong, lower is better: plain matching 1.41%. Our network 1.33% – better than plain matching. Correlated matching 1.09% – still ahead. All five of our networks land between the two matchers. Correlated matching is the one to beat, and it is free to download.\r",
+     "pause": "1.5 s: after 1.09"
+    },
+    {
+     "id": "7.3",
+     "speaker": "B",
+     "secs": 30.4,
+     "said": "Three things keep this honest. These are runs of five rounds in simulation, so they never sit on the same scale as Google's per-round numbers. Matching was told exactly how often each kind of error happens – so the comparison leans its way. And we compared accuracy; our timings are emulated on a laptop and stay off the clock. Honest progress on accuracy, not a win.\r",
+     "pause": "1 s: before the handover"
+    }
+   ]
+  },
+  "8": {
+   "title": "One run of a million rounds, Google's 2024 network – not ours",
+   "target": 60,
+   "speaker": "A",
+   "builds": [
+    {
+     "id": "8.1",
+     "speaker": "A",
+     "secs": 20.8,
+     "said": "Back to the clock, at true scale. The longest runs in Google's live test were a million rounds: 1.1 seconds of chip time. Google's 2024 network, one copy at 24 millionths a round, needs 24 seconds to read it. Our arithmetic, Google's times. Let's wait.\r",
+     "pause": ""
+    },
+    {
+     "id": "8.2",
+     "speaker": "A",
+     "secs": 25.5,
+     "said": "*(silence)*\r",
+     "pause": "24 s: silence while the bar fills"
+    },
+    {
+     "id": "8.3",
+     "speaker": "A",
+     "secs": 14,
+     "said": "The chip is half the computer; the other half has to read it – right, and in time. The how and the ranges are in the article. Thank you.\r",
+     "pause": "0.5 s: end"
+    }
+   ]
+  }
+ }
+}

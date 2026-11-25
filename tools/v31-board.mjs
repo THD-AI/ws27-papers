@@ -27,7 +27,7 @@ async function load(url) {
 }
 // measured in the page: rendered font height via getScreenCTM, label boxes in screen px
 const measure = () => p.evaluate(() => {
-  const texts = [...document.querySelectorAll('#ann text')].map((t) => {
+  const texts = [...document.querySelectorAll('#ann text:not(.halo)')].map((t) => {
     const m = t.getScreenCTM(), fs = parseFloat(getComputedStyle(t).fontSize) * Math.hypot(m.a, m.b);
     const bb = t.getBoundingClientRect();
     return { anchor: t.closest('[data-anchor]')?.dataset.anchor || t.dataset.anchor, role: t.dataset.role, type: t.dataset.type, px: +fs.toFixed(2), box: { x: bb.x, y: bb.y, r: bb.right, b: bb.bottom }, s: t.textContent };
