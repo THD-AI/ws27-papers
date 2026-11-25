@@ -23,3 +23,4 @@ rect[data-stroke]{vector-effect:non-scaling-stroke}
 .thing.red [data-stroke=object]{stroke:var(--qc-red)}
 
 #world path.context, .thing.red path.context{stroke:var(--context)}
+#ann .knock{fill:var(--paper);stroke:none}

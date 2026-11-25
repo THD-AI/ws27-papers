@@ -25,7 +25,7 @@ const FONTS = {
   zone: ['500', 44, 'Libre Franklin', 'label'],
   loc: ['500', 30, 'Libre Franklin', 'qualifier'],
 };
-const STOPNAME = { A: 'A · cold box', B: 'B · chip', BC: 'B–C · chip to film', 'CD-frame': 'C · newest frame', D: 'D · reader', CD: 'C–D · film to reader', E: 'E · results' };
+const STOPNAME = { A: 'A cold box', B: 'B chip', BC: 'B–C chip to film', 'CD-frame': 'C newest frame', D: 'D reader', CD: 'C–D film to reader', E: 'E results' };
 // numbers: a thin space between value and unit, as in the article
 const num = (s) => s.replace(/(\d) (?=(µs|ms|s)\b)/g, '$1\u2009');
 const ctx = document.createElement('canvas').getContext('2d');
@@ -85,7 +85,7 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
   ann.append(el('path', { d: `M${SAFE.x},${BAND_TOP}H${SAFE.r}`, 'data-stroke': 'grid' }));
   ann.append(text('caption', SAFE.x, CAPTION_Y, page.caption, { 'data-anchor': 'caption' }));
   const free = { x: SAFE.x, y: top, r: SAFE.r, b: BAND_TOP - 12 };
-  if (!overview) { drawLocator(ann, route, P, r, P.stops[page.camera].prev ? rect(P.stops[P.stops[page.camera].prev], route, P.map) : null, STOPNAME[page.camera] || 'backup ' + page.camera); used.push({ x: LOC.x, y: LOC.y, w: LOC.w, h: LOC.h }); }
+  if (!overview && typeof page.beat === 'number') { drawLocator(ann, route, P, r, P.stops[page.camera].prev ? rect(P.stops[P.stops[page.camera].prev], route, P.map) : null, STOPNAME[page.camera] || 'backup ' + page.camera); used.push({ x: LOC.x, y: LOC.y, w: LOC.w, h: LOC.h }); }
 
   // route as screen points, for placement scoring and the route gate
   const rp = route.pts.map((q) => project(q, r)), routePts = [];
@@ -147,6 +147,7 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
       g.append(el('circle', { cx: p0[0], cy: p0[1], r: 3, fill: 'var(--ink)' }));
     }
     if (outline) g.append(el('rect', { x: best.x, y: best.y, width: w, height: h, 'data-stroke': 'leader', fill: 'var(--paper)' }));
+    g.append(el('rect', { x: best.x - 8, y: best.y - 4, width: w + 16, height: h + 8, class: 'knock' }));
     let y = best.y + pad;
     for (const [f, s, a = {}] of lines) {
       y += FONTS[f][1];
@@ -184,7 +185,7 @@ export function start(P, F, q = new URLSearchParams(location.search)) {
   for (const [i, nm] of (page.names || []).entries()) place('name-' + i, nm.zone, [['name', nm.text]], { mode: 'under' });
   for (const [i, mi] of (page.minis || []).entries()) {
     const t = (page.things || []).find((q) => q.id === mi.zone), g = thingGeom(route, t);
-    place('mini-' + i, mi.zone, [[mi.red ? 'tag' : 'mini', mi.text, mi.red ? { class: 'red', 'data-thing': 'hero' } : {}]], { at: g.points?.[mi.point] });
+    place('mini-' + i, mi.zone, [[mi.big ? 'tag' : 'mini', mi.text]], { at: g.points?.[mi.point], mode: mi.mode });
   }
   for (const j of page.joins || []) {
     const a = thingGeom(route, (page.things || []).find((q) => q.id === j.from)), zb = zoneGeom(route, P.zones.find((z) => z.id === j.to));

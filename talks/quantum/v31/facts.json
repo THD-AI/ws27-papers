@@ -309,6 +309,20 @@
       "verified": "article table"
     },
     {
+      "id": "train-noise-range", "value": [0.2, 1], "display": "0.2–1%", "unit": "% noise", "kind": "own-sim",
+      "qualifiers": ["seven noise levels", "every training step draws one of them"],
+      "source": { "article": "§9 'What we ran' (seven noise levels between 0.2% and 1%)", "paper": "OWN-D3 OWN-D5", "data": null },
+      "used_on": ["b5"],
+      "verified": "article §9 text (P4 round 2 examiner)"
+    },
+    {
+      "id": "ahead-0.6", "value": 4, "display": "4 of 5 seeds", "unit": "seeds", "kind": "own-sim",
+      "qualifiers": ["ahead of plain matching up to 0.6% noise", "the fifth seed level"],
+      "source": { "article": "§9 details 'Against the noise level'", "paper": "OWN-D5-250M", "data": "noise.json" },
+      "used_on": ["b5"],
+      "verified": "article §9 text (P4 round 2 examiner)"
+    },
+    {
       "id": "run-1e6", "value": 1000000, "display": "a million rounds", "unit": "rounds", "kind": "measured",
       "qualifiers": ["the longest runs in Google's live test", "distance 5"],
       "source": { "article": "§8 clock caption ('runs of up to a million rounds')", "paper": "GQA-2024 Sec. V; Fig. 4d", "data": "clock.json live-matching kind" },

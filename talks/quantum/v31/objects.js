@@ -63,10 +63,8 @@ export function chip(o) {
     P.line(iso(o, pu - 7, pv, 40), iso(o, pu + 7, pv, 40));
     P.line(iso(o, pu, pv, 40), iso(o, du, dv, 66));
   }
-  for (let u = 90; u < U - 60; u += 60) P.line(iso(o, u, 0, 20), iso(o, u + 14, 0, 20));
   coax(P, o, 60, 60, 40, [0.5, 1]); coax(P, o, U - 60, 60, 40, [1, -0.6]); coax(P, o, 60, V - 60, 40, [-1, -0.6]); coax(P, o, U - 60, V - 60, 40, [-0.5, -1]);
   // carrier markings: ground-via rows inside the edges
-  for (let s = 70; s < U - 40; s += 48) for (const [a, b] of [[s, 30], [30, s], [s, V - 30], [U - 30, s]]) P.line(iso(o, a - 14 / 2, b, 40), iso(o, a + 14 / 2, b, 40));
   return P.out;
 }
 
@@ -97,7 +95,7 @@ export function reader(o) {
     P.line(F(U - 70, z + 18), F(U - 46, z + 18));
   }
   // vents on the side face, near the top
-  for (let v = 60; v < V - 60; v += 56) for (let z = 90; z < H - 60; z += 70) P.line(iso(o, 0, v, z), iso(o, 0, v + DASH, z));
+  for (let v = 60; v < V - 60; v += 70) for (let z = 110; z < H - 60; z += 90) { P.line(iso(o, 0, v, z), iso(o, 0, v + 34, z)); P.line(iso(o, 0, v, z + 10), iso(o, 0, v + 34, z + 10)); }
   // top: inset lid and vent grille
   P.poly([[30, 30], [U - 30, 30], [U - 30, V - 30], [30, V - 30]].map(([u, v]) => iso(o, u, v, H)));
   // vent grille: parallel dash rows across the lid
@@ -141,23 +139,24 @@ export function checkTile(o, s = 180) {
 
 // Lifted tile for beat 4: the smallest grid, 3 × 3 storing qubits, its four inner checks;
 // the fired checks carry an inner diamond (reference: the article's lattice.js puzzle).
-export function liftedTile(o, s = 420, fired = ['i0', 'i1', 'e1']) {
-  const P = pen('lifted'), M = pen('lifted-mark');
+// Lifted tile (beat 4), distance 3 as in the article's lattice.json: q = row * 3 + col,
+// squares x0 (r0 c0), z0 (r0 c1), z1 (r1 c0), x1 (r1 c1); halves x2 top, x3 bottom, z2 left, z3 right.
+// Fired checks (lattice.json example: z2, x0, x1) carry a thick inner mark. Half-checks are closed.
+export function liftedTile(o, s = 420, fired = ['z2', 'x0', 'x1'], name = 'lifted') {
+  const P = pen(name), M = pen(name + '-mark');
   P.poly([[0, 0], [s, 0], [s, s], [0, s]].map(([u, v]) => iso(o, u, v, 0)));
-  const m = (i, j) => iso(o, s * (i + 0.5) / 3, s * (j + 0.5) / 3, 0);
-  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) P.ellipse(m(i, j), 22, 13);
-  const R = s / 3 * 0.42, dia = (c, r, half) => { const pts = [[-r, 0], [0, -r * 0.62], [r, 0], [0, r * 0.62]].map(([a, b]) => [c[0] + a * R / 0.42, c[1] + b * R / 0.42]); return half === 'up' ? [pts[0], pts[1], pts[2]] : half === 'down' ? [pts[2], pts[3], pts[0]] : pts; };
-  const checks = {
-    i0: [m(0.5, 0.5)], i1: [m(1.5, 0.5)], i2: [m(0.5, 1.5)], i3: [m(1.5, 1.5)],
-    e0: [m(1.5, -0.5), 'up'], e1: [m(2.5, 1.5), 'down'], e2: [m(0.5, 2.5), 'down'], e3: [m(-0.5, 0.5), 'up'],
-  };
+  const m = (col, row) => iso(o, s * (col + 0.5) / 3, s * (row + 0.5) / 3, 0);
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) P.ellipse(m(c, r), 22, 13);
+  const R = s / 3, dia = (c, k, half) => { const pts = [[-k, 0], [0, -k * 0.62], [k, 0], [0, k * 0.62]].map(([a, b]) => [c[0] + a * R, c[1] + b * R]); // left, top, right, bottom
+    return half === 'top' ? [pts[0], pts[1], pts[2]] : half === 'bottom' ? [pts[2], pts[3], pts[0]] : half === 'left' ? [pts[1], pts[0], pts[3]] : half === 'right' ? [pts[3], pts[2], pts[1]] : pts; };
+  const checks = { x0: [m(0.5, 0.5)], z0: [m(1.5, 0.5)], z1: [m(0.5, 1.5)], x1: [m(1.5, 1.5)], x2: [m(1.5, -0.5), 'top'], x3: [m(0.5, 2.5), 'bottom'], z2: [m(-0.5, 0.5), 'left'], z3: [m(2.5, 1.5), 'right'] };
   const points = {};
   for (const [k, [c, half]] of Object.entries(checks)) {
-    const pts = dia(c, 0.42, half); half ? P.poly(pts, false) : P.poly(pts);
-    if (fired.includes(k)) { const q = dia(c, 0.24, half); half ? M.poly(q, false) : M.poly(q); }
-    points[k] = pts[0]; // a vertex on the drawn check
+    const pts = dia(c, 0.42, half); P.poly(pts); // closed, halves included
+    if (fired.includes(k)) M.poly(dia(c, 0.22, half));
+    points[k] = pts[0];
   }
-  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) { const c = m(i, j); points['q' + i + j] = [c[0] - 11, c[1]]; } // on the drawn ring
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) { const p = m(c, r); points['q' + (r * 3 + c)] = [p[0] - 11, p[1]]; }
   const out = [...P.out, ...M.out.map((q) => ({ ...q, stroke: 'mark' }))];
   out.points = points;
   return out;
@@ -181,13 +180,13 @@ export function frame(o, U = 160, V = 120, name = 'frame') { // U, V: frame size
 
 // Pile of unread frames: one frame per N unread, stacked; spacing in map units chosen so
 // it is ≥ 8 px at the CD camera (0.6 px per unit → 14 units).
-export function pile(o, count, gap = 21, grey = 4) {
+export function pile(o, count, gap = 34, grey = 2) {
   const out = [];
   for (let i = 0; i < count; i++) {
     const j = ((i * 7919) % 5) - 2 + i * 1.6; // stable jitter plus a slight lean
     const P = pen('pile-' + i);
     const p = [o[0] + j, o[1] - i * gap];
-    P.path([[0, 120], [0, 0], [160, 0]].map(([u, v]) => iso(p, u, v, 0)), false); // front corner only, one stroke
+    P.path([[160, 0, 12], [160, 0, 0], [0, 0, 0], [0, 120, 0], [0, 120, 12], [0, 0, 12], [160, 0, 12], [160, 120, 12], [0, 120, 12]].map(([u, v, z]) => iso(p, u, v, z)), false); // a plate: front corner and its 12-unit edge
     out.push(...P.out.map((q) => (i < grey ? { ...q, cls: 'context' } : q)));
   }
   return out;
@@ -218,7 +217,8 @@ export function backPlaneX(o, len, top, step, tallest, name = 'planex') {
   P.line(o, [o[0] + len, o[1]]);
   P.line(o, [o[0], o[1] - top]);
   for (let z = step; z <= top; z += step) P.line([o[0], o[1] - z], [o[0] + DASH * 1.2, o[1] - z]);
-  const out = P.out, Q = pen(name + '-top');
+  const out = P.out; if (tallest == null) return out;
+  const Q = pen(name + '-top');
   Q.line([o[0], o[1] - tallest], [o[0] + len, o[1] - tallest]);
   return [...out, ...Q.out.map((q) => ({ ...q, cls: 'context' }))];
 }

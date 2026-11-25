@@ -98,9 +98,9 @@ export function thingGeom(route, t, ov = false) {
   const [x, y] = t.pos ? t.pos : route.at(t.at), p = [x + (t.off?.[0] || 0), y + (t.off?.[1] || 0)];
   let paths, hull = true;
   if (t.kind === 'ruler') { paths = ruler(p, dirAt(route, t.at), t.len, t.every || 0, t.tick || 40); hull = false; }
-  else if (t.kind === 'planex') { paths = backPlaneX(p, t.len, t.top, t.step, t.tallest, t.id); hull = false; }
+  else if (t.kind === 'planex') { paths = backPlaneX(p, t.len, t.top, t.step, t.tallest, t.id); hull = false; var points = { top: [p[0], p[1] - t.top], base: p }; }
   else if (t.kind === 'lifted') {
-    paths = liftedTile(p, t.s || 420, t.fired || ['i0', 'i1', 'e1']); var points = paths.points;
+    paths = liftedTile(p, t.s || 420, t.fired ?? ['z2', 'x0', 'x1'], t.id); var points = paths.points;
     if (t.from) { const f = thingGeom(route, t.from); const fo = t.from.pos ? t.from.pos : route.at(t.from.at); paths = [...paths, ...tie([fo[0] + t.from.off[0], fo[1] + t.from.off[1]], t.from.U || 160, t.from.V || 120, p, t.s || 420)]; }
   }
   else if (t.kind === 'bar') { const d = dirAt(route, t.at); paths = [...bar(p, d, t.len, t.id), ...(t.tick ? startTick(p, d, t.id + '-t') : [])]; hull = false; }
@@ -108,7 +108,7 @@ export function thingGeom(route, t, ov = false) {
   else if (t.kind === 'flatruler') { paths = flatRuler(p, t.len, t.ticks || [], t.id); hull = false; }
   else if (t.kind === 'prism') paths = prism(p, t.h, t.s || 90, t.id);
   else if (t.kind === 'plane') { paths = backPlane(p, t.len, t.top, t.step, t.id); hull = false; }
-  else if (t.kind === 'pile') paths = ov ? pileOverview(p, t.count * 14) : pile(p, t.count);
+  else if (t.kind === 'pile') paths = ov ? pileOverview(p, t.count * 34) : pile(p, t.count);
   else if (t.kind === 'qubit') paths = ov ? qubitOverview(p) : qubit(p, t.r || 70, t.rings ?? 3);
   else if (t.kind === 'tile') paths = checkTile(p, t.s || 180);
   else paths = frame(p, t.U || 160, t.V || 120, t.id);
