@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><title>Quantum v3.1 player</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500&family=Newsreader:opsz,wght@6..72,400&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400&family=JetBrains+Mono:wght@500&display=swap">
 <link rel="stylesheet" href="player.css">
 </head><body>
 <svg id="page" xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><g id="cam"></g><g id="ann"></g></svg>
@@ -9,6 +9,6 @@
 import { start } from './main.js';
 const [P, F] = await Promise.all(['./pages.json', './facts.json'].map((u) => fetch(u).then((r) => r.json())));
 await document.fonts.ready;
-await Promise.all(['500 32px "Libre Franklin"', '400 56px "Newsreader"', '500 40px "JetBrains Mono"', '400 24px "Libre Franklin"'].map((f) => document.fonts.load(f)));
+await Promise.all(['500 44px "Libre Franklin"', '600 44px "Libre Franklin"', '400 30px "Libre Franklin"', '400 56px "Newsreader"'].map((f) => document.fonts.load(f)));
 start(P, F);
 </script></body></html>

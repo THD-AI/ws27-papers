@@ -9,7 +9,7 @@ import rough from '../../../lib/vendor/rough.esm.js';
 const C30 = Math.cos(Math.PI / 6), S30 = 0.5;
 const gen = rough.generator();
 const PX = 1 / 0.8; // map units per screen px at the reading cameras
-export const TOKEN = 3, VAR = 0.05, DASH = 22;
+export const TOKEN = 4, VAR = 0.05, DASH = 22; // object stroke 4 px (P4 floor)
 
 function rng(seed) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
 
@@ -58,15 +58,15 @@ export function chip(o) {
   const P = pen('chip'), U = 560, V = 560;
   slab(P, o, U, V, 0, 40);
   slab(P, iso(o, 170, 170, 40), 220, 220, 0, 26);
-  for (let a = 205; a < 380; a += 55) for (let c = 205; c < 380; c += 55) P.line(iso(o, a, c, 66), iso(o, a + DASH, c, 66));
+  for (let a = 205; a < 380; a += 55) for (let c = 205; c < 380; c += 55) P.line(iso(o, a, c, 66), iso(o, a + 14, c, 66));
   for (let k = 200; k <= 360; k += 52) for (const [pu, pv, du, dv] of [[k, 135, k, 172], [k, 425, k, 388], [135, k, 172, k], [425, k, 388, k]]) {
     P.line(iso(o, pu - 7, pv, 40), iso(o, pu + 7, pv, 40));
     P.line(iso(o, pu, pv, 40), iso(o, du, dv, 66));
   }
-  for (let u = 90; u < U - 60; u += 60) P.line(iso(o, u, 0, 20), iso(o, u + DASH, 0, 20));
+  for (let u = 90; u < U - 60; u += 60) P.line(iso(o, u, 0, 20), iso(o, u + 14, 0, 20));
   coax(P, o, 60, 60, 40, [0.5, 1]); coax(P, o, U - 60, 60, 40, [1, -0.6]); coax(P, o, 60, V - 60, 40, [-1, -0.6]); coax(P, o, U - 60, V - 60, 40, [-0.5, -1]);
   // carrier markings: ground-via rows inside the edges
-  for (let s = 70; s < U - 40; s += 48) for (const [a, b] of [[s, 30], [30, s], [s, V - 30], [U - 30, s]]) P.line(iso(o, a - DASH / 2, b, 40), iso(o, a + DASH / 2, b, 40));
+  for (let s = 70; s < U - 40; s += 48) for (const [a, b] of [[s, 30], [30, s], [s, V - 30], [U - 30, s]]) P.line(iso(o, a - 14 / 2, b, 40), iso(o, a + 14 / 2, b, 40));
   return P.out;
 }
 
@@ -79,8 +79,7 @@ export function film(o) {
   for (let u = 0; u < U - 180; u += 180) for (let i = 0; i < 4; i++) { const uu = u + 30 + ((i * 53) % 120), vv = 60 + ((i * 37) % 80); P.line(iso(o, uu, vv, 0), iso(o, uu + DASH, vv, 0)); }
   for (let u = 30; u < U - 20; u += 90) for (const v of [12, V - 28]) P.poly([[u, v], [u + 22, v], [u + 22, v + 16], [u, v + 16]].map(([a, b]) => iso(o, a, b, 0)));
   // curl: both edges rise in a quarter turn past the end
-  for (const v of [0, V]) P.curve([iso(o, U, v, 0), iso(o, U + 90, v, 20), iso(o, U + 140, v, 100), iso(o, U + 120, v, 190), iso(o, U + 60, v, 220)]);
-  P.line(iso(o, U + 60, 0, 220), iso(o, U + 60, V, 220));
+  P.line(iso(o, U, 0, 0), iso(o, U, V, 0)); // clean end
   return P.out;
 }
 
@@ -136,22 +135,32 @@ export function checkTile(o, s = 180) {
   for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) { const c = iso(o, s * (i + 0.5) / 3, s * (j + 0.5) / 3, 0); P.ellipse(c, 14, 8); }
   const m = (i, j) => iso(o, s * (i + 0.5) / 3, s * (j + 0.5) / 3, 0);
   P.poly([m(1, 0), m(2, 1), m(1, 2), m(0, 1)]); // the check: a diamond on its four neighbours
-  return P.out;
+  const M = pen('tile-mark'); M.poly([m(1, 0.35), m(1.65, 1), m(1, 1.65), m(0.35, 1)]);
+  return [...P.out, ...M.out.map((q) => ({ ...q, stroke: 'mark' }))];
 }
 
 // Lifted tile for beat 4: the smallest grid, 3 × 3 storing qubits, its four inner checks;
 // the fired checks carry an inner diamond (reference: the article's lattice.js puzzle).
-export function liftedTile(o, s = 420, fired = [0, 1, 3]) {
-  const P = pen('lifted');
+export function liftedTile(o, s = 420, fired = ['i0', 'i1', 'e1']) {
+  const P = pen('lifted'), M = pen('lifted-mark');
   P.poly([[0, 0], [s, 0], [s, s], [0, s]].map(([u, v]) => iso(o, u, v, 0)));
   const m = (i, j) => iso(o, s * (i + 0.5) / 3, s * (j + 0.5) / 3, 0);
   for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) P.ellipse(m(i, j), 22, 13);
-  [[0.5, 0.5], [1.5, 0.5], [0.5, 1.5], [1.5, 1.5]].forEach(([ci, cj], k) => {
-    const c0 = m(ci, cj), R = s / 3 * 0.42, d = (r) => [[-r, 0], [0, -r * 0.62], [r, 0], [0, r * 0.62]].map(([a, b]) => [c0[0] + a * R / 0.42, c0[1] + b * R / 0.42]);
-    P.poly(d(0.42));
-    if (fired.includes(k)) P.poly(d(0.22));
-  });
-  return P.out;
+  const R = s / 3 * 0.42, dia = (c, r, half) => { const pts = [[-r, 0], [0, -r * 0.62], [r, 0], [0, r * 0.62]].map(([a, b]) => [c[0] + a * R / 0.42, c[1] + b * R / 0.42]); return half === 'up' ? [pts[0], pts[1], pts[2]] : half === 'down' ? [pts[2], pts[3], pts[0]] : pts; };
+  const checks = {
+    i0: [m(0.5, 0.5)], i1: [m(1.5, 0.5)], i2: [m(0.5, 1.5)], i3: [m(1.5, 1.5)],
+    e0: [m(1.5, -0.5), 'up'], e1: [m(2.5, 1.5), 'down'], e2: [m(0.5, 2.5), 'down'], e3: [m(-0.5, 0.5), 'up'],
+  };
+  const points = {};
+  for (const [k, [c, half]] of Object.entries(checks)) {
+    const pts = dia(c, 0.42, half); half ? P.poly(pts, false) : P.poly(pts);
+    if (fired.includes(k)) { const q = dia(c, 0.24, half); half ? M.poly(q, false) : M.poly(q); }
+    points[k] = pts[0]; // a vertex on the drawn check
+  }
+  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) { const c = m(i, j); points['q' + i + j] = [c[0] - 11, c[1]]; } // on the drawn ring
+  const out = [...P.out, ...M.out.map((q) => ({ ...q, stroke: 'mark' }))];
+  out.points = points;
+  return out;
 }
 
 // Qubit with its smear: a dot and iso ripples (ratio 0.577), the water image of beat 1.
@@ -178,7 +187,7 @@ export function pile(o, count, gap = 21, grey = 4) {
     const j = ((i * 7919) % 5) - 2 + i * 1.6; // stable jitter plus a slight lean
     const P = pen('pile-' + i);
     const p = [o[0] + j, o[1] - i * gap];
-    P.path([[0, 0], [160, 0], [160, 120], [0, 120]].map(([u, v]) => iso(p, u, v, 0))); // one stroke per frame
+    P.path([[0, 120], [0, 0], [160, 0]].map(([u, v]) => iso(p, u, v, 0)), false); // front corner only, one stroke
     out.push(...P.out.map((q) => (i < grey ? { ...q, cls: 'context' } : q)));
   }
   return out;
@@ -238,3 +247,7 @@ export function tie(frameO, FU, FV, tileO, s) {
 export function panel(c, w, h, name = 'panel') { const P = pen(name); P.poly([[c[0] - w / 2, c[1] - h / 2], [c[0] + w / 2, c[1] - h / 2], [c[0] + w / 2, c[1] + h / 2], [c[0] - w / 2, c[1] + h / 2]]); return P.out; }
 // flat (screen-x) ruler for panels, with optional marks [[pos, len]]
 export function flatRuler(p, len, ticks = [], name = 'fr') { const P = pen(name); P.line(p, [p[0] + len, p[1]]); P.line([p[0], p[1] - 24], [p[0], p[1] + 24]); P.line([p[0] + len, p[1] - 24], [p[0] + len, p[1] + 24]); for (const [x, l] of ticks) P.line([p[0] + x, p[1] - l], [p[0] + x, p[1] + l]); return P.out; }
+
+// Bar (beat 8): a thick bar along a direction from a start tick; one axis for both bars.
+export function bar(p, dir, len, name = 'bar') { const P = pen(name); P.line(p, [p[0] + dir[0] * len, p[1] + dir[1] * len]); return P.out.map((q) => ({ ...q, stroke: 'bar' })); }
+export function startTick(p, dir, name = 'tick') { const P = pen(name), n = [-dir[1] * 70, dir[0] * 70]; P.line([p[0] - n[0], p[1] - n[1]], [p[0] + n[0], p[1] + n[1]]); return P.out; }

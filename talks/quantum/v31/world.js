@@ -24,7 +24,7 @@ export function panels(route, zones) {
 }
 
 // ---- real objects (block 5) ----
-import { chip, film, reader, prism, backPlane, backPlaneX, liftedTile, tie, panel, flatRuler, pile, qubit, checkTile, ruler, frame,
+import { chip, film, reader, prism, backPlane, backPlaneX, liftedTile, tie, panel, flatRuler, bar, startTick, pile, qubit, checkTile, ruler, frame,
   chipOverview, filmOverview, readerOverview, cryoOverview, pileOverview, qubitOverview } from './objects.js';
 
 const C30 = Math.cos(Math.PI / 6);
@@ -84,7 +84,7 @@ export function buildWorld(svg, route, zones, map = [9600, 5400], { overview = f
   for (const z of zones) {
     const zg = el('g', { 'data-zone': z.id, class: 'zone' }), geo = zoneGeom(route, z, ov);
     if (geo.image) zg.append(el('image', { href: geo.image.href, x: geo.image.x, y: geo.image.y, width: geo.image.w, height: geo.image.h, 'data-raster': '1', preserveAspectRatio: 'none' }));
-    for (const q of geo.paths || []) zg.append(el('path', { d: q.d, 'stroke-width': q.w, 'data-stroke': 'object', ...(q.cls ? { class: q.cls } : {}), ...(q.transform ? { transform: q.transform } : {}) }));
+    for (const q of geo.paths || []) zg.append(el('path', { d: q.d, 'stroke-width': q.w, 'data-stroke': q.stroke || 'object', ...(q.cls ? { class: q.cls } : {}), ...(q.transform ? { transform: q.transform } : {}) }));
     g.append(zg);
   }
   svg.append(g);
@@ -100,9 +100,10 @@ export function thingGeom(route, t, ov = false) {
   if (t.kind === 'ruler') { paths = ruler(p, dirAt(route, t.at), t.len, t.every || 0, t.tick || 40); hull = false; }
   else if (t.kind === 'planex') { paths = backPlaneX(p, t.len, t.top, t.step, t.tallest, t.id); hull = false; }
   else if (t.kind === 'lifted') {
-    paths = liftedTile(p, t.s || 420, t.fired || [0, 1, 3]);
+    paths = liftedTile(p, t.s || 420, t.fired || ['i0', 'i1', 'e1']); var points = paths.points;
     if (t.from) { const f = thingGeom(route, t.from); const fo = t.from.pos ? t.from.pos : route.at(t.from.at); paths = [...paths, ...tie([fo[0] + t.from.off[0], fo[1] + t.from.off[1]], t.from.U || 160, t.from.V || 120, p, t.s || 420)]; }
   }
+  else if (t.kind === 'bar') { const d = dirAt(route, t.at); paths = [...bar(p, d, t.len, t.id), ...(t.tick ? startTick(p, d, t.id + '-t') : [])]; hull = false; }
   else if (t.kind === 'panel') { paths = panel(p, t.w, t.h, t.id); hull = false; }
   else if (t.kind === 'flatruler') { paths = flatRuler(p, t.len, t.ticks || [], t.id); hull = false; }
   else if (t.kind === 'prism') paths = prism(p, t.h, t.s || 90, t.id);
@@ -115,16 +116,16 @@ export function thingGeom(route, t, ov = false) {
   let anchor = null;
   if (t.anchor === 'centre') anchor = p;
   if (t.anchor === 'end') { const d = dirAt(route, t.at); anchor = [p[0] + d[0] * t.len, p[1] + d[1] * t.len]; }
-  return { paths, box, hull: hull ? rectHull(box) : null, anchor };
+  return { paths, box, hull: hull ? rectHull(box) : null, anchor, points: typeof points !== 'undefined' ? points : null };
 }
 
 // draws things and breaks the route with a paper gap under every object (mask, no filter)
 export function addThings(world, route, zones, things = [], hide = []) {
   for (const z of world.querySelectorAll('.zone')) if (hide.includes(z.dataset.zone)) z.remove();
   for (const t of things) {
-    const g = el('g', { 'data-thing-id': t.id, 'data-kind': t.kind, class: 'thing' + (t.red ? ' red' : '') });
-    if (t.red) g.dataset.thing = 'hero';
-    for (const q of thingGeom(route, t).paths) g.append(el('path', { d: q.d, 'stroke-width': q.w, 'data-stroke': 'object', ...(q.cls ? { class: q.cls } : {}) }));
+    const g = el('g', { 'data-thing-id': t.id, 'data-kind': t.kind, class: 'thing' + (t.red ? ' red' : '') + (t.redmarks ? ' redmarks' : '') });
+    if (t.red || t.redmarks) g.dataset.thing = 'hero';
+    for (const q of thingGeom(route, t).paths) g.append(el('path', { d: q.d, 'stroke-width': q.w, 'data-stroke': q.stroke || 'object', ...(q.cls ? { class: q.cls } : {}) }));
     world.append(g);
   }
   const id = 'routegap' + Math.random().toString(36).slice(2, 7);

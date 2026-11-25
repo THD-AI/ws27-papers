@@ -47,33 +47,41 @@
   "A": {
    "width": 2400,
    "at": 0.1,
-   "dy": -250
+   "dy": -250,
+   "prev": "overview"
   },
   "B": {
    "width": 1800,
-   "at": 0.3
+   "at": 0.3,
+   "prev": "A"
   },
   "BC": {
    "width": 2600,
    "at": 0.4,
    "dy": -340,
-   "dx": 300
+   "dx": 300,
+   "prev": "B"
   },
   "CD-frame": {
    "width": 2200,
-   "at": 0.6
+   "at": 0.6,
+   "prev": "BC"
   },
   "D": {
    "width": 2400,
-   "at": 0.72
+   "at": 0.72,
+   "prev": "CD-frame"
   },
   "CD": {
    "width": 3200,
-   "at": 0.66
+   "at": 0.66,
+   "prev": "D"
   },
   "E": {
    "width": 2000,
-   "at": 0.91
+   "at": 0.91,
+   "prev": "CD",
+   "dx": -520
   },
   "b1": {
    "width": 2000,
@@ -117,7 +125,6 @@
    "build": 0,
    "camera": "overview",
    "focus": null,
-   "eyebrow": "Beat 0 · the whole machine",
    "title": "The other half of a quantum computer",
    "question": "Same recording, two readers – which reads it right, and can it keep up?",
    "zoneLabels": true,
@@ -128,7 +135,6 @@
    "build": 0,
    "camera": "A",
    "focus": "A",
-   "eyebrow": "Beat 1 · A cold box",
    "title": "A qubit smears like water",
    "hero": {
     "zone": "qubit",
@@ -161,24 +167,20 @@
    "build": 0,
    "camera": "B",
    "focus": "B",
-   "eyebrow": "Beat 2 · B chip",
    "title": "Neighbours ask: even or odd?",
-   "hero": {
-    "zone": "B",
-    "parts": [
-     {
-      "fact": "d7-checks-48"
-     }
-    ],
-    "tag": "checks at distance 7",
-    "source": "surface code layout"
-   },
    "flags": [
     {
      "zone": "B",
      "fact": "round-1.1",
      "tag": "one round of all checks",
-     "source": "Google 2024 chip – Nature 2025"
+     "source": "Google 2024 chip – Nature 2025",
+     "mode": "left"
+    },
+    {
+     "zone": "B",
+     "fact": "d7-checks-48",
+     "tag": "checks at distance 7",
+     "source": "surface code layout"
     }
    ],
    "caption": "Helpers ask their neighbours even or odd, without looking at the value.",
@@ -192,7 +194,7 @@
       -80
      ],
      "s": 150,
-     "red": true
+     "redmarks": true
     }
    ]
   },
@@ -201,7 +203,6 @@
    "build": 0,
    "camera": "BC",
    "focus": "C",
-   "eyebrow": "Beat 3 · C film",
    "title": "Each round is one frame of a film",
    "hero": {
     "zone": "newest",
@@ -211,7 +212,7 @@
       "red": true
      }
     ],
-    "tag": "frames, one logical qubit",
+    "tag": "frames, one stored value",
     "source": "our arithmetic, Google’s 1.1 µs"
    },
    "caption": "The thing that reads the film – the article calls it the decoder.",
@@ -235,7 +236,6 @@
    "build": 0,
    "camera": "CD-frame",
    "focus": "C",
-   "eyebrow": "Beat 4 · C newest frame",
    "title": "Which errors made three checks fire?",
    "flags": [
     {
@@ -245,7 +245,7 @@
      "source": "checks never wrong; far more than a real chip"
     }
    ],
-   "caption": "The smallest grid: 9 storing qubits, 8 checks, one round, checks never wrong.",
+   "caption": "Here three checks fire. Which errors made them fire?",
    "things": [
     {
      "id": "newest",
@@ -277,16 +277,164 @@
       ],
       "U": 180,
       "V": 120
-     }
+     },
+     "redmarks": true,
+     "fired": [
+      "i0",
+      "i1",
+      "e1"
+     ]
+    }
+   ],
+   "minis": [
+    {
+     "zone": "lifted",
+     "point": "q00",
+     "text": "storing qubit"
+    },
+    {
+     "zone": "lifted",
+     "point": "i2",
+     "text": "check"
     }
    ]
+  },
+  {
+   "beat": 4,
+   "build": 1,
+   "camera": "CD-frame",
+   "focus": "C",
+   "title": "Which errors made three checks fire?",
+   "caption": "Two answers fit. Which would you bet on? Hands up for one, and for two.",
+   "things": [
+    {
+     "id": "newest",
+     "kind": "frame",
+     "at": 0.51,
+     "off": [
+      242,
+      -80
+     ],
+     "U": 180,
+     "V": 120
+    },
+    {
+     "id": "lifted",
+     "kind": "lifted",
+     "at": 0.51,
+     "off": [
+      150,
+      -480
+     ],
+     "s": 320,
+     "from": {
+      "id": "newest",
+      "kind": "frame",
+      "at": 0.51,
+      "off": [
+       242,
+       -80
+      ],
+      "U": 180,
+      "V": 120
+     },
+     "redmarks": false,
+     "fired": [
+      "i0",
+      "i1",
+      "e1"
+     ]
+    }
+   ],
+   "minis": [
+    {
+     "zone": "lifted",
+     "point": "q00",
+     "text": "corner: flip (1) or Y (2)",
+     "red": true
+    },
+    {
+     "zone": "lifted",
+     "point": "q11",
+     "text": "centre: phase error (1)",
+     "red": true
+    },
+    {
+     "zone": "lifted",
+     "point": "q21",
+     "text": "right: phase error (2)",
+     "red": true
+    }
+   ]
+  },
+  {
+   "beat": 4,
+   "build": 2,
+   "camera": "CD-frame",
+   "focus": "C",
+   "title": "Which errors made three checks fire?",
+   "caption": "Matching picks answer one: right in 10 of 30. Answer two is right in 19.",
+   "things": [
+    {
+     "id": "newest",
+     "kind": "frame",
+     "at": 0.51,
+     "off": [
+      242,
+      -80
+     ],
+     "U": 180,
+     "V": 120
+    },
+    {
+     "id": "lifted",
+     "kind": "lifted",
+     "at": 0.51,
+     "off": [
+      150,
+      -480
+     ],
+     "s": 320,
+     "from": {
+      "id": "newest",
+      "kind": "frame",
+      "at": 0.51,
+      "off": [
+       242,
+       -80
+      ],
+      "U": 180,
+      "V": 120
+     },
+     "redmarks": false,
+     "fired": [
+      "i0",
+      "i1",
+      "e1"
+     ]
+    }
+   ],
+   "minis": [],
+   "hero": {
+    "zone": "lifted",
+    "parts": [
+     {
+      "fact": "match-10of30"
+     },
+     {
+      "fact": "other-19of30",
+      "red": true
+     }
+    ],
+    "tag": "answer one / answer two right",
+    "source": "5% per storing qubit; one round; our own count"
+   }
   },
   {
    "beat": 5,
    "build": 0,
    "camera": "D",
    "focus": null,
-   "eyebrow": "Beat 5 · D reader",
    "title": "Same recording, another reader",
    "hero": {
     "zone": "p143",
@@ -296,8 +444,7 @@
       "red": true
      }
     ],
-    "tag": "neural network, per 100,000 rounds",
-    "source": "distance 7; Google 2024 chip – Nature 2025"
+    "tag": "fine-tuned on the chip"
    },
    "caption": "A neural network, a program that learns from examples, reads the same recording.",
    "things": [
@@ -306,8 +453,8 @@
      "kind": "prism",
      "at": 0.72,
      "off": [
-      -950,
-      80
+      -550,
+      280
      ],
      "s": 90,
      "h": 342
@@ -317,8 +464,8 @@
      "kind": "prism",
      "at": 0.72,
      "off": [
-      -760,
-      80
+      -250,
+      280
      ],
      "s": 90,
      "h": 286,
@@ -329,10 +476,10 @@
      "kind": "planex",
      "at": 0.72,
      "off": [
-      -1050,
-      125
+      -650,
+      325
      ],
-     "len": 440,
+     "len": 500,
      "top": 400,
      "step": 50,
      "tallest": 342
@@ -341,18 +488,34 @@
    "flags": [
     {
      "zone": "p171",
+     "mode": "above",
      "fact": "d7-match-171",
-     "tag": "Google’s best matching, same rounds",
-     "source": "tuned on the chip; read afterwards"
+     "tag": ""
     }
-   ]
+   ],
+   "names": [
+    {
+     "zone": "p171",
+     "text": "matching"
+    },
+    {
+     "zone": "p143",
+     "text": "network"
+    }
+   ],
+   "joins": [
+    {
+     "from": "plane5",
+     "to": "D"
+    }
+   ],
+   "rowNote": "Lost the value, per 100,000 rounds · distance 7 · read afterwards · Google 2024 chip – Nature 2025"
   },
   {
    "beat": 6,
    "build": 0,
    "camera": "CD",
    "focus": "D",
-   "eyebrow": "Beat 6 · C to D",
    "title": "Accurate, or in time",
    "hero": {
     "zone": "D",
@@ -362,20 +525,22 @@
      }
     ],
     "tag": "network time per round",
-    "source": "quoted from earlier work"
+    "source": "Google’s 2024 network · one network, serial · distance not stated"
    },
    "flags": [
     {
      "zone": "newest",
      "fact": "round-1.1",
      "tag": "a new frame every",
-     "source": "Google 2024 chip – Nature 2025"
+     "source": "Google 2024 chip – Nature 2025",
+     "inline": "a new frame every ",
+     "mode": "left"
     },
     {
      "zone": "pile",
      "fact": "waiting-62-at-66",
      "tag": "unread frames piling up",
-     "source": "our arithmetic, Google’s times"
+     "source": "after the network’s 3rd answer, ~73 µs in"
     }
    ],
    "caption": "Storing can wait; a calculation has steps that wait for the answer.",
@@ -410,7 +575,6 @@
    "build": 0,
    "camera": "E",
    "focus": null,
-   "eyebrow": "Beat 7 · E results",
    "title": "Ours, honestly",
    "hero": {
     "zone": "corr",
@@ -420,21 +584,21 @@
       "red": true
      }
     ],
-    "tag": "correlated matching, the one to beat",
-    "source": "per run of 5 rounds; d 5; 0.5% noise, simulated"
+    "tag": "the one to beat",
+    "mode": "aboveHigh"
    },
    "flags": [
     {
      "zone": "ours",
+     "mode": "above",
      "fact": "d5-net-1.33",
-     "tag": "our network",
-     "source": "lower is better"
+     "tag": ""
     },
     {
      "zone": "plain",
+     "mode": "above",
      "fact": "d5-plain-1.41",
-     "tag": "plain matching",
-     "source": "same runs, same noise"
+     "tag": ""
     }
    ],
    "caption": "Better than plain matching, not than correlated matching.",
@@ -447,33 +611,33 @@
      "kind": "prism",
      "at": 0.91,
      "off": [
-      -560,
-      250
+      -1270,
+      310
      ],
      "s": 90,
-     "h": 282
+     "h": 226
     },
     {
      "id": "ours",
      "kind": "prism",
      "at": 0.91,
      "off": [
-      -370,
-      250
+      -930,
+      310
      ],
      "s": 90,
-     "h": 266
+     "h": 213
     },
     {
      "id": "corr",
      "kind": "prism",
      "at": 0.91,
      "off": [
-      -180,
-      250
+      -590,
+      310
      ],
      "s": 90,
-     "h": 218,
+     "h": 174,
      "red": true
     },
     {
@@ -481,22 +645,36 @@
      "kind": "planex",
      "at": 0.91,
      "off": [
-      -660,
-      295
+      -1370,
+      355
      ],
-     "len": 630,
-     "top": 340,
-     "step": 100,
-     "tallest": 282
+     "len": 940,
+     "top": 280,
+     "step": 80,
+     "tallest": 226
     }
-   ]
+   ],
+   "names": [
+    {
+     "zone": "plain",
+     "text": "plain"
+    },
+    {
+     "zone": "ours",
+     "text": "ours"
+    },
+    {
+     "zone": "corr",
+     "text": "correlated"
+    }
+   ],
+   "rowNote": "Per run of 5 rounds · distance 5 · 0.5% noise, simulated · plain: exact error model · 10 million runs · lower is better"
   },
   {
    "beat": 8,
    "build": 0,
    "camera": "overview",
    "focus": null,
-   "eyebrow": "Beat 8 · the whole machine",
    "title": "One run of a million rounds",
    "hero": {
     "zone": "r24",
@@ -510,11 +688,11 @@
     "source": "our arithmetic; read afterwards"
    },
    "redRoute": false,
-   "caption": "24 µs per round quoted; one network, serial; distance unstated. Our arithmetic.",
+   "caption": "One copy of the network, one round after another: 24 s for 1.1 s of chip time.",
    "things": [
     {
      "id": "r24",
-     "kind": "ruler",
+     "kind": "bar",
      "at": 0.72,
      "off": [
       -250,
@@ -522,19 +700,18 @@
      ],
      "len": 2400,
      "red": true,
-     "every": 100,
-     "anchor": "end"
+     "anchor": "end",
+     "tick": true
     },
     {
      "id": "r11",
-     "kind": "ruler",
+     "kind": "bar",
      "at": 0.72,
      "off": [
-      -450,
-      780
+      -265,
+      459
      ],
-     "len": 110,
-     "tick": 20
+     "len": 110
     }
    ],
    "flags": [
@@ -542,7 +719,8 @@
      "zone": "r11",
      "fact": "run-1e6-1.1s",
      "tag": "a million rounds at chip pace",
-     "source": "our arithmetic, Google’s times"
+     "source": "Google’s live test, distance 5",
+     "mode": "above"
     }
    ]
   },
@@ -551,7 +729,6 @@
    "build": 0,
    "camera": "b1",
    "focus": null,
-   "eyebrow": "Backup b1 · not in our article",
    "title": "Run copies in parallel?",
    "things": [
     {
@@ -614,7 +791,6 @@
    "build": 0,
    "camera": "b2",
    "focus": null,
-   "eyebrow": "Backup b2 · 10 million runs per decoder",
    "title": "Is 1.33 against 1.41 noise?",
    "things": [
     {
@@ -693,7 +869,6 @@
    "build": 0,
    "camera": "b3",
    "focus": null,
-   "eyebrow": "Backup b3 · times, not distances",
    "title": "24 µs at which distance?",
    "things": [
     {
@@ -752,7 +927,6 @@
    "build": 0,
    "camera": "b4",
    "focus": null,
-   "eyebrow": "Backup b4 · two scales, never one",
    "title": "Yours is ten times worse?",
    "things": [
     {
@@ -857,7 +1031,6 @@
    "build": 0,
    "camera": "b5",
    "focus": null,
-   "eyebrow": "Backup b5 · the noise table",
    "title": "A flattering noise level?",
    "things": [
     {

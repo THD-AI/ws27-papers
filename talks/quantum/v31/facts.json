@@ -51,7 +51,7 @@
     },
     {
       "id": "frames-per-0.1s", "value": 90909, "display": "≈ 90,000 in 0.1 s", "unit": "rounds per 0.1 s", "kind": "own-arith",
-      "qualifiers": ["our arithmetic, Google's 1.1 µs", "one logical qubit"],
+      "qualifiers": ["our arithmetic, Google's 1.1 µs", "one stored value"],
       "source": { "article": "§4 step 0 ('about ninety thousand rounds' in a blink)", "paper": "GQA-2024 + OWN-ARITH", "data": "clock.json rounds_per_second (909,091)" },
       "formula": "0.1 s / 1.1 µs",
       "used_on": ["beat 3 hero", "notes 3.2"],

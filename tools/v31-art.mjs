@@ -1,5 +1,5 @@
 // Prepares the forged cryostat raster for the world (block 5): ink recoloured to the pen
-// colour, lines grown so they render at the 3 px object token between the A (0.8 px/unit)
+// colour, lines grown so they render at the 4 px object token between the A (0.8 px/unit)
 // and CD (0.6) cameras at 700 map units tall, stored at half the source size.
 //   node tools/v31-art.mjs  ->  talks/quantum/v31/art/cryostat-world.png
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -15,7 +15,7 @@ const out = await p.evaluate(async (png) => {
   const W = img.width, H = img.height, c = document.createElement('canvas'); c.width = W; c.height = H;
   const g = c.getContext('2d'); g.drawImage(img, 0, 0); const d = g.getImageData(0, 0, W, H).data;
   let M = new Uint8Array(W * H); for (let i = 0; i < W * H; i++) M[i] = d[i * 4 + 3] >= 64 ? 1 : 0;
-  const disp = (700 / H) * 0.7, need = 3 / disp, src = 3, r = Math.max(0, Math.round((need - src) / 2));
+  const disp = (700 / H) * 0.7, need = 4 / disp, src = 3, r = Math.max(0, Math.round((need - src) / 2));
   for (let it = 0; it < r; it++) { const o = new Uint8Array(W * H); for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) { const i = y * W + x; o[i] = M[i] | M[i - 1] | M[i + 1] | M[i - W] | M[i + W]; } M = o; }
   const id = g.createImageData(W, H); for (let i = 0; i < W * H; i++) { id.data[i * 4] = 0x15; id.data[i * 4 + 1] = 0x17; id.data[i * 4 + 2] = 0x1c; id.data[i * 4 + 3] = M[i] ? 255 : 0; }
   g.clearRect(0, 0, W, H); g.putImageData(id, 0, 0);

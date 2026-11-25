@@ -16,8 +16,8 @@ const { server, port } = await startServer(ROOT, 0);
 const base = `http://127.0.0.1:${port}/talks/quantum/v31/`;
 const b = await puppeteer.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: 'new' });
 const p = await b.newPage();
-const TOK = { grid: 1.5, leader: 2, object: 3, route: 4, locator: 1.5 }, TOL = 0.2;
-const FLOOR = { main: 32, mono: 28, source: 24, locator: 24, title: 32, hero: 32 };
+const TOK = { grid: 1.5, leader: 2, object: 4, route: 4, locator: 1.5, mark: 8, bar: 12 }, TOL = 0.2; // P4: object strokes 4 px
+const FLOOR = { label: 44, qualifier: 30, caption: 32, title: 56, hero: 96 }; // P4: labels ≥ 44, qualifiers ≥ 30
 const SAFE = { x: 96, y: 54, r: 1824, b: 1026 };
 const lead = [], baseRows = [], focus = [], g1 = [], g3 = [], g2 = [], g5 = [], g22 = [], keep = [], over = [], rgate = [], gap = [];
 
@@ -46,7 +46,7 @@ for (let i = 1; i <= NPAGES; i++) {
   const m = await measure();
   // G1 colours and G3 fills, computed
   const col = await p.evaluate(() => {
-    const ok = ['none', 'rgb(251, 251, 252)', 'rgb(21, 23, 28)', 'rgb(92, 99, 112)', 'rgb(187, 190, 196)', 'rgb(218, 221, 227)', 'rgb(200, 50, 31)'], RED = 'rgb(200, 50, 31)';
+    const ok = ['none', 'rgb(251, 251, 252)', 'rgb(21, 23, 28)', 'rgb(92, 99, 112)', 'rgb(142, 146, 154)', 'rgb(236, 238, 241)', 'rgb(200, 50, 31)'], RED = 'rgb(200, 50, 31)';
     const bad = [], redGroups = new Set(), fills = [];
     for (const e of document.querySelectorAll('#page *')) {
       if (e.closest('mask, clipPath') || ['g', 'mask', 'clipPath', 'image', 'tspan'].includes(e.tagName)) continue;
@@ -75,7 +75,7 @@ for (let i = 1; i <= NPAGES; i++) {
         for (let s = 0; s <= L; s += Math.max(0.5, L / 400)) { const q = e.getPointAtLength(s); best = Math.min(best, Math.hypot(m.a * q.x + m.c * q.y + m.e - d0[0], m.b * q.x + m.d * q.y + m.f - d0[1])); }
       }
       out.lead.push({ id: g.dataset.anchor, target: id, d: +best.toFixed(1) });
-      if (!['ruler', 'plane', 'planex', 'panel', 'flatruler'].includes(T.dataset.kind)) {
+      if (!['ruler', 'plane', 'planex', 'panel', 'flatruler', 'bar'].includes(T.dataset.kind)) {
         const b = T.getBBox(), c = [b.x + b.width / 2, b.y + b.height / 2]; // map units
         const mask = document.querySelector('#route').getAttribute('mask');
         const holes = [...document.querySelectorAll(mask.slice(4, -1) + ' path')].map((h) => { const n = h.getAttribute('d').match(/-?[0-9.]+(e-?[0-9]+)?/g).map(Number), xs = n.filter((_, i) => i % 2 === 0), ys = n.filter((_, i) => i % 2); return { x: Math.min(...xs), r: Math.max(...xs), y: Math.min(...ys), b: Math.max(...ys) }; });
@@ -89,7 +89,8 @@ for (let i = 1; i <= NPAGES; i++) {
   for (const x of geo.lead) lead.push({ page: i, ...x, pass: x.d <= 12 });
   for (const x of geo.base) baseRows.push({ page: i, ...x, pass: x.spread <= 2 });
   for (const x of geo.focus) focus.push({ page: i, ...x });
-  g1.push({ page: i, red: col.red.join(' '), bad: col.bad.join('; '), pass: !col.bad.length && col.red.length <= 1 });
+  const red = col.red.filter((x) => x !== 'locator'); // the locator's red route is navigation, not the frame's red thing
+  g1.push({ page: i, red: red.join(' '), bad: col.bad.join('; '), pass: !col.bad.length && red.length <= 1 });
   g3.push({ page: i, fills: col.fills.join('; '), pass: !col.fills.length });
   for (const s of m.strokes) g2.push({ page: i, ...s, pass: Math.abs(s.w - TOK[s.role]) <= TOL && s.ns === 'non-scaling-stroke' });
   for (const t of m.texts) {
@@ -140,7 +141,7 @@ for (const [role, list] of Object.entries(sizes)) {
 }
 
 await p.setViewport({ width: 2040, height: 900 });
-await p.goto(`${base}board/backups.html`, { waitUntil: 'networkidle0' });
+await p.goto(`${base}board/grid.html?set=backups`, { waitUntil: 'networkidle0' });
 await new Promise((r) => setTimeout(r, 1500));
 await p.screenshot({ path: join(OUT, 'board-backups.png'), fullPage: true });
 // main grid last (NOGRID=1 skips it while a review reads the current one)
@@ -169,7 +170,7 @@ const table = ['| Gate | Passed | Result |', '| --- | --- | --- |',
   row('G1 colours (tokens only; red on ≤ 1 group per frame)', g1, (x) => `p${x.page} red=[${x.red}] ${x.bad}`),
   row('G3 fills (paper only, except text and dots)', g3, (x) => `p${x.page} ${x.fills}`),
   row('G2 stroke weight', g2, (x) => `p${x.page} ${x.role} ${x.w}`),
-  row('G5 type floor (main 32, mono 28, sources/locator 24)', g5, (x) => `p${x.page} ${x.anchor}/${x.role} ${x.px}px`),
+  row('G5 type floor (labels 44, qualifiers 30, captions 32)', g5, (x) => `p${x.page} ${x.anchor}/${x.role} ${x.px}px`),
   row('G22 label size constant (pages + hops at t .25/.5/.75)', g22, (x) => `${x.role} ${x.min}–${x.max}`),
   row('G24 map edge (cameras + panels)', g24, (x) => x.id),
   row('Keep-inside (text in 5% safe area)', keep, (x) => `p${x.page} ${x.anchor} "${x.s}"`),

@@ -1,8 +1,15 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><title>v3.1 board: grid</title>
 <style>body{margin:0;background:#FBFBFC;font:500 24px 'Libre Franklin',sans-serif;color:#15171C}#root{display:grid;grid-template-columns:repeat(3,640px);gap:24px;padding:24px}
 .f{width:640px;height:360px;overflow:hidden;outline:1px solid #DADDE3}iframe{width:1920px;height:1080px;border:0;transform:scale(.3333);transform-origin:0 0}</style></head>
-<body><div id="root"></div><script>
-// Thin page over the real player: final frame of every beat, 3 x 3.
-const route = new URLSearchParams(location.search).get('route') || 'chevron';
-for (let i = 1; i <= 9; i++) document.getElementById('root').insertAdjacentHTML('beforeend', `<div><div class="f"><iframe src="../index.html?print=1&page=${i}&route=${route}"></iframe></div>page ${i}, beat ${i - 1}</div>`);
+<body><div id="root"></div><script type="module">
+// Thin page over the real player. ?set=main (default): the last build of every beat, 3 × 3;
+// ?set=backups: the backup pages. Page numbers come from pages.json.
+const q = new URLSearchParams(location.search), route = q.get('route') || 'chevron', set = q.get('set') || 'main';
+const P = await (await fetch('../pages.json')).json();
+const main = [...new Map(P.pages.map((p, i) => [p.beat, i]).filter(([b]) => typeof b === 'number')).values()];
+const backups = P.pages.map((p, i) => [p.beat, i]).filter(([b]) => typeof b === 'string').map(([, i]) => i);
+for (const i of set === 'main' ? main : backups) {
+  const b = P.pages[i].beat, label = typeof b === 'number' ? 'beat ' + b : 'backup ' + b;
+  document.getElementById('root').insertAdjacentHTML('beforeend', `<div><div class="f"><iframe src="../index.html?print=1&page=${i + 1}&route=${route}"></iframe></div>page ${i + 1}, ${label}</div>`);
+}
 </script></body></html>

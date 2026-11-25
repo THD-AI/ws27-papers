@@ -123,7 +123,7 @@ Camera: BC → CD-frame · speaker B · STORY target 128 s · handover from the 
 
 > Here three checks fire. We give every storing qubit a 5% chance of an error, far more than a real chip has, so the effect is easy to count. Which errors made these three checks fire?
 
-### 4.3 · speaker B · 31.2 s (46 words, 1 click, pause 10 s: the room votes (open Q3: aloud or a volunteer))
+### 4.3 · speaker B · 31.2 s (46 words, 1 click, pause 15–20 s: the room votes (open Q3: aloud or a volunteer; length to confirm at rehearsal))
 
 *On screen:* The two candidate answers, side by side (red)
 
