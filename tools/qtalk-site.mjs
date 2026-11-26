@@ -46,7 +46,7 @@ await page.evaluate(() => document.fonts.ready);
 const raw = await page.evaluate(() => [...document.querySelectorAll('.s')].map((el) => ({
   id: el.id, svg: el.innerHTML,
   // the page's title: its big serif lines, in order
-  title: [...el.querySelectorAll('text')].filter((t) => parseFloat(t.getAttribute('font-size') || getComputedStyle(t).fontSize) >= 60 && /Newsreader|serif/.test(t.getAttribute('font-family') || getComputedStyle(t).fontFamily) && !/Mono/.test(t.getAttribute('font-family') || getComputedStyle(t).fontFamily)).map((t) => t.textContent).join(' '),
+  title: [...el.querySelectorAll('text')].filter((t) => parseFloat(t.getAttribute('font-size') || getComputedStyle(t).fontSize) >= 60 && /Newsreader|serif/.test(t.getAttribute('font-family') || getComputedStyle(t).fontFamily) && !/Mono/.test(t.getAttribute('font-family') || getComputedStyle(t).fontFamily) && (t.getAttribute('font-style') || getComputedStyle(t).fontStyle) !== 'italic').map((t) => t.textContent).join(' '),
 })));
 await browser.close();
 server.close();

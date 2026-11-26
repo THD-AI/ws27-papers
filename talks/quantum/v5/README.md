@@ -16,12 +16,11 @@ read.png     the drawing on page 17
 ## Look, present, publish
 
 - **Look at every page:** serve the repository root (`node tools/serve.mjs`) and open `talks/quantum/v5/index.html`. All pages are drawn one under the other.
-- **Present:** `node tools/qtalk-site.mjs` writes `.shots/deck/quantum-v5/quantum-talk.html`: the player (`player.html`) with every page, the drawings and the fonts embedded, no network needed.
-  - The slide fills the screen with nothing over it. A control bar comes up with the pointer and goes after two seconds; a thin line at the bottom shows how far the talk is.
-  - Right, Space, a click or a swipe: next. Left: back. Home and End. A number and Enter: that page. B: black screen.
-  - G: every page, the backups apart; click one to go there. From a backup, Esc (or the button in the bar) goes back to the page you left.
-  - P: presenter view (this page, the next, a clock against 15 minutes, the notes). W: the same in its own window for the laptop screen, kept in step with the projector window.
-  - F: full screen. ?: the keys. Ctrl+P: every page, one per sheet.
+- **Present:** `node tools/qtalk-site.mjs` writes `.shots/deck/quantum-v5/quantum-talk.html`: the player (`player.html`) with every page, the drawings and the fonts embedded, no network needed. It is the Renovate talk's player, with the same keys:
+  - Right, Space, Enter, a click or the mouse wheel: next. Left or Backspace: back. Home and End. G: go to a page. N: notes. F: full screen (the notes hide).
+  - The wheel matters for a remote: the Flipper's Slides page (duckwalk) scrolls the wheel; it sends no arrow keys. One notch is one page.
+  - P: presenter mode. This window becomes the presenter's (the page now, the next one, a clock against 15:00, the notes, buttons) and a second window opens with the slide alone. Drag that one to the projector and press F there. Both windows move together, whichever one gets the key, click or scroll.
+  - Ctrl+P: every page, one per sheet.
 - **Publish:** after `node lib/build.mjs`, run `node tools/qtalk-site.mjs --site`. It writes the same file as `dist/other-half/talk/index.html`. Then deploy `dist/` to `gh-pages` as the main README says.
 
 ## The drawings
