@@ -5,6 +5,7 @@ The 15-minute group talk "The other half of a quantum computer", Quantum Computi
 ## Files
 
 ```
+player.html  the player the build pours the pages into
 index.html   the source: every page drawn in code at 1920 × 1080 from the article's
              own figure code (lib/fig.js, articles/other-half/figures/) and data
 notes.md     what is said on each page, and the field's word for it, said once
@@ -15,7 +16,12 @@ read.png     the drawing on page 17
 ## Look, present, publish
 
 - **Look at every page:** serve the repository root (`node tools/serve.mjs`) and open `talks/quantum/v5/index.html`. All pages are drawn one under the other.
-- **Present:** `node tools/qtalk-site.mjs` writes `.shots/deck/quantum-v5/quantum-talk.html`, one file with the drawings and fonts embedded. Right, Space or a click: next. Left: back. Home and End. N: speaker notes. F: full screen. Ctrl+P prints every page, one per sheet.
+- **Present:** `node tools/qtalk-site.mjs` writes `.shots/deck/quantum-v5/quantum-talk.html`: the player (`player.html`) with every page, the drawings and the fonts embedded, no network needed.
+  - The slide fills the screen with nothing over it. A control bar comes up with the pointer and goes after two seconds; a thin line at the bottom shows how far the talk is.
+  - Right, Space, a click or a swipe: next. Left: back. Home and End. A number and Enter: that page. B: black screen.
+  - G: every page, the backups apart; click one to go there. From a backup, Esc (or the button in the bar) goes back to the page you left.
+  - P: presenter view (this page, the next, a clock against 15 minutes, the notes). W: the same in its own window for the laptop screen, kept in step with the projector window.
+  - F: full screen. ?: the keys. Ctrl+P: every page, one per sheet.
 - **Publish:** after `node lib/build.mjs`, run `node tools/qtalk-site.mjs --site`. It writes the same file as `dist/other-half/talk/index.html`. Then deploy `dist/` to `gh-pages` as the main README says.
 
 ## The drawings

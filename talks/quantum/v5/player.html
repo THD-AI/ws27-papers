@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The other half of a quantum computer: the talk</title>
+<!-- The talk's player. tools/qtalk-site.mjs fills in the fonts and the pages. -->
+<style>
+/*__FONTS__*/
+:root {
+  --ink: #15171C; --paper: #FBFBFC; --muted: #4A505B; --soft: #8A909B; --hair: #DADDE3;
+  --accent: #4254C5; --field: #C9D3F7; --night: #0E0F12; --night2: #17191E; --night3: #23262D;
+  --sans: 'Libre Franklin', system-ui, sans-serif; --serif: 'Newsreader', Georgia, serif; --mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--night); color: var(--paper); font-family: var(--sans); overflow: hidden; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+a { color: inherit; }
+.slide { position: relative; background: var(--paper); overflow: hidden; }
+.slide svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.fit { aspect-ratio: 16 / 9; max-width: 100%; max-height: 100%; }
+
+/* ---------- the audience view: the slide, and nothing over it ---------- */
+#show { position: fixed; inset: 0; display: grid; place-items: center; }
+#show .slide { width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); }
+#show.idle { cursor: none; }
+#progress { position: fixed; left: 0; bottom: 0; height: 3px; background: var(--accent); transition: width .25s ease; z-index: 3; }
+#progress.backup { background: var(--soft); }
+
+/* the control bar: floats under the slide's edge, comes with the pointer, goes after two seconds */
+#bar { position: fixed; left: 50%; bottom: 18px; transform: translate(-50%, 0); display: flex; align-items: center; gap: 2px; padding: 6px; border-radius: 14px;
+  background: rgba(21, 23, 28, .86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 8px 30px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.06);
+  transition: opacity .3s ease, transform .3s ease; z-index: 4; user-select: none; }
+#bar.hide { opacity: 0; transform: translate(-50%, 12px); pointer-events: none; }
+#bar button { width: 40px; height: 40px; border-radius: 9px; display: grid; place-items: center; color: #D5D9E0; }
+#bar button:hover { background: rgba(255,255,255,.09); color: #fff; }
+#bar button:focus-visible { outline: 2px solid var(--field); outline-offset: -2px; }
+#bar svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+#bar .count { font-family: var(--mono); font-size: 14px; color: #D5D9E0; padding: 0 12px; min-width: 92px; text-align: center; letter-spacing: .02em; }
+#bar .sep { width: 1px; height: 22px; background: rgba(255,255,255,.12); margin: 0 6px; }
+#bar #back { display: none; font-size: 13px; padding: 0 12px !important; width: auto !important; white-space: nowrap; color: var(--field) !important; }
+#bar #back.on { display: grid; }
+#tip { position: fixed; left: 50%; bottom: 82px; transform: translateX(-50%); font-size: 12px; color: #C9CDD5; background: rgba(21,23,28,.9); padding: 5px 9px; border-radius: 6px; pointer-events: none; opacity: 0; transition: opacity .15s; z-index: 5; white-space: nowrap; }
+#goto { position: fixed; right: 24px; top: 20px; font-family: var(--mono); font-size: 22px; background: rgba(21,23,28,.9); padding: 8px 14px; border-radius: 10px; display: none; z-index: 5; }
+
+/* ---------- the overview: every page, the backups apart ---------- */
+#over { position: fixed; inset: 0; background: var(--paper); color: var(--ink); overflow: auto; z-index: 6; display: none; }
+#over.on { display: block; }
+#over header { position: sticky; top: 0; background: rgba(251,251,252,.94); backdrop-filter: blur(10px); padding: 26px 48px 18px; display: flex; align-items: baseline; gap: 24px; border-bottom: 1px solid var(--hair); z-index: 1; }
+#over h1 { font-family: var(--serif); font-weight: 500; font-size: 30px; margin: 0; letter-spacing: -.01em; }
+#over header .sub { color: var(--muted); font-size: 15px; }
+#over header .x { margin-left: auto; font-size: 14px; color: var(--muted); border: 1px solid var(--hair); border-radius: 8px; padding: 6px 12px; }
+#over header .x:hover { color: var(--ink); border-color: var(--soft); }
+#over h2 { font-family: var(--sans); font-weight: 600; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 34px 48px 14px; }
+#over .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 26px 22px; padding: 0 48px; }
+#over .card { text-align: left; }
+#over .card .slide { width: 100%; aspect-ratio: 16 / 9; border-radius: 6px; box-shadow: 0 0 0 1px var(--hair); transition: box-shadow .15s, transform .15s; }
+#over .card:hover .slide { box-shadow: 0 0 0 1px var(--soft), 0 10px 24px rgba(21,23,28,.12); transform: translateY(-2px); }
+#over .card.cur .slide { box-shadow: 0 0 0 3px var(--accent); }
+#over .card .lab { display: flex; gap: 10px; margin-top: 9px; font-size: 14px; color: var(--muted); }
+#over .card .lab b { font-family: var(--mono); font-weight: 500; color: var(--ink); }
+#over .card .lab span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#over footer { margin: 48px 48px 40px; padding-top: 18px; border-top: 1px solid var(--hair); display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; font-size: 14px; color: var(--muted); line-height: 1.6; }
+#over footer kbd, #help kbd { font-family: var(--mono); font-size: 12px; border: 1px solid var(--hair); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; color: var(--ink); background: #fff; }
+#over footer dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; }
+#over footer dt { white-space: nowrap; }
+#over footer dd { margin: 0; }
+
+/* ---------- the presenter view: this slide, the next, the time, the words ---------- */
+#pres { position: fixed; inset: 0; background: var(--night); display: none; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) 28vh; gap: 22px; padding: 22px; z-index: 2; }
+#pres.on { display: grid; }
+#pres .now { display: grid; place-items: center; min-height: 0; }
+#pres .now .slide { width: min(100%, calc((72vh - 66px) * 16 / 9)); border-radius: 6px; }
+#pres .side { display: flex; flex-direction: column; gap: 18px; min-height: 0; }
+#pres .k { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--soft); margin-bottom: 8px; }
+#pres .next .slide { width: 100%; border-radius: 6px; opacity: .92; }
+#pres .next .end { aspect-ratio: 16/9; border: 1px dashed var(--night3); border-radius: 6px; display: grid; place-items: center; color: var(--soft); font-size: 15px; }
+#pres .clock { display: flex; align-items: baseline; gap: 18px; }
+#pres .clock .t { font-family: var(--mono); font-size: 56px; font-weight: 500; letter-spacing: -.02em; color: var(--paper); line-height: 1; }
+#pres .clock .t.late { color: #E0896B; }
+#pres .clock .of { font-family: var(--mono); color: var(--soft); font-size: 18px; }
+#pres .clock button { margin-left: auto; font-size: 13px; color: var(--soft); border: 1px solid var(--night3); border-radius: 8px; padding: 6px 10px; }
+#pres .clock button:hover { color: var(--paper); border-color: var(--soft); }
+#pres .meta { display: flex; gap: 18px; font-family: var(--mono); font-size: 15px; color: var(--soft); }
+#pres .meta b { color: var(--paper); font-weight: 500; }
+#pres .words { grid-column: 1 / -1; background: var(--night2); border-radius: 10px; padding: 20px 26px 84px; overflow: auto; }
+#pres .say { font-size: clamp(20px, 2.1vw, 30px); line-height: 1.45; color: #EEF0F3; margin: 0; max-width: 72ch; }
+#pres .term { margin-top: 10px; font-family: var(--serif); font-style: italic; font-size: clamp(18px, 1.6vw, 24px); color: var(--field); }
+#pres .none { color: var(--soft); font-style: italic; }
+
+/* ---------- help ---------- */
+#help { position: fixed; inset: 0; background: rgba(14,15,18,.6); display: none; place-items: center; z-index: 7; }
+#help.on { display: grid; }
+#help .box { background: var(--paper); color: var(--ink); border-radius: 14px; padding: 28px 34px; width: min(560px, 92vw); box-shadow: 0 20px 60px rgba(0,0,0,.4); }
+#help h3 { font-family: var(--serif); font-weight: 500; font-size: 24px; margin: 0 0 16px; }
+#help dl { display: grid; grid-template-columns: 150px 1fr; gap: 9px 16px; margin: 0; font-size: 15px; }
+#help dt { text-align: right; }
+#help dd { margin: 0; color: var(--muted); }
+
+/* ---------- print: every page, one per sheet ---------- */
+#print { display: none; }
+@page { size: 13.333in 7.5in; margin: 0; }
+@media print {
+  html, body { background: #fff; height: auto; overflow: visible; }
+  body > *:not(#print) { display: none !important; }
+  #print { display: block; }
+  #print .slide { width: 13.333in; height: 7.5in; break-after: page; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main id="show" aria-live="polite"><div class="slide" id="cur" role="img"></div></main>
+<div id="progress"></div>
+<nav id="bar" aria-label="Talk controls">
+  <button id="b-prev" data-tip="Back  ←"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <span class="count" id="count"></span>
+  <button id="b-next" data-tip="Next  →  Space"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  <button id="back" data-tip="Back to the talk  Esc"></button>
+  <span class="sep"></span>
+  <button id="b-over" data-tip="All pages  G"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="7" height="6" rx="1"/><rect x="13.5" y="4.5" width="7" height="6" rx="1"/><rect x="3.5" y="13.5" width="7" height="6" rx="1"/><rect x="13.5" y="13.5" width="7" height="6" rx="1"/></svg></button>
+  <button id="b-pres" data-tip="Presenter view  P"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M7 20h10M12 16v4"/></svg></button>
+  <button id="b-win" data-tip="Presenter window, for a second screen  W"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="10" rx="1.5"/><path d="M8 3h13v10"/></svg></button>
+  <button id="b-full" data-tip="Full screen  F"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <button id="b-help" data-tip="Keys  ?"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.3 2.4c-.6.3-.9.8-.9 1.5v.4"/><path d="M12 17h.01"/></svg></button>
+</nav>
+<div id="tip"></div>
+<div id="goto"></div>
+
+<section id="pres" aria-label="Presenter view">
+  <div class="now"><div class="slide fit" id="p-cur"></div></div>
+  <div class="side">
+    <div class="next"><div class="k">Next</div><div id="p-next"></div></div>
+    <div><div class="k">Time</div><div class="clock"><span class="t" id="p-time">0:00</span><span class="of">of 15:00</span><button id="p-reset">restart</button></div></div>
+    <div class="meta"><span>page <b id="p-n"></b></span><span>now <b id="p-clock"></b></span></div>
+  </div>
+  <div class="words"><p class="say" id="p-say"></p><div class="term" id="p-term"></div></div>
+</section>
+
+<section id="over" aria-label="All pages">
+  <header><h1>The other half of a quantum computer</h1><span class="sub">The talk · Quantum Computing seminar, TH Deggendorf · 9 January 2027</span><button class="x" id="o-close">Back to page <span id="o-cur"></span> · Esc</button></header>
+  <h2>The talk</h2><div class="grid" id="o-main"></div>
+  <h2>Backups, for questions</h2><div class="grid" id="o-back"></div>
+  <footer>
+    <div>
+      <p style="margin-top:0">Every figure and number is from the article, <a href="../">The other half of a quantum computer</a>, where each one is explained and sourced.</p>
+      <p>The drawings on pages 1, 10 and 17 are after a photograph by Lars Ploughman, “IBM Q at CES”, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>.</p>
+    </div>
+    <dl>
+      <dt><kbd>→</kbd> <kbd>Space</kbd> click</dt><dd>next page</dd>
+      <dt><kbd>←</kbd></dt><dd>back</dd>
+      <dt><kbd>P</kbd> / <kbd>W</kbd></dt><dd>presenter view, here or in a second window</dd>
+      <dt><kbd>F</kbd></dt><dd>full screen</dd>
+      <dt><kbd>Ctrl</kbd> <kbd>P</kbd></dt><dd>print every page, one per sheet</dd>
+    </dl>
+  </footer>
+</section>
+
+<div id="help" role="dialog" aria-label="Keys"><div class="box">
+  <h3>Keys</h3>
+  <dl>
+    <dt><kbd>→</kbd> <kbd>Space</kbd> click</dt><dd>next page</dd>
+    <dt><kbd>←</kbd></dt><dd>back</dd>
+    <dt><kbd>Home</kbd> <kbd>End</kbd></dt><dd>first page, last page of the talk</dd>
+    <dt>number <kbd>Enter</kbd></dt><dd>go to that page</dd>
+    <dt><kbd>G</kbd></dt><dd>all pages, and the backups</dd>
+    <dt><kbd>Esc</kbd></dt><dd>from a backup, back to where you were</dd>
+    <dt><kbd>P</kbd></dt><dd>presenter view: this page, the next, the time, the words</dd>
+    <dt><kbd>W</kbd></dt><dd>presenter view in its own window, for the laptop screen</dd>
+    <dt><kbd>F</kbd></dt><dd>full screen</dd>
+    <dt><kbd>B</kbd></dt><dd>black screen</dd>
+    <dt><kbd>Ctrl</kbd> <kbd>P</kbd></dt><dd>print every page</dd>
+  </dl>
+</div></div>
+<div id="print"></div>
+
+<script>
+var DATA = /*__DATA__*/null;
+var PAGES = DATA.pages, SVG = DATA.svgs, MAIN = PAGES.filter(function (p) { return !p.backup; }).length;
+
+// the drawings: one blob each, shared by every page that shows them
+var URLS = {};
+Object.keys(DATA.images).forEach(function (k) {
+  var b = atob(DATA.images[k].split(',')[1]), a = new Uint8Array(b.length);
+  for (var j = 0; j < b.length; j++) a[j] = b.charCodeAt(j);
+  URLS[k] = URL.createObjectURL(new Blob([a], { type: 'image/png' }));
+});
+function art(i) { return SVG[i].replace(/href="([a-z]+\.png)"/g, function (m, f) { return URLS[f] ? 'href="' + URLS[f] + '"' : m; }); }
+function $(id) { return document.getElementById(id); }
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+var role = /[?&]presenter\b/.test(location.search) ? 'presenter' : 'show';
+var i = 0, ret = null, peer = null, black = false;
+var h = parseInt(location.hash.slice(1), 10); if (h >= 1 && h <= MAIN) i = h - 1;
+var hb = location.hash.match(/^#b(\d)$/); if (hb) i = MAIN + (+hb[1]) - 1;
+
+// ---- moving through the talk
+function nextOf(k) { return PAGES[k].backup ? Math.min(k + 1, PAGES.length - 1) : Math.min(k + 1, MAIN - 1); }
+function prevOf(k) { return PAGES[k].backup ? Math.max(k - 1, MAIN) : Math.max(k - 1, 0); }
+function go(k, quiet) {
+  if (k === i && !quiet) return;
+  if (PAGES[k].backup && !PAGES[i].backup) ret = i;
+  if (!PAGES[k].backup) ret = null;
+  i = k; render();
+  if (!quiet) send({ go: i, ret: ret });
+  if (i > 0) startClock();
+}
+function render() {
+  var p = PAGES[i];
+  $('cur').innerHTML = black ? '' : art(i);
+  $('cur').style.background = black ? '#000' : '';
+  $('cur').setAttribute('aria-label', p.label);
+  $('count').textContent = p.backup ? p.label : (i + 1) + ' / ' + MAIN;
+  $('progress').style.width = (p.backup ? 100 : (i + 1) / MAIN * 100) + '%';
+  $('progress').classList.toggle('backup', p.backup);
+  var b = $('back'); b.classList.toggle('on', ret !== null); if (ret !== null) b.textContent = '← page ' + (ret + 1);
+  history.replaceState(null, '', location.search + '#' + (p.backup ? 'b' + p.id.slice(1) : i + 1));
+  document.title = (p.backup ? p.label : (i + 1) + ' / ' + MAIN) + ' · The other half of a quantum computer';
+  if ($('pres').classList.contains('on')) renderPres();
+  if ($('over').classList.contains('on')) markOver();
+}
+
+// ---- presenter view
+function renderPres() {
+  var p = PAGES[i], n = nextOf(i);
+  $('p-cur').innerHTML = art(i);
+  $('p-next').innerHTML = n === i ? '<div class="end">' + (p.backup ? 'last backup' : 'end of the talk') + '</div>' : '<div class="slide fit">' + art(n) + '</div>';
+  $('p-n').textContent = p.backup ? p.label : (i + 1) + ' / ' + MAIN;
+  $('p-say').innerHTML = p.say ? esc(p.say) : '<span class="none">' + (p.backup ? 'A backup: show it only for the question it answers.' : 'No notes for this page.') + '</span>';
+  $('p-term').textContent = p.term ? 'The field’s word: ' + p.term : '';
+}
+function presenter(on) { $('pres').classList.toggle('on', on); if (on) renderPres(); wake(); }
+
+// ---- the clock: starts on the first move off the title page
+var t0 = null;
+function startClock() { if (t0 === null) { t0 = Date.now(); send({ t0: t0 }); } }
+function tick() {
+  var s = t0 === null ? 0 : Math.floor((Date.now() - t0) / 1000);
+  var el = $('p-time'); el.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  el.classList.toggle('late', s > 15 * 60);
+  var d = new Date(); $('p-clock').textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+}
+setInterval(tick, 500); tick();
+$('p-reset').onclick = function () { t0 = null; send({ t0: null }); tick(); };
+
+// ---- a second window for the presenter, kept in step with this one
+function send(msg) { try { if (peer && !peer.closed) peer.postMessage({ qtalk: msg }, '*'); } catch (e) {} }
+addEventListener('message', function (e) {
+  var m = e.data && e.data.qtalk; if (!m) return;
+  if (!peer) peer = e.source;
+  if ('go' in m) { ret = m.ret; i = m.go; render(); }
+  if ('t0' in m) { t0 = m.t0; tick(); }
+  if ('black' in m) { black = m.black; render(); }
+  if (m.hello) send({ go: i, ret: ret, t0: t0 });
+});
+function openPresenter() {
+  peer = open(location.pathname + '?presenter#' + (i + 1), 'qtalk-presenter', 'width=1280,height=800');
+  send({ go: i, ret: ret, t0: t0 });
+}
+if (role === 'presenter') {
+  peer = window.opener; presenter(true);
+  document.body.classList.add('presenter-window');
+  send({ hello: true });
+}
+
+// ---- overview
+function buildOver() {
+  if ($('o-main').childElementCount) return;
+  PAGES.forEach(function (p, k) {
+    var c = document.createElement('button'); c.className = 'card'; c.dataset.k = k;
+    c.innerHTML = '<div class="slide">' + art(k) + '</div><div class="lab"><b>' + (p.backup ? 'B' + p.id.slice(1) : k + 1) + '</b><span>' + esc(p.title) + '</span></div>';
+    c.onclick = function () { over(false); go(k); };
+    $(p.backup ? 'o-back' : 'o-main').appendChild(c);
+  });
+}
+function markOver() {
+  document.querySelectorAll('#over .card').forEach(function (c) { c.classList.toggle('cur', +c.dataset.k === i); });
+  $('o-cur').textContent = PAGES[i].backup ? PAGES[i].label : i + 1;
+}
+function over(on) {
+  if (on) { buildOver(); markOver(); }
+  $('over').classList.toggle('on', on);
+  if (on) { var c = document.querySelector('#over .card.cur'); if (c) c.scrollIntoView({ block: 'center' }); }
+}
+$('o-close').onclick = function () { over(false); };
+
+// ---- the bar: shown while the pointer moves, gone after two seconds
+var idleT;
+function wake() {
+  $('bar').classList.remove('hide'); $('show').classList.remove('idle');
+  clearTimeout(idleT);
+  idleT = setTimeout(function () { if (!$('bar').matches(':hover')) { $('bar').classList.add('hide'); $('show').classList.add('idle'); $('tip').style.opacity = 0; } }, 2000);
+}
+addEventListener('mousemove', wake);
+document.querySelectorAll('#bar button').forEach(function (b) {
+  b.addEventListener('mouseenter', function () { var t = $('tip'); t.textContent = b.dataset.tip; var r = b.getBoundingClientRect(); t.style.left = (r.left + r.width / 2) + 'px'; t.style.opacity = 1; });
+  b.addEventListener('mouseleave', function () { $('tip').style.opacity = 0; });
+});
+$('b-prev').onclick = function () { go(prevOf(i)); };
+$('b-next').onclick = function () { go(nextOf(i)); };
+$('back').onclick = function () { if (ret !== null) go(ret); };
+$('b-over').onclick = function () { over(true); };
+$('b-pres').onclick = function () { presenter(!$('pres').classList.contains('on')); };
+$('b-win').onclick = openPresenter;
+$('b-full').onclick = full;
+$('b-help').onclick = function () { $('help').classList.add('on'); };
+$('help').onclick = function () { $('help').classList.remove('on'); };
+$('cur').addEventListener('click', function () { go(nextOf(i)); });
+function full() { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(function () {}); }
+
+// ---- swipes on a touch screen
+var tx = null;
+addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+addEventListener('touchend', function (e) { if (tx === null) return; var dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) go(dx < 0 ? nextOf(i) : prevOf(i)); tx = null; });
+
+// ---- keys
+var typed = '', typedT;
+addEventListener('keydown', function (e) {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  var k = e.key, overOn = $('over').classList.contains('on');
+  if ($('help').classList.contains('on')) { $('help').classList.remove('on'); e.preventDefault(); return; }
+  if (/^[0-9]$/.test(k)) {
+    typed += k; $('goto').textContent = 'page ' + typed; $('goto').style.display = 'block';
+    clearTimeout(typedT); typedT = setTimeout(function () { typed = ''; $('goto').style.display = 'none'; }, 1800); return;
+  }
+  if (k === 'Enter' && typed) { var n = +typed; typed = ''; $('goto').style.display = 'none'; if (n >= 1 && n <= MAIN) go(n - 1); e.preventDefault(); return; }
+  if (k === 'Escape') { if (overOn) over(false); else if (ret !== null) go(ret); else if ($('pres').classList.contains('on') && role !== 'presenter') presenter(false); return; }
+  if (overOn) { if (k === 'g' || k === 'G') over(false); return; }
+  if (k === 'ArrowRight' || k === ' ' || k === 'PageDown' || k === 'ArrowDown') { e.preventDefault(); go(nextOf(i)); }
+  else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'ArrowUp') { e.preventDefault(); go(prevOf(i)); }
+  else if (k === 'Home') go(0);
+  else if (k === 'End') go(MAIN - 1);
+  else if (k === 'g' || k === 'G') over(true);
+  else if ((k === 'p' || k === 'P') && role !== 'presenter') presenter(!$('pres').classList.contains('on'));
+  else if (k === 'w' || k === 'W') openPresenter();
+  else if (k === 'f' || k === 'F') full();
+  else if (k === 'b' || k === 'B' || k === '.') { black = !black; render(); send({ black: black }); }
+  else if (k === '?' || k === 'h' || k === 'H') $('help').classList.add('on');
+});
+
+addEventListener('beforeprint', function () {
+  if (!$('print').childElementCount) $('print').innerHTML = PAGES.map(function (p, k) { return '<div class="slide">' + art(k) + '</div>'; }).join('');
+});
+render(); wake();
+</script>
+</body>
+</html>
