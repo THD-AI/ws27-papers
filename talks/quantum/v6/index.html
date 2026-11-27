@@ -22,8 +22,8 @@ body{margin:0;background:#888}
 // - one code: a frame is a film frame, an error a black disc with its letter,
 //   the decoder's guess a blue ring with its letter, a fired check an amber
 //   outline with a dot;
-// - the spine along the foot: chip, film of frames, reader; the part the page
-//   is about is lit and named at the bottom left.
+// - the section: which part of the machine the page is about (the chip, the
+//   hints, the reader), named beside the page number, as the Renovate talk does.
 const L = new URL('../../../', location.href).href; // the repository root, served
 const F = await import(L + 'lib/fig.js');
 const S = await import(L + 'articles/other-half/figures/shared.js');
@@ -43,7 +43,7 @@ const TW = 500, PEN = 3;
 const SUB = { size: 36, family: 'sans', fill: MUTED };
 const LAB = { size: 32, family: 'sans', fill: INK };
 const CAP = { size: 28, family: 'sans', fill: MUTED };
-const BIG = { family: 'mono', weight: 500 };
+const BIG = { family: 'sans', weight: 500 };
 const PENCIL = { stroke: '#2E2C27', 'stroke-width': 2.6, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' };
 const arrow = (svg, x1, y1, x2, y2, col = INK, w = 3) => {
   path(svg, `M${x1} ${y1}L${x2} ${y2}`, { stroke: col, 'stroke-width': w, 'stroke-linecap': 'round' });
@@ -83,14 +83,12 @@ function frame(svg, x, y, w, h, o = {}) {
 const DIM = '#A9AEB7';
 const SEG = { chip: [80, 640, INK, 'the chip'], film: [660, 1260, AMBER, 'the hints'], reader: [1280, 1840, BLUE, 'the reader'] };
 function spine(svg, where) {
-  const W = [].concat(where || []), y = 986;
-  line(svg, 110, y, 1810, y, { stroke: DIM, 'stroke-width': 2 });
-  for (let i = 0; i < 9; i++) circle(svg, 86 + (i % 3) * 7, y - 7 + Math.floor(i / 3) * 7, 2.2, { fill: W.includes('chip') ? INK : DIM });
-  rect(svg, 1812, y - 9, 28, 18, { rx: 3, fill: PAPER, stroke: W.includes('reader') ? BLUE : DIM, 'stroke-width': 2 });
-  for (const k of W) {
-    const [x1, x2, col, name] = SEG[k];
-    line(svg, x1 + (k === 'chip' ? 34 : 0), y, x2 - (k === 'reader' ? 40 : 0), y, { stroke: col, 'stroke-width': 6, 'stroke-linecap': 'round' });
-    T(svg, k === 'reader' ? x2 : x1, y - 18, name, { family: 'mono', size: 20, weight: 500, fill: col, anchor: k === 'reader' ? 'end' : 'start' });
+  const W = [].concat(where || []);
+  let x = 1740;
+  for (const k of W.slice().reverse()) {
+    const [, , col, name] = SEG[k];
+    T(svg, x, 1054, name, { family: 'sans', size: 20, weight: 600, fill: col === INK ? MUTED : col, anchor: 'end' });
+    x -= name.length * 10.5 + 34;
   }
 }
 function slide(id, title, n, foot, where, o = {}) {
@@ -142,10 +140,10 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
   line(svg, 900, 280, 900, 880, { stroke: RULE, 'stroke-width': 2 });
   // right: the errors, halving with each bigger grid
   T(svg, 1000, 300, 'underneath: each bigger grid halved the errors', { ...LAB, size: 32, weight: 500 });
-  const base = 820, k = 0.62, xs = [1090, 1380, 1670], bw = 170;
+  const base = 820, k = 0.56, xs = [1090, 1380, 1670], bw = 170;
   [[17, 712], [49, 349], [97, 171]].forEach(([q, e], i) => {
     const h = e * k;
-    rect(svg, xs[i] - bw / 2, base - h, bw, h, { fill: INK });
+    rect(svg, xs[i] - bw / 2, base - h, bw, h, { fill: '#D3D7DE', stroke: INK, 'stroke-width': 2.5 });
     T(svg, xs[i], base - h - 22, String(e), { ...BIG, size: 56, anchor: 'middle' });
     T(svg, xs[i], base + 44, `${q} qubits`, { ...LAB, anchor: 'middle' });
   });
@@ -172,7 +170,7 @@ build('m1', 4, (pid, st) => {
   if (st >= 3) {
     arrow(svg, 1160, cy, 1240, cy);
     rect(svg, 1260, cy - 110, 330, 220, { rx: 14, fill: BLUE_T, stroke: BLUE, 'stroke-width': 4 });
-    for (let i = 0; i < 6; i++) circle(svg, 1310 + i * 26, cy + 70, 6, { fill: BLUE });
+    for (let i = 0; i < 6; i++) circle(svg, 1360 + i * 26, cy + 70, 6, { fill: BLUE });
     T(svg, 1425, cy - 8, 'decoder', { size: 44, family: 'sans', weight: 600, anchor: 'middle', fill: BLUE });
     T(svg, 1425, 760, 'the reader', { ...LAB, size: 40, weight: 500, anchor: 'middle', fill: BLUE });
     T(svg, 1425, 806, 'an ordinary computer', { ...CAP, anchor: 'middle' });
@@ -191,16 +189,16 @@ build('m1', 4, (pid, st) => {
 // ---------------- 4: the same recordings, two readers (pair; builds matching, then the network)
 build('p3', 2, (pid, st) => {
   const svg = slide(pid, 'Same recordings, a second reader', 4, 'Nature 638 (2025) · network: Bausch et al., Nature 635 (2024)', 'reader');
-  const y0 = 250, fh = 70, fw = 56;
-  for (let x = 240, i = 0; x + fw <= 1680; x += fw + 6, i++) { const lit = (i * 5) % 3 === 0; frame(svg, x, y0, fw, fh, lit ? { dot: AMBER, sw: 2, stroke: AMBER, fill: AMBER_T } : { sw: 2 }); }
+  const y0 = 250, fh = 70;
+  for (let i = 0; i < 23; i++) { const fw = (1440 + 6) / 23 - 6, x = 240 + i * (fw + 6), lit = (i * 5) % 3 === 0; frame(svg, x, y0, fw, fh, lit ? { dot: AMBER, sw: 2, stroke: AMBER, fill: AMBER_T } : { sw: 2 }); }
   T(svg, 960, y0 - 22, 'the same recordings from Willow’s largest grid (97 qubits), read afterwards', { ...CAP, size: 30, anchor: 'middle' });
   const col = (cx, name, sub, nn, strong) => {
     arrow(svg, cx, y0 + fh + 12, cx, y0 + fh + 52);
     rect(svg, cx - 300, 380, 600, 110, { rx: 10, fill: strong ? BLUE_T : PAPER, stroke: BLUE, 'stroke-width': strong ? 4 : 2.5 });
     T(svg, cx, 446, name, { size: 40, family: 'sans', weight: 500, anchor: 'middle', fill: BLUE });
     T(svg, cx, 530, sub, { ...CAP, size: 30, anchor: 'middle' });
-    T(svg, cx, 760, String(nn), { ...BIG, size: 220, anchor: 'middle', fill: strong ? BLUE : (st === 1 ? INK : QUIET) });
-    if (strong) penRing(svg, cx, 690, 265, 130, { stroke: BLUE, width: PEN + 1, seed: 11, start: 0.6 });
+    T(svg, cx, 740, String(nn), { ...BIG, size: 150, anchor: 'middle', fill: strong ? BLUE : (st === 1 ? INK : QUIET) });
+    if (strong) penRing(svg, cx, 688, 190, 95, { stroke: BLUE, width: PEN + 1, seed: 11, start: 0.6 });
   };
   col(540, 'matching', 'Google’s best rule-based decoder', 171, false);
   if (st >= 2) col(1380, 'a neural network', 'trained, AlphaQubit’s design', 143, true);
@@ -213,19 +211,18 @@ build('p3', 2, (pid, st) => {
   const svg = slide('p4', 'Even good hardware slips a few times in a thousand', 5,
     'Nature 638 (2025), Table S4, 72-qubit chip · Gidney and Ekerå (2021)', 'chip',
     { sub: 'Google’s 72-qubit chip: a two-qubit gate slips about 3 times in 1,000.' });
-  const px = 15, x0 = 80, y0 = 330, cols = 40, slips = new Set([137, 512, 838]);
+  const px = 18, x0 = 80, y0 = 320, cols = 40, slips = new Set([137, 512, 838]);
   for (let i = 0; i < 1000; i++) {
     const x = x0 + (i % cols) * px, y = y0 + Math.floor(i / cols) * px, on = slips.has(i);
     rect(svg, x, y, px - 3, px - 3, { fill: on ? AMBER : '#D3D7DE' });
   }
-  for (const i of slips) { const x = x0 + (i % cols) * px + 6, y = y0 + Math.floor(i / cols) * px + 6; circle(svg, x, y, 17, { fill: 'none', stroke: AMBER, 'stroke-width': 3.5 }); }
+  for (const i of slips) { const x = x0 + (i % cols) * px + 6, y = y0 + Math.floor(i / cols) * px + 6; circle(svg, x + 1, y + 1, 21, { fill: 'none', stroke: AMBER, 'stroke-width': 4 }); }
   T(svg, x0, y0 + 25 * px + 56, '1,000 operations: 3 slips', { ...LAB, size: 36, weight: 500 });
-  arrow(svg, 720, 520, 860, 520);
-  T(svg, 900, 470, 'Breaking today’s encryption:', { ...LAB, size: 36 });
-  T(svg, 900, 560, '2–3 billion costly steps', { ...BIG, size: 58 });
-  T(svg, 900, 610, 'each of many operations', { ...CAP, size: 30 });
-  T(svg, 900, 790, 'millions of slips', { ...BIG, size: 88, fill: AMBER });
-  T(svg, 900, 850, 'at the very least. Without error correction, it never finishes.', { ...CAP, size: 30 });
+  arrow(svg, 840, 540, 940, 540);
+  T(svg, 980, 470, 'Breaking RSA-2048 encryption:', { ...LAB, size: 36 });
+  T(svg, 980, 556, '2–3 billion costly steps', { ...LAB, size: 52, weight: 500 });
+  T(svg, 980, 740, 'millions', { ...LAB, size: 64, weight: 600, fill: AMBER });
+  T(svg, 980, 792, 'of slips, at the very least.', { ...LAB, size: 36, weight: 500 });
 }
 
 // ---------------- 6: measuring, so the chip asks "same or different?" (pair)
@@ -246,7 +243,7 @@ build('p3', 2, (pid, st) => {
   const qa = 1180, qb = 1700;
   circle(svg, qa, my, 70, { fill: PAPER, stroke: INK, 'stroke-width': 4 });
   circle(svg, qb, my, 70, { fill: INK });
-  T(svg, qb, my + 14, 'flipped', { size: 30, family: 'sans', anchor: 'middle', fill: PAPER });
+  T(svg, qb, my + 10, 'flipped', { size: 24, family: 'sans', anchor: 'middle', fill: PAPER });
   line(svg, qa + 70, my, 1290, my, { stroke: AMBER, 'stroke-width': 4 }); line(svg, 1590, my, qb - 70, my, { stroke: AMBER, 'stroke-width': 4 });
   rect(svg, 1290, my - 80, 300, 160, { rx: 10, fill: AMBER_T, stroke: AMBER, 'stroke-width': 4 });
   circle(svg, 1440, my - 36, 13, { fill: AMBER });
@@ -259,16 +256,15 @@ build('p3', 2, (pid, st) => {
 {
   const svg = slide('p6', 'Two ways to go wrong: a flip, and a phase error', 7, '', 'chip',
     { sub: 'A qubit holds some 0, some 1, and a sign between them.' });
-  const F2 = { family: 'serif', size: 76, italic: true, fill: INK };
+  const F2 = { family: 'serif', size: 64, italic: true, fill: INK };
+  line(svg, 960, 280, 960, 880, { stroke: RULE, 'stroke-width': 2 });
   const card = (x, letter, name, before, after, checks) => {
-    rect(svg, x, 280, 820, 600, { rx: 12, fill: PAPER, stroke: INK, 'stroke-width': 2.5 });
     errMark(svg, x + 90, 370, 44, letter);
     T(svg, x + 160, 386, name, { ...LAB, size: 40, weight: 500 });
-    T(svg, x + 50, 610, before, F2);
-    arrow(svg, x + 375, 588, x + 445, 588);
-    T(svg, x + 470, 610, after, F2);
-    rect(svg, x + 50, 720, 76, 76, { fill: letter === 'X' ? '#D3D7DE' : PAPER, stroke: INK, 'stroke-width': 3 });
-    T(svg, x + 150, 770, checks, { ...LAB, size: 32 });
+    T(svg, x + 50, 606, before, F2);
+    arrow(svg, x + 340, 586, x + 410, 586);
+    T(svg, x + 440, 606, after, F2);
+    T(svg, x + 50, 770, checks, { ...LAB, size: 32 });
   };
   card(80, 'X', 'a flip: 0 and 1 swap', 'a·0 + b·1', 'a·1 + b·0', 'the flip checks see it');
   card(1020, 'Z', 'a phase error: the sign flips', 'a·0 + b·1', 'a·0 − b·1', 'the phase checks see it');
@@ -279,20 +275,17 @@ build('p3', 2, (pid, st) => {
   const svg = slide('p7', 'Bigger grids help, once qubits are good enough', 8, 'Nature 638 (2025) · threshold: Fowler et al. (2012)', 'chip',
     { sub: 'Under a threshold (about 1 slip in 100 per operation), bigger grids make fewer errors; above it, more.' });
   const pitch = 54, base = 650;
-  [[3, 17, 712, 330], [5, 49, 349, 900], [7, 97, 171, 1560]].forEach(([d, q, err, cx], k) => {
+  [[3, 17, 712, 330], [5, 49, 349, 960], [7, 97, 171, 1590]].forEach(([d, q, err, cx], k) => {
     const half = (d - 1) / 2 * pitch;
     deckGrid(svg, { checks: S.surface(d), d, cx, cy: base - half, pitch, qr: 13 });
     T(svg, cx, base + 64, `distance ${d}: ${q} qubits`, { ...LAB, anchor: 'middle' });
-    T(svg, cx, base + 100, `${d * d} storing (circles), ${q - d * d} in the checks`, { ...CAP, size: 24, anchor: 'middle' });
     T(svg, cx, 866, String(err), { ...BIG, size: 96, anchor: 'middle', fill: k === 2 ? INK : QUIET });
-    T(svg, cx, 906, k === 2 ? 'errors per 100,000 rounds, read by matching' : 'errors per 100,000 rounds', { ...CAP, size: 26, anchor: 'middle' });
   });
-  for (const [a, b] of [[330, 900], [900, 1560]]) {
+  for (const [a, b] of [[330, 960], [960, 1590]]) {
     T(svg, (a + b) / 2, 792, '÷ 2', { ...BIG, size: 48, anchor: 'middle' });
     arrow(svg, a + 130, 816, b - 130, 816);
   }
-  T(svg, 80, 330, 'Willow is under it:', { ...LAB, size: 34, weight: 500 });
-  T(svg, 80, 376, 'each step halved them.', { ...LAB, size: 34, weight: 500 });
+  T(svg, 960, 930, 'errors per 100,000 rounds, read by matching', { ...CAP, size: 26, anchor: 'middle' });
 }
 
 // ---------------- 9: the checks see only a change (pair)
@@ -302,7 +295,7 @@ build('p3', 2, (pid, st) => {
   line(svg, 960, 280, 960, 880, { stroke: RULE, 'stroke-width': 2 });
   T(svg, 80, 330, 'one check, round by round', { ...LAB, weight: 500 });
   ['even', 'odd', 'odd'].forEach((w, i) => {
-    const x = 90 + i * 270, fired = i === 1;
+    const x = 80 + i * 270, fired = i === 1;
     frame(svg, x, 380, 220, 300, fired ? { fill: AMBER_T, stroke: AMBER, sw: 4 } : { sw: 3 });
     if (fired) circle(svg, x + 110, 480, 22, { fill: AMBER });
     T(svg, x + 110, 600, w, { size: 44, family: 'sans', weight: fired ? 600 : 400, anchor: 'middle', fill: fired ? AMBER : INK });
@@ -310,10 +303,10 @@ build('p3', 2, (pid, st) => {
   });
   T(svg, 80, 890, 'Round 2 changed, so it fires; round 3 did not.', { ...LAB, size: 32 });
   T(svg, 1000, 330, 'one flip, one round', { ...LAB, weight: 500 });
-  const G = deckGrid(svg, { checks: lat.checks, d: 3, cx: 1400, cy: 530, pitch: 175, qr: 28 });
+  const G = deckGrid(svg, { checks: lat.checks, d: 3, cx: 1400, cy: 590, pitch: 150, qr: 24 });
   for (const id of lat.walk[0].fired) G.tiles[id].setFired(1);
-  for (const [q, letter] of Object.entries(lat.walk[0].errors)) errMark(svg, ...G.pos(+q), 34, letter);
-  T(svg, 1400, 890, 'One flip: the two checks beside it fire.', { ...LAB, size: 32, anchor: 'middle' });
+  for (const [q, letter] of Object.entries(lat.walk[0].errors)) errMark(svg, ...G.pos(+q), 30, letter);
+  T(svg, 1000, 890, 'One flip: the two checks beside it fire.', { ...LAB, size: 32 });
 }
 
 // ---------------- 10: one frame of hints (drawing)
@@ -331,7 +324,7 @@ build('p3', 2, (pid, st) => {
   path(svg, `M${cx - bh - 30} ${cy + bh + 50}L${1060} ${790}`, { stroke: AMBER, 'stroke-width': 3, 'stroke-dasharray': '8 7' });
   circle(svg, 1060, 790, 14, { fill: AMBER });
   T(svg, cx, cy + bh + 100, 'one frame, enlarged:', { ...LAB, size: 30, anchor: 'middle' });
-  T(svg, cx, cy + bh + 140, 'the checks whose answer changed', { ...LAB, size: 30, anchor: 'middle', fill: AMBER });
+  T(svg, cx, cy + bh + 140, 'the checks whose answer changed', { ...LAB, size: 26, anchor: 'middle', fill: AMBER });
 }
 
 // ---------------- 11: the mistake that sets off no check (pair)
@@ -368,11 +361,11 @@ build('p3', 2, (pid, st) => {
   };
   draw(520, ex.plain_matching.errors);
   const G2 = draw(1400, ex.read_together.errors);
-  { const [x, y] = G2.pos(5); guess(svg, x, y, 32, 'Z'); T(svg, x + 86, (y + G2.pos(8)[1]) / 2 + 12, 'or', { size: 34, family: 'sans', weight: 600, fill: BLUE }); }
+  { const [x, y] = G2.pos(5); guess(svg, x, y, 32, 'Z'); }
   const res = (cx, k, lab, strong) => {
     T(svg, cx, 800, lab, { ...LAB, size: 34, anchor: 'middle' });
-    T(svg, cx - 10, 890, String(k), { ...BIG, size: 72, anchor: 'end', fill: strong ? BLUE : QUIET });
-    T(svg, cx + 6, 884, 'in 30 right', { ...CAP, size: 32 });
+    T(svg, cx - 40, 890, String(k), { ...BIG, size: 72, anchor: 'end', fill: strong ? BLUE : QUIET });
+    T(svg, cx - 24, 884, 'in 30 right', { ...CAP, size: 32 });
   };
   res(520, 10, 'matching: an X and a Z', false);
   res(1400, 19, 'likelier: a Y, and a Z here or here', true);
@@ -381,7 +374,7 @@ build('p3', 2, (pid, st) => {
 // ---------------- 13: a better reader removed one error in six (sequence; builds row by row)
 build('p12', 3, (pid, st) => {
   const svg = slide(pid, 'A better reader removed one error in six', 13,
-    'Nature 638 (2025) · distance 9: our estimate, 171 ÷ 2.04', 'reader',
+    st >= 3 ? 'Nature 638 (2025) · distance 9: our estimate, 171 ÷ 2.04' : 'Nature 638 (2025)', 'reader',
     { sub: 'Same recordings, a better decoder: part of what a bigger grid buys, with no new qubits.' });
   const x0 = 640, k = 5.9, h = 96;
   const row = (y, nn, lab, sub, o) => {
@@ -391,30 +384,30 @@ build('p12', 3, (pid, st) => {
     T(svg, (o.numAt || x0 + nn * k) + 24, y + h / 2 + 24, String(nn), { ...BIG, size: 64, fill: o.num || INK });
   };
   row(310, 171, 'matching', 'Willow, 97 qubits', { num: QUIET, draw: (y) => hbar(svg, x0, y, 171 * k, h, { fill: QUIET }) });
-  if (st >= 2) row(470, 143, 'the network', 'the same 97 qubits', { lab: BLUE, num: BLUE, numAt: x0 + 171 * k, draw: (y) => {
+  if (st >= 2) row(490, 143, 'the network', 'the same 97 qubits', { lab: BLUE, num: BLUE, numAt: x0 + 171 * k, draw: (y) => {
     hbar(svg, x0, y, 143 * k, h, { fill: BLUE });
-    rect(svg, x0 + 143 * k + 4, y, 28 * k - 4, h, { rx: 4, fill: 'none', stroke: BLUE, 'stroke-width': 3, 'stroke-dasharray': '10 8' });
+    rect(svg, x0 + 143 * k + 10, y, 28 * k - 10, h, { rx: 4, fill: 'none', stroke: BLUE, 'stroke-width': 3, 'stroke-dasharray': '10 8' });
     T(svg, x0 + 143 * k + 14 * k, y + h / 2 + 12, '28 fewer', { size: 30, family: 'sans', weight: 600, anchor: 'middle', fill: BLUE });
   } });
-  if (st >= 3) row(690, 84, 'matching, bigger grid', '161 qubits: our estimate', { num: QUIET, draw: (y) => hbar(svg, x0, y, 84 * k, h, { fill: PAPER, stroke: QUIET, 'stroke-width': 3, 'stroke-dasharray': '10 8' }) });
+  if (st >= 3) row(670, 84, 'matching, bigger grid', '161 qubits: our estimate', { num: QUIET, draw: (y) => hbar(svg, x0, y, 84 * k, h, { fill: PAPER, stroke: QUIET, 'stroke-width': 3, 'stroke-dasharray': '10 8' }) });
   line(svg, x0, 290, x0, 810, { stroke: INK, 'stroke-width': 2 });
   T(svg, x0, 870, 'errors per 100,000 rounds', CAP);
 });
 
 // ---------------- 14: could the network keep up? one clock, two lanes (sequence; builds frames, reader, queue)
 build('p13', 3, (pid, st) => {
-  const svg = slide(pid, 'Could the network keep up?', 14, 'Nature 638 (2025), Sec. V · 24 µs: Bausch et al. (2024)', ['film', 'reader']);
+  const svg = slide(pid, 'Could the network keep up?', 14, 'Nature 638 (2025), Sec. V · 24 µs: Bausch et al. (2024)', st >= 2 ? ['film', 'reader'] : 'film');
   const x0 = 360, x1 = 1840, tmax = 25.4, X = (t) => x0 + (x1 - x0) * t / tmax, n = 23;
-  const fy = 300, fh = 120;
+  const fy = 320, fh = 120;
   T(svg, 80, fy + 54, 'the chip', { ...LAB, size: 40, weight: 500 });
   T(svg, 80, fy + 98, 'a frame every 1.1 µs', CAP);
-  const ay = 720;
+  const ay = 730;
   for (const t of [0, 6, 12, 18, 24]) line(svg, X(t), fy - 20, X(t), ay + 12, { stroke: RULE, 'stroke-width': 1.5, 'stroke-dasharray': '6 6' });
   for (let i = 0; i < n; i++) {
     const a = X(i * 1.1), b = X((i + 1) * 1.1);
     frame(svg, a + 2, fy, b - a - 4, fh, i === 0 && st >= 2 ? { fill: BLUE_T, stroke: BLUE, sw: 3 } : { fill: PAPER, stroke: AMBER, sw: 2.5 });
   }
-  const ny = 520, nh = 120;
+  const ny = 530, nh = 120;
   if (st >= 2) {
     T(svg, 80, ny + 54, 'the network', { ...LAB, size: 40, weight: 500, fill: BLUE });
     T(svg, 80, ny + 98, '24 µs per frame', CAP);
@@ -432,32 +425,32 @@ build('p13', 3, (pid, st) => {
   }
 });
 
-// ---------------- 15: we trained one ourselves (sequence: one bar each, on one scale)
+// ---------------- 15: we trained one ourselves (sequence, built like page 13)
 {
   const svg = slide('p14', 'We trained one ourselves', 15,
     'our own runs · distance 5 · noise 0.5% · 10 million test runs each', 'reader',
     { sub: 'Simulated noise, failed runs per 10,000: lower is better. Not comparable with Google’s numbers.' });
-  const x0 = 80, k = 7.4, h = 120;
-  const bar = (y, nn, name, note, fill, txt) => {
+  const x0 = 640, k = 7.15, h = 96;
+  const row = (y, nn, lab, sub, fill, labCol) => {
+    T(svg, 80, y + 44, lab, { ...LAB, size: 36, weight: 500, fill: labCol });
+    T(svg, 80, y + 86, sub, CAP);
     hbar(svg, x0, y, nn * k, h, { fill });
-    T(svg, x0 + 28, y + 54, name, { size: 36, family: 'sans', weight: 600, fill: txt });
-    T(svg, x0 + 28, y + 96, note, { size: 28, family: 'sans', fill: txt });
-    T(svg, x0 + nn * k + 24, y + h / 2 + 26, String(nn), { ...BIG, size: 72, fill });
+    T(svg, x0 + nn * k + 24, y + h / 2 + 24, String(nn), { ...BIG, size: 64, fill: fill === BLUE ? BLUE : MUTED });
   };
-  bar(320, 141, 'plain matching', 'no training', QUIET, PAPER);
-  bar(500, 133, 'our network', 'after 250 million examples: past plain matching', BLUE, PAPER);
-  // where it stood earlier, a tick on its own row
-  line(svg, x0 + 204 * k, 488, x0 + 204 * k, 632, { stroke: BLUE, 'stroke-width': 3, 'stroke-dasharray': '6 6' });
-  T(svg, x0 + 204 * k - 14, 576, 'after 66 million: 204', { size: 26, family: 'sans', fill: BLUE, anchor: 'end' });
-  bar(680, 109, 'correlated matching', 'no training, free: still ahead', INK, PAPER);
+  row(310, 141, 'plain matching', 'no training', QUIET, INK);
+  row(490, 133, 'our network', 'after 250 million examples', BLUE, BLUE);
+  row(670, 109, 'correlated matching', 'no training: still ahead', MUTED, INK);
+  line(svg, x0, 290, x0, 810, { stroke: INK, 'stroke-width': 2 });
+  T(svg, x0, 870, 'failed runs per 10,000', CAP);
 }
 
 // ---------------- 16: what our results don't show (sequence of three)
 {
   const svg = slide('p15', 'What our results don’t show', 16, 'the article, section 10 and “What we could not show”', []);
-  const item = (x, n, head, sub, strong) => {
-    rect(svg, x, 260, 540, 600, { rx: 12, fill: strong ? BLUE_T : PAPER, stroke: strong ? BLUE : INK, 'stroke-width': strong ? 4 : 2 });
-    T(svg, x + 40, 400, n, { ...BIG, size: 120, fill: strong ? BLUE : QUIET });
+  const item = (x0, n, head, sub, strong) => {
+    const x = strong ? x0 : x0 - 40;
+    if (strong) rect(svg, x0, 260, 540, 600, { rx: 12, fill: BLUE_T, stroke: BLUE, 'stroke-width': 4 });
+    T(svg, x + 40, 400, n, { ...BIG, size: 56, fill: strong ? BLUE : MUTED });
     head.forEach((h, i) => T(svg, x + 40, 520 + i * 52, h, { ...LAB, size: 40, weight: 500, fill: strong ? BLUE : INK }));
     sub.forEach((h, i) => T(svg, x + 40, 660 + i * 42, h, { ...CAP, size: 30 }));
   };
@@ -473,8 +466,8 @@ build('p13', 3, (pid, st) => {
   F.h('image', { href: 'read.png', x: 80, y: -16, width: 1760, height: 990 }, svg);
   T(svg, 80, 140, 'Half of a quantum computer is an ordinary one, reading', { size: 68, weight: TW, family: 'serif' });
   T(svg, 80, 214, 'Reading every frame accurately and in time is still being built.', SUB);
-  penRing(svg, 1500, 768, 330, 165, { stroke: BLUE, width: PEN + 1, seed: 7, start: 0.4 });
-  path(svg, 'M1440 606 Q1425 545 1350 512', { stroke: BLUE, 'stroke-width': PEN, 'stroke-linecap': 'round', fill: 'none', 'stroke-dasharray': '10 8' });
+  penRing(svg, 1495, 772, 325, 190, { stroke: BLUE, width: PEN + 1, seed: 7, start: 0.4 });
+  path(svg, 'M1440 588 Q1420 540 1350 512', { stroke: BLUE, 'stroke-width': PEN, 'stroke-linecap': 'round', fill: 'none', 'stroke-dasharray': '10 8' });
   T(svg, 920, 450, 'one answer', { size: 44, hand: true, fill: BLUE }); T(svg, 920, 500, 'per round, in time', { size: 44, hand: true, fill: BLUE });
 }
 
@@ -531,8 +524,8 @@ build('p13', 3, (pid, st) => {
     line(svg, x0, y0, x0, y0 + h, { stroke: INK, 'stroke-width': 2 });
     for (const [v, t] of [[1e6, '1 million'], [1e7, '10 million'], [1e8, '100 million']]) { line(svg, lx(v), y0 + h, lx(v), y0 + h + 10, { stroke: INK, 'stroke-width': 2 }); T(svg, lx(v), y0 + h + 40, t, { ...CAP, size: 24, anchor: 'middle' }); }
     for (const r of [0.01, 0.02, 0.03]) T(svg, x0 - 14, ly(r) + 9, Math.round(r * 100) + '%', { ...CAP, size: 24, anchor: 'end' });
-    for (const [kk, lab, col, dy] of [['plain', 'plain matching', QUIET, -10], ['correlated', 'correlated', INK, 30]]) {
-      const r = p.levels[kk].rate;
+    for (const [kk, lab, col, dy0] of [['plain', 'plain matching', QUIET, -10], ['correlated', 'correlated', INK, 30]]) {
+      const r = p.levels[kk].rate, dy = kk === 'correlated' && p.id !== 'd3' ? -10 : dy0;
       line(svg, x0, ly(r), x0 + w, ly(r), { stroke: col, 'stroke-width': 3, 'stroke-dasharray': kk === 'plain' ? '10 8' : null });
       T(svg, x0 + w + 12, ly(r) + dy + 8, lab, { ...CAP, size: 24, fill: col });
     }
@@ -561,7 +554,7 @@ build('p13', 3, (pid, st) => {
   line(svg, 80, y0 + 50, 1480, y0 + 50, { stroke: INK, 'stroke-width': 2 });
   rows.forEach((r, j) => {
     const y = y0 + 104 + j * rh, beats = parseFloat(r[1]) < parseFloat(r[2]);
-    if (j === 4) rect(svg, 80, y - 50, 1420, 68, { fill: '#E6E8EC', rx: 6 });
+    if (j === 4) rect(svg, 80, y - 50, 1400, 68, { fill: '#E6E8EC', rx: 6 });
     r.forEach((v, i) => T(svg, cx[i], y, v, { family: 'mono', size: 34, weight: i === 1 && beats ? 500 : 400, fill: i === 1 ? (beats ? BLUE : QUIET) : i === 3 ? INK : QUIET }));
   });
   T(svg, 1560, 470, 'Blue: our network', { ...LAB, size: 28, fill: BLUE }); T(svg, 1560, 506, 'beat plain matching.', { ...LAB, size: 28, fill: BLUE });
@@ -585,7 +578,7 @@ build('p13', 3, (pid, st) => {
   bar(330, 0, 'plain matching', 'all 219 fixed');
   bar(490, 6, 'correlated matching', '6 missed');
   T(svg, 80, 720, 'Those six add about 0.4 × the noise level: at 0.1% noise, 0.04%,', { ...LAB, size: 34 });
-  T(svg, 80, 768, 'about the gap we measured (0.113% against 0.075%).', { ...LAB, size: 34 });
+  T(svg, 80, 768, 'about the gap we measured (correlated 0.113%, plain 0.075%).', { ...LAB, size: 34 });
   T(svg, 80, 852, 'A second script, written without seeing ours, found the same six. Our setup only; the cause is not traced.', { ...CAP, size: 26 });
   T(svg, 80, 890, 'At distance 5, correlated matching beat plain matching at every noise level.', { ...CAP, size: 26 });
 }
@@ -647,7 +640,8 @@ build('p13', 3, (pid, st) => {
   };
   col(110, 'Gidney and Ekerå, 2021', 'peer-reviewed: solid box', [['20 million', 'noisy qubits'], ['8 hours', 'for one 2048-bit RSA key'], ['1 in 1,000', 'slips per basic operation']], false);
   col(1070, 'Gidney, 2025', 'preprint: dashed box', [['< 1 million', 'noisy qubits'], ['< 1 week', 'for one 2048-bit RSA key'], ['1 in 1,000', 'slips per basic operation']], true);
-  T(svg, 80, 890, 'Both assume a 1 µs round and a 10 µs reaction. Willow’s round: 1.1 µs; the 2024 network: 24 µs.', { ...LAB, size: 32, fill: BLUE, weight: 500 });
+  T(svg, 80, 868, 'Both assume a 1 µs round and a 10 µs reaction. Willow’s round: 1.1 µs.', { ...LAB, size: 32, weight: 500 });
+  T(svg, 80, 914, 'The 2024 network: 24 µs.', { ...LAB, size: 32, fill: BLUE, weight: 500 });
 }
 
 // ---------------- B8: training and decoding times (a table)
@@ -660,7 +654,7 @@ build('p13', 3, (pid, st) => {
     rows.forEach(([a, b], i) => { T(svg, x, y + 82 + i * 70, a, { ...BIG, size: 36 }); T(svg, x + 340, y + 80 + i * 70, b, { ...CAP, size: 26 }); });
   };
   table(80, 300, 'training, on a Kaggle GPU', [['50 s', 'per seed, distance 3, 66 million'], ['100 s', 'per seed, distance 5, 66 million'], ['6 min', 'per seed, distance 5, 250 million'], ['1 h 45 min', 'estimate: on a laptop, emulated']]);
-  table(1000, 300, 'decoding one run: our network', [['14–27 µs', 'per run, distance 3 to 7'], ['20× slower', 'than plain matching, d 3, 0.5%'], ['2× slower', 'than plain matching, d 5, 0.5%'], ['10× slower', 'than plain matching, d 5, 0.1%']]);
+  table(1040, 300, 'decoding one run: our network', [['14–27 µs', 'per run, distance 3 to 7'], ['20× slower', 'than plain matching, d 3, 0.5%'], ['2× slower', 'than plain matching, d 5, 0.5%'], ['10× slower', 'than plain matching, d 5, 0.1%']]);
   T(svg, 80, 860, 'Not a live decoder on its own hardware, so not set against the chip’s clock.', { ...CAP, size: 30 });
 }
 
@@ -675,7 +669,7 @@ build('p13', 3, (pid, st) => {
     circle(svg, cx + dx * hs, cy + dy * hs, 40, { fill: PAPER, stroke: INK, 'stroke-width': 3 });
   }
   circle(svg, cx, cy, 26, { fill: AMBER });
-  T(svg, cx, cy + hs + 100, 'the helper, in the middle', { size: 32, family: 'sans', weight: 500, anchor: 'middle', fill: AMBER });
+  T(svg, cx, cy + hs + 100, 'the helper, in the middle', { size: 32, family: 'sans', weight: 500, anchor: 'middle', fill: INK });
   T(svg, cx + hs + 60, cy - hs + 10, 'storing qubits:', { ...CAP, size: 26 });
   T(svg, cx + hs + 60, cy - hs + 44, 'not measured', { ...CAP, size: 26 });
   T(svg, cx + hs + 60, cy - hs + 78, 'during the run', { ...CAP, size: 26 });
@@ -683,7 +677,7 @@ build('p13', 3, (pid, st) => {
     T(svg, 80, 330 + i * 120, n, { ...BIG, size: 48, fill: i === 3 ? AMBER : INK });
     T(svg, 150, 330 + i * 120, t, { ...LAB, size: 34, fill: i === 3 ? AMBER : INK, weight: i === 3 ? 500 : 400 });
   });
-  T(svg, 80, 860, 'Every check on the grid does this at once, every round.', { ...CAP, size: 30 });
+  T(svg, 80, 880, 'Every check on the grid does this at once, every round.', { ...CAP, size: 30 });
 }
 
 window.DONE = true;
