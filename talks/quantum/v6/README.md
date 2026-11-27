@@ -22,7 +22,8 @@ pilot.html   the pilot: pages 1, 4, 8 and 14 in two colour systems (?v=A, ?v=B)
 player.html  the player the build pours the pages into (the Renovate talk's player)
 notes.md     what is said on each page, and the field's word for it, said once
 heap.png     the drawing on pages 1, 10 and 18
-read.png     the drawing on page 17
+read.png     the drawing on page 17 (new in v6: page 1's scene resolved)
+raw/         read.png as the forge made it
 ```
 
 ## Look, present, publish
@@ -33,4 +34,6 @@ read.png     the drawing on page 17
 
 ## The drawings
 
-The same files as v5, cleaned for 4K (see `talks/quantum/v5/README.md` for their sources and credits).
+`heap.png` is v5's, cleaned for 4K (see `talks/quantum/v5/README.md` for its sources and credits).
+
+`read.png` is new: Paper Studio forge, board `talk-read2`, round 1, candidate 2. References: v5's `heap.png` as the forge made it (so the refrigerator and film are the same as on page 1); the companion deck's approved line; the article's film-and-cable drawing, for the computer. Cleaned with `python tools/clean-drawing.py raw/read.png read.png`. It replaces v5's page-17 drawing, whose refrigerator was cut off by the edge.

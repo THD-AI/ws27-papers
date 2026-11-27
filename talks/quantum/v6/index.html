@@ -467,18 +467,15 @@ build('p13', 3, (pid, st) => {
   T(svg, 1340, 820, 'the next step', { size: 34, family: 'sans', weight: 600, fill: BLUE });
 }
 
-// ---------------- 17: the reading (drawing, framed, not cut)
+// ---------------- 17: the reading (page 1's scene, resolved: the film runs into the reader)
 {
   const svg = slide('p16', null, 17, '', null);
-  const cp = F.h('clipPath', { id: 'win17' }, svg);
-  F.h('rect', { x: 80, y: 260, width: 1760, height: 660, rx: 12 }, cp);
-  F.h('image', { href: 'read.png', x: 80, y: -50, width: 1760, height: 990, 'clip-path': 'url(#win17)' }, svg);
-  rect(svg, 80, 260, 1760, 660, { rx: 12, fill: 'none', stroke: INK, 'stroke-width': 3 });
+  F.h('image', { href: 'read.png', x: 80, y: -16, width: 1760, height: 990 }, svg);
   T(svg, 80, 140, 'Half of a quantum computer is an ordinary one, reading', { size: 68, weight: TW, family: 'serif' });
   T(svg, 80, 214, 'Reading every frame accurately and in time is still being built.', SUB);
-  penRing(svg, 1400, 750, 420, 145, { stroke: BLUE, width: PEN + 1, seed: 7, start: 0.4 });
-  path(svg, 'M1400 618 Q1385 540 1350 472', { stroke: BLUE, 'stroke-width': PEN, 'stroke-linecap': 'round', fill: 'none', 'stroke-dasharray': '10 8' });
-  T(svg, 1040, 400, 'one answer', { size: 44, hand: true, fill: BLUE }); T(svg, 1040, 450, 'per round, in time', { size: 44, hand: true, fill: BLUE });
+  penRing(svg, 1500, 768, 330, 165, { stroke: BLUE, width: PEN + 1, seed: 7, start: 0.4 });
+  path(svg, 'M1440 606 Q1425 545 1350 512', { stroke: BLUE, 'stroke-width': PEN, 'stroke-linecap': 'round', fill: 'none', 'stroke-dasharray': '10 8' });
+  T(svg, 920, 450, 'one answer', { size: 44, hand: true, fill: BLUE }); T(svg, 920, 500, 'per round, in time', { size: 44, hand: true, fill: BLUE });
 }
 
 // ---------------- 18: the question (bookend of page 1)
