@@ -1,0 +1,1562 @@
+{
+ "generated": "2026-11-23",
+ "generated_by": "tools/other-half-data.mjs",
+ "inputs": [
+  "kaggle-d3",
+  "kaggle-d3-rerun",
+  "kaggle-d5",
+  "kaggle-d5-250m",
+  "kaggle-d5-250m-rerun",
+  "correlated-check-2026-11-15.json",
+  "timing-2026-11-15.json"
+ ],
+ "method": {
+  "d3": {
+   "source": "OWN-D3",
+   "code": "rotated surface code, memory experiment in the Z basis",
+   "distance": 3,
+   "rounds": 3,
+   "detectors": 24,
+   "noise_model": "uniform circuit-level depolarizing, strength p",
+   "network": {
+    "type": "multilayer perceptron",
+    "width": 256,
+    "depth": 3,
+    "parameters": 138241,
+    "input": "detection events only"
+   },
+   "steps": 16000,
+   "batch": 4096,
+   "training_shots": 65536000,
+   "train_noise_levels": [
+    0.002,
+    0.003,
+    0.004,
+    0.005,
+    0.006,
+    0.008,
+    0.01
+   ],
+   "schedule": "AdamW, lr 1e-3 constant after 200 warm-up steps, cosine decay over the last fifth",
+   "seeds": [
+    20261116,
+    20261117,
+    20261118,
+    20261119,
+    20261120,
+    20261126,
+    20261127,
+    20261128
+   ],
+   "test_shots_per_noise_level": 2000000,
+   "probe_shots": 1000000,
+   "table_shots_per_noise_level": 200000000,
+   "tool_versions": {
+    "stim": "1.16.0",
+    "pymatching": "2.4.0",
+    "torch": "2.11.0+cu130"
+   },
+   "device": [
+    "cuda"
+   ],
+   "train_seconds": {
+    "min": 48.8,
+    "max": 55.1,
+    "mean": 51.0125
+   }
+  },
+  "d5-66m": {
+   "source": "OWN-D5",
+   "code": "rotated surface code, memory experiment in the Z basis",
+   "distance": 5,
+   "rounds": 5,
+   "detectors": 120,
+   "noise_model": "uniform circuit-level depolarizing, strength p",
+   "network": {
+    "type": "multilayer perceptron",
+    "width": 256,
+    "depth": 3,
+    "parameters": 162817,
+    "input": "detection events only"
+   },
+   "steps": 16000,
+   "batch": 4096,
+   "training_shots": 65536000,
+   "train_noise_levels": [
+    0.002,
+    0.003,
+    0.004,
+    0.005,
+    0.006,
+    0.008,
+    0.01
+   ],
+   "schedule": "AdamW, lr 1e-3 constant after 200 warm-up steps, cosine decay over the last fifth",
+   "seeds": [
+    20261116,
+    20261117,
+    20261118,
+    20261119,
+    20261120
+   ],
+   "test_shots_per_noise_level": 2000000,
+   "probe_shots": 1000000,
+   "table_shots_per_noise_level": 0,
+   "tool_versions": {
+    "stim": "1.16.0",
+    "pymatching": "2.4.0",
+    "torch": "2.11.0+cu130"
+   },
+   "device": [
+    "cuda"
+   ],
+   "train_seconds": {
+    "min": 98.7,
+    "max": 104.1,
+    "mean": 100.28
+   }
+  },
+  "d5-250m": {
+   "source": "OWN-D5-250M",
+   "code": "rotated surface code, memory experiment in the Z basis",
+   "distance": 5,
+   "rounds": 5,
+   "detectors": 120,
+   "noise_model": "uniform circuit-level depolarizing, strength p",
+   "network": {
+    "type": "multilayer perceptron",
+    "width": 256,
+    "depth": 3,
+    "parameters": 162817,
+    "input": "detection events only"
+   },
+   "steps": 61000,
+   "batch": 4096,
+   "training_shots": 249856000,
+   "train_noise_levels": [
+    0.002,
+    0.003,
+    0.004,
+    0.005,
+    0.006,
+    0.008,
+    0.01
+   ],
+   "schedule": "AdamW, lr 1e-3 constant after 200 warm-up steps, cosine decay over the last fifth",
+   "seeds": [
+    20261116,
+    20261117,
+    20261126,
+    20261127,
+    20261128
+   ],
+   "test_shots_per_noise_level": 2000000,
+   "probe_shots": 1000000,
+   "table_shots_per_noise_level": 0,
+   "tool_versions": {
+    "stim": "1.16.0",
+    "pymatching": "2.4.0",
+    "torch": "2.11.0+cu130"
+   },
+   "device": [
+    "cuda"
+   ],
+   "train_seconds": {
+    "min": 374.5,
+    "max": 390.9,
+    "mean": 380.2
+   }
+  }
+ },
+ "at_noise_0_005": {
+  "d3": {
+   "source": "OWN-D3",
+   "network": {
+    "per_seed": [
+     {
+      "seed": 1,
+      "later_repeat": false,
+      "errors": 29610,
+      "shots": 2000000,
+      "rate": 0.014805,
+      "ci95": [
+       0.014638548441927869,
+       0.014973315479603911
+      ]
+     },
+     {
+      "seed": 2,
+      "later_repeat": false,
+      "errors": 29513,
+      "shots": 2000000,
+      "rate": 0.0147565,
+      "ci95": [
+       0.014590318805378016,
+       0.014924545302471007
+      ]
+     },
+     {
+      "seed": 3,
+      "later_repeat": false,
+      "errors": 29598,
+      "shots": 2000000,
+      "rate": 0.014799,
+      "ci95": [
+       0.01463258186383017,
+       0.014967282080751165
+      ]
+     },
+     {
+      "seed": 4,
+      "later_repeat": false,
+      "errors": 29648,
+      "shots": 2000000,
+      "rate": 0.014824,
+      "ci95": [
+       0.014657442652595611,
+       0.01499242119594591
+      ]
+     },
+     {
+      "seed": 5,
+      "later_repeat": false,
+      "errors": 29824,
+      "shots": 2000000,
+      "rate": 0.014912,
+      "ci95": [
+       0.014744953603065287,
+       0.015080909907416083
+      ]
+     },
+     {
+      "seed": 11,
+      "later_repeat": true,
+      "errors": 29574,
+      "shots": 2000000,
+      "rate": 0.014787,
+      "ci95": [
+       0.014620648728893357,
+       0.014955215261787091
+      ]
+     },
+     {
+      "seed": 12,
+      "later_repeat": true,
+      "errors": 29677,
+      "shots": 2000000,
+      "rate": 0.0148385,
+      "ci95": [
+       0.014671861966317281,
+       0.015007001826521146
+      ]
+     },
+     {
+      "seed": 13,
+      "later_repeat": true,
+      "errors": 29254,
+      "shots": 2000000,
+      "rate": 0.014627,
+      "ci95": [
+       0.014461542987731769,
+       0.014794321617603495
+      ]
+     }
+    ],
+    "min": 0.014627,
+    "max": 0.014912,
+    "mean": 0.014793625,
+    "pooled": {
+     "errors": 236698,
+     "shots": 16000000,
+     "rate": 0.014793625,
+     "ci95": [
+      0.014734585637051878,
+      0.01485289735899345
+     ]
+    }
+   },
+   "levels": {
+    "plain": {
+     "errors": 274401,
+     "shots": 16000000,
+     "rate": 0.0171500625,
+     "ci95": [
+      0.017086561428635745,
+      0.01721379543584857
+     ],
+     "per_seed": {
+      "min": 0.017014,
+      "max": 0.0173235,
+      "mean": 0.0171500625
+     }
+    },
+    "correlated": {
+     "errors": 266180,
+     "shots": 16000000,
+     "rate": 0.01663625,
+     "ci95": [
+      0.016573692896130497,
+      0.016699039215086524
+     ],
+     "per_seed": {
+      "min": 0.0164705,
+      "max": 0.0168225,
+      "mean": 0.016636249999999998
+     }
+    },
+    "table": {
+     "errors": 234482,
+     "shots": 16000000,
+     "rate": 0.014655125,
+     "ci95": [
+      0.01459635909470151,
+      0.014714123967851503
+     ]
+    }
+   },
+   "below_plain_from": [
+    {
+     "step": 1600,
+     "training_shots": 6553600
+    },
+    {
+     "step": 2263,
+     "training_shots": 9269248
+    },
+    {
+     "step": 1600,
+     "training_shots": 6553600
+    },
+    {
+     "step": 2263,
+     "training_shots": 9269248
+    },
+    {
+     "step": 1600,
+     "training_shots": 6553600
+    },
+    {
+     "step": 2263,
+     "training_shots": 9269248
+    },
+    {
+     "step": 2263,
+     "training_shots": 9269248
+    },
+    {
+     "step": 1600,
+     "training_shots": 6553600
+    }
+   ],
+   "below_correlated_from": [
+    {
+     "step": 3200,
+     "training_shots": 13107200
+    },
+    {
+     "step": 3200,
+     "training_shots": 13107200
+    },
+    {
+     "step": 3200,
+     "training_shots": 13107200
+    },
+    {
+     "step": 3200,
+     "training_shots": 13107200
+    },
+    {
+     "step": 2263,
+     "training_shots": 9269248
+    },
+    {
+     "step": 3200,
+     "training_shots": 13107200
+    },
+    {
+     "step": 3200,
+     "training_shots": 13107200
+    },
+    {
+     "step": 3200,
+     "training_shots": 13107200
+    }
+   ]
+  },
+  "d5-66m": {
+   "source": "OWN-D5",
+   "network": {
+    "per_seed": [
+     {
+      "seed": 1,
+      "later_repeat": false,
+      "errors": 37962,
+      "shots": 2000000,
+      "rate": 0.018981,
+      "ci95": [
+       0.018792801050667992,
+       0.019171046828373003
+      ]
+     },
+     {
+      "seed": 2,
+      "later_repeat": false,
+      "errors": 41381,
+      "shots": 2000000,
+      "rate": 0.0206905,
+      "ci95": [
+       0.020494137111407327,
+       0.020888704200431086
+      ]
+     },
+     {
+      "seed": 3,
+      "later_repeat": false,
+      "errors": 43119,
+      "shots": 2000000,
+      "rate": 0.0215595,
+      "ci95": [
+       0.021359124567198122,
+       0.021761713406296297
+      ]
+     },
+     {
+      "seed": 4,
+      "later_repeat": false,
+      "errors": 40053,
+      "shots": 2000000,
+      "rate": 0.0200265,
+      "ci95": [
+       0.01983326395092769,
+       0.02022157991172822
+      ]
+     },
+     {
+      "seed": 5,
+      "later_repeat": false,
+      "errors": 41148,
+      "shots": 2000000,
+      "rate": 0.020574,
+      "ci95": [
+       0.020378181817865007,
+       0.020771659941518937
+      ]
+     }
+    ],
+    "min": 0.018981,
+    "max": 0.0215595,
+    "mean": 0.020366299999999997,
+    "pooled": {
+     "errors": 203663,
+     "shots": 10000000,
+     "rate": 0.0203663,
+     "ci95": [
+      0.020278936528704508,
+      0.020454031983318306
+     ]
+    }
+   },
+   "levels": {
+    "plain": {
+     "errors": 141065,
+     "shots": 10000000,
+     "rate": 0.0141065,
+     "ci95": [
+      0.014033592608025164,
+      0.014179780713525337
+     ],
+     "per_seed": {
+      "min": 0.0140435,
+      "max": 0.014187,
+      "mean": 0.0141065
+     }
+    },
+    "correlated": {
+     "errors": 108724,
+     "shots": 10000000,
+     "rate": 0.0108724,
+     "ci95": [
+      0.010808312218019785,
+      0.010936863588353477
+     ],
+     "per_seed": {
+      "min": 0.010829,
+      "max": 0.010947,
+      "mean": 0.0108724
+     }
+    }
+   },
+   "below_plain_from": [
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "below_correlated_from": [
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  "d5-250m": {
+   "source": "OWN-D5-250M",
+   "network": {
+    "per_seed": [
+     {
+      "seed": 1,
+      "later_repeat": false,
+      "errors": 25839,
+      "shots": 2000000,
+      "rate": 0.0129195,
+      "ci95": [
+       0.012763923613391783,
+       0.013076947551462886
+      ]
+     },
+     {
+      "seed": 2,
+      "later_repeat": false,
+      "errors": 26715,
+      "shots": 2000000,
+      "rate": 0.0133575,
+      "ci95": [
+       0.013199327241009464,
+       0.013517542241227634
+      ]
+     },
+     {
+      "seed": 11,
+      "later_repeat": true,
+      "errors": 26682,
+      "shots": 2000000,
+      "rate": 0.013341,
+      "ci95": [
+       0.01318292423960598,
+       0.0135009453060174
+      ]
+     },
+     {
+      "seed": 12,
+      "later_repeat": true,
+      "errors": 26759,
+      "shots": 2000000,
+      "rate": 0.0133795,
+      "ci95": [
+       0.01322119800650806,
+       0.013539671391214004
+      ]
+     },
+     {
+      "seed": 13,
+      "later_repeat": true,
+      "errors": 27143,
+      "shots": 2000000,
+      "rate": 0.0135715,
+      "ci95": [
+       0.013412074805696709,
+       0.01373279385443957
+      ]
+     }
+    ],
+    "min": 0.0129195,
+    "max": 0.0135715,
+    "mean": 0.0133138,
+    "pooled": {
+     "errors": 133138,
+     "shots": 10000000,
+     "rate": 0.0133138,
+     "ci95": [
+      0.01324294776997439,
+      0.013385026160623143
+     ]
+    }
+   },
+   "levels": {
+    "plain": {
+     "errors": 141097,
+     "shots": 10000000,
+     "rate": 0.0141097,
+     "ci95": [
+      0.014036784435421078,
+      0.0141829888836708
+     ],
+     "per_seed": {
+      "min": 0.014054,
+      "max": 0.0141745,
+      "mean": 0.0141097
+     }
+    },
+    "correlated": {
+     "errors": 109019,
+     "shots": 10000000,
+     "rate": 0.0109019,
+     "ci95": [
+      0.010837726026956254,
+      0.010966449756751576
+     ],
+     "per_seed": {
+      "min": 0.0108465,
+      "max": 0.010947,
+      "mean": 0.0109019
+     }
+    }
+   },
+   "below_plain_from": [
+    {
+     "step": 51200,
+     "training_shots": 209715200
+    },
+    {
+     "step": 61000,
+     "training_shots": 249856000
+    },
+    {
+     "step": 61000,
+     "training_shots": 249856000
+    },
+    {
+     "step": 61000,
+     "training_shots": 249856000
+    },
+    {
+     "step": 61000,
+     "training_shots": 249856000
+    }
+   ],
+   "below_correlated_from": [
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  }
+ },
+ "d5_250m_at_about_66_million": [
+  {
+   "seed": 1,
+   "training_shots": 74145792,
+   "rate": 0.018243,
+   "ci95": [
+    0.017982539906277593,
+    0.01850716151488542
+   ]
+  },
+  {
+   "seed": 2,
+   "training_shots": 74145792,
+   "rate": 0.020413,
+   "ci95": [
+    0.02013767650062846,
+    0.020692008248054606
+   ]
+  },
+  {
+   "seed": 11,
+   "training_shots": 74145792,
+   "rate": 0.018977,
+   "ci95": [
+    0.018711412438679118,
+    0.01924628334303676
+   ]
+  },
+  {
+   "seed": 12,
+   "training_shots": 74145792,
+   "rate": 0.01867,
+   "ci95": [
+    0.018406544041267712,
+    0.018937154099181504
+   ]
+  },
+  {
+   "seed": 13,
+   "training_shots": 74145792,
+   "rate": 0.018963,
+   "ci95": [
+    0.01869750924638661,
+    0.019232186642893657
+   ]
+  }
+ ],
+ "d5_250m_last_two_probe_points": [
+  [
+   {
+    "seed": 1,
+    "training_shots": 148291584,
+    "rate": 0.014825
+   },
+   {
+    "seed": 1,
+    "training_shots": 209715200,
+    "rate": 0.013789
+   },
+   {
+    "seed": 1,
+    "training_shots": 249856000,
+    "rate": 0.012765
+   }
+  ],
+  [
+   {
+    "seed": 2,
+    "training_shots": 148291584,
+    "rate": 0.015459
+   },
+   {
+    "seed": 2,
+    "training_shots": 209715200,
+    "rate": 0.014374
+   },
+   {
+    "seed": 2,
+    "training_shots": 249856000,
+    "rate": 0.013189
+   }
+  ],
+  [
+   {
+    "seed": 11,
+    "training_shots": 148291584,
+    "rate": 0.015394
+   },
+   {
+    "seed": 11,
+    "training_shots": 209715200,
+    "rate": 0.014354
+   },
+   {
+    "seed": 11,
+    "training_shots": 249856000,
+    "rate": 0.01339
+   }
+  ],
+  [
+   {
+    "seed": 12,
+    "training_shots": 148291584,
+    "rate": 0.015403
+   },
+   {
+    "seed": 12,
+    "training_shots": 209715200,
+    "rate": 0.01407
+   },
+   {
+    "seed": 12,
+    "training_shots": 249856000,
+    "rate": 0.013076
+   }
+  ],
+  [
+   {
+    "seed": 13,
+    "training_shots": 148291584,
+    "rate": 0.015679
+   },
+   {
+    "seed": 13,
+    "training_shots": 209715200,
+    "rate": 0.014536
+   },
+   {
+    "seed": 13,
+    "training_shots": 249856000,
+    "rate": 0.013504
+   }
+  ]
+ ],
+ "d3_plain_against_correlated_in_the_five_seed_run": [
+  {
+   "p": 0.001,
+   "plain": {
+    "errors": 12293,
+    "shots": 16000000,
+    "rate": 0.0007683125,
+    "ci95": [
+     0.0007548550158789198,
+     0.0007820097151198579
+    ],
+    "per_seed": {
+     "min": 0.000732,
+     "max": 0.0007915,
+     "mean": 0.0007683125
+    }
+   },
+   "correlated": {
+    "errors": 17742,
+    "shots": 16000000,
+    "rate": 0.001108875,
+    "ci95": [
+     0.0010926865053440728,
+     0.001125303062116632
+    ],
+    "per_seed": {
+     "min": 0.0010475,
+     "max": 0.0011375,
+     "mean": 0.001108875
+    }
+   }
+  },
+  {
+   "p": 0.002,
+   "plain": {
+    "errors": 48079,
+    "shots": 16000000,
+    "rate": 0.0030049375,
+    "ci95": [
+     0.0029782364716367453,
+     0.0030318771853349645
+    ],
+    "per_seed": {
+     "min": 0.002926,
+     "max": 0.0030715,
+     "mean": 0.0030049375000000002
+    }
+   },
+   "correlated": {
+    "errors": 54592,
+    "shots": 16000000,
+    "rate": 0.003412,
+    "ci95": [
+     0.003383545815882265,
+     0.00344069264561808
+    ],
+    "per_seed": {
+     "min": 0.0033535,
+     "max": 0.003492,
+     "mean": 0.003412
+    }
+   }
+  },
+  {
+   "p": 0.003,
+   "plain": {
+    "errors": 105080,
+    "shots": 16000000,
+    "rate": 0.0065675,
+    "ci95": [
+     0.006528039256307791,
+     0.006607197689921817
+    ],
+    "per_seed": {
+     "min": 0.006506,
+     "max": 0.0066445,
+     "mean": 0.0065674999999999996
+    }
+   },
+   "correlated": {
+    "errors": 111686,
+    "shots": 16000000,
+    "rate": 0.006980375,
+    "ci95": [
+     0.006939697508686833,
+     0.007021289239280246
+    ],
+    "per_seed": {
+     "min": 0.006915,
+     "max": 0.007053,
+     "mean": 0.006980374999999999
+    }
+   }
+  },
+  {
+   "p": 0.004,
+   "plain": {
+    "errors": 181106,
+    "shots": 16000000,
+    "rate": 0.011319125,
+    "ci95": [
+     0.011267406313882613,
+     0.011371078350617214
+    ],
+    "per_seed": {
+     "min": 0.0111775,
+     "max": 0.01145,
+     "mean": 0.011319125000000003
+    }
+   },
+   "correlated": {
+    "errors": 175224,
+    "shots": 16000000,
+    "rate": 0.0109515,
+    "ci95": [
+     0.010900620637921235,
+     0.011002614203112075
+    ],
+    "per_seed": {
+     "min": 0.0108355,
+     "max": 0.011076,
+     "mean": 0.0109515
+    }
+   }
+  },
+  {
+   "p": 0.005,
+   "plain": {
+    "errors": 274401,
+    "shots": 16000000,
+    "rate": 0.0171500625,
+    "ci95": [
+     0.017086561428635745,
+     0.01721379543584857
+    ],
+    "per_seed": {
+     "min": 0.017014,
+     "max": 0.0173235,
+     "mean": 0.0171500625
+    }
+   },
+   "correlated": {
+    "errors": 266180,
+    "shots": 16000000,
+    "rate": 0.01663625,
+    "ci95": [
+     0.016573692896130497,
+     0.016699039215086524
+    ],
+    "per_seed": {
+     "min": 0.0164705,
+     "max": 0.0168225,
+     "mean": 0.016636249999999998
+    }
+   }
+  }
+ ],
+ "correlated_check": {
+  "source": "OWN-CORR",
+  "monte_carlo": [
+   {
+    "basis": "Z",
+    "distance": 3,
+    "rounds": 3,
+    "p": 0.001,
+    "shots": 4000000,
+    "plain": {
+     "errors": 3016,
+     "shots": 4000000,
+     "rate": 0.000754,
+     "ci95": [
+      0.0007275754831486144,
+      0.0007813834676472093
+     ]
+    },
+    "correlated": {
+     "errors": 4504,
+     "shots": 4000000,
+     "rate": 0.001126,
+     "ci95": [
+      0.00109360935620979,
+      0.0011593488800491203
+     ]
+    },
+    "only_plain_wrong": 773,
+    "only_correlated_wrong": 2261,
+    "paired_z": 27.014388607295416
+   },
+   {
+    "basis": "Z",
+    "distance": 3,
+    "rounds": 3,
+    "p": 0.003,
+    "shots": 4000000,
+    "plain": {
+     "errors": 26340,
+     "shots": 4000000,
+     "rate": 0.006585,
+     "ci95": [
+      0.006506209712897303,
+      0.006664738037724478
+     ]
+    },
+    "correlated": {
+     "errors": 28199,
+     "shots": 4000000,
+     "rate": 0.00704975,
+     "ci95": [
+      0.006968229120121954,
+      0.007132217737808882
+     ]
+    },
+    "only_plain_wrong": 5894,
+    "only_correlated_wrong": 7753,
+    "paired_z": 15.913319924124805
+   },
+   {
+    "basis": "Z",
+    "distance": 3,
+    "rounds": 3,
+    "p": 0.008,
+    "shots": 2000000,
+    "plain": {
+     "errors": 80562,
+     "shots": 2000000,
+     "rate": 0.040281,
+     "ci95": [
+      0.040009383906093286,
+      0.04055438214702487
+     ]
+    },
+    "correlated": {
+     "errors": 78054,
+     "shots": 2000000,
+     "rate": 0.039027,
+     "ci95": [
+      0.03875948624779259,
+      0.039296284622682726
+     ]
+    },
+    "only_plain_wrong": 14899,
+    "only_correlated_wrong": 12391,
+    "paired_z": -15.181887339457534
+   },
+   {
+    "basis": "X",
+    "distance": 3,
+    "rounds": 3,
+    "p": 0.001,
+    "shots": 4000000,
+    "plain": {
+     "errors": 3425,
+     "shots": 4000000,
+     "rate": 0.00085625,
+     "ci95": [
+      0.0008280611476976979,
+      0.0008853976066965145
+     ]
+    },
+    "correlated": {
+     "errors": 3943,
+     "shots": 4000000,
+     "rate": 0.00098575,
+     "ci95": [
+      0.0009554719796803275,
+      0.001016986525970524
+     ]
+    },
+    "only_plain_wrong": 986,
+    "only_correlated_wrong": 1504,
+    "paired_z": 10.38078236792782
+   },
+   {
+    "basis": "X",
+    "distance": 3,
+    "rounds": 3,
+    "p": 0.003,
+    "shots": 2000000,
+    "plain": {
+     "errors": 14651,
+     "shots": 2000000,
+     "rate": 0.0073255,
+     "ci95": [
+      0.007208257439087898,
+      0.007444635215635892
+     ]
+    },
+    "correlated": {
+     "errors": 14289,
+     "shots": 2000000,
+     "rate": 0.0071445,
+     "ci95": [
+      0.00702871629964173,
+      0.0072621770504103225
+     ]
+    },
+    "only_plain_wrong": 3964,
+    "only_correlated_wrong": 3602,
+    "paired_z": -4.161744383045051
+   },
+   {
+    "basis": "X",
+    "distance": 3,
+    "rounds": 3,
+    "p": 0.008,
+    "shots": 1000000,
+    "plain": {
+     "errors": 45175,
+     "shots": 1000000,
+     "rate": 0.045175,
+     "ci95": [
+      0.044769676206728344,
+      0.04558381829128718
+     ]
+    },
+    "correlated": {
+     "errors": 43365,
+     "shots": 1000000,
+     "rate": 0.043365,
+     "ci95": [
+      0.04296754344217225,
+      0.04376596496238185
+     ]
+    },
+    "only_plain_wrong": 10038,
+    "only_correlated_wrong": 8228,
+    "paired_z": -13.392351770769839
+   },
+   {
+    "basis": "Z",
+    "distance": 5,
+    "rounds": 5,
+    "p": 0.001,
+    "shots": 8000000,
+    "plain": {
+     "errors": 1024,
+     "shots": 8000000,
+     "rate": 0.000128,
+     "ci95": [
+      0.00012039686805671816,
+      0.00013608320878154894
+     ]
+    },
+    "correlated": {
+     "errors": 813,
+     "shots": 8000000,
+     "rate": 0.000101625,
+     "ci95": [
+      0.00009487556134919495,
+      0.00010885454081961001
+     ]
+    },
+    "only_plain_wrong": 590,
+    "only_correlated_wrong": 379,
+    "paired_z": -6.778296573444135
+   },
+   {
+    "basis": "Z",
+    "distance": 5,
+    "rounds": 5,
+    "p": 0.003,
+    "shots": 3000000,
+    "plain": {
+     "errors": 10042,
+     "shots": 3000000,
+     "rate": 0.0033473333333333332,
+     "ci95": [
+      0.0032826055384813386,
+      0.0034133330871460527
+     ]
+    },
+    "correlated": {
+     "errors": 7314,
+     "shots": 3000000,
+     "rate": 0.002438,
+     "ci95": [
+      0.002382827369312671,
+      0.002494446918508361
+     ]
+    },
+    "only_plain_wrong": 5138,
+    "only_correlated_wrong": 2410,
+    "paired_z": -31.399911226200125
+   },
+   {
+    "basis": "Z",
+    "distance": 5,
+    "rounds": 5,
+    "p": 0.008,
+    "shots": 1000000,
+    "plain": {
+     "errors": 48995,
+     "shots": 1000000,
+     "rate": 0.048995,
+     "ci95": [
+      0.04857364900454985,
+      0.04941981614375442
+     ]
+    },
+    "correlated": {
+     "errors": 40952,
+     "shots": 1000000,
+     "rate": 0.040952,
+     "ci95": [
+      0.040565329287755234,
+      0.041342197656289256
+     ]
+    },
+    "only_plain_wrong": 18839,
+    "only_correlated_wrong": 10796,
+    "paired_z": -46.72137364767394
+   },
+   {
+    "basis": "X",
+    "distance": 5,
+    "rounds": 5,
+    "p": 0.001,
+    "shots": 4000000,
+    "plain": {
+     "errors": 583,
+     "shots": 4000000,
+     "rate": 0.00014575,
+     "ci95": [
+      0.00013438994888004014,
+      0.00015807017024126147
+     ]
+    },
+    "correlated": {
+     "errors": 451,
+     "shots": 4000000,
+     "rate": 0.00011275,
+     "ci95": [
+      0.00010281360074685089,
+      0.00012364658176078984
+     ]
+    },
+    "only_plain_wrong": 355,
+    "only_correlated_wrong": 223,
+    "paired_z": -5.4904761833308395
+   },
+   {
+    "basis": "X",
+    "distance": 5,
+    "rounds": 5,
+    "p": 0.003,
+    "shots": 1500000,
+    "plain": {
+     "errors": 5603,
+     "shots": 1500000,
+     "rate": 0.003735333333333333,
+     "ci95": [
+      0.003638970825279158,
+      0.0038342377686687514
+     ]
+    },
+    "correlated": {
+     "errors": 3853,
+     "shots": 1500000,
+     "rate": 0.0025686666666666666,
+     "ci95": [
+      0.002488926825041601,
+      0.0026509544113798933
+     ]
+    },
+    "only_plain_wrong": 2937,
+    "only_correlated_wrong": 1187,
+    "paired_z": -27.250766369063108
+   },
+   {
+    "basis": "X",
+    "distance": 5,
+    "rounds": 5,
+    "p": 0.008,
+    "shots": 500000,
+    "plain": {
+     "errors": 28228,
+     "shots": 500000,
+     "rate": 0.056456,
+     "ci95": [
+      0.05581965575077605,
+      0.05709915987137976
+     ]
+    },
+    "correlated": {
+     "errors": 22456,
+     "shots": 500000,
+     "rate": 0.044912,
+     "ci95": [
+      0.04434140602174434,
+      0.04548958698877016
+     ]
+    },
+    "only_plain_wrong": 11790,
+    "only_correlated_wrong": 6018,
+    "paired_z": -43.25325034917254
+   }
+  ]
+ },
+ "single_mechanisms": {
+  "source": "OWN-CORR",
+  "rows": [
+   {
+    "basis": "Z",
+    "distance": 3,
+    "rounds": 1,
+    "mechanisms": 23,
+    "plain_fails": 0,
+    "correlated_fails": 0,
+    "chance_over_p": 0
+   },
+   {
+    "basis": "Z",
+    "distance": 3,
+    "rounds": 2,
+    "mechanisms": 107,
+    "plain_fails": 0,
+    "correlated_fails": 0,
+    "chance_over_p": 0
+   },
+   {
+    "basis": "Z",
+    "distance": 3,
+    "rounds": 3,
+    "mechanisms": 219,
+    "plain_fails": 0,
+    "correlated_fails": 6,
+    "chance_over_p": 0.4001867912064583
+   },
+   {
+    "basis": "Z",
+    "distance": 3,
+    "rounds": 6,
+    "mechanisms": 555,
+    "plain_fails": 0,
+    "correlated_fails": 18,
+    "chance_over_p": 1.2005603736193748
+   },
+   {
+    "basis": "Z",
+    "distance": 5,
+    "rounds": 5,
+    "mechanisms": 1677,
+    "plain_fails": 0,
+    "correlated_fails": 0,
+    "chance_over_p": 0
+   },
+   {
+    "basis": "Z",
+    "distance": 7,
+    "rounds": 7,
+    "mechanisms": 6023,
+    "plain_fails": 0,
+    "correlated_fails": 0,
+    "chance_over_p": 0
+   },
+   {
+    "basis": "X",
+    "distance": 3,
+    "rounds": 1,
+    "mechanisms": 23,
+    "plain_fails": 0,
+    "correlated_fails": 0,
+    "chance_over_p": 0
+   },
+   {
+    "basis": "X",
+    "distance": 3,
+    "rounds": 2,
+    "mechanisms": 109,
+    "plain_fails": 0,
+    "correlated_fails": 4,
+    "chance_over_p": 0.26679119413763885
+   },
+   {
+    "basis": "X",
+    "distance": 3,
+    "rounds": 3,
+    "mechanisms": 221,
+    "plain_fails": 0,
+    "correlated_fails": 4,
+    "chance_over_p": 0.26679119413763885
+   },
+   {
+    "basis": "X",
+    "distance": 3,
+    "rounds": 6,
+    "mechanisms": 557,
+    "plain_fails": 0,
+    "correlated_fails": 4,
+    "chance_over_p": 0.26679119413763885
+   },
+   {
+    "basis": "X",
+    "distance": 5,
+    "rounds": 5,
+    "mechanisms": 1679,
+    "plain_fails": 0,
+    "correlated_fails": 0,
+    "chance_over_p": 0
+   },
+   {
+    "basis": "X",
+    "distance": 7,
+    "rounds": 7,
+    "mechanisms": 6025,
+    "plain_fails": 0,
+    "correlated_fails": 0,
+    "chance_over_p": 0
+   }
+  ],
+  "failing_detector_sets_d3_r3_Z": [
+   [
+    5,
+    9,
+    12,
+    16
+   ],
+   [
+    6,
+    9,
+    10
+   ],
+   [
+    7,
+    10,
+    11,
+    14
+   ],
+   [
+    7,
+    11,
+    14,
+    18
+   ],
+   [
+    9,
+    12,
+    13,
+    16
+   ],
+   [
+    13,
+    14,
+    17
+   ]
+  ],
+  "pairs_d5": [
+   {
+    "basis": "Z",
+    "d": 5,
+    "rounds": 5,
+    "p": 0.001,
+    "pairs": 1405326,
+    "plain_failed": 0,
+    "correlated_failed": 1253,
+    "plain_failed_probability": 0,
+    "correlated_failed_probability": 0.000022115917309899817,
+    "correlated_failed_probability_over_p2": 22.115917309899817
+   },
+   {
+    "basis": "X",
+    "d": 5,
+    "rounds": 5,
+    "p": 0.001,
+    "pairs": 1408681,
+    "plain_failed": 0,
+    "correlated_failed": 1324,
+    "plain_failed_probability": 0,
+    "correlated_failed_probability": 0.00002364813572044488,
+    "correlated_failed_probability_over_p2": 23.64813572044488
+   }
+  ]
+ },
+ "timing": {
+  "source": "OWN-TIME",
+  "machine": "Snapdragon(R) X 12-core X1E80100 @ 3.40 GHz",
+  "emulated": true,
+  "decoding_at_noise_0_005": [
+   {
+    "distance": 3,
+    "rounds": 3,
+    "shots": 1000000,
+    "plain_us_per_run": 0.9967603000695817,
+    "correlated_us_per_run": 2.9719507999834605,
+    "network_one_core_us_per_run": 19.45024750012089
+   },
+   {
+    "distance": 5,
+    "rounds": 5,
+    "shots": 1000000,
+    "plain_us_per_run": 7.704826199973468,
+    "correlated_us_per_run": 16.428048599977046,
+    "network_one_core_us_per_run": 13.582734699943103
+   },
+   {
+    "distance": 7,
+    "rounds": 7,
+    "shots": 1000000,
+    "plain_us_per_run": 16.776407000026666,
+    "correlated_us_per_run": 63.93224240001291,
+    "network_one_core_us_per_run": 25.642559699743284
+   }
+  ],
+  "decoding_all": [
+   {
+    "distance": 3,
+    "rounds": 3,
+    "p": 0.005,
+    "plain_us_per_run": 0.9967603000695817,
+    "correlated_us_per_run": 2.9719507999834605,
+    "network_one_core_us_per_run": 19.45024750012089,
+    "network_over_plain": 19.513465272205476
+   },
+   {
+    "distance": 5,
+    "rounds": 5,
+    "p": 0.005,
+    "plain_us_per_run": 7.704826199973468,
+    "correlated_us_per_run": 16.428048599977046,
+    "network_one_core_us_per_run": 13.582734699943103,
+    "network_over_plain": 1.7628865788030204
+   },
+   {
+    "distance": 7,
+    "rounds": 7,
+    "p": 0.005,
+    "plain_us_per_run": 16.776407000026666,
+    "correlated_us_per_run": 63.93224240001291,
+    "network_one_core_us_per_run": 25.642559699743284,
+    "network_over_plain": 1.528489366030672
+   },
+   {
+    "distance": 3,
+    "rounds": 3,
+    "p": 0.001,
+    "plain_us_per_run": 0.21285149996401742,
+    "correlated_us_per_run": 0.48202739996486343,
+    "network_one_core_us_per_run": 17.886830000061313,
+    "network_over_plain": 84.03431501814684
+   },
+   {
+    "distance": 5,
+    "rounds": 5,
+    "p": 0.001,
+    "plain_us_per_run": 1.5524117000459228,
+    "correlated_us_per_run": 4.123818600026425,
+    "network_one_core_us_per_run": 20.59739520013682,
+    "network_over_plain": 13.26799791545472
+   },
+   {
+    "distance": 7,
+    "rounds": 7,
+    "p": 0.001,
+    "plain_us_per_run": 4.831394599954365,
+    "correlated_us_per_run": 12.163971900008619,
+    "network_one_core_us_per_run": 26.53132500045467,
+    "network_over_plain": 5.491442367531991
+   }
+  ],
+  "notes": [
+   "training: PyTorch default threads; times are wall clock",
+   "decoding: PyMatching on one thread; network once on one thread, once on default threads",
+   "decoding time excludes sampling; per round = per shot / rounds",
+   "a decoder with reached_target = false stopped at the time cap; its shots field says how many it did",
+   "the network is untrained; speed does not depend on the weights"
+  ],
+  "python": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+  "training_step_ms": [
+   {
+    "distance": 3,
+    "ms_per_step": 90.8586110000033
+   },
+   {
+    "distance": 5,
+    "ms_per_step": 100.14144500004477
+   },
+   {
+    "distance": 7,
+    "ms_per_step": 132.413973500079
+   }
+  ]
+ },
+ "enumeration": {
+  "source": "OWN-ENUM",
+  "patterns": 256,
+  "differs": 24,
+  "ties": 0,
+  "example_matching": 0.33299441259676155,
+  "example_likeliest": 0.6221838324894758
+ }
+}
