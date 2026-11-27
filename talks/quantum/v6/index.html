@@ -84,11 +84,11 @@ const DIM = '#A9AEB7';
 const SEG = { chip: [80, 640, INK, 'the chip'], film: [660, 1260, AMBER, 'the hints'], reader: [1280, 1840, BLUE, 'the reader'] };
 function spine(svg, where) {
   const W = [].concat(where || []);
-  let x = 1740;
+  let x = 1712;
   for (const k of W.slice().reverse()) {
     const [, , col, name] = SEG[k];
-    T(svg, x, 1054, name, { family: 'sans', size: 20, weight: 600, fill: col === INK ? MUTED : col, anchor: 'end' });
-    x -= name.length * 10.5 + 34;
+    T(svg, x, 1056, name, { family: 'sans', size: 30, weight: 600, fill: col === INK ? MUTED : col, anchor: 'end' });
+    x -= name.length * 15.5 + 40;
   }
 }
 function slide(id, title, n, foot, where, o = {}) {
@@ -98,7 +98,7 @@ function slide(id, title, n, foot, where, o = {}) {
   if (o.sub) T(svg, 80, 214, o.sub, SUB);
   if (where) spine(svg, where);
   if (foot) T(svg, 80, 1054, foot, { family: 'mono', size: 18, fill: MUTED });
-  if (n) T(svg, 1840, 1054, typeof n === 'string' ? 'backup ' + n.slice(1) : n + ' / 18', { family: 'mono', size: 18, fill: MUTED, anchor: 'end' });
+  if (n) T(svg, 1840, 1056, typeof n === 'string' ? 'backup ' + n.slice(1) : n + ' / 18', { family: 'mono', size: 24, fill: MUTED, anchor: 'end' });
   return svg;
 }
 // A build: the page drawn k times, one more part each click, as the Renovate
@@ -133,7 +133,7 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
     'speed: Google blog, 9 Dec 2024 · errors: Nature 638 (2025), Table S1', null);
   // left: the headline, quiet
   T(svg, 80, 300, 'the headline', { ...CAP, size: 30 });
-  T(svg, 80, 420, '< 5 minutes', { ...BIG, size: 96, fill: QUIET });
+  T(svg, 80, 420, '< 5 minutes', { ...BIG, size: 96, fill: MUTED });
   T(svg, 80, 476, 'against 10 septillion years', { ...CAP, size: 30 });
   T(svg, 80, 516, 'on a supercomputer, for a', { ...CAP, size: 30 });
   T(svg, 80, 556, 'benchmark with no known use', { ...CAP, size: 30 });
@@ -305,11 +305,11 @@ build('p3', 2, (pid, st) => {
   F.h('image', { href: 'heap.png', x: 12, y: 170, width: 1320, height: 742 }, svg);
   const run = film.runs[0];
   const round = run.frames.findIndex((f, i) => i > 0 && f.length >= 5 && f.length <= 7 && new Set(f.map((id) => run.checks[id].kind)).size === 2);
-  const pitch = 44, cx = 1600, cy = 530, bh = 4.3 * pitch;
+  const pitch = 50, cx = 1590, cy = 520, bh = 4.3 * pitch;
   frame(svg, cx - bh - 30, cy - bh - 50, 2 * bh + 60, 2 * bh + 100, { sw: 4, stroke: AMBER, fill: PAPER });
-  const G = deckGrid(svg, { checks: S.surface(7), d: 7, cx, cy, pitch, qr: 11 });
+  const G = deckGrid(svg, { checks: S.surface(7), d: 7, cx, cy, pitch, qr: 8 });
   const on = run.frames[round].map((id) => toGrid(run.checks[id], 7));
-  Object.values(G.tiles).forEach((t) => { if (on.some((c) => c.row === t.check.row && c.col === t.check.col && c.asks_about === t.check.asks_about)) t.setFired(1); });
+  Object.values(G.tiles).forEach((t) => { if (on.some((c) => c.row === t.check.row && c.col === t.check.col && c.asks_about === t.check.asks_about)) { t.setFired(1); t.dot.setAttribute('r', 11); } });
   path(svg, `M${cx - bh - 30} ${cy + bh + 50}L${1060} ${790}`, { stroke: AMBER, 'stroke-width': 3, 'stroke-dasharray': '8 7' });
   circle(svg, 1060, 790, 14, { fill: AMBER });
   T(svg, cx, cy + bh + 100, 'one frame, enlarged:', { ...LAB, size: 30, anchor: 'middle' });
@@ -384,7 +384,7 @@ build('p12', 3, (pid, st) => {
 
 // ---------------- 14: could the network keep up? one clock, two lanes (sequence; builds frames, reader, queue)
 build('p13', 3, (pid, st) => {
-  const svg = slide(pid, 'Could the network keep up?', 14, 'Nature 638 (2025), Sec. V · 24 µs: Bausch et al. (2024)', st >= 2 ? ['film', 'reader'] : 'film');
+  const svg = slide(pid, 'Could the network keep up?', 14, 'Nature 638 (2025), Sec. V · 24 µs: Bausch et al. (2024)', st >= 2 ? 'reader' : 'film');
   const x0 = 360, x1 = 1840, tmax = 25.4, X = (t) => x0 + (x1 - x0) * t / tmax, n = 23;
   const fy = 320, fh = 120;
   T(svg, 80, fy + 54, 'the chip', { ...LAB, size: 40, weight: 500 });
@@ -625,8 +625,8 @@ build('p13', 3, (pid, st) => {
   };
   col(110, 'Gidney and Ekerå, 2021', 'peer-reviewed: solid box', [['20 million', 'noisy qubits'], ['8 hours', 'for one 2048-bit RSA key'], ['1 in 1,000', 'slips per basic operation']], false);
   col(1070, 'Gidney, 2025', 'preprint: dashed box', [['< 1 million', 'noisy qubits'], ['< 1 week', 'for one 2048-bit RSA key'], ['1 in 1,000', 'slips per basic operation']], true);
-  T(svg, 80, 868, 'Both assume a 1 µs round and a 10 µs reaction. Willow’s round: 1.1 µs.', { ...LAB, size: 32, weight: 500 });
-  T(svg, 80, 914, 'The 2024 network: 24 µs.', { ...LAB, size: 32, fill: BLUE, weight: 500 });
+  T(svg, 80, 900, 'Both assume a 1 µs round and a 10 µs reaction. Willow’s round: 1.1 µs.', { ...LAB, size: 32, weight: 500 });
+  T(svg, 80, 946, 'The 2024 network: 24 µs.', { ...LAB, size: 32, fill: BLUE, weight: 500 });
 }
 
 // ---------------- B8: training and decoding times (a table)
