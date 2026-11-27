@@ -94,16 +94,13 @@ html, body { margin: 0; height: 100%; background: #111214; overflow: hidden; }
 #notes { position: fixed; left: 0; right: 0; bottom: 0; max-height: 36vh; overflow: auto; background: #FBFBFC; color: #15171C;
   font: 19px/1.5 'Libre Franklin', Arial, sans-serif; padding: 14px 28px; box-shadow: 0 -1px 0 #DADDE3; }
 #notes .where { color: #5C6370; font-size: 15px; }
-#help { position: fixed; right: 12px; top: 10px; color: #8A9099; font: 13px 'Libre Franklin', Arial, sans-serif; opacity: 0.8; }
-body.clean #help { display: none; }
 /* in full screen the room sees the screen: the notes never show there */
-body.full #notes, body.full #help { display: none !important; }
+body.full #notes { display: none !important; }
 </style>
 </head>
 <body>
 <div id="stage"><div id="slide"></div></div>
 <aside id="notes" hidden></aside>
-<div id="help">F full screen (notes hide), Right, Space or the wheel next, Left back, N notes, G go to page (this hint hides after the first key)</div>
 <script>
 var PAGES = ${JSON.stringify(pages)};
 var ART = ${JSON.stringify(ART)};
