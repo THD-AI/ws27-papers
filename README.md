@@ -43,7 +43,7 @@ The site is the `gh-pages` branch, built from `dist/`:
 
 1. `node lib/build.mjs` builds both articles into `dist/`.
 2. `node tools/deck-offline.mjs renovate --v2 --site` adds the talk as `dist/renovate/talk/` (one file, fonts and drawings embedded, not indexed). Run it after the build, which rewrites `dist/renovate/`.
-   `node tools/qtalk-site.mjs --site` adds the Quantum talk (18 pages, `talks/quantum/v5/`) as `dist/other-half/talk/` the same way.
+   `node tools/qtalk-site.mjs --site` adds the Quantum talk (18 pages, `talks/quantum/v6/`) as `dist/other-half/talk/` the same way.
    `node tools/talk-card.mjs` then gives both talk pages their link preview: a card from the talk's title page and the Open Graph tags.
 3. Copy `dist/` into a fresh repository and force-push it to `gh-pages`.
 

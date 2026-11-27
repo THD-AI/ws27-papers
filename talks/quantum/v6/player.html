@@ -165,7 +165,12 @@ addEventListener('keydown', function (e) {
   else if (e.key === 'End') show(PAGES.length - 1);
   else if (e.key === 'n' || e.key === 'N') notes.hidden = !notes.hidden;
   else if (e.key === 'f' || e.key === 'F') { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(function () {}); }
-  else if (e.key === 'g' || e.key === 'G') { var k = parseInt(prompt('Go to page (1–' + PAGES.length + ')'), 10); if (k) show(k - 1); }
+  else if (e.key === 'g' || e.key === 'G') {
+    // a page number, as printed on the page; its first step
+    var k = parseInt(prompt('Go to page (1–18)'), 10), at = -1;
+    for (var j = 0; j < PAGES.length && at < 0; j++) if (PAGES[j].label === k + ' / 18') at = j;
+    if (at >= 0) show(at);
+  }
   else if ((e.key === 'p' || e.key === 'P') && !AUDIENCE) presenter(!document.body.classList.contains('presenter'));
 });
 // The wheel: one notch, one page. A clicker or the Flipper's Slides remote scrolls.
@@ -181,7 +186,8 @@ addEventListener('wheel', function (e) {
 slide.addEventListener('click', function () { document.body.classList.add('clean'); show(n + 1); });
 addEventListener('beforeprint', function () {
   var pr = document.getElementById('print');
-  if (!pr.childElementCount) pr.innerHTML = SVG.map(function (s, k) { return '<div class="frame">' + art(k) + '</div>'; }).join('');
+  // every page once, complete: a build's earlier steps are left out
+  if (!pr.childElementCount) pr.innerHTML = SVG.map(function (s, k) { return /-\d+$/.test(PAGES[k].id) ? '' : '<div class="frame">' + art(k) + '</div>'; }).join('');
 });
 fit(); mode(); show(n, true);
 </script>

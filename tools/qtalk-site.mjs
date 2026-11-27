@@ -66,11 +66,13 @@ for (const row of readFileSync(join(DECK, 'notes.md'), 'utf8').split(/\r?\n/)) {
   if (m) notes[m[1]] = { say: m[2].replace(/&#124;/g, '|'), term: m[3] };
 }
 let n = 0;
+// a build step ('m1-1', 'm1-2', ...) shares the number and notes of the page it builds
 const PAGES = raw.map(({ id, svg, title }) => {
-  const backup = id.startsWith('b');
-  const label = backup ? `backup ${id.slice(1)}` : `${++n} / 18`;
-  const note = backup ? null : notes[n];
-  return { id, label, backup, title: title || (n === 1 && !backup ? 'The other half of a quantum computer' : ''), svg, say: note ? note.say : '', term: note ? note.term : '' };
+  const backup = id.startsWith('b'), step = /-\d+$/.test(id);
+  const num = backup ? 0 : step ? n + 1 : ++n;
+  const label = backup ? `backup ${id.slice(1)}` : `${num} / 18`;
+  const note = backup ? null : notes[num];
+  return { id, label, backup, title: title || (num === 1 && !backup ? 'The other half of a quantum computer' : ''), svg, say: note ? note.say : '', term: note ? note.term : '' };
 });
 if (n !== 18) throw new Error(`expected 18 main pages, found ${n}`);
 
