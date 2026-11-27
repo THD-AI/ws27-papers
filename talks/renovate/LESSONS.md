@@ -116,7 +116,7 @@ Rules that follow:
 
 What happened:
 - He left the socket and bricks to our judgement instead of drawing them himself. A round-3 redraw of the channel, with the approved wall as its brick reference, could not run: the OpenAI account has no credits left.
-- Slide 14 now cuts its channel in code into a strip of the approved slide-1 wall (three courses, at nearly the title's scale, top and bottom softened with paper). All three wall pictures share one brick; the stones and the blob of green are gone. The generated deck-chase.png is no longer used.
+- Slide 14 now cuts its channel in code into a strip of the approved slide-1 wall (three courses, at nearly the title's scale, top and bottom softened with paper). All three wall pictures share one brick; the stones and the blob of green are gone. The generated deck-chase.png is no longer used (kept under the tag `archive/renovate-deck-art-unused`).
 - The sockets stay in code: the count of 14 distinct faces must be exact, and no real socket photograph is on file to draw one from.
 - Two things failed on the way: an SVG mask on a group holding a nested svg did not apply in Chrome's print, and a crop scaled to 1.95× turned his hairline into a crude marker line.
 
