@@ -1,4 +1,4 @@
-// Builds the 18-page Quantum talk (talks/quantum/v6; --deck v5 for the earlier one) as ONE self-contained
+// Builds the 18-page Quantum talk (talks/quantum/v6; --deck <folder> for another) as ONE self-contained
 // page: every page drawn once from the deck's source, the two drawings and
 // the fonts embedded, no server or network at the talk. It is both the file
 // to present from and the talk's page on the site (dist/other-half/talk/).
@@ -12,7 +12,8 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { startServer } from './serve.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-// the deck folder: v6 by default; --deck v5 builds the earlier one
+// the deck folder under talks/quantum/: v6 by default; --deck <folder> builds
+// another (v5 is kept under the tag archive/quantum-deck-v5)
 const di = process.argv.indexOf('--deck');
 const VER = di > 0 ? process.argv[di + 1] : 'v6';
 const DECK = join(ROOT, 'talks', 'quantum', VER);
