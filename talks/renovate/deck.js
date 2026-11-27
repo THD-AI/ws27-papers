@@ -6,7 +6,7 @@
 //   ?page=N: open at page N (1-based)
 
 const q = new URLSearchParams(location.search);
-const { SLIDES } = await import(q.get('v') === '2' ? './slides2.js' : './slides.js');
+const { SLIDES } = await import('./slides2.js');
 const PRINT = q.get('print') === '1';
 if (PRINT) document.documentElement.classList.add('is-print');
 

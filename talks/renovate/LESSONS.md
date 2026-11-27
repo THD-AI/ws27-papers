@@ -2,6 +2,53 @@
 
 Kind: log, newest first. Read this before every loop on the deck; add to it at the end of every loop (the compound step). Each entry: what happened, what it means, the rule that follows. His words are in dotUni `.docs/transcripts/` (numbers given).
 
+## State after loop 12 (21 November): where things are
+
+- The deck: `slides2.js` (open `index.html`), 46 pages, the only deck since 27 November (v1 is under the tag `archive/renovate-deck-v1`). Build: `node tools/deck.mjs renovate` (PDF, cue sheet `CUES-v2.md`, gates), `node tools/deck-offline.mjs renovate` (one presenting file in `.shots/deck/renovate-v2/`). The old `--v2` and `?v=2` still work and change nothing.
+- Live: https://thd-ai.github.io/ws27-papers/renovate/talk/ (gh-pages `145ee27`, loop 12). Notes on N, hidden in full screen; F for full screen. Publish steps in the README.
+- Q&A: `QUESTIONS.md`, nine expected questions with short answers from the article's facts.
+- Clock: the notes speak in about 14 minutes (130 words a minute, 1.5 s a click, 2.5 s a landing); the cue sheet's start times are computed from that, not set by hand.
+- Two reader rounds (11 and 12) checked the changes; their reports and scores are kept with the private working documents.
+- Merged: ws27-papers#12 (the talk on the site). Open: ws27-papers#13 (loops 11–12), paper-studio#3 (stacked on #2).
+- His standing calls: no QR code on any slide; plugs and keys stay simple one-line drawings; the closing socket plate stays as it is; "How this was made" is folded, never a slide.
+- His answers (21 November): 12 December is right; the talk and the article are separate works and needn't match; the AI-sceptic seat means a sceptic of AI-made look and sound, not of AI at work, so the closing slide stays as it is. Rules that carry to any talk: dotPrivate `BRAND/methods/talks.md`. Left: the real projector and rehearsal run 0.
+
+## Loop 13 (21 November): the AI-made look and sound
+
+What happened:
+- He redefined the AI-sceptic seat: a sceptic of AI-made work, who researches the current tells first. One reader did (Pangram, WikiProject AI Cleanup and others). The visuals and the drawings passed; the speech didn't. The tell was the contrast sentence ("doesn't just X. It Y", "not X, but Y"), about once a minute, much of it added by rounds 11–12's fixes. Other tells: the italic serif aside under a sans slide, "Still," four times, semicolons in captions, → and ≈ in backups.
+- Fixed: the notes keep about three contrasts on purpose; captions in the body sans; plain separators. Proposed to him, not done: plain titles instead of the "First brick: …" run and the slogan pairs.
+
+Rules that follow:
+55. **Count the contrast sentences.** "Not X, but Y" and "doesn't just X. It Y" are the first thing a trained ear hears as AI. Three in a talk, placed on purpose; every fix round adds more, so count again after each.
+56. **No italic serif aside, no → or ≈, no repeated concessive opener.** They are house-style tells, not typography.
+
+## Loops 11–12 (21 November): the room, the clock and the defence
+
+What happened:
+- Projector: every page rendered at 1024×768 with 12% ambient light and slight blur (`.shots/deck/projector/`). It all reads; the wall strip on slide 14 nearly vanished (thin grey lines in the drawing) and now carries the ink filter. A label on slide 8 sat under the wrong dot.
+- Clock: the notes spoke in 11 minutes against a cue sheet planned for 14:40, with some windows too tight and others too loose. The start times are now computed from the words.
+- Round 11 (projector, professor, fact checker, voice and pacing, AI-sceptic). Convergent: the thesis came only at minute 14, the worker side of his thesis was never said, the course theory was hidden, ten fact wordings overstated their sources ("Telekom says 40" was only its press release; "walked it back" was half true for Klarna; "the staff stay" over a chart of 4,000 positions a year leaving).
+- Fixed: his short answer at the start of slide 2; "the agent works with them, not instead of them" on slide 9 and in the close; an honest line that the rebuild can't be shown to have caused T-Mobile's result; a customer case and "always a way to a person" in step 6; the staff load in step 4; adoption terms (TOE) on slide 9 and stage-gate on slide 15, on the slide and not in speech; spoken grammar throughout; every fact fix.
+- Round 12 (the four seats whose part changed). The sceptic seat stays unconvinced until the worker thesis is on a slide, not only spoken.
+
+Rules that follow:
+50. **Time a talk from its words, never by hand.** 130 words a minute, plus the clicks and the landings; a cue sheet wrong in both directions is worse than none.
+51. **Test the projector, not the file.** Low resolution, lifted blacks and blur first: thin grey drawing lines are the first to go.
+52. **Course terms go on the slide; the voice stays in the notes.** The grader reads the slide; a spoken aside for the grader is the sentence the room loses.
+53. **Say the claim first and end on his own line.** When the title only repeats the slide, the landing steps backwards.
+54. **Every fact rewrite gets checked again.** Round 12 found five new overstatements made by round 11's fixes ("cut forty-five jobs", "close to a tenth", "next step").
+
+## Loop 10 (20 November): the last kink, and the talk on the site
+
+What happened:
+- On slide 6 a 2 px kink showed where the drawn cord met the cable. The cause: the drawings were scaled by the cord's outer width, but the eye follows the line centres. The drawn cords' line centres are 49.5 px (side) and 53.75 px (upright) apart; scaled to the cable's 20.4 and 18.4 px, they now meet without a step. The cable on slide 6 moved 80 px clear of the text.
+- He asked for the deck on the site with speaker notes, but never in full screen. The page hides the notes when the Fullscreen API is on, the browser is in its own full screen (F11), or the window is as large as the screen; tested in a window and at full-screen size.
+
+Rules that follow:
+48. **Scale a drawing to meet code by its line centres, not its outer edge.**
+49. **What the room sees in full screen is not what the speaker sees in a window.** Anything private (notes, hints) hides in full screen, whichever way full screen was reached.
+
 ## Loop 9 (19 November): drawn plugs with their cords, and a full audit
 
 What happened:
@@ -20,7 +67,7 @@ Rules that follow:
 
 What happened:
 - He said the plug, the cable going into it, the keys and the closing socket look off in every appearance (`-016`). Three readers (an electrician, an illustrator, an AI-sceptic) agreed on the main cause. The code cable was about three times heavier, and in darker ink, than the drawn plug's pen line. The drawn plug kept its own one-line cord, under a tube that ended in a rounded cap. The plug body was see-through. The closing socket was a face-on green box against a plug drawn from the side. Several of the 14 sockets were not real socket types.
-- Fixed in code: one ink (#2B2B2E) for the cable, the sockets and, through the ink filter, the drawn plug and keys; a lighter tube wall (2.5 px). The cable ends square inside an opaque paper silhouette of the plug body (`deck-plug-body.png`). The closing socket is now a cover plate seen edge on, proud of the wall, with the plug's face against it. Slide 7 uses the real IEC types A to O (without M), and the three planned sockets (C, F, E) are ones the Euro plug fits.
+- Fixed in code: one ink (#2B2B2E) for the cable, the sockets and, through the ink filter, the drawn plug and keys; a lighter tube wall (2.5 px). The cable ends square inside an opaque paper silhouette of the plug body (`deck-plug-body.png`, later replaced; kept under the tag `archive/renovate-deck-art-unused`). The closing socket is now a cover plate seen edge on, proud of the wall, with the plug's face against it. Slide 7 uses the real IEC types A to O (without M), and the three planned sockets (C, F, E) are ones the Euro plug fits.
 - Not possible yet: new drawings (no OpenAI credits). Boards are ready in Paper Studio: `deck-plug-cord` (plug and cord in one drawing, side view), `deck-plug-up` (upright, for slides 6 and 7, instead of a rotated copy) and `deck-keys3` (three different keys for the three stages). The closing socket in section still needs a real socket photograph to draw from (a download, his OK first).
 
 Rules that follow:
@@ -69,7 +116,7 @@ Rules that follow:
 
 What happened:
 - He left the socket and bricks to our judgement instead of drawing them himself. A round-3 redraw of the channel, with the approved wall as its brick reference, could not run: the OpenAI account has no credits left.
-- Slide 14 now cuts its channel in code into a strip of the approved slide-1 wall (three courses, at nearly the title's scale, top and bottom softened with paper). All three wall pictures share one brick; the stones and the blob of green are gone. The generated deck-chase.png is no longer used.
+- Slide 14 now cuts its channel in code into a strip of the approved slide-1 wall (three courses, at nearly the title's scale, top and bottom softened with paper). All three wall pictures share one brick; the stones and the blob of green are gone. The generated deck-chase.png is no longer used (kept under the tag `archive/renovate-deck-art-unused`).
 - The sockets stay in code: the count of 14 distinct faces must be exact, and no real socket photograph is on file to draw one from.
 - Two things failed on the way: an SVG mask on a group holding a nested svg did not apply in Chrome's print, and a crop scaled to 1.95× turned his hairline into a crude marker line.
 

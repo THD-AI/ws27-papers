@@ -1,8 +1,10 @@
 // Builds the talk as ONE offline HTML file for presenting: every build
 // pre-drawn as SVG, the three typefaces and the house drawing embedded, no
 // network and no server. Double-click it, press F11, then Right / Left.
-//   node tools/deck-offline.mjs [renovate|quantum] [--v2]
-// Writes .shots/deck/<talk>[-v2]/<talk>-talk.html
+//   node tools/deck-offline.mjs [renovate] [--site]
+// Writes .shots/deck/<talk>-v2/<talk>-talk.html. slides2.js is the only deck;
+// --v2 is still accepted and changes nothing (v1 is under the tag
+// archive/renovate-deck-v1).
 import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,8 +16,7 @@ const require = createRequire(join(ROOT, 'package.json'));
 const puppeteer = require('puppeteer-core');
 const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const talk = process.argv[2] && !process.argv[2].startsWith('--') ? process.argv[2] : 'renovate';
-const V2 = process.argv.includes('--v2');
-const OUT = join(ROOT, '.shots', 'deck', talk + (V2 ? '-v2' : ''));
+const OUT = join(ROOT, '.shots', 'deck', `${talk}-v2`);
 mkdirSync(OUT, { recursive: true });
 
 // 1. The fonts: the same request the deck makes, only the latin subsets, inlined.
@@ -37,11 +38,11 @@ const { server, port } = await startServer(ROOT, 0);
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: 'new' });
 const page = await browser.newPage();
 await page.setViewport({ width: 1920, height: 1080 });
-await page.goto(`http://localhost:${port}/talks/${talk}/index.html?print=1${V2 ? '&v=2' : ''}`, { waitUntil: 'networkidle0' });
+await page.goto(`http://localhost:${port}/talks/${talk}/index.html?print=1`, { waitUntil: 'networkidle0' });
 await page.waitForFunction('window.__deck && window.__deck.ready', { timeout: 30000 });
 await page.evaluate(() => document.fonts.ready);
-const pages = await page.evaluate(async (v2) => {
-  const { SLIDES } = await import(v2 ? './slides2.js' : './slides.js');
+const pages = await page.evaluate(async () => {
+  const { SLIDES } = await import('./slides2.js');
   const els = [...document.querySelectorAll('.page')];
   return window.__deck.pages.map((p, i) => {
     const s = SLIDES[p.slide];
@@ -54,14 +55,14 @@ const pages = await page.evaluate(async (v2) => {
       notes: p.build === 0 || p.build === s.builds - 1 ? (s.notes || '') : '',
     };
   });
-}, V2);
+});
 await browser.close();
 server.close();
 
 // 3. Each drawing (and the Virgil face) once, as a data URI the pages point
-// to at show time. The Quantum deck draws from the article's art and its own.
-const ARTICLE = { renovate: 'renovate', quantum: 'other-half' }[talk] || talk;
-const PREFIXES = [[`../../articles/${ARTICLE}/art/`, join(ROOT, 'articles', ARTICLE, 'art')], ['./art/', join(ROOT, 'talks', talk, 'art')]];
+// to at show time. The deck draws from its article's art. (The Quantum talk is
+// built by tools/qtalk-site.mjs.)
+const PREFIXES = [[`../../articles/${talk}/art/`, join(ROOT, 'articles', talk, 'art')]];
 const MIME = { png: 'image/png', woff2: 'font/woff2' };
 const ART = {};
 for (const p of pages) {
@@ -83,7 +84,7 @@ const doc = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>${talk === 'quantum' ? 'The other half of a quantum computer' : 'Renovate, don’t repaint'}: the talk</title>
+<title>Renovate, don’t repaint: the talk</title>
 <style>
 ${fontCss}
 html, body { margin: 0; height: 100%; background: #111214; overflow: hidden; }
