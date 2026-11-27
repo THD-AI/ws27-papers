@@ -27,7 +27,7 @@ const repo = resolve(here, '..');
 const OUT = join(repo, 'articles', 'other-half', 'data');
 const argAt = process.argv.indexOf('--results');
 const RESULTS = resolve(argAt > 0 ? process.argv[argAt + 1]
-  : process.env.QEC_RESULTS || join(repo, '../../../dotUni/.worktrees/quantum-seminar/seminar/experiments/results'));
+  : process.env.QEC_RESULTS || join(repo, '../../../../dotUni/.worktrees/quantum-seminar/seminar/experiments/results'));
 if (!existsSync(RESULTS)) { console.error('results folder not found: ' + RESULTS); process.exit(1); }
 mkdirSync(OUT, { recursive: true });
 
