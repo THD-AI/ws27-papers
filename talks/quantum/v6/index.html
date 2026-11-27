@@ -57,6 +57,8 @@ function deckGrid(svg, o) {
   G.root.querySelectorAll('circle').forEach((e) => { if (e.getAttribute('stroke') === INK) e.setAttribute('stroke-width', o.sw || 2.5); });
   for (const t of Object.values(G.tiles)) {
     t.field.setAttribute('stroke-width', 3);
+    if (t.check.asks_about === 'flips') t.base.setAttribute('fill-opacity', '0.17');
+    t.base.setAttribute('stroke-opacity', '0.9');
     const set = t.setFired.bind(t);
     t.setFired = (p) => { set(p); if (p > 0.001) t.base.setAttribute('fill-opacity', '0'); };
   }
@@ -71,7 +73,7 @@ function guess(svg, x, y, r, letter) {
 // one frame of film: a cell with sprocket holes
 function frame(svg, x, y, w, h, o = {}) {
   rect(svg, x, y, w, h, { fill: o.fill || PAPER, stroke: o.stroke || INK, 'stroke-width': o.sw || 2 });
-  if (o.holes !== false) for (const yy of [y + h * 0.14, y + h * 0.86]) circle(svg, x + w / 2, yy, Math.max(2, h * 0.045), { fill: o.stroke || INK });
+  if (o.holes !== false) for (const yy of [y + Math.min(h * 0.14, 22), y + h - Math.min(h * 0.14, 22)]) circle(svg, x + w / 2, yy, Math.min(8, Math.max(2, h * 0.045)), { fill: o.stroke || INK });
   if (o.dot) circle(svg, x + w / 2, y + h / 2, Math.min(w, h) * 0.17, { fill: o.dot });
 }
 // the spine along the foot: the chip, a short film of frames, the reader.
@@ -81,15 +83,15 @@ const DIM = '#A9AEB7';
 function spine(svg, where) {
   const W = where === 'all' ? ['chip', 'film', 'reader'] : [].concat(where || []);
   const on = (k) => W.includes(k), y = 950, h = 56;
-  rect(svg, 80, y, 170, h, { rx: 8, fill: on('chip') ? AMBER : PAPER, stroke: on('chip') ? AMBER : DIM, 'stroke-width': 3 });
-  T(svg, 165, y + 38, 'the chip', { size: 26, family: 'sans', weight: 600, anchor: 'middle', fill: on('chip') ? PAPER : DIM });
+  rect(svg, 80, y, 170, h, { rx: 8, fill: on('chip') ? AMBER_T : PAPER, stroke: on('chip') ? AMBER : DIM, 'stroke-width': 3 });
+  T(svg, 165, y + 38, 'the chip', { size: 26, family: 'sans', weight: 600, anchor: 'middle', fill: on('chip') ? AMBER : DIM });
   for (let i = 0; i < 13; i++) {
     const x = 280 + i * 104;
     frame(svg, x, y, 92, h, { stroke: on('film') ? INK : DIM, sw: 2.5, fill: on('film') && i % 4 === 1 ? AMBER_T : PAPER, dot: on('film') && i % 4 === 1 ? AMBER : null });
   }
   arrow(svg, 1638, y + h / 2, 1660, y + h / 2, on('film') ? INK : DIM, 3);
-  rect(svg, 1670, y, 170, h, { rx: 8, fill: on('reader') ? BLUE : PAPER, stroke: on('reader') ? BLUE : DIM, 'stroke-width': 3 });
-  T(svg, 1755, y + 38, 'the reader', { size: 26, family: 'sans', weight: 600, anchor: 'middle', fill: on('reader') ? PAPER : DIM });
+  rect(svg, 1670, y, 170, h, { rx: 8, fill: on('reader') ? BLUE_T : PAPER, stroke: on('reader') ? BLUE : DIM, 'stroke-width': 3 });
+  T(svg, 1755, y + 38, 'the reader', { size: 26, family: 'sans', weight: 600, anchor: 'middle', fill: on('reader') ? BLUE : DIM });
 }
 function slide(id, title, n, foot, where, o = {}) {
   const svg = F.h('svg', { viewBox: '0 0 1920 1080', width: 1920, height: 1080 });
@@ -119,13 +121,13 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
 // ---------------- 2: the headline, and what was underneath (pair)
 {
   const svg = slide('p2', 'Willow’s real news wasn’t the speed', 2,
-    'speed: Google blog, 9 Dec 2024 · errors: Nature 638 (2025), Table S1', 'chip');
+    'speed: Google blog, 9 Dec 2024 · errors: Nature 638 (2025), Table S1', null);
   // left: the headline, quiet
   T(svg, 80, 300, 'the headline', { ...CAP, size: 30 });
   T(svg, 80, 420, '< 5 minutes', { ...BIG, size: 96, fill: QUIET });
-  T(svg, 80, 476, 'for a test a supercomputer would need', { ...CAP, size: 30 });
-  T(svg, 80, 516, '10 septillion years for', { ...CAP, size: 30 });
-  T(svg, 80, 556, 'a benchmark with no known use', { ...CAP, size: 30 });
+  T(svg, 80, 476, 'against 10 septillion years', { ...CAP, size: 30 });
+  T(svg, 80, 516, 'on a supercomputer, for a', { ...CAP, size: 30 });
+  T(svg, 80, 556, 'benchmark with no known use', { ...CAP, size: 30 });
   line(svg, 900, 280, 900, 880, { stroke: RULE, 'stroke-width': 2 });
   // right: the errors, halving with each bigger grid
   T(svg, 1000, 300, 'underneath: each bigger grid halved the errors', { ...LAB, size: 32, weight: 500 });
@@ -148,10 +150,10 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
   const G = deckGrid(svg, { checks: lat.checks, d: 3, cx: 300, cy, pitch: 110, qr: 18 });
   for (const id of lat.walk[0].fired) G.tiles[id].setFired(1);
   errMark(svg, ...G.pos(4), 22, 'X');
-  T(svg, 300, 760, 'the chip', { ...LAB, size: 40, weight: 500, anchor: 'middle' });
+  T(svg, 300, 760, 'the chip', { ...LAB, size: 40, weight: 500, anchor: 'middle', fill: AMBER });
   T(svg, 300, 806, 'qubits, and checks between them', { ...CAP, anchor: 'middle' });
   arrow(svg, 500, cy, 580, cy);
-  for (let i = 0; i < 6; i++) frame(svg, 600 + i * 92, cy - 70, 80, 140, { sw: 3, stroke: i === 0 ? AMBER : INK, fill: i === 0 ? AMBER_T : PAPER, dot: i === 0 || i === 3 ? AMBER : null });
+  for (let i = 0; i < 6; i++) { const lit = i === 0 || i === 3; frame(svg, 600 + i * 92, cy - 70, 80, 140, { sw: 3, stroke: lit ? AMBER : INK, fill: lit ? AMBER_T : PAPER, dot: lit ? AMBER : null }); }
   T(svg, 600 + 3 * 92 - 6, 760, 'the hints', { ...LAB, size: 40, weight: 500, anchor: 'middle', fill: AMBER });
   T(svg, 600 + 3 * 92 - 6, 806, 'one frame every round', { ...CAP, anchor: 'middle' });
   arrow(svg, 1160, cy, 1240, cy);
@@ -193,21 +195,21 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
 // ---------------- 5: a few slips in a thousand (sequence)
 {
   const svg = slide('p4', 'Even good hardware slips a few times in a thousand', 5,
-    'Nature 638 (2025), Table S4 · Gidney and Ekerå (2021); Gidney (2025)', 'chip',
-    { sub: 'Google’s chip: about 3 slips in every 1,000 steps.' });
+    'Nature 638 (2025), Table S4, 72-qubit chip · Gidney and Ekerå (2021)', 'chip',
+    { sub: 'Google’s 72-qubit chip: a two-qubit gate slips about 3 times in 1,000.' });
   const px = 15, x0 = 80, y0 = 330, cols = 40, slips = new Set([137, 512, 838]);
   for (let i = 0; i < 1000; i++) {
     const x = x0 + (i % cols) * px, y = y0 + Math.floor(i / cols) * px, on = slips.has(i);
     rect(svg, x, y, px - 3, px - 3, { fill: on ? AMBER : '#D3D7DE' });
   }
   for (const i of slips) { const x = x0 + (i % cols) * px + 6, y = y0 + Math.floor(i / cols) * px + 6; circle(svg, x, y, 17, { fill: 'none', stroke: AMBER, 'stroke-width': 3.5 }); }
-  T(svg, x0, y0 + 25 * px + 56, '1,000 steps: 3 slips', { ...LAB, size: 36, weight: 500 });
+  T(svg, x0, y0 + 25 * px + 56, '1,000 operations: 3 slips', { ...LAB, size: 36, weight: 500 });
   arrow(svg, 720, 520, 860, 520);
   T(svg, 900, 470, 'Breaking today’s encryption:', { ...LAB, size: 36 });
-  T(svg, 900, 560, '2–3 billion steps', { ...BIG, size: 80 });
-  T(svg, 900, 700, 'at 1 slip in 1,000:', { ...LAB, size: 36 });
-  T(svg, 900, 800, '2–3 million slips', { ...BIG, size: 80, fill: AMBER });
-  T(svg, 900, 860, 'Without error correction, it never finishes.', { ...CAP, size: 30 });
+  T(svg, 900, 560, '2–3 billion costly steps', { ...BIG, size: 58 });
+  T(svg, 900, 610, 'each of many operations', { ...CAP, size: 30 });
+  T(svg, 900, 790, 'millions of slips', { ...BIG, size: 88, fill: AMBER });
+  T(svg, 900, 850, 'at the very least. Without error correction, it never finishes.', { ...CAP, size: 30 });
 }
 
 // ---------------- 6: measuring, so the chip asks "same or different?" (pair)
@@ -229,6 +231,7 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
   circle(svg, qa, my, 70, { fill: PAPER, stroke: INK, 'stroke-width': 4 });
   circle(svg, qb, my, 70, { fill: INK });
   T(svg, qb, my + 14, 'flipped', { size: 30, family: 'sans', anchor: 'middle', fill: PAPER });
+  line(svg, qa + 70, my, 1290, my, { stroke: AMBER, 'stroke-width': 4 }); line(svg, 1590, my, qb - 70, my, { stroke: AMBER, 'stroke-width': 4 });
   rect(svg, 1290, my - 80, 300, 160, { rx: 10, fill: AMBER_T, stroke: AMBER, 'stroke-width': 4 });
   circle(svg, 1440, my - 36, 13, { fill: AMBER });
   T(svg, 1440, my + 36, 'different', { size: 40, family: 'sans', weight: 600, anchor: 'middle', fill: AMBER });
@@ -263,13 +266,14 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
   [[3, 17, 712, 330], [5, 49, 349, 900], [7, 97, 171, 1560]].forEach(([d, q, err, cx], k) => {
     const half = (d - 1) / 2 * pitch;
     deckGrid(svg, { checks: S.surface(d), d, cx, cy: base - half, pitch, qr: 13 });
-    T(svg, cx, base + 70, `distance ${d}: ${q} qubits`, { ...LAB, anchor: 'middle' });
-    T(svg, cx, 830, String(err), { ...BIG, size: 104, anchor: 'middle', fill: k === 2 ? INK : QUIET });
-    T(svg, cx, 878, k === 2 ? 'errors per 100,000 rounds, read by matching' : 'errors per 100,000 rounds', { ...CAP, size: 26, anchor: 'middle' });
+    T(svg, cx, base + 64, `distance ${d}: ${q} qubits`, { ...LAB, anchor: 'middle' });
+    T(svg, cx, base + 100, `${d * d} storing (circles), ${q - d * d} in the checks`, { ...CAP, size: 24, anchor: 'middle' });
+    T(svg, cx, 846, String(err), { ...BIG, size: 96, anchor: 'middle', fill: k === 2 ? INK : QUIET });
+    T(svg, cx, 888, k === 2 ? 'errors per 100,000 rounds, read by matching' : 'errors per 100,000 rounds', { ...CAP, size: 26, anchor: 'middle' });
   });
   for (const [a, b] of [[330, 900], [900, 1560]]) {
-    T(svg, (a + b) / 2, 770, '÷ 2', { ...BIG, size: 52, anchor: 'middle' });
-    arrow(svg, a + 130, 796, b - 130, 796);
+    T(svg, (a + b) / 2, 792, '÷ 2', { ...BIG, size: 48, anchor: 'middle' });
+    arrow(svg, a + 130, 816, b - 130, 816);
   }
   T(svg, 80, 330, 'Willow is under it:', { ...LAB, size: 34, weight: 500 });
   T(svg, 80, 376, 'each step halved them.', { ...LAB, size: 34, weight: 500 });
@@ -289,10 +293,10 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
     T(svg, x + 110, 740, `round ${i + 1}`, { ...CAP, anchor: 'middle' });
   });
   T(svg, 80, 830, 'Round 2 changed, so it fires; round 3 did not.', { ...LAB, size: 32 });
-  const G = deckGrid(svg, { checks: lat.checks, d: 3, cx: 1400, cy: 560, pitch: 200, qr: 30 });
+  const G = deckGrid(svg, { checks: lat.checks, d: 3, cx: 1400, cy: 530, pitch: 175, qr: 28 });
   for (const id of lat.walk[0].fired) G.tiles[id].setFired(1);
   for (const [q, letter] of Object.entries(lat.walk[0].errors)) errMark(svg, ...G.pos(+q), 34, letter);
-  T(svg, 1400, 860, 'one flip: the two checks beside it fire', { ...LAB, size: 32, anchor: 'middle' });
+  T(svg, 1400, 890, 'one flip: the two checks beside it fire', { ...LAB, size: 32, anchor: 'middle' });
 }
 
 // ---------------- 10: one frame of hints (drawing)
@@ -362,7 +366,7 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
   const svg = slide('p12', 'A better reader removed one error in six', 13,
     'Nature 638 (2025) · distance 9: our estimate, 171 ÷ 2.04', 'reader',
     { sub: 'Same recordings, a better decoder: part of what a bigger grid buys, with no new qubits.' });
-  const x0 = 640, k = 6.6, h = 96;
+  const x0 = 640, k = 5.9, h = 96;
   const row = (y, nn, lab, sub, o) => {
     T(svg, 80, y + 44, lab, { ...LAB, size: 36, weight: 500, fill: o.lab || INK });
     T(svg, 80, y + 86, sub, CAP);
@@ -402,7 +406,7 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
     line(svg, X(t), fy - 20, X(t), ay + 12, { stroke: RULE, 'stroke-width': 1.5, 'stroke-dasharray': '6 6' });
     T(svg, X(t), ay + 48, t + ' µs', { ...CAP, anchor: t === 0 ? 'start' : 'middle' });
   }
-  const qa = X(2.2), qb = X(n * 1.1);
+  const qa = X(1.1), qb = X(n * 1.1);
   path(svg, `M${qa} ${fy - 24}V${fy - 44}H${qb}V${fy - 24}`, { stroke: AMBER, 'stroke-width': 3, fill: 'none' });
   T(svg, (qa + qb) / 2 - 20, fy - 62, '22', { ...BIG, size: 88, anchor: 'end', fill: AMBER });
   T(svg, (qa + qb) / 2, fy - 72, 'new frames before it finishes one', { size: 36, family: 'sans', weight: 600, fill: AMBER });
@@ -424,7 +428,7 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
   row(290, 204, 'our network', 'after 66 million examples', BLUE, { open: true, lab: BLUE });
   row(410, 133, 'our network', 'after 250 million: past plain matching', BLUE, { lab: BLUE });
   row(570, 141, 'plain matching', 'no training', QUIET);
-  row(690, 109, 'correlated matching', 'no training, free: still ahead', INK);
+  row(690, 109, 'correlated matching', 'no training, free: still ahead', INK, { open: true });
   line(svg, x0, 270, x0, 800, { stroke: INK, 'stroke-width': 2 });
   T(svg, x0, 860, 'failed runs per 10,000', CAP);
 }
@@ -446,24 +450,28 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
 
 // ---------------- 17: the reading (drawing, framed, not cut)
 {
-  const svg = slide('p16', null, 17, '', null);
-  F.h('image', { href: 'read.png', x: 230, y: 230, width: 1500, height: 844 }, svg);
+  const svg = slide('p16', null, 17, '', 'all');
+  const cp = F.h('clipPath', { id: 'win17' }, svg);
+  F.h('rect', { x: 80, y: 260, width: 1760, height: 660, rx: 12 }, cp);
+  F.h('image', { href: 'read.png', x: 80, y: -20, width: 1760, height: 990, 'clip-path': 'url(#win17)' }, svg);
+  rect(svg, 80, 260, 1760, 660, { rx: 12, fill: 'none', stroke: INK, 'stroke-width': 3 });
   T(svg, 80, 140, 'Half of a quantum computer is an ordinary one, reading', { size: 68, weight: TW, family: 'serif' });
-  T(svg, 80, 214, 'Reading every frame in time is still being built.', SUB);
-  path(svg, 'M1380 760 Q1390 670 1440 600', { stroke: BLUE, 'stroke-width': PEN, 'stroke-linecap': 'round', fill: 'none', 'stroke-dasharray': '10 8' });
-  T(svg, 1450, 560, 'one answer', { size: 40, hand: true, fill: BLUE }); T(svg, 1450, 606, 'per round, in time', { size: 40, hand: true, fill: BLUE });
+  T(svg, 80, 214, 'Reading every frame accurately and in time is still being built.', SUB);
+  penRing(svg, 1400, 770, 400, 150, { stroke: BLUE, width: PEN + 1, seed: 7, start: 0.4 });
+  path(svg, 'M1400 618 Q1380 520 1330 450', { stroke: BLUE, 'stroke-width': PEN, 'stroke-linecap': 'round', fill: 'none', 'stroke-dasharray': '10 8' });
+  T(svg, 1000, 400, 'one answer', { size: 44, hand: true, fill: BLUE }); T(svg, 1000, 450, 'per round, in time', { size: 44, hand: true, fill: BLUE });
 }
 
 // ---------------- 18: the question (bookend of page 1)
 {
   const svg = slide('p17', null, 18, '', 'all');
-  F.h('image', { href: 'heap.png', x: 700, y: 250, width: 1240, height: 698 }, svg);
+  F.h('image', { href: 'heap.png', x: 900, y: 330, width: 1000, height: 562 }, svg);
   T(svg, 80, 250, 'Can a decoder', { size: 104, weight: TW, family: 'serif', fill: BLUE });
   T(svg, 80, 366, 'that learns', { size: 104, weight: TW, family: 'serif', fill: BLUE });
   T(svg, 80, 482, 'keep up with', { size: 104, weight: TW, family: 'serif', fill: BLUE });
   T(svg, 80, 598, 'a real chip?', { size: 104, weight: TW, family: 'serif', fill: BLUE });
   T(svg, 82, 760, 'Questions welcome. The article, with every figure:', { ...CAP, size: 30 });
-  T(svg, 82, 820, 'thd-ai.github.io/ws27-papers/other-half/', { ...BIG, size: 40 });
+  T(svg, 82, 820, 'thd-ai.github.io/ws27-papers/other-half/', { ...BIG, size: 34 });
 }
 
 // ================= BACKUPS (shown only when a question asks for them)
@@ -480,9 +488,10 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
   hbar(svg, 80, 560, 40, 40, { fill: '#C9CED7' });
   T(svg, 140, 592, '144: two answers tie', { ...LAB, size: 32 });
   hbar(svg, 80, 640, 40, 40, { fill: PAPER, stroke: QUIET, 'stroke-width': 2 });
-  T(svg, 140, 672, 'the rest: matching is right', { ...LAB, size: 32 });
-  T(svg, 80, 780, 'Rare: under 1% of all runs.', { ...CAP, size: 30 });
-  T(svg, 80, 822, 'Ringed: the pattern on page 12.', { ...CAP, size: 30 });
+  T(svg, 140, 672, 'the rest: matching’s answer', { ...LAB, size: 32 });
+  T(svg, 140, 712, 'is the likeliest', { ...LAB, size: 32 });
+  T(svg, 80, 800, 'Rare: under 1% of all runs.', { ...CAP, size: 30 });
+  T(svg, 80, 842, 'Ringed: the pattern on page 12.', { ...CAP, size: 30 });
   const pitch = 40, gx = 1060, gy = 260, ord = syn.grid.order;
   for (const c of syn.cells) {
     const x = gx + c.col * pitch, y = gy + c.row * pitch, st = c.state;
@@ -497,9 +506,9 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
 {
   const svg = slide('b2', 'How the network learned', 'B2',
     'our own runs · noise 0.5% · curve points on 1 million probe runs per seed', 'reader',
-    { sub: 'Share of runs wrong, as training goes on. One line per seed.' });
+    { sub: 'Share of runs wrong as training goes on. Blue: our network, one line per seed. Flat: matching.' });
   const panel = (p, x0, title) => {
-    const w = 680, h = 470, y0 = 340;
+    const w = 560, h = 470, y0 = 340;
     const lx = (v) => x0 + w * (Math.log10(v) - 5.6) / (8.5 - 5.6), ly = (r) => y0 + h * (1 - (r - 0.01) / (0.03 - 0.01));
     T(svg, x0, y0 - 44, title, { ...LAB, size: 32, weight: 500 });
     line(svg, x0, y0 + h, x0 + w, y0 + h, { stroke: INK, 'stroke-width': 2 });
@@ -522,7 +531,7 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
   };
   const P = Object.fromEntries(learn.panels.map((p) => [p.id, p]));
   panel(P.d3, 160, 'distance 3: past both, early');
-  panel(P['d5-250m'], 1000, 'distance 5: past plain matching late');
+  panel(P['d5-250m'], 1080, 'distance 5: past plain matching late');
 }
 
 // ---------------- B3: every noise level (the table he liked)
@@ -530,17 +539,17 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
   const svg = slide('b3', 'Our network beat plain matching up to 0.6%', 'B3',
     'our own runs · distance 5 · about 250 million examples · 5 seeds, 10 million runs per level', 'reader');
   const rows = [['0.1%', '0.0099%', '0.0136%', '0.0105%'], ['0.2%', '0.079%', '0.102%', '0.073%'], ['0.3%', '0.276%', '0.330%', '0.243%'], ['0.4%', '0.670%', '0.756%', '0.564%'], ['0.5%', '1.331%', '1.411%', '1.090%'], ['0.6%', '2.260%', '2.309%', '1.835%'], ['0.8%', '5.090%', '4.898%', '4.094%'], ['1.0%', '9.074%', '8.379%', '7.335%']];
-  const cx = [80, 460, 860, 1260], y0 = 270, rh = 74;
+  const cx = [80, 420, 780, 1140], y0 = 270, rh = 74;
   ['noise level', 'our network', 'plain matching', 'correlated matching'].forEach((h, i) => T(svg, cx[i], y0, h, { ...LAB, size: 30, weight: 500, fill: i === 1 ? BLUE : INK }));
   T(svg, 80, y0 + 34, 'share of runs wrong', { ...CAP, size: 22 });
-  line(svg, 80, y0 + 50, 1640, y0 + 50, { stroke: INK, 'stroke-width': 2 });
+  line(svg, 80, y0 + 50, 1480, y0 + 50, { stroke: INK, 'stroke-width': 2 });
   rows.forEach((r, j) => {
     const y = y0 + 104 + j * rh, beats = parseFloat(r[1]) < parseFloat(r[2]);
-    if (j === 4) rect(svg, 60, y - 50, 1600, 68, { fill: BLUE_T, rx: 6 });
+    if (j === 4) rect(svg, 60, y - 50, 1440, 68, { fill: '#E6E8EC', rx: 6 });
     r.forEach((v, i) => T(svg, cx[i], y, v, { family: 'mono', size: 34, weight: i === 1 && beats ? 500 : 400, fill: i === 1 ? (beats ? BLUE : QUIET) : i === 3 ? INK : QUIET }));
   });
-  T(svg, 1700, 470, 'Blue: the', { ...LAB, size: 28, fill: BLUE }); T(svg, 1700, 506, 'network beat', { ...LAB, size: 28, fill: BLUE }); T(svg, 1700, 542, 'plain matching.', { ...LAB, size: 28, fill: BLUE });
-  T(svg, 1700, 620, 'Band: 0.5%,', { ...CAP, size: 26 }); T(svg, 1700, 654, 'page 15.', { ...CAP, size: 26 });
+  T(svg, 1560, 470, 'Blue: our network', { ...LAB, size: 28, fill: BLUE }); T(svg, 1560, 506, 'beat plain matching.', { ...LAB, size: 28, fill: BLUE });
+  T(svg, 1560, 600, 'Band: 0.5%, the level', { ...CAP, size: 26 }); T(svg, 1560, 634, 'of page 15.', { ...CAP, size: 26 });
 }
 
 // ---------------- B4: correlated matching's defect
@@ -550,17 +559,18 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
     { sub: 'Each of the 219 single errors in the simulator, applied alone. At distance 3 every one should be fixed.' });
   const bar = (y, nWrong, lab, sub) => {
     T(svg, 80, y + 40, lab, { ...LAB, size: 36, weight: 500 });
-    T(svg, 80, y + 80, sub, { ...CAP, size: 28, fill: nWrong ? AMBER : MUTED });
-    const x0 = 640, w = 1100, fixed = (219 - nWrong) / 219 * w;
+    T(svg, 80, y + 80, sub, { ...CAP, size: 28, fill: nWrong ? BLUE : MUTED });
+    const x0 = 640, w = 1060, fixed = (219 - nWrong) / 219 * w;
     hbar(svg, x0, y, fixed, 90, { fill: QUIET });
-    if (nWrong) { hbar(svg, x0 + fixed + 6, y, w - fixed - 6 + 60, 90, { fill: AMBER }); T(svg, x0 + w + 90, y + 62, String(nWrong), { ...BIG, size: 64, fill: AMBER }); }
-    else T(svg, x0 + w + 24, y + 62, '0', { ...BIG, size: 64, fill: QUIET });
+    if (nWrong) hbar(svg, x0 + fixed + 3, y, w - fixed - 3, 90, { fill: BLUE });
+    T(svg, x0 + w + 24, y + 62, String(nWrong), { ...BIG, size: 64, fill: nWrong ? BLUE : QUIET });
   };
   bar(330, 0, 'plain matching', 'all 219 fixed');
   bar(490, 6, 'correlated matching', '6 missed');
   T(svg, 80, 720, 'Those six add about 0.4 × the noise level: at 0.1% noise, 0.04%,', { ...LAB, size: 34 });
   T(svg, 80, 768, 'about the gap we measured (0.113% against 0.075%).', { ...LAB, size: 34 });
-  T(svg, 80, 860, 'A second script, written without seeing ours, found the same six. At distance 5 correlated matching won at every level.', { ...CAP, size: 26 });
+  T(svg, 80, 852, 'A second script, written without seeing ours, found the same six. Our setup only; the cause is not traced.', { ...CAP, size: 26 });
+  T(svg, 80, 890, 'At distance 5, correlated matching beat plain matching at every noise level.', { ...CAP, size: 26 });
 }
 
 // ---------------- B5: Nvidia builds for the reading half
@@ -571,7 +581,7 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
   line(svg, x0, y, x1, y, { stroke: INK, 'stroke-width': 3 });
   for (const [t, lab] of [[2025.0, '2025'], [2026.0, '2026']]) { line(svg, X(t), y - 12, X(t), y + 12, { stroke: INK, 'stroke-width': 3 }); T(svg, X(t), y + 54, lab, { ...BIG, size: 26, anchor: 'middle', fill: MUTED }); }
   const ev = [[2025.02, 'Jan 2025', 'Huang: useful quantum computers', '15 to 30 years away (paraphrase)', false, true],
-              [2025.22, 'Mar 2025', 'Quantum Day at GTC:', 'he joked he had been wrong', false, false],
+              [2025.22, 'Mar 2025', 'Quantum Day at GTC: he joked the', 'guests would explain why he was wrong', false, false],
               [2025.82, 'Oct 2025', 'NVQLink: GPUs wired into', 'the loop, for error correction', true, true],
               [2026.28, 'Apr 2026', '“Ising” decoding models,', 'a company claim', true, false]];
   ev.forEach(([t, d, a, b, reader, up], i) => {
@@ -588,10 +598,10 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
 // ---------------- B6: other labs, other hardware
 {
   const svg = slide('b6', 'Other labs, other hardware', 'B6',
-    'as cited in the article, sections 7 and 8 · status as of November 2026', 'all');
-  T(svg, 80, 214, 'Reviewed results in ink; preprints and press releases in grey, marked “not yet reviewed”.', SUB);
+    'as cited in the article, sections 7 and 8 · status as of November 2026', []);
+  T(svg, 80, 214, 'Solid rule: reviewed. Dashed rule: preprint or press release, not yet reviewed.', SUB);
   const rows = [
-    ['Harvard, MIT, QuEra', 'neutral atoms: a fault-tolerant architecture', 'Nature 649 (2025)', false],
+    ['Harvard, MIT, QuEra', 'neutral atoms: a fault-tolerant architecture', 'Nature 649, online Nov 2025', false],
     ['USTC', 'below the surface-code threshold, superconducting', 'Phys. Rev. Lett. 135 (2025)', false],
     ['Quantinuum', 'well below the colour-code threshold', 'not yet reviewed · Oct 2026', true],
     ['IBM', 'a fast decoder without learning, real time in simulation', 'not yet reviewed · 2025', true],
@@ -600,10 +610,10 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
   ];
   rows.forEach(([who, what, st, pre], i) => {
     const y = 320 + i * 96;
-    T(svg, 80, y, who, { ...LAB, size: 32, weight: 500, fill: pre ? QUIET : INK });
-    T(svg, 520, y, what, { ...LAB, size: 30, fill: pre ? QUIET : INK });
-    T(svg, 1840, y, st, { ...BIG, size: 22, fill: pre ? QUIET : INK, anchor: 'end' });
-    line(svg, 80, y + 30, 1840, y + 30, { stroke: RULE, 'stroke-width': 1.5 });
+    T(svg, 80, y, who, { ...LAB, size: 32, weight: 500 });
+    T(svg, 520, y, what, { ...LAB, size: 30 });
+    T(svg, 1840, y, st, { ...BIG, size: 22, anchor: 'end' });
+    line(svg, 80, y + 30, 1840, y + 30, { stroke: INK, 'stroke-width': 2.5, 'stroke-dasharray': pre ? '12 9' : null });
   });
 }
 
@@ -617,22 +627,22 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
     T(svg, x, 356, sub, { ...CAP, size: 28 });
     lines.forEach(([big, small], i) => { T(svg, x, 460 + i * 124, big, { ...BIG, size: 56 }); T(svg, x, 502 + i * 124, small, { ...CAP, size: 26 }); });
   };
-  col(110, 'Gidney and Ekerå, 2021', 'peer-reviewed: solid box', [['20 million', 'noisy qubits'], ['8 hours', 'for one 2048-bit RSA key'], ['1 in 1,000', 'slips per basic step']], false);
-  col(1010, 'Gidney, 2025', 'preprint: dashed box', [['< 1 million', 'noisy qubits'], ['< 1 week', 'for one 2048-bit RSA key'], ['1 in 1,000', 'and a 10 µs reaction time']], true);
-  T(svg, 80, 890, 'The reader must keep pace: Willow’s round is 1.1 µs; the 2024 network took 24 µs.', { ...LAB, size: 32, fill: BLUE, weight: 500 });
+  col(110, 'Gidney and Ekerå, 2021', 'peer-reviewed: solid box', [['20 million', 'noisy qubits'], ['8 hours', 'for one 2048-bit RSA key'], ['1 in 1,000', 'slips per basic operation']], false);
+  col(1010, 'Gidney, 2025', 'preprint: dashed box', [['< 1 million', 'noisy qubits'], ['< 1 week', 'for one 2048-bit RSA key'], ['1 in 1,000', 'slips per basic operation']], true);
+  T(svg, 80, 890, 'Both assume a 1 µs round and a 10 µs reaction. Willow’s round: 1.1 µs; the 2024 network: 24 µs.', { ...LAB, size: 32, fill: BLUE, weight: 500 });
 }
 
 // ---------------- B8: training and decoding times (a table)
 {
-  const svg = slide('b8', 'How long it took', 'B8',
+  const svg = slide('b8', 'Training took minutes; decoding was slower than matching', 'B8',
     'our own timings · decoding on one laptop core, emulated · rough: repeats varied by half', 'reader');
   const table = (x, y, head, rows) => {
     T(svg, x, y, head, { ...LAB, size: 32, weight: 500 });
     line(svg, x, y + 20, x + 800, y + 20, { stroke: INK, 'stroke-width': 2 });
-    rows.forEach(([a, b], i) => { T(svg, x, y + 82 + i * 70, a, { ...BIG, size: 36, fill: i === 0 ? BLUE : INK }); T(svg, x + 340, y + 80 + i * 70, b, { ...CAP, size: 26 }); });
+    rows.forEach(([a, b], i) => { T(svg, x, y + 82 + i * 70, a, { ...BIG, size: 36 }); T(svg, x + 340, y + 80 + i * 70, b, { ...CAP, size: 26 }); });
   };
   table(80, 300, 'training, on a Kaggle GPU', [['50 s', 'per seed, distance 3, 66 million'], ['100 s', 'per seed, distance 5, 66 million'], ['6 min', 'per seed, distance 5, 250 million'], ['1 h 45 min', 'estimate: on a laptop, emulated']]);
-  table(1000, 300, 'decoding one run, against plain matching', [['14–27 µs', 'the network, distance 3 to 7'], ['20× slower', 'distance 3, noise 0.5%'], ['2× slower', 'distance 5, noise 0.5%'], ['10× slower', 'distance 5, noise 0.1%']]);
+  table(1000, 300, 'decoding one run: our network', [['14–27 µs', 'per run, distance 3 to 7'], ['20× slower', 'than plain matching, d 3, 0.5%'], ['2× slower', 'than plain matching, d 5, 0.5%'], ['10× slower', 'than plain matching, d 5, 0.1%']]);
   T(svg, 80, 860, 'Not a live decoder on its own hardware, so not set against the chip’s clock.', { ...CAP, size: 30 });
 }
 
@@ -640,7 +650,7 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
 {
   const svg = slide('b9', 'What one check does in a round', 'B9',
     'the surface code’s usual circuit, simplified · one round on Willow: 1.1 µs', 'chip');
-  const cx = 1400, cy = 560, hs = 220;
+  const cx = 1320, cy = 560, hs = 220;
   rect(svg, cx - hs, cy - hs, 2 * hs, 2 * hs, { fill: AMBER_T, stroke: AMBER, 'stroke-width': 4, rx: 6 });
   for (const [dx, dy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
     line(svg, cx, cy, cx + dx * (hs - 40), cy + dy * (hs - 40), { stroke: INK, 'stroke-width': 3, 'stroke-dasharray': '8 7' });
@@ -649,7 +659,8 @@ function hbar(svg, x, y, w, h, o) { rect(svg, x, y, Math.max(2, w), h, { rx: 4, 
   circle(svg, cx, cy, 26, { fill: AMBER });
   T(svg, cx, cy + hs + 90, 'the helper, in the middle', { size: 36, hand: true, anchor: 'middle', fill: AMBER });
   T(svg, cx + hs + 60, cy - hs + 10, 'storing qubits:', { ...CAP, size: 26 });
-  T(svg, cx + hs + 60, cy - hs + 44, 'never measured', { ...CAP, size: 26 });
+  T(svg, cx + hs + 60, cy - hs + 44, 'not measured', { ...CAP, size: 26 });
+  T(svg, cx + hs + 60, cy - hs + 78, 'during the run', { ...CAP, size: 26 });
   [['1', 'Reset the helper.'], ['2', 'Couple it to its four storing qubits.'], ['3', 'Measure only the helper: even or odd.'], ['4', 'Changed since last round? The check fires.']].forEach(([n, t], i) => {
     T(svg, 80, 330 + i * 120, n, { ...BIG, size: 48, fill: i === 3 ? AMBER : INK });
     T(svg, 150, 330 + i * 120, t, { ...LAB, size: 34, fill: i === 3 ? AMBER : INK, weight: i === 3 ? 500 : 400 });
