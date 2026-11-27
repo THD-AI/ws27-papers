@@ -103,7 +103,7 @@ body.full #notes, body.full #help { display: none !important; }
 <body>
 <div id="stage"><div id="slide"></div></div>
 <aside id="notes" hidden></aside>
-<div id="help">F full screen (notes hide), Right or Space next, Left back, N notes, G go to page (this hint hides after the first key)</div>
+<div id="help">F full screen (notes hide), Right, Space or the wheel next, Left back, N notes, G go to page (this hint hides after the first key)</div>
 <script>
 var PAGES = ${JSON.stringify(pages)};
 var ART = ${JSON.stringify(ART)};
@@ -135,6 +135,16 @@ addEventListener('keydown', function (e) {
   else if (e.key === 'g' || e.key === 'G') { var k = parseInt(prompt('Go to page (1–' + PAGES.length + ')'), 10); if (k) show(k - 1); }
 });
 slide.addEventListener('click', function (e) { if (e.target.closest('a')) return; document.body.classList.add('clean'); show(n + 1); });
+// The wheel: one notch, one page. A clicker or the Flipper's Slides remote scrolls.
+var wheelAt = 0, wheelSum = 0;
+addEventListener('wheel', function (e) {
+  if (e.target.closest && e.target.closest('#notes')) return; // the notes scroll
+  e.preventDefault();
+  var now = Date.now();
+  if (now - wheelAt > 400) wheelSum = 0;
+  wheelSum += e.deltaY;
+  if (Math.abs(wheelSum) >= 30 && now - wheelAt > 250) { document.body.classList.add('clean'); show(n + (wheelSum > 0 ? 1 : -1)); wheelAt = now; wheelSum = 0; }
+}, { passive: false });
 fit(); mode(); show(n);
 </script>
 </body>
