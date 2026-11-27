@@ -91,29 +91,12 @@ function spine(svg, where) {
     x -= name.length * 15.5 + 40;
   }
 }
-// The thread, as the Renovate talk runs its cable through every wall: the film
-// of hints along the foot of each middle page, off both edges. The page's own
-// frame is lit in its section's colour and moves right as the talk goes on.
-// Pages 4, 10 and 14 draw the film large, so the strip is left out there.
-const THREAD = new Set([5, 6, 7, 8, 9, 11, 12, 13, 15, 16]);
-function thread(svg, n, where) {
-  const y = 962, h = 40, w = 34, gap = 6, at = 80 + (n - 1) / 17 * (1760 - w);
-  const k0 = Math.round(at / (w + gap)), off = at - k0 * (w + gap);
-  const col = SEG[[].concat(where)[0]][2];
-  for (let i = -1; i * (w + gap) + off < 1920; i++) {
-    const x = i * (w + gap) + off, lit = i === k0;
-    if (lit) continue;
-    frame(svg, x, y, w, h, { stroke: RULE, sw: 1.5 });
-  }
-  frame(svg, at, y - 4, w, h + 8, { stroke: col, fill: col === INK ? '#E6E8EC' : col === AMBER ? AMBER_T : BLUE_T, sw: 3 });
-}
 function slide(id, title, n, foot, where, o = {}) {
   const svg = F.h('svg', { viewBox: '0 0 1920 1080', width: 1920, height: 1080 });
   document.getElementById(id).appendChild(svg);
   if (title) T(svg, 80, 140, title, { size: 68, weight: TW, family: 'serif' });
   if (o.sub) T(svg, 80, 214, o.sub, SUB);
   if (where) spine(svg, where);
-  if (typeof n === 'number' && THREAD.has(n) && where && [].concat(where).length) thread(svg, n, where);
   if (foot) T(svg, 80, 1054, foot, { family: 'mono', size: 18, fill: MUTED });
   if (n) T(svg, 1840, 1056, typeof n === 'string' ? 'backup ' + n.slice(1) : n + ' / 18', { family: 'mono', size: 24, fill: MUTED, anchor: 'end' });
   return svg;
@@ -358,8 +341,8 @@ build('p10', 2, (pid, st) => {
 });
 
 // ---------------- 12: fewer errors, less likely (pair; the layout he liked)
-build('p11', 3, (pid, st) => {
-  const svg = slide(pid, 'Fewer errors, less likely', 12, 'distance 3 · 5% error per qubit · times right in 30 runs · our own count', 'reader',
+build('p11', 2, (pid, st) => {
+  const svg = slide(pid, 'Fewer errors, less likely', 12, 'distance 3 · 5% error per qubit · our own count', 'reader',
     { sub: 'Same fired checks, two explanations.' });
   line(svg, 960, 280, 960, 900, { stroke: RULE, 'stroke-width': 2 });
   const ex = lat.example, pitch = 150, cy = 520;
@@ -373,7 +356,8 @@ build('p11', 3, (pid, st) => {
   if (st >= 2) { const G2 = draw(1400, ex.read_together.errors); const [x, y] = G2.pos(5); guess(svg, x, y, 32, 'Z'); }
   const res = (cx, k, lab, strong) => {
     T(svg, cx, 800, lab, { ...LAB, size: 34, anchor: 'middle', fill: strong ? BLUE : INK });
-    if (st >= 3) T(svg, cx, 890, String(k), { ...BIG, size: 72, anchor: 'middle', fill: strong ? BLUE : QUIET });
+    T(svg, cx, 890, String(k), { ...BIG, size: 72, anchor: 'middle', fill: strong ? BLUE : QUIET });
+    T(svg, cx, 936, 'right, of 30 runs', { ...CAP, anchor: 'middle', fill: strong ? BLUE : MUTED });
   };
   res(520, 10, 'matching’s pick', false);
   if (st >= 2) res(1400, 19, 'the likelier pick', true);
