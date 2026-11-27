@@ -1,8 +1,8 @@
 // Review harness: mounts any figure at any state, as the page shell would.
 //
 //   _lab.html                                   index of all states
-//   _lab.html?fig=path&step=6&t=1&layout=wide&print=0
-//   _lab.html?fig=path&sheet=1&layout=wide      every step at t = 1 on one sheet
+//   _lab.html?fig=plan&step=6&t=1&layout=wide&print=0
+//   _lab.html?fig=plan&sheet=1&layout=wide      every step at t = 1 on one sheet
 //   further: w=<px> width of the frame, reduced=0|1 (default 1: stills),
 //            cols=<n> columns of a sheet, nocss=1 (figure falls back to its
 //            own colours), audit=0 to hide the checks
@@ -16,13 +16,10 @@ const FIGS = {
   numbers:   { role: 'scene',  steps: 5 },
   pairs:     { role: 'wide',   steps: 1 },
   obstacles: { role: 'scene',  steps: 2 },
-  path:      { role: 'scene',  steps: 9 },
   exits:     { role: 'scene',  steps: 3 },
   attitudes: { role: 'scene',  steps: 3 },
-  house:     { role: 'margin', steps: 6 },
   'walls': { role: 'scene', steps: 3 },
   'permits': { role: 'scene', steps: 3 },
-  'roadmap': { role: 'wide', steps: 3 },
   'terms': { role: 'scene', steps: 2 },
   'repaint': { role: 'scene', steps: 3 },
   'rewire': { role: 'column', steps: 2 },   // a scene that prints one column wide

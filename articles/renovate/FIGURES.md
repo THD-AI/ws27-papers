@@ -21,7 +21,7 @@ A step now starts when its passage is reached and plays its timeline (t 0 to 1) 
 
 ## Twelve-reader round on the web page (17 November 2026)
 
-- **`plan`**: the staff band is no longer drawn under the path ("throughout" overreached: the protection ends on 31 Dec 2028, the plan has no dates). It is a separate note with a short band that stops at a marked end: "no dismissals for business reasons until 31 Dec 2028" / "about 60,000 staff · about 4,000 a year leave by agreed routes" (R11-14, DGB-2026, R12-01). A ninth state, step 8, is the overview: every station in ink, none in the field; it is the still where scenes read as a sequence (`stills = [8]`) and the print state. The text never scrolls to it (its `@step` lines stop at 7). Tall (phones, pinned): a compact strip, 360 × 236 (about 233 px at 355 wide, 28% of an 844 px screen): eight small numbered stations on one line, the bracket "need step 5" over 6 to 8, and under it "step n of 8" with the current station's name and measure. `data/house.json` says "no dismissals for business reasons until 31 Dec 2028".
+- **`plan`**: the staff band is no longer drawn under the path ("throughout" overreached: the protection ends on 31 Dec 2028, the plan has no dates). It is a separate note with a short band that stops at a marked end: "no dismissals for business reasons until 31 Dec 2028" / "about 60,000 staff · about 4,000 a year leave by agreed routes" (R11-14, DGB-2026, R12-01). A ninth state, step 8, is the overview: every station in ink, none in the field; it is the still where scenes read as a sequence (`stills = [8]`) and the print state. The text never scrolls to it (its `@step` lines stop at 7). Tall (phones, pinned): a compact strip, 360 × 236 (about 233 px at 355 wide, 28% of an 844 px screen): eight small numbered stations on one line, the bracket "need step 5" over 6 to 8, and under it "step n of 8" with the current station's name and measure. The retired `data/house.json` (tag `archive/renovate-retired-figures`) said "no dismissals for business reasons until 31 Dec 2028".
 - **`exits`**: on phones the severance field reaches up over its route name, so name, "526 in 2021 → 1,016 in 2025" and its marks share one field; tall frame 360 × 398.
 - **`attitudes`**: one dot is 2% on screen (50 dots, one row per country at every width; the value at the end of the row; note "one dot is 2%, rounded"). Print keeps 5%.
 - **`permits`**: step 2 draws the German side as two rows: the row of step 1, now named "outside the framework: its own agreement · how long: not published", with the conciliation board as a muted note under it; and a new row "inside the framework agreement (2021): a short check" with a short check, build and launch (words inside the bars). The stamp and the dashed ghost are gone. Lengths stay schematic.
@@ -42,7 +42,7 @@ A step now starts when its passage is reached and plays its timeline (t 0 to 1) 
 Twelve readers per round; the log is in dotUni `docs/papers/innovation/loop-draft-6.md`.
 
 - **`permits`**: cars removed. The figure now shows the real schedules: T-Mobile build → launch, checks afterwards; Telekom works council and privacy review → build → launch; the 2021 framework agreement as the shortcut; the conciliation board note. The cars remain one sentence in the text.
-- **`roadmap`**: off the page since draft 9. It failed in all three rounds in three forms (icons, Gantt, ladder of equal steps). The numbered list with a measure per step carries section 9. The file stays for his decision.
+- **`roadmap`**: off the page since draft 9. It failed in all three rounds in three forms (icons, Gantt, ladder of equal steps). The numbered list with a measure per step carries section 9. Its files are kept under the tag `archive/renovate-roadmap-figure`.
 - **`repaint`** (new, column, 2 steps): "The saving first, taken back later", Klarna (leavers not replaced → hiring again, 15 months) and Commonwealth Bank (45 jobs to go → "error", weeks).
 - **`numbers`**: plates cross-fade, so the pinned figure is never blank; the 40/32 nesting note says the overlap isn't published; "−55%" mark.
 - **`walls`**: timber cable dropped from above into one bay; brick runs in the upper zone; sockets visibly above the floor; headings "On the surface, painted over" / "Cut in and plastered".
@@ -56,7 +56,6 @@ Six independent readers read draft 5 (dotUni `docs/papers/innovation/readers-dra
 - **`walls`**: the cable follows the DIN 18015-3 installation zones (along the upper zone, down beside a corner, to a socket near the floor) in all three walls; the brick walls read as plastered, with the brick visible only in the cut and in a broken-away patch.
 - **`terms`**: the cable joins two junction boxes (a lead between two wall sockets is a lethal double plug); the agent "acts in a loop".
 - **`permits`**: now cars, because buildings are inspected before occupancy in both countries. United States: the maker certifies itself, tests and recalls come afterwards (FR-2020-28107). Germany and the EU: type approval before any car is sold (EU-2018-858). The 2021 standing agreement is the type approval; a system outside it needs its own approval, the long way.
-- **`roadmap`**: a renovation schedule of an occupied house in a true order: survey, plan and materials, approval, trades first, the main supply, room by room with the keys in steps, running it; people at home throughout; inspected at every step.
 - **`obstacles`**: the accent is on missing knowledge, which the section is about; the law rows are marked quietly.
 - **`exits`**, **`attitudes`**: labels enlarged for laptop screens.
 - **`pairs`**: moved to an appendix; the text keeps a two-sentence summary.
@@ -65,14 +64,13 @@ Six independent readers read draft 5 (dotUni `docs/papers/innovation/readers-dra
 
 Alexander's rule for this article (dotUni transcripts `2026-11-16-019`, `-020`): every hard idea is explained with an everyday analogy, and the main one is his father's, a civil engineer: American houses are timber frames, so new wiring is pulled through hollow walls; German houses are mostly masonry, so a new cable means a channel cut and plastered. **The analogy is drawn in its own world. No AI agents, robots, screens or office workers inside it.** The plan with the analogy dictionary and the storyboard is in arudaev/dotUni `docs/papers/innovation/plan-restart.md`.
 
-Retired in draft 5: `path` (its point did not come across; replaced by `permits`) and the margin scene `house` (distracting). Their files stay for reference; the text no longer uses them. The five house directions of the same day (`house-a` to `house-e`, branch `feat/renovate-house-directions`) were all rejected.
+Retired in draft 5: `path` (its point did not come across; replaced by `permits`) and the margin scene `house` (distracting). Their files are kept under the tag `archive/renovate-retired-figures`; the text does not use them. The five house directions of the same day (`house-a` to `house-e`, tag `archive/renovate-house-directions`) were all rejected.
 
 New in draft 5:
 
 - **`walls`** (figure, column, 3 steps, the hero): the same new cable added to a timber stud wall and to a brick wall. Five-second reading: "the same job is quick in one wall and building work in the other". Sources: NAHB-2026, DESTATIS-2021, BAUNETZ-DIN18015.
 - **`terms`** (figure, column, 2 steps): four everyday pictures for the parts of an AI system: apprentice (language model), plans archive (retrieval), keys (an agent's permissions), wiring (connections). Five-second reading: "what people picture as AI is only the apprentice".
-- **`permits`** (figure, column, 3 steps): one decision as two construction schedules on one time axis: Germany checks before the work, the US after; a pre-approved standard design (Telekom's 2021 framework agreement) keeps the German permit short. Facts and ids from `data/path.json`.
-- **`roadmap`** (figure, wide, 5 steps): the renovation of an occupied building in order: survey, foundations, wiring with keys in steps, fit-out with the residents, inspection while building; "the residents stay" (no dismissals for business reasons until the end of 2028) under all phases.
+- **`permits`** (figure, column, 3 steps): one decision as two construction schedules on one time axis: Germany checks before the work, the US after; a pre-approved standard design (Telekom's 2021 framework agreement) keeps the German permit short. Facts and ids then came from `data/path.json` (now under the tag `archive/renovate-retired-figures`; the figure reads `data/permits.json`).
 
 ## `numbers` (scene, 5 steps): what the 40% and the 55% are
 
@@ -127,23 +125,6 @@ Six rows of unit dots, one dot is 2 percentage points, 50 dots to a full row, co
 | Data not available or not good enough | 44 |
 | Cost | 32 |
 
-## `path` (scene, 9 steps): one decision on both sides
-
-Five-second reading at the last step: "in the US the decision goes straight to launch and the checks come after; in Germany it passes several gates first, and the way out by dismissal is shut until the end of 2028".
-
-Two horizontal tracks, United States above, Germany below. At the left of each a filled dot, "the decision: let a software agent act on accounts". At the right a small flag, "launch". Small dots travel along the tracks (the Processing touch: gentle, seeded, idle only). A gate is a short vertical bar across the track with a gap that dots pass through; its holder is written above in Libre Franklin, its basis below in mono.
-
-- Step 0: both tracks, empty.
-- Step 1: US track draws from left to right to the flag. Note over it: "announced September 2024 → a third of contract customers' calls by mid-2026, about 21 months" (R6-08, R6-06). A faint struck slot labelled "no works council" (R11-36).
-- Step 2: after the US flag, three marks in a row: "caller authentication (every call)" (R11-40), "state rules from 2027" (R11-41), "lawsuits" (R11-43). Bracket: "after launch".
-- Step 3: German gate 1 appears: "Works council is told at the planning stage", basis "§ 90 BetrVG" (R11-05).
-- Step 4: gate 2: "Works council agrees, or a conciliation committee decides", basis "§ 87(1) no. 6, § 76 BetrVG" (R11-07, R11-08). Italic note: "applies to systems suited to monitoring staff".
-- Step 5: gates 3 and 4: "Privacy and security approval", basis "company procedure" (R11-21); "Impact assessment · AI Act duties", basis "GDPR Art. 35 · AI Act Art. 50" (R11-22, R9-04). Six small unlabelled ticks stand for the other gates, with the note "6 more in the research".
-- Step 6: after the launch flag on both tracks a second stretch, "taking the saving". US: an open way marked "dismissal: management decides, 60 days' notice for a mass layoff" (R11-34, R11-35). Germany: a shut gate marked "no dismissals for business reasons until 31 Dec 2028" (R11-14) and a side track leaving downward: "about 4,000 a year leave by agreed routes" (R12-01).
-- Step 7: gate 2 opens out into a queue: many dots waiting in a line, note "until 2021: six weeks per system, sometimes over a hundred in one meeting" (R11-12).
-- Step 8: the queue becomes a sieve: dots that fit a small template pass without stopping, note "since 2021: a profile checked against agreed rules"; one dot of a different shape is led aside to a closed box with a question mark, "a screen that listens to calls: own agreement, not public" (R11-12).
-- Phone layout (`tall`): the two tracks run top to bottom, side by side.
-
 ## `exits` (scene, 3 steps): the agreed routes out
 
 Five-second reading: "about four thousand positions a year leave Telekom in Germany by agreed routes, most by partial retirement; severance is the one that doubled".
@@ -177,19 +158,6 @@ Three small panels, each a pair of 100-dot strips (one dot is 1%).
 3. "Digital monitoring of workers: negative": Germany 79. One strip only, with the note "second-highest in the EU, after Sweden's 80%; asked in the EU only" (R12-28).
 
 Never place panel 3 as if it compared with the US.
-
-## `house` (margin scene, 6 states): where the text is
-
-A small exact drawing of a house in section, drawn in ink line with the accent field behind one part at a time. Parts from the ground up: foundations ("customer data, who is calling"), wiring ("own software"), rooms ("service: agent and staff"), the supply line entering from the side ("models from outside"), the inspector's mark at the door ("gates"), and the coat of paint on the outside ("the agent everyone sees"). One or two words per label, set in mono, shown only for the part that is active.
-
-- State 0 (opening): the paint is the field; label "what was announced".
-- State 1 (section 3): foundations and wiring are the field; label "what T-Mobile did first".
-- State 2 (section 4): foundations drawn as unfinished (dashed), label "Telekom: planned work".
-- State 3 (section 5): the supply line is the field; label "bought from outside".
-- State 4 (section 6): the inspector's mark at the door is the field; label "gates before launch".
-- State 5 (section 7): a closed back door; label "no dismissals until 2028".
-
-On phones and in print each state is a small figure at the start of its section.
 
 ## Hero
 
