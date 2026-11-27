@@ -8,7 +8,7 @@ The 15-minute group talk "The other half of a quantum computer", Quantum Computi
 - **Two layouts.** A pair of equal halves around a gutter, or one full-width sequence. Comparisons, time and cause run left to right.
 - **One code.** A frame is always a film frame. An error is a black disc with its letter; the decoder's guess is a blue ring with its letter. A fired check is an amber outline with a dot.
 - **The spine.** Along the foot of every page from page 3 on: the chip, a short film of frames, the reader. The part the page is about is lit in its colour. Page 3 draws the spine large; page 17 shows it as the drawing.
-- **Builds.** Pages 3, 4, 13 and 14 add one part per click, as the Renovate talk does (35 frames in all).
+- **Builds.** Pages 3, 4, 5, 7, 8, 9, 11, 12, 13 and 14 add one part per click, as the Renovate talk does (43 frames in all).
 - **The ending returns to the beginning.** Page 18 brings back page 1's drawing with the question.
 
 Each page was checked sharp and blurred (the back row, or no glasses). Independent reviewers then went through it: error hunts per page, a flow reading against the Renovate talk, a fact check and a panel of three. The previous version is still in `talks/quantum/v5/`.
