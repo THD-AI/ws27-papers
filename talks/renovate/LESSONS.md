@@ -52,14 +52,14 @@ Rules that follow:
 ## Loop 9 (19 November): drawn plugs with their cords, and a full audit
 
 What happened:
-- With credits back, the plug was redrawn WITH its cord in one drawing (side view) and three different keys were drawn. He liked the side plug and found the first upright plug (a detailed Schuko face) "way too detailed" (`-017`). It was redrawn from the side plug as reference: the same simple plug, standing up.
+- With credits back, the plug was redrawn WITH its cord in one drawing (side view) and three different keys were drawn. He liked the side plug and found the first upright plug (a detailed Schuko face) far too detailed (`-017`). It was redrawn from the side plug as reference: the same simple plug, standing up.
 - Readers measured the seam: the drawn cord's lines render at about 1.5 px of mid-grey (#535353). The cable now uses that ink and weight (#505055, 1.6 px), and it ends 30 px under the drawing, whose first stretch of cord is filled with paper, so no cap or edge shows.
 - Slide 6: the pins now go into the box (the box is drawn over their tips). Slide 7: a dashed line runs from the pins to the socket they fit. Closing slide: the plug is cropped before its pin collars and seated on a plate in the drawing's ink and weight.
 - A final audit of all 46 pages (designer and QA) scored 8 and 7.5. Fixed: a dashed line through "4,448"; dashed guides cutting through timeline labels (the labels now sit on paper); a label past the margin; a second cable in the footer of the walls slide; unexplained ticks on columns; an orphaned title word (the line was widened, the words kept: "Nearly four in five" is the fact); a stray full stop; awkward wording; a three-line source.
 - Not taken: the walls slide's duct shadow (held since loop 1) and green on headline numbers (the deck's way of marking the figure that matters).
 
 Rules that follow:
-45. **Simple beats detailed.** When he likes a drawing, it becomes the reference for its siblings: "the same object, only turned".
+45. **Simple beats detailed.** When he likes a drawing, it becomes the reference for its siblings: the same object, only turned.
 46. **A drawn cord and a code cable meet under the drawing,** never edge to edge: fill the drawing's cord with paper and run the cable 30 px beneath it.
 47. **An audit may suggest changing a fact's wording to fix layout; fix the layout instead.**
 
@@ -90,7 +90,7 @@ Rules that follow:
 ## Loop 6 (19 November): where the QR code belongs, and how it may look
 
 What happened:
-- He rejected the socket-faced QR code on the sources slide ("it looks weird", `-014`) and asked for a brainstorm through the playbook.
+- He rejected the socket-faced QR code on the sources slide as odd-looking (`-014`) and asked for a brainstorm through the playbook.
 - Research: on slides the code should be about 15% of the slide's width and come with a plain call to action; the closing slide is the classic place; image-model "art" QR codes always trade scanning for looks.
 - Three directions on the closing slide (it stays up through the questions): a plaster patch in the wall, an engineer's title block, a tag hanging from the cable. A brick-wall QR from the image model could not be tried (no credits).
 - Four readers: three would ship the plaster patch, one the cable tag. Convergent fixes: the code on white with the green only around it; no sentence explaining the metaphor; keep clear of the slide's edges and the bottom third, where heads and the speaker stand.
@@ -115,7 +115,7 @@ Rules that follow:
 ## Loop 4 (19 November): one wall, reused instead of regenerated
 
 What happened:
-- He said "do whatever is best" to drawing the socket and bricks himself. A round-3 redraw of the channel, with the approved wall as its brick reference, could not run: the OpenAI account has no credits left.
+- He left the socket and bricks to our judgement instead of drawing them himself. A round-3 redraw of the channel, with the approved wall as its brick reference, could not run: the OpenAI account has no credits left.
 - Slide 14 now cuts its channel in code into a strip of the approved slide-1 wall (three courses, at nearly the title's scale, top and bottom softened with paper). All three wall pictures share one brick; the stones and the blob of green are gone. The generated deck-chase.png is no longer used.
 - The sockets stay in code: the count of 14 distinct faces must be exact, and no real socket photograph is on file to draw one from.
 - Two things failed on the way: an SVG mask on a group holding a nested svg did not apply in Chrome's print, and a crop scaled to 1.95× turned his hairline into a crude marker line.
@@ -186,9 +186,9 @@ Rules that follow:
 ## Loop 0 → 1 (19 November): the first deck and why it isn't the bar
 
 What happened:
-- The deck Claude Design made from the synced design system was "horrible" (`-009`): artifacts are not the medium for his slides.
+- The deck Claude Design made from the synced design system was rejected outright (`-009`): artifacts are not the medium for his slides.
 - The first coded deck (assertion–evidence, title as the last build, counted dots, a step row) scored 7–8 with five readers twice, and he still found it wrong on sight (`-010`): on most pages the title band was empty until the last click, so the slide looked broken.
-- His bar after seeing it and the CheXVision and GKD4HYDRO decks (`-011`): not that pattern at all; "ten times better", unique, perfectly explained, made for the projector (no animation is seen, every page is a still), speaking to the expected audience. Generated images and sprites allowed. Compound engineering with written lessons.
+- His bar after seeing it and the CheXVision and GKD4HYDRO decks (`-011`): not that pattern at all; far better, unique, perfectly explained, made for the projector (no animation is seen, every page is a still), speaking to the expected audience. Generated images and sprites allowed. Compound engineering with written lessons.
 
 Rules that follow:
 1. **A page is a still.** On a projector nothing moves; each build must be a complete, good picture on its own. Never leave a reserved empty slot (the title-last band read as an error). If something arrives later, the page before it must not look unfinished.

@@ -1,7 +1,7 @@
 // Builds the talk as ONE offline HTML file for presenting: every build
 // pre-drawn as SVG, the three typefaces and the house drawing embedded, no
 // network and no server. Double-click it, press F11, then Right / Left.
-//   node tools/deck-offline.mjs [renovate] [--v2]
+//   node tools/deck-offline.mjs [renovate|quantum] [--v2]
 // Writes .shots/deck/<talk>[-v2]/<talk>-talk.html
 import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
@@ -58,16 +58,23 @@ const pages = await page.evaluate(async (v2) => {
 await browser.close();
 server.close();
 
-// 3. Each drawing once, as a data URI the pages point to at show time.
-const ART_PREFIX = `../../articles/${talk}/art/`;
+// 3. Each drawing (and the Virgil face) once, as a data URI the pages point
+// to at show time. The Quantum deck draws from the article's art and its own.
+const ARTICLE = { renovate: 'renovate', quantum: 'other-half' }[talk] || talk;
+const PREFIXES = [[`../../articles/${ARTICLE}/art/`, join(ROOT, 'articles', ARTICLE, 'art')], ['./art/', join(ROOT, 'talks', talk, 'art')]];
+const MIME = { png: 'image/png', woff2: 'font/woff2' };
 const ART = {};
 for (const p of pages) {
-  p.svg = p.svg.split(ART_PREFIX).map((part, i) => {
-    if (i === 0) return part;
-    const f = part.match(/^[\w.-]+\.png/)[0];
-    if (!ART[f]) ART[f] = `data:image/png;base64,${readFileSync(join(ROOT, 'articles', talk, 'art', f)).toString('base64')}`;
-    return `%ART:${f}%` + part.slice(f.length);
-  }).join('');
+  for (const [prefix, dir] of PREFIXES) {
+    p.svg = p.svg.split(prefix).map((part, i) => {
+      if (i === 0) return part;
+      const m = part.match(/^[\w.-]+\.(png|woff2)/);
+      if (!m) return prefix + part;
+      const f = m[0];
+      if (!ART[f]) ART[f] = `data:${MIME[m[1]]};base64,${readFileSync(join(dir, f)).toString('base64')}`;
+      return `%ART:${f}%` + part.slice(f.length);
+    }).join('');
+  }
 }
 
 const doc = `<!doctype html>
@@ -76,7 +83,7 @@ const doc = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Renovate, don’t repaint: the talk</title>
+<title>${talk === 'quantum' ? 'The other half of a quantum computer' : 'Renovate, don’t repaint'}: the talk</title>
 <style>
 ${fontCss}
 html, body { margin: 0; height: 100%; background: #111214; overflow: hidden; }
@@ -87,16 +94,13 @@ html, body { margin: 0; height: 100%; background: #111214; overflow: hidden; }
 #notes { position: fixed; left: 0; right: 0; bottom: 0; max-height: 36vh; overflow: auto; background: #FBFBFC; color: #15171C;
   font: 19px/1.5 'Libre Franklin', Arial, sans-serif; padding: 14px 28px; box-shadow: 0 -1px 0 #DADDE3; }
 #notes .where { color: #5C6370; font-size: 15px; }
-#help { position: fixed; right: 12px; top: 10px; color: #8A9099; font: 13px 'Libre Franklin', Arial, sans-serif; opacity: 0.8; }
-body.clean #help { display: none; }
 /* in full screen the room sees the screen: the notes never show there */
-body.full #notes, body.full #help { display: none !important; }
+body.full #notes { display: none !important; }
 </style>
 </head>
 <body>
 <div id="stage"><div id="slide"></div></div>
 <aside id="notes" hidden></aside>
-<div id="help">F full screen (notes hide), Right or Space next, Left back, N notes, G go to page (this hint hides after the first key)</div>
 <script>
 var PAGES = ${JSON.stringify(pages)};
 var ART = ${JSON.stringify(ART)};
@@ -128,6 +132,16 @@ addEventListener('keydown', function (e) {
   else if (e.key === 'g' || e.key === 'G') { var k = parseInt(prompt('Go to page (1–' + PAGES.length + ')'), 10); if (k) show(k - 1); }
 });
 slide.addEventListener('click', function (e) { if (e.target.closest('a')) return; document.body.classList.add('clean'); show(n + 1); });
+// The wheel: one notch, one page. A clicker or the Flipper's Slides remote scrolls.
+var wheelAt = 0, wheelSum = 0;
+addEventListener('wheel', function (e) {
+  if (e.target.closest && e.target.closest('#notes')) return; // the notes scroll
+  e.preventDefault();
+  var now = Date.now();
+  if (now - wheelAt > 400) wheelSum = 0;
+  wheelSum += e.deltaY;
+  if (Math.abs(wheelSum) >= 30 && now - wheelAt > 250) { document.body.classList.add('clean'); show(n + (wheelSum > 0 ? 1 : -1)); wheelAt = now; wheelSum = 0; }
+}, { passive: false });
 fit(); mode(); show(n);
 </script>
 </body>

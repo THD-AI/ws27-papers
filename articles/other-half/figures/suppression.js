@@ -53,14 +53,15 @@ function build(el, ctx) {
       if (tall) y += 17;
       const n = Math.round(pt.per_100000_rounds / PER);
       const list = cells(n, COLS, { gx: p, gy: p });
-      const accent = k === 1 && i === dc.points.length - 1;
+      const accent = k === 1;   // the network, every distance: the results register's one meaning for the accent
+      const ringHere = k === 1 && i === dc.points.length - 1;
       const dg = g(svg);
       const ds = dots(dg, list, n, r, { fill: accent ? C.accent : C.ink }, x, y + 8);
       const yb = y + 8 + Math.ceil(n / COLS) * p;
       const vg = g(svg);
       const v = text(vg, x + COLS * p + 10, yb - p / 2 + 4.5, String(pt.per_100000_rounds), { family: 'mono', size: tall ? 13 : 14, weight: 500 });
       st.fade(rg, a, a + 0.08).fill(ds, a + 0.04, a + 0.2).fade(vg, a + 0.16, a + 0.24);
-      if (accent) ringAt = v;
+      if (ringHere) ringAt = v;
       if (k === 0 && i === dc.points.length - 1) unitDot = { x: x + list[n - 1].x, y: y + 8 + list[n - 1].y };
       y += 8 + rows[i] * p;
       if (i < dc.points.length - 1) {
@@ -80,9 +81,9 @@ function build(el, ctx) {
   leader(ug, un.x + 8, un.y - 3, unitDot.x, unitDot.y + r + 2, { stroke: C.muted, dot: false });
   st.fade(ug, 0.8, 0.9);
   const ng = g(svg);
-  text(ng, X[1], yEnd + 34, `[[${lastM.per_100000_rounds} → ${lastN.per_100000_rounds}]]: about ${WORDS[1]} in ${WORDS[fewer] || fewer} fewer, read from the same data`, { ...noteO, width: tall ? 156 : 220 });
+  text(ng, X[1], yEnd + 34, `[[${lastM.per_100000_rounds} → ${lastN.per_100000_rounds}]]: about ${WORDS[1]} in ${WORDS[fewer] || fewer} fewer, read from the same data`, { ...noteO, width: tall ? 156 : 220, hand: true });   // the ring's words
   st.fade(ng, 0.84, 0.94);
-  const pr = penRing(svg, ringAt.cx, ringAt.cy - 0.5, ringAt.w / 2 + 9, 12.5, { seed: 9, stroke: C.accent, width: 1.5 });
+  const pr = penRing(svg, ringAt.cx, ringAt.cy - 0.5, ringAt.w / 2 + 9, 12.5, { seed: 9, stroke: C.ink, width: 1.5 });
   pr.paths.forEach((pp, k) => st.draw(pp, 0.86 + k * 0.03, 0.97 + k * 0.02));
   const fg = g(svg);
   const fit = text(fg, X[0], yEnd + (tall ? 92 : 80), `fitted over all three: [[÷ ${nn.lambda.toFixed(2)}]] (network), [[÷ ${m.lambda.toFixed(2)}]] (matching)`, { size: tall ? 13 : 14, width: W - X[0] - 16 });

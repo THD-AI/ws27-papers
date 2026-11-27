@@ -11,7 +11,7 @@ export const steps = 1;
 // seconds the drawing plays once 40% of it is in view: the grid three times
 // (what happened, what the chip reports, what the decoder adds), then the sum
 export const durations = { medium: [2.0] };
-const SIZE = { wide: [560, 400], tall: [360, 610] };
+const SIZE = { wide: [560, 420], tall: [360, 646] };
 export const aspect = { wide: SIZE.wide[0] / SIZE.wide[1], tall: SIZE.tall[0] / SIZE.tall[1] };
 
 function build(el, ctx) {
@@ -24,7 +24,9 @@ function build(el, ctx) {
     + `The decoder's shortest explanation adds ${nAdd} more flips below it. Errors and correction together cross the grid from the ${d.crosses_from} to the ${d.crosses_to}: the stored value has changed and no check fires.`);
   svg0.style.color = C.ink;
   text(svg0, tall ? 16 : 20, 18, tall ? 'the one mistake that matters' : `the one mistake that matters, on a grid of distance ${d.distance}`, { family: 'sans', size: 13, weight: 600 });
-  text(svg0, tall ? 16 : 20, H - 14, 'a full line of flips fires no check: an error nobody sees', { size: tall ? 13.5 : 14.5 });
+  text(svg0, tall ? 16 : 20, H - (tall ? 48 : 34), 'a full line of flips fires no check: an error nobody sees', { size: tall ? 13.5 : 14.5 });
+  // the same tag, in the same place and words, as syndromes and lattice
+  text(svg0, tall ? 16 : 20, H - (tall ? 24 : 10), tall ? `distance ${d.distance} · one round ·\nchecks never wrong · constructed by us` : `distance ${d.distance} · one round · checks never wrong · constructed by us`, { family: 'mono', size: tall ? 11.5 : 12, fill: C.muted, lh: 14 });
   const svg = g(svg0, { transform: 'translate(0 26)' });
   const st = stage();
   const pitch = tall ? 27 : 30, er = tall ? 9.8 : 8.3;
@@ -38,7 +40,7 @@ function build(el, ctx) {
 
   const plates = P.map((p, i) => {
     const grp = g(svg);
-    const G = grid(grp, { checks: d.flip_checks, d: d.distance, cx: p.cx, cy: p.cy, pitch, C, qr: 4.6, helper: 1.5 });
+    const G = grid(grp, { checks: d.flip_checks, d: d.distance, cx: p.cx, cy: p.cy, pitch, C });
     const head = g(svg);
     text(head, tall ? p.tx : p.cx, p.ty, titles[i], { family: 'sans', size: 13, weight: 600, anchor: tall ? 'start' : 'middle' });
     st.fade(grp, i * 0.26, i * 0.26 + 0.16).fade(head, i * 0.26, i * 0.26 + 0.16);
@@ -72,7 +74,7 @@ function build(el, ctx) {
   const G3 = plates[2];
   const top = G3.pos(d.together[0]), bot = G3.pos(d.together[d.together.length - 1]);
   const reach = pitch * 0.62;
-  const cross = line(G3.gE, top[0], top[1] - reach, bot[0], bot[1] + reach, { stroke: C.accent, 'stroke-width': 2.5, 'stroke-linecap': 'round' });
+  const cross = line(G3.gE, top[0], top[1] - reach, bot[0], bot[1] + reach, { stroke: C.ink, 'stroke-width': 2.2, 'stroke-linecap': 'round' });
   marks(G3, d.real_errors, 'real', 0.62);
   marks(G3, d.decoder_correction, 'added', 0.74);
   st.draw(cross, 0.82, 0.97);

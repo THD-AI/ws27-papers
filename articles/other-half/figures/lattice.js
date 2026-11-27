@@ -68,7 +68,7 @@ function build(el, ctx) {
     const cnt = g(svg);
     text(cnt, cx, nt.bottom + 38, `${n} of ${STRIP}`, { family: 'mono', size: monoS, anchor: 'middle', fill: C.muted });
     let pr = null;
-    if (ring) pr = penRing(svg, cx, cy, ext + (tall ? 12 : 17), ext + (tall ? 10 : 14), { seed: 11, stroke: C.accent, width: 1.6, start: -0.4 });
+    if (ring) pr = penRing(svg, cx, cy, ext + (tall ? 12 : 17), ext + (tall ? 10 : 14), { seed: 11, stroke: C.ink, width: 1.6, start: -0.4 });
     return { grp, marks, ng, sg, dotsEl, cnt, pr, bottom: nt.bottom + 44 };
   }
 
@@ -78,8 +78,8 @@ right [[1]] time in [[${inN}]]`;
 about [[${in10}]] times in [[10]]`;
   const rest = 'the rest: rarer explanations';
   const foot = tall
-    ? `${pctErr} error per storing qubit ·\nchecks never wrong · our own count`
-    : `${pctErr} error per storing qubit · checks never wrong · our own count`;
+    ? `${pctErr} error per storing qubit · one round ·\nchecks never wrong · our own count`
+    :`${pctErr} error per storing qubit · one round · checks never wrong · our own count`;
   const firedLabel = `${ex.fired.length} of ${d.helpers} checks fired`;
 
   // ---- print: the walk at its second step, then the example ---------------
@@ -141,7 +141,7 @@ Which errors?`, { italic: true, size: S.noteSize, anchor: 'middle' });
   const fire = [];
   w1.fired.forEach((id) => {
     const stays = w2.fired.includes(id);
-    fire.push([id, 1.28, 1.55, stays ? 3 : 2.3, stays ? 3.2 : 2.52]);
+    fire.push([id, 1.28, 1.55, stays ? 3 : 2.1, stays ? 3.2 : 2.3]);   // the middle check goes dark as the second flip arrives, not after
   });
   ex.fired.forEach((id, i) => fire.push([id, 3.2 + i * 0.08, 3.42 + i * 0.08, 99, 100]));
   st.on((gg) => {

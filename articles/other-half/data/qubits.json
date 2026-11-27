@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-16",
+ "generated": "2026-11-23",
  "generated_by": "tools/other-half-data.mjs",
  "inputs": [],
  "source": "OWN-ARITH",
@@ -33,5 +33,39 @@
    "total": 161,
    "source": "OWN-ARITH"
   }
- ]
+ ],
+ "lit_d7": {
+  "source": "OWN-FILM-SIM",
+  "round": 14,
+  "noise": 0.005,
+  "seed": 20261122,
+  "meaning": "The checks of the distance-7 grid whose answer changed in this simulated round: the frame the film holds up.",
+  "checks": [
+   {
+    "row": 5,
+    "col": 4,
+    "asks_about": "flips"
+   },
+   {
+    "row": 6,
+    "col": 4,
+    "asks_about": "phase errors"
+   },
+   {
+    "row": 5,
+    "col": 3,
+    "asks_about": "phase errors"
+   },
+   {
+    "row": 6,
+    "col": 2,
+    "asks_about": "phase errors"
+   },
+   {
+    "row": 1,
+    "col": 1,
+    "asks_about": "phase errors"
+   }
+  ]
+ }
 }

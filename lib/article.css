@@ -1,3 +1,4 @@
+@font-face { font-family: 'Excalifont'; src: url('vendor/excalifont/Excalifont.woff2') format('woff2'); font-display: swap; }
 /* Page, type, tables, print. The design system is SPEC.md; this file sets it.
  *
  * How the file is organised
@@ -586,6 +587,10 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .passage > :last-child { margin-bottom: 0; }
   .scene.is-live .passage { transition: color 0.25s ease; }
   .scene.is-live .passage.is-read { color: #4A4D55; }
+  /* the passage the figure shows now: a very light tint behind its text (the
+     spread of the shadow pads it without moving anything) */
+  .scene.is-live .passage > :not(.where) { transition: background-color 0.3s ease, box-shadow 0.3s ease; border-radius: 3px; }
+  .scene.is-live .passage.is-active > :not(.where) { background-color: rgba(21, 23, 28, 0.035); box-shadow: 0 0 0 0.45rem rgba(21, 23, 28, 0.035); }
   /* a focused link or mark in a passage is never scrolled under a pinned figure */
   .scene .passage :is(a, button) { scroll-margin-top: calc(var(--stage-h, 0px) + 1rem); }
 }
@@ -928,4 +933,15 @@ table.cols-2 th:first-child, table.cols-2 td:first-child { width: 44%; }
   .steps li::before { content: none; display: none; }
   .steps li::marker { font: 600 7.5pt var(--mono); color: var(--accent-line); }
   .steps ol::before { left: 0.7em; width: 1.2px; }
+}
+
+/* On phones and tablets a scene's caption is folded to its first line,
+   pinned or as stills (23 November: the whole caption took the screen from
+   the passages); a tap opens it, and again folds it. Not on paper. */
+@media screen and (max-width: 999.98px) {
+  .scene figcaption.is-foldable, .scene-caption.is-foldable { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; line-clamp: 1; overflow: hidden; cursor: pointer; }
+  .scene figcaption.is-foldable.is-open, .scene-caption.is-foldable.is-open { -webkit-line-clamp: unset; line-clamp: none; }
+  .scene figcaption.is-foldable:focus-visible, .scene-caption.is-foldable:focus-visible { outline: 2px solid var(--accent-line, #4254C5); outline-offset: 2px; }
+  .scene-stage figcaption.is-foldable { display: -webkit-box; }
+  .scene.is-seq .seq-cap.is-foldable { display: -webkit-box; }
 }

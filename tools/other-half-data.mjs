@@ -27,7 +27,7 @@ const repo = resolve(here, '..');
 const OUT = join(repo, 'articles', 'other-half', 'data');
 const argAt = process.argv.indexOf('--results');
 const RESULTS = resolve(argAt > 0 ? process.argv[argAt + 1]
-  : process.env.QEC_RESULTS || join(repo, '../../../dotUni/.worktrees/quantum-seminar/seminar/experiments/results'));
+  : process.env.QEC_RESULTS || join(repo, '../../../../dotUni/.worktrees/quantum-seminar/seminar/experiments/results'));
 if (!existsSync(RESULTS)) { console.error('results folder not found: ' + RESULTS); process.exit(1); }
 mkdirSync(OUT, { recursive: true });
 
@@ -195,6 +195,18 @@ const qubits = {
   what: 'Physical qubits for one logical qubit in the surface code: d × d storing qubits and d × d − 1 helpers, 2d² − 1 in all.',
   rows: [3, 5, 7, 9].map(d => ({ distance: d, storing: d * d, helpers: code(d).checks.length, total: 2 * d * d - 1, source: 'OWN-ARITH' })),
 };
+// The margin scene lights, at distance 7, the round the film holds up
+// (figures/film-rule.js applied to data/film.json, written by tools/film-sim.py).
+{
+  const { filmRounds, toGrid } = await import('../articles/other-half/figures/film-rule.js');
+  const film = JSON.parse(readFileSync(join(OUT, 'film.json'), 'utf8')), run = film.runs[0];
+  const { held } = filmRounds(run);
+  qubits.lit_d7 = {
+    source: film.source, round: held, noise: run.noise, seed: film.seed,
+    meaning: 'The checks of the distance-7 grid whose answer changed in this simulated round: the frame the film holds up.',
+    checks: run.frames[held].map((id) => toGrid(run.checks[id], 7)),
+  };
+}
 write('qubits.json', qubits);
 
 // ---------------------------------------------------------------- the enumeration at distance 3
@@ -246,10 +258,17 @@ for (const [k, classes] of prob) {
   const tie = a.flips.size > 1 || b.flips.size > 1;
   const matchCls = tie ? null : [...a.flips][0] + '' + [...b.flips][0];
   cells.push({ sx, sz, total, tie, matchCls, ml, pMatch: tie ? null : classes.get(matchCls) / total, pMl: classes.get(ml) / total,
-    correction: letters(a.b, b.b), state: tie ? 'tie' : matchCls === ml ? 'same' : 'differs' });
+    // Several error classes can be exactly equally likely, and a strict comparison of floating-point sums would let
+    // rounding call one of them "the most likely" (it did: 103 instead of 24). Matching differs only where its
+    // answer is less likely than the best by more than rounding; where another answer is exactly as likely, it is a tie.
+    correction: letters(a.b, b.b),
+    state: tie ? 'tie' : classes.get(matchCls) < classes.get(ml) * (1 - 1e-9) ? 'differs'
+      : [...classes].filter(([c, v]) => c !== matchCls && v >= classes.get(ml) * (1 - 1e-9)).length ? 'tie-best' : 'same' });
 }
 const differs = cells.filter(c => c.state === 'differs').sort((a, b) => (+b.total.toPrecision(10)) - (+a.total.toPrecision(10)) || (a.sx < b.sx ? 1 : a.sx > b.sx ? -1 : 0) || (a.sz < b.sz ? 1 : -1));
 const nTie = cells.filter(c => c.state === 'tie').length;
+const nTieBest = cells.filter(c => c.state === 'tie-best').length;
+if (differs.length !== 24) throw new Error('expected 24 patterns where matching is strictly less likely, got ' + differs.length);
 if (cells.length !== 256) throw new Error('expected 256 patterns, got ' + cells.length);
 // The proposal's Figure 1 shows the pattern z2 + x0 + x1. Several differing patterns are equally frequent
 // (mirror images of each other); which of them a sort lists first is decided by rounding, so it is named here
@@ -266,7 +285,7 @@ write('syndromes.json', {
   ...head(['port of docs/proposal/paper/data/find_example.py']), source: 'OWN-ENUM',
   what: 'All 256 patterns of the eight checks at distance 3. For each: does the correction of smallest weight per kind of check (plain matching) belong to the most likely kind of correction?',
   conditions: { error_per_storing_qubit: P_ENUM, error_kinds: 'X, Z or Y, each with a third of that chance', checks: 'perfect, one round' },
-  counts: { patterns: cells.length, differs: differs.length, same: cells.filter(c => c.state === 'same').length, tie: nTie },
+  counts: { patterns: cells.length, differs: differs.length, same: cells.filter(c => c.state === 'same').length, tie: nTie, tie_best: nTieBest },
   share_of_all_cases_with_a_differing_pattern: differs.reduce((s, c) => s + c.total, 0),
   share_of_all_cases_with_no_check_fired: cells.find(c => c.sx === '0000' && c.sz === '0000').total,
   grid: { rows: 'flip-check pattern (z0 z1 z2 z3)', columns: 'phase-check pattern (x0 x1 x2 x3)', order: order16,
