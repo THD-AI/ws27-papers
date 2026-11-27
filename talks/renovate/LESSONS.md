@@ -4,7 +4,7 @@ Kind: log, newest first. Read this before every loop on the deck; add to it at t
 
 ## State after loop 12 (21 November): where things are
 
-- The deck: `slides2.js` (open `index.html?v=2`), 46 pages. Build: `node tools/deck.mjs renovate --v2` (PDF, cue sheet `CUES-v2.md`, gates), `node tools/deck-offline.mjs renovate --v2` (one presenting file in `.shots/deck/renovate-v2/`).
+- The deck: `slides2.js` (open `index.html`), 46 pages, the only deck since 27 November (v1 is under the tag `archive/renovate-deck-v1`). Build: `node tools/deck.mjs renovate` (PDF, cue sheet `CUES-v2.md`, gates), `node tools/deck-offline.mjs renovate` (one presenting file in `.shots/deck/renovate-v2/`). The old `--v2` and `?v=2` still work and change nothing.
 - Live: https://thd-ai.github.io/ws27-papers/renovate/talk/ (gh-pages `145ee27`, loop 12). Notes on N, hidden in full screen; F for full screen. Publish steps in the README.
 - Q&A: `QUESTIONS.md`, nine expected questions with short answers from the article's facts.
 - Clock: the notes speak in about 14 minutes (130 words a minute, 1.5 s a click, 2.5 s a landing); the cue sheet's start times are computed from that, not set by hand.
@@ -67,7 +67,7 @@ Rules that follow:
 
 What happened:
 - He said the plug, the cable going into it, the keys and the closing socket look off in every appearance (`-016`). Three readers (an electrician, an illustrator, an AI-sceptic) agreed on the main cause. The code cable was about three times heavier, and in darker ink, than the drawn plug's pen line. The drawn plug kept its own one-line cord, under a tube that ended in a rounded cap. The plug body was see-through. The closing socket was a face-on green box against a plug drawn from the side. Several of the 14 sockets were not real socket types.
-- Fixed in code: one ink (#2B2B2E) for the cable, the sockets and, through the ink filter, the drawn plug and keys; a lighter tube wall (2.5 px). The cable ends square inside an opaque paper silhouette of the plug body (`deck-plug-body.png`). The closing socket is now a cover plate seen edge on, proud of the wall, with the plug's face against it. Slide 7 uses the real IEC types A to O (without M), and the three planned sockets (C, F, E) are ones the Euro plug fits.
+- Fixed in code: one ink (#2B2B2E) for the cable, the sockets and, through the ink filter, the drawn plug and keys; a lighter tube wall (2.5 px). The cable ends square inside an opaque paper silhouette of the plug body (`deck-plug-body.png`, later replaced; kept under the tag `archive/renovate-deck-art-unused`). The closing socket is now a cover plate seen edge on, proud of the wall, with the plug's face against it. Slide 7 uses the real IEC types A to O (without M), and the three planned sockets (C, F, E) are ones the Euro plug fits.
 - Not possible yet: new drawings (no OpenAI credits). Boards are ready in Paper Studio: `deck-plug-cord` (plug and cord in one drawing, side view), `deck-plug-up` (upright, for slides 6 and 7, instead of a rotated copy) and `deck-keys3` (three different keys for the three stages). The closing socket in section still needs a real socket photograph to draw from (a download, his OK first).
 
 Rules that follow:
