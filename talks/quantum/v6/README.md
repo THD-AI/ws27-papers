@@ -18,7 +18,6 @@ Each page was checked sharp and blurred (the back row, or no glasses). Independe
 ```
 index.html   the source: every page drawn in code at 1920 × 1080 from the article's
              own figure code and data; build steps are drawn by build()
-pilot.html   the pilot: pages 1, 4, 8 and 14 in two colour systems (?v=A, ?v=B)
 player.html  the player the build pours the pages into (the Renovate talk's player)
 notes.md     what is said on each page, and the field's word for it, said once
 heap.png     the drawing on pages 1, 10 and 18
