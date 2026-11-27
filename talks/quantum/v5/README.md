@@ -9,8 +9,9 @@ player.html  the player the build pours the pages into
 index.html   the source: every page drawn in code at 1920 × 1080 from the article's
              own figure code (lib/fig.js, articles/other-half/figures/) and data
 notes.md     what is said on each page, and the field's word for it, said once
-heap.png     the drawing on pages 1 and 10
-read.png     the drawing on page 17
+heap.png     the drawing on pages 1 and 10, cleaned (see below)
+read.png     the drawing on page 17, cleaned
+raw/         the two drawings as the forge made them
 ```
 
 ## Look, present, publish
@@ -29,5 +30,7 @@ read.png     the drawing on page 17
 |---|---|
 | `heap.png` | Paper Studio forge, board `talk-heap`, round 2, candidate 1. References: the author's own line drawing (the hand); the companion deck's approved line; "IBM Q at CES" by Lars Ploughman, CC BY-SA 2.0 (Wikimedia Commons), for the refrigerator's silhouette only |
 | `read.png` | Paper Studio forge, board `talk-read`. References: the author's own line drawing; the companion deck's approved line; the article's film-and-cable drawing (`articles/other-half/art/`) |
+
+Both were cleaned for the big screen the way the Renovate drawings were: `python tools/clean-drawing.py raw/heap.png heap.png` (and the same for `read.png`). The haze between the strokes is removed, every stroke is solid ink (`#2E2C27`, the deck's pencil), and the image is doubled to 3072 × 1728 so the edges hold at 4K. As the forge made them, the strokes were partly see-through and looked grey and soft on a 4K screen.
 
 The talk page credits the photograph: "Drawings after a photograph by Lars Ploughman, CC BY-SA 2.0".
