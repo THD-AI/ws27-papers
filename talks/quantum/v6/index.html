@@ -91,12 +91,29 @@ function spine(svg, where) {
     x -= name.length * 15.5 + 40;
   }
 }
+// The thread, as the Renovate talk runs its cable through every wall: the film
+// of hints along the foot of each middle page, off both edges. The page's own
+// frame is lit in its section's colour and moves right as the talk goes on.
+// Pages 4, 10 and 14 draw the film large, so the strip is left out there.
+const THREAD = new Set([5, 6, 7, 8, 9, 11, 12, 13, 15, 16]);
+function thread(svg, n, where) {
+  const y = 962, h = 40, w = 34, gap = 6, at = 80 + (n - 1) / 17 * (1760 - w);
+  const k0 = Math.round(at / (w + gap)), off = at - k0 * (w + gap);
+  const col = SEG[[].concat(where)[0]][2];
+  for (let i = -1; i * (w + gap) + off < 1920; i++) {
+    const x = i * (w + gap) + off, lit = i === k0;
+    if (lit) continue;
+    frame(svg, x, y, w, h, { stroke: RULE, sw: 1.5 });
+  }
+  frame(svg, at, y - 4, w, h + 8, { stroke: col, fill: col === INK ? '#E6E8EC' : col === AMBER ? AMBER_T : BLUE_T, sw: 3 });
+}
 function slide(id, title, n, foot, where, o = {}) {
   const svg = F.h('svg', { viewBox: '0 0 1920 1080', width: 1920, height: 1080 });
   document.getElementById(id).appendChild(svg);
   if (title) T(svg, 80, 140, title, { size: 68, weight: TW, family: 'serif' });
   if (o.sub) T(svg, 80, 214, o.sub, SUB);
   if (where) spine(svg, where);
+  if (typeof n === 'number' && THREAD.has(n) && where && [].concat(where).length) thread(svg, n, where);
   if (foot) T(svg, 80, 1054, foot, { family: 'mono', size: 18, fill: MUTED });
   if (n) T(svg, 1840, 1056, typeof n === 'string' ? 'backup ' + n.slice(1) : n + ' / 18', { family: 'mono', size: 24, fill: MUTED, anchor: 'end' });
   return svg;
@@ -207,23 +224,24 @@ build('p3', 2, (pid, st) => {
 });
 
 // ---------------- 5: a few slips in a thousand (sequence)
-{
-  const svg = slide('p4', 'Even good hardware slips a few times in a thousand', 5,
+build('p4', 3, (pid, st) => {
+  const svg = slide(pid, 'Even good hardware slips a few times in a thousand', 5,
     'Nature 638 (2025), Table S4, 72-qubit chip · Gidney and Ekerå (2021)', 'chip',
     { sub: 'Google’s 72-qubit chip: a two-qubit gate slips about 3 times in 1,000.' });
   const px = 18, x0 = 80, y0 = 320, cols = 40, slips = new Set([137, 512, 838]);
   for (let i = 0; i < 1000; i++) {
-    const x = x0 + (i % cols) * px, y = y0 + Math.floor(i / cols) * px, on = slips.has(i);
+    const x = x0 + (i % cols) * px, y = y0 + Math.floor(i / cols) * px, on = st >= 2 && slips.has(i);
     rect(svg, x, y, px - 3, px - 3, { fill: on ? AMBER : '#D3D7DE' });
   }
-  for (const i of slips) { const x = x0 + (i % cols) * px + 6, y = y0 + Math.floor(i / cols) * px + 6; circle(svg, x + 1, y + 1, 21, { fill: 'none', stroke: AMBER, 'stroke-width': 4 }); }
-  T(svg, x0, y0 + 25 * px + 56, '1,000 operations: 3 slips', { ...LAB, size: 36, weight: 500 });
+  if (st >= 2) for (const i of slips) { const x = x0 + (i % cols) * px + 6, y = y0 + Math.floor(i / cols) * px + 6; circle(svg, x + 1, y + 1, 21, { fill: 'none', stroke: AMBER, 'stroke-width': 4 }); }
+  T(svg, x0, y0 + 25 * px + 56, st >= 2 ? '1,000 operations: 3 slips' : '1,000 operations', { ...LAB, size: 36, weight: 500 });
+  if (st < 3) return;
   arrow(svg, 840, 540, 940, 540);
   T(svg, 980, 470, 'Breaking RSA-2048 encryption:', { ...LAB, size: 36 });
   T(svg, 980, 556, '2–3 billion costly steps', { ...LAB, size: 52, weight: 500 });
   T(svg, 980, 740, 'millions', { ...LAB, size: 64, weight: 600, fill: AMBER });
   T(svg, 980, 792, 'of slips, at the very least.', { ...LAB, size: 36, weight: 500 });
-}
+});
 
 // ---------------- 6: measuring, so the chip asks "same or different?" (pair)
 {
@@ -242,8 +260,8 @@ build('p3', 2, (pid, st) => {
 }
 
 // ---------------- 7: two ways to go wrong (pair of cards)
-{
-  const svg = slide('p6', 'Two ways to go wrong: a flip, and a phase error', 7, '', 'chip',
+build('p6', 2, (pid, st) => {
+  const svg = slide(pid, 'Two ways to go wrong: a flip, and a phase error', 7, '', 'chip',
     { sub: 'A qubit holds some 0, some 1, and a sign between them.' });
   const F2 = { family: 'serif', size: 64, italic: true, fill: INK };
   line(svg, 960, 280, 960, 880, { stroke: RULE, 'stroke-width': 2 });
@@ -256,30 +274,30 @@ build('p3', 2, (pid, st) => {
     T(svg, x + 50, 770, checks, { ...LAB, size: 32 });
   };
   card(80, 'X', 'a flip: 0 and 1 swap', 'a·0 + b·1', 'a·1 + b·0', 'the flip checks see it');
-  card(1020, 'Z', 'a phase error: the sign flips', 'a·0 + b·1', 'a·0 − b·1', 'the phase checks see it');
-}
+  if (st >= 2) card(1020, 'Z', 'a phase error: the sign flips', 'a·0 + b·1', 'a·0 − b·1', 'the phase checks see it');
+});
 
 // ---------------- 8: bigger grids help, once qubits are good enough (sequence)
-{
-  const svg = slide('p7', 'Bigger grids help, once qubits are good enough', 8, 'Nature 638 (2025) · threshold: Fowler et al. (2012)', 'chip',
+build('p7', 3, (pid, st) => {
+  const svg = slide(pid, 'Bigger grids help, once qubits are good enough', 8, 'Nature 638 (2025) · threshold: Fowler et al. (2012)', 'chip',
     { sub: 'Under a threshold (about 1 slip in 100 per operation), bigger grids make fewer errors; above it, more.' });
   const pitch = 54, base = 650;
-  [[3, 17, 712, 330], [5, 49, 349, 960], [7, 97, 171, 1590]].forEach(([d, q, err, cx], k) => {
+  [[3, 17, 712, 330], [5, 49, 349, 960], [7, 97, 171, 1590]].slice(0, st).forEach(([d, q, err, cx], k) => {
     const half = (d - 1) / 2 * pitch;
     deckGrid(svg, { checks: S.surface(d), d, cx, cy: base - half, pitch, qr: 13 });
     T(svg, cx, base + 64, `distance ${d}: ${q} qubits`, { ...LAB, anchor: 'middle' });
     T(svg, cx, 866, String(err), { ...BIG, size: 96, anchor: 'middle', fill: k === 2 ? INK : QUIET });
   });
-  for (const [a, b] of [[330, 960], [960, 1590]]) {
+  for (const [a, b] of [[330, 960], [960, 1590]].slice(0, st - 1)) {
     T(svg, (a + b) / 2, 792, '÷ 2', { ...BIG, size: 48, anchor: 'middle' });
     arrow(svg, a + 130, 816, b - 130, 816);
   }
   T(svg, 960, 930, 'errors per 100,000 rounds, read by matching', { ...CAP, size: 26, anchor: 'middle' });
-}
+});
 
 // ---------------- 9: the checks see only a change (pair)
-{
-  const svg = slide('p8', 'The checks never see the qubits, only a change', 9, '', 'film',
+build('p8', 2, (pid, st) => {
+  const svg = slide(pid, 'The checks never see the qubits, only a change', 9, '', 'film',
     { sub: 'A check fires only in the round its answer changes.' });
   line(svg, 960, 280, 960, 880, { stroke: RULE, 'stroke-width': 2 });
   T(svg, 80, 330, 'one check, round by round', { ...LAB, weight: 500 });
@@ -291,12 +309,13 @@ build('p3', 2, (pid, st) => {
     T(svg, x + 110, 740, `round ${i + 1}`, { ...CAP, anchor: 'middle' });
   });
   T(svg, 80, 890, 'Round 2 changed, so it fires; round 3 did not.', { ...LAB, size: 32 });
+  if (st < 2) return;
   T(svg, 1000, 330, 'one flip, one round', { ...LAB, weight: 500 });
   const G = deckGrid(svg, { checks: lat.checks, d: 3, cx: 1400, cy: 590, pitch: 150, qr: 24 });
   for (const id of lat.walk[0].fired) G.tiles[id].setFired(1);
   for (const [q, letter] of Object.entries(lat.walk[0].errors)) errMark(svg, ...G.pos(+q), 30, letter);
   T(svg, 1000, 890, 'One flip: the two checks beside it fire.', { ...LAB, size: 32 });
-}
+});
 
 // ---------------- 10: one frame of hints (drawing)
 {
@@ -317,8 +336,8 @@ build('p3', 2, (pid, st) => {
 }
 
 // ---------------- 11: the mistake that sets off no check (pair)
-{
-  const svg = slide('p10', 'The one mistake that matters sets off no check', 11,
+build('p10', 2, (pid, st) => {
+  const svg = slide(pid, 'The one mistake that matters sets off no check', 11,
     'distance 5 · only the flip checks drawn', 'reader',
     { sub: 'Flips in a line across the grid look like no error at all.' });
   line(svg, 960, 280, 960, 900, { stroke: RULE, 'stroke-width': 2 });
@@ -331,14 +350,16 @@ build('p3', 2, (pid, st) => {
     for (const q of real) errMark(svg, ...G.pos(q), 26, 'X');
     if (withFix) for (const q of lineD.decoder_correction) guess(svg, ...G.pos(q), 26, 'X');
   };
-  panel(520, false); panel(1400, true);
+  panel(520, false);
   T(svg, 520, 900, '3 real flips: one check fires', { ...LAB, size: 34, weight: 500, anchor: 'middle' });
+  if (st < 2) return;
+  panel(1400, true);
   T(svg, 1400, 900, `the decoder adds ${lineD.decoder_correction.length}: no check fires`, { ...LAB, size: 34, weight: 500, anchor: 'middle', fill: BLUE });
-}
+});
 
 // ---------------- 12: fewer errors, less likely (pair; the layout he liked)
-{
-  const svg = slide('p11', 'Fewer errors, less likely', 12, 'distance 3 · 5% error per qubit · times right in 30 runs · our own count', 'reader',
+build('p11', 3, (pid, st) => {
+  const svg = slide(pid, 'Fewer errors, less likely', 12, 'distance 3 · 5% error per qubit · times right in 30 runs · our own count', 'reader',
     { sub: 'Same fired checks, two explanations.' });
   line(svg, 960, 280, 960, 900, { stroke: RULE, 'stroke-width': 2 });
   const ex = lat.example, pitch = 150, cy = 520;
@@ -349,15 +370,14 @@ build('p3', 2, (pid, st) => {
     return G;
   };
   draw(520, ex.plain_matching.errors);
-  const G2 = draw(1400, ex.read_together.errors);
-  { const [x, y] = G2.pos(5); guess(svg, x, y, 32, 'Z'); }
+  if (st >= 2) { const G2 = draw(1400, ex.read_together.errors); const [x, y] = G2.pos(5); guess(svg, x, y, 32, 'Z'); }
   const res = (cx, k, lab, strong) => {
     T(svg, cx, 800, lab, { ...LAB, size: 34, anchor: 'middle', fill: strong ? BLUE : INK });
-    T(svg, cx, 890, String(k), { ...BIG, size: 72, anchor: 'middle', fill: strong ? BLUE : QUIET });
+    if (st >= 3) T(svg, cx, 890, String(k), { ...BIG, size: 72, anchor: 'middle', fill: strong ? BLUE : QUIET });
   };
   res(520, 10, 'matching’s pick', false);
-  res(1400, 19, 'the likelier pick', true);
-}
+  if (st >= 2) res(1400, 19, 'the likelier pick', true);
+});
 
 // ---------------- 13: a better reader removed one error in six (sequence; builds row by row)
 build('p12', 3, (pid, st) => {
