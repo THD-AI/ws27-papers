@@ -36,7 +36,7 @@ const { circle, path, line, rect, text, penRing, cells } = F;
 
 const INK = '#15171C', PAPER = '#FBFBFC', MUTED = '#5A606B', QUIET = '#8A909B', RULE = '#B9BEC7';
 const BLUE = '#2B44C6', BLUE_T = '#DCE2FA';
-const AMBER = '#2A2E36', AMBER_T = '#BCC2CC'; // one accent: the chip's hints in ink; blue alone marks the reader
+const AMBER = '#B85C00', AMBER_T = '#FBE3C8';
 const C = { ink: INK, paper: PAPER, muted: MUTED, hairline: RULE, accent: AMBER, field: AMBER_T };
 const T = (p, x, y, s, o = {}) => text(p, x, y, s, { free: true, fill: INK, ...o });
 const TW = 500, PEN = 3;
@@ -57,7 +57,7 @@ function deckGrid(svg, o) {
   G.root.querySelectorAll('circle').forEach((e) => { if (e.getAttribute('stroke') === INK) e.setAttribute('stroke-width', o.sw || 2.5); });
   for (const t of Object.values(G.tiles)) {
     t.field.setAttribute('stroke-width', 3);
-    if (t.check.asks_about === 'flips') t.base.setAttribute('fill-opacity', '0.09');
+    if (t.check.asks_about === 'flips') t.base.setAttribute('fill-opacity', '0.17');
     t.base.setAttribute('stroke-opacity', '0.9');
     const set = t.setFired.bind(t);
     t.setFired = (p) => { set(p); if (p > 0.001) t.base.setAttribute('fill-opacity', '0'); };
@@ -214,7 +214,7 @@ build('p3', 2, (pid, st) => {
   const px = 18, x0 = 80, y0 = 320, cols = 40, slips = new Set([137, 512, 838]);
   for (let i = 0; i < 1000; i++) {
     const x = x0 + (i % cols) * px, y = y0 + Math.floor(i / cols) * px, on = slips.has(i);
-    rect(svg, x, y, px - 3, px - 3, { fill: on ? INK : '#DDE0E5' });
+    rect(svg, x, y, px - 3, px - 3, { fill: on ? AMBER : '#D3D7DE' });
   }
   for (const i of slips) { const x = x0 + (i % cols) * px + 6, y = y0 + Math.floor(i / cols) * px + 6; circle(svg, x + 1, y + 1, 21, { fill: 'none', stroke: AMBER, 'stroke-width': 4 }); }
   T(svg, x0, y0 + 25 * px + 56, '1,000 operations: 3 slips', { ...LAB, size: 36, weight: 500 });
