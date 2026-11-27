@@ -1,0 +1,180 @@
+<!doctype html><meta charset=utf-8><title>Quantum talk v6: pilot</title><meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Libre+Franklin:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&display=swap">
+<style>
+@font-face{font-family:'Excalifont';src:url('../../../lib/vendor/excalifont/Excalifont.woff2') format('woff2')}
+body{margin:0;background:#888}
+.s{width:1920px;height:1080px;position:relative;overflow:hidden;background:#FBFBFC;margin-bottom:20px}
+.s svg{position:absolute;left:0;top:0}
+</style>
+<body>
+<div class=s id=p1></div><div class=s id=p3></div><div class=s id=p7></div><div class=s id=p13></div>
+<script type=module>
+// Pilot for v6: the same four pages in two colour systems (?v=A or ?v=B).
+// A: one accent, for what the chip says (a fired check, a frame of hints).
+// B: two meanings: amber for what the chip says, blue for what the reader decides.
+// Both: a spine along the foot of every page, chip -> film of frames -> reader,
+// with the part the page is about drawn at full strength.
+const V = new URLSearchParams(location.search).get('v') || 'B';
+const L = new URL('../../../', location.href).href;
+const F = await import(L + 'lib/fig.js');
+const S = await import(L + 'articles/other-half/figures/shared.js');
+const J = async (n) => (await fetch(L + 'articles/other-half/data/' + n + '.json')).json();
+const lat = await J('lattice');
+for (const f of ['600 64px Newsreader', 'italic 28px Newsreader', '28px "Libre Franklin"', '500 22px "Libre Franklin"', '22px "JetBrains Mono"', '30px Excalifont']) await document.fonts.load(f);
+const { circle, path, line, rect, text, cells } = F;
+
+// colour roles
+const INK = '#15171C', PAPER = '#FBFBFC', MUTED = '#5A606B', RULE = '#B9BEC7';
+const BLUE = '#2B44C6', BLUE_T = '#DCE2FA';
+const AMBER = '#B85C00', AMBER_T = '#FBE3C8';
+const HINT = V === 'A' ? BLUE : AMBER, HINT_T = V === 'A' ? BLUE_T : AMBER_T;
+const READ = V === 'A' ? INK : BLUE, READ_T = V === 'A' ? '#E4E6EA' : BLUE_T;
+const C = { ink: INK, paper: PAPER, muted: MUTED, hairline: RULE, accent: HINT, field: HINT_T };
+const T = (p, x, y, s, o = {}) => text(p, x, y, s, { free: true, fill: INK, ...o });
+const TW = 500;
+
+// a grid whose fired checks read from the back: a full-strength outline of
+// the hint colour round its tint, and a large dot
+function deckGrid(svg, o) {
+  const G = S.grid(svg, { C, helper: 0, ...o });
+  G.root.querySelectorAll('circle').forEach((e) => { if (e.getAttribute('stroke') === INK) e.setAttribute('stroke-width', 2.5); });
+  for (const t of Object.values(G.tiles)) {
+    t.field.setAttribute('stroke-width', 3);
+    const set = t.setFired.bind(t);
+    t.setFired = (p) => { set(p); if (p > 0.001) t.base.setAttribute('fill-opacity', '0'); };
+  }
+  return G;
+}
+
+// one frame of film: a cell with sprocket holes above and below
+function frame(svg, x, y, w, h, o = {}) {
+  rect(svg, x, y, w, h, { fill: o.fill || PAPER, stroke: o.stroke || INK, 'stroke-width': o.sw || 2 });
+  if (o.holes !== false) for (const yy of [y + h * 0.14, y + h * 0.86]) circle(svg, x + w / 2, yy, Math.max(2, h * 0.045), { fill: o.stroke || INK });
+  if (o.dot) circle(svg, x + w / 2, y + h / 2, Math.min(w, h) * 0.17, { fill: o.dot });
+}
+
+// the spine: chip at the left, the film running right, the reader at the end.
+// where: 'chip' | 'film' | 'reader' | 'all'; the rest is drawn quiet.
+function spine(svg, where, label) {
+  const y = 968, h = 34;
+  const on = (k) => where === 'all' || where === k;
+  // the chip: a small 3 x 3 grid in a square
+  const cx0 = 80, cw = 46;
+  rect(svg, cx0, y - 6, cw, cw, { rx: 4, fill: on('chip') ? HINT_T : PAPER, stroke: on('chip') ? HINT : RULE, 'stroke-width': 2.5 });
+  for (let i = 0; i < 9; i++) circle(svg, cx0 + 11 + (i % 3) * 12, y + 5 + Math.floor(i / 3) * 12, 3.2, { fill: on('chip') ? INK : RULE });
+  // the film
+  const fx0 = 146, fx1 = 1690, fw = 40;
+  for (let x = fx0, i = 0; x + fw <= fx1; x += fw + 4, i++) {
+    const lit = on('film') && (i * 7) % 5 === 0;
+    frame(svg, x, y, fw, h, { stroke: on('film') ? INK : RULE, sw: 1.5, dot: lit ? HINT : null });
+  }
+  // the reader: an ordinary computer
+  rect(svg, 1710, y - 6, 130, cw, { rx: 6, fill: on('reader') ? READ_T : PAPER, stroke: on('reader') ? READ : RULE, 'stroke-width': 2.5 });
+  for (let i = 0; i < 4; i++) circle(svg, 1730 + i * 14, y + 17, 3, { fill: on('reader') ? READ : RULE });
+  // the section, named once, under the part that is lit
+  if (label) T(svg, 80, 1050, label, { family: 'mono', size: 20, fill: INK, weight: 500 });
+}
+
+function slide(id, title, n, foot, where, label) {
+  const el = document.getElementById(id);
+  const svg = F.h('svg', { viewBox: '0 0 1920 1080', width: 1920, height: 1080 });
+  el.appendChild(svg);
+  if (title) T(svg, 80, 140, title, { size: 68, weight: TW, family: 'serif' });
+  if (where) spine(svg, where, label);
+  if (foot) T(svg, 960, 1050, foot, { family: 'mono', size: 18, fill: MUTED, anchor: 'middle' });
+  if (n) T(svg, 1840, 1050, n + ' / 18', { family: 'mono', size: 18, fill: MUTED, anchor: 'end' });
+  return svg;
+}
+const SUB = { size: 36, family: 'sans', fill: MUTED };
+const BIG = { family: 'mono', weight: 500 };
+
+// ---------------- page 1: the title, the device and the question
+{
+  const svg = slide('p1', null, null, null, 'all');
+  F.h('image', { href: 'heap.png', x: 700, y: 250, width: 1240, height: 698 }, svg);
+  T(svg, 80, 250, 'The other half', { size: 112, weight: TW, family: 'serif' });
+  T(svg, 80, 370, 'of a quantum', { size: 112, weight: TW, family: 'serif' });
+  T(svg, 80, 490, 'computer', { size: 112, weight: TW, family: 'serif' });
+  T(svg, 82, 600, 'Can the ordinary half', { size: 44, family: 'sans', weight: 500, fill: READ === INK ? HINT : READ });
+  T(svg, 82, 656, 'keep up with the chip?', { size: 44, family: 'sans', weight: 500, fill: READ === INK ? HINT : READ });
+  T(svg, 82, 900, 'Quantum Computing seminar · TH Deggendorf · 9 January 2027', { size: 28, family: 'sans', fill: MUTED });
+}
+
+// ---------------- page 4: the same recordings, two readers (a symmetric pair)
+{
+  const svg = slide('p3', 'Same recordings, a second reader', 4, 'Nature 638 (2025) · network: Bausch et al., Nature 635 (2024)', 'reader', 'the reader');
+  // one strip of recordings across the top, feeding both readers
+  const y0 = 250, fh = 70, fw = 56;
+  for (let x = 240, i = 0; x + fw <= 1680; x += fw + 6, i++) frame(svg, x, y0, fw, fh, { dot: (i * 5) % 3 === 0 ? HINT : null, sw: 2 });
+  T(svg, 960, y0 - 22, 'the same recordings from Willow', { size: 32, family: 'sans', anchor: 'middle', fill: MUTED });
+  // two readers, same layout, a gutter in the middle
+  const col = (cx, name, sub, nn, strong) => {
+    path(svg, `M${cx} ${y0 + fh + 12}V${y0 + fh + 70}`, { stroke: INK, 'stroke-width': 3 });
+    path(svg, `M${cx - 11} ${y0 + fh + 56}L${cx} ${y0 + fh + 72}L${cx + 11} ${y0 + fh + 56}`, { stroke: INK, 'stroke-width': 3, fill: 'none' });
+    rect(svg, cx - 300, 380, 600, 110, { rx: 10, fill: strong ? READ_T : PAPER, stroke: strong ? READ : INK, 'stroke-width': 3 });
+    T(svg, cx, 446, name, { size: 40, family: 'sans', weight: 500, anchor: 'middle', fill: strong ? READ : INK });
+    T(svg, cx, 530, sub, { ...SUB, size: 30, anchor: 'middle' });
+    T(svg, cx, 760, String(nn), { ...BIG, size: 220, anchor: 'middle', fill: strong ? READ : '#8A909B' });
+    T(svg, cx, 830, 'errors per 100,000 rounds', { ...SUB, size: 30, anchor: 'middle' });
+  };
+  col(540, 'matching', 'Google’s standard decoder, rules', 171, false);
+  col(1380, 'a neural network', 'trained, AlphaQubit’s design', 143, true);
+  line(svg, 960, 380, 960, 860, { stroke: RULE, 'stroke-width': 2 });
+}
+
+// ---------------- page 8: a bigger grid helps, once each qubit is good enough
+{
+  const svg = slide('p7', 'Bigger grids help, once qubits are good enough', 8, 'Nature 638 (2025) · threshold: Fowler et al. 2012', 'chip', 'the chip');
+  T(svg, 80, 214, 'Below about 1 slip in 100 per step, each bigger grid halves the errors. Willow is below it.', SUB);
+  const pitch = 62, base = 640;
+  const cols = [[3, 17, 712, 330], [5, 49, 349, 900], [7, 97, 171, 1560]];
+  cols.forEach(([d, q, err, cx], k) => {
+    const half = (d - 1) / 2 * pitch;
+    const G = deckGrid(svg, { checks: S.surface(d), d, cx, cy: base - half, pitch, qr: 13 });
+    const ids = Object.keys(G.tiles); ids.forEach((id, i) => { if ((i * 7 + k) % 9 === 0) G.tiles[id].setFired(1); });
+    T(svg, cx, base + 76, `${q} qubits`, { size: 32, family: 'sans', anchor: 'middle' });
+    T(svg, cx, 830, String(err), { ...BIG, size: 104, anchor: 'middle', fill: k === 2 ? INK : '#8A909B' });
+    T(svg, cx, 878, 'errors per 100,000 rounds', { ...SUB, size: 26, anchor: 'middle' });
+  });
+  for (const [a, b] of [[330, 900], [900, 1560]]) {
+    const xm = (a + b) / 2;
+    T(svg, xm, 770, '÷ 2', { ...BIG, size: 52, anchor: 'middle', fill: INK });
+    path(svg, `M${a + 130} 796H${b - 130}`, { stroke: INK, 'stroke-width': 3 });
+    path(svg, `M${b - 146} 784L${b - 130} 796L${b - 146} 808`, { stroke: INK, 'stroke-width': 3, fill: 'none' });
+  }
+}
+
+// ---------------- page 14: could the network keep up? one time axis, two lanes
+{
+  const svg = slide('p13', 'Could the network keep up?', 14, 'Nature 638 (2025), Sec. V · 24 µs: Bausch et al. (2024)', 'reader', 'the reader');
+  const x0 = 360, x1 = 1840, tmax = 25.3, X = (t) => x0 + (x1 - x0) * t / tmax;
+  const n = 23;
+  // lane 1: the chip's frames, one every 1.1 µs
+  const fy = 300, fh = 120;
+  T(svg, 80, fy + 54, 'the chip', { size: 40, family: 'sans', weight: 500 });
+  T(svg, 80, fy + 98, 'a frame every 1.1 µs', { ...SUB, size: 28 });
+  for (let i = 0; i < n; i++) {
+    const a = X(i * 1.1), b = X((i + 1) * 1.1);
+    frame(svg, a + 2, fy, b - a - 4, fh, i === 0 ? { fill: READ_T, stroke: READ, sw: 3 } : { fill: HINT_T, stroke: HINT, sw: 2.5, dot: HINT });
+  }
+  // lane 2: the network reading frame 1 for 24 µs
+  const ny = 560, nh = 120;
+  T(svg, 80, ny + 54, 'the network', { size: 40, family: 'sans', weight: 500, fill: READ });
+  T(svg, 80, ny + 98, '24 µs per frame', { ...SUB, size: 28 });
+  rect(svg, X(0), ny, X(24) - X(0), nh, { rx: 6, fill: READ, stroke: READ, 'stroke-width': 2 });
+  T(svg, X(0) + 30, ny + nh / 2 + 14, 'reading frame 1', { size: 40, family: 'sans', weight: 500, fill: PAPER });
+  // the shared clock
+  const ay = 760;
+  line(svg, x0, ay, x1, ay, { stroke: INK, 'stroke-width': 2 });
+  for (const t of [0, 6, 12, 18, 24]) {
+    line(svg, X(t), fy - 20, X(t), ay + 12, { stroke: RULE, 'stroke-width': 1.5, 'stroke-dasharray': '6 6' });
+    T(svg, X(t), ay + 48, t + ' µs', { size: 28, family: 'sans', fill: MUTED, anchor: t === 0 ? 'start' : 'middle' });
+  }
+  // the queue
+  const qa = X(1.1), qb = X(n * 1.1);
+  path(svg, `M${qa} ${fy - 24}V${fy - 44}H${qb}V${fy - 24}`, { stroke: HINT, 'stroke-width': 3, fill: 'none' });
+  T(svg, (qa + qb) / 2, fy - 64, '22 frames waiting', { size: 40, family: 'sans', weight: 600, anchor: 'middle', fill: HINT });
+  T(svg, 80, 890, 'No. The queue only grows.', { size: 56, family: 'serif', weight: TW });
+}
+window.DONE = true;
+</script>

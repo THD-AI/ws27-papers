@@ -1,4 +1,4 @@
-// Builds the 18-page Quantum talk (talks/quantum/v5) as ONE self-contained
+// Builds the 18-page Quantum talk (talks/quantum/v6; --deck v5 for the earlier one) as ONE self-contained
 // page: every page drawn once from the deck's source, the two drawings and
 // the fonts embedded, no server or network at the talk. It is both the file
 // to present from and the talk's page on the site (dist/other-half/talk/).
@@ -12,11 +12,14 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { startServer } from './serve.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const DECK = join(ROOT, 'talks', 'quantum', 'v5');
+// the deck folder: v6 by default; --deck v5 builds the earlier one
+const di = process.argv.indexOf('--deck');
+const VER = di > 0 ? process.argv[di + 1] : 'v6';
+const DECK = join(ROOT, 'talks', 'quantum', VER);
 const require = createRequire(join(ROOT, 'package.json'));
 const puppeteer = require('puppeteer-core');
 const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
-const OUT = join(ROOT, '.shots', 'deck', 'quantum-v5');
+const OUT = join(ROOT, '.shots', 'deck', 'quantum-' + VER);
 mkdirSync(OUT, { recursive: true });
 
 // 1. Fonts: the latin subsets of the deck's Google fonts, and Excalifont, inlined.
@@ -40,13 +43,13 @@ const page = await browser.newPage();
 const errors = [];
 page.on('pageerror', (e) => errors.push(e.message));
 await page.setViewport({ width: 1920, height: 1080 });
-await page.goto(`http://localhost:${port}/talks/quantum/v5/index.html`, { waitUntil: 'networkidle0' });
+await page.goto(`http://localhost:${port}/talks/quantum/${VER}/index.html`, { waitUntil: 'networkidle0' });
 await page.waitForFunction('window.DONE', { timeout: 30000 });
 await page.evaluate(() => document.fonts.ready);
 const raw = await page.evaluate(() => [...document.querySelectorAll('.s')].map((el) => ({
   id: el.id, svg: el.innerHTML,
   // the page's title: its big serif lines, in order
-  title: [...el.querySelectorAll('text')].filter((t) => parseFloat(t.getAttribute('font-size') || getComputedStyle(t).fontSize) >= 60 && /Newsreader|serif/.test(t.getAttribute('font-family') || getComputedStyle(t).fontFamily) && !/Mono/.test(t.getAttribute('font-family') || getComputedStyle(t).fontFamily) && (t.getAttribute('font-style') || getComputedStyle(t).fontStyle) !== 'italic').map((t) => t.textContent).join(' '),
+  title: [...el.querySelectorAll('text')].filter((t) => parseFloat(t.getAttribute('font-size') || getComputedStyle(t).fontSize) >= 60 && /Newsreader/.test(t.getAttribute('font-family') || getComputedStyle(t).fontFamily) && !/Mono/.test(t.getAttribute('font-family') || getComputedStyle(t).fontFamily) && (t.getAttribute('font-style') || getComputedStyle(t).fontStyle) !== 'italic').map((t) => t.textContent).join(' '),
 })));
 await browser.close();
 server.close();
@@ -71,7 +74,7 @@ const PAGES = raw.map(({ id, svg, title }) => {
 });
 if (n !== 18) throw new Error(`expected 18 main pages, found ${n}`);
 
-// 5. The player (talks/quantum/v5/player.html) with the fonts and pages poured in.
+// 5. The player (talks/quantum/<deck>/player.html) with the fonts and pages poured in.
 const data = { pages: PAGES.map(({ svg, ...p }) => p), svgs: PAGES.map((p) => p.svg), images: IMAGES };
 const html = readFileSync(join(DECK, 'player.html'), 'utf8')
   .replace('/*__FONTS__*/', () => fontCss)
