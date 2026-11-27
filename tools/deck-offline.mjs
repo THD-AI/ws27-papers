@@ -1,7 +1,7 @@
 // Builds the talk as ONE offline HTML file for presenting: every build
 // pre-drawn as SVG, the three typefaces and the house drawing embedded, no
 // network and no server. Double-click it, press F11, then Right / Left.
-//   node tools/deck-offline.mjs [renovate|quantum] [--site]
+//   node tools/deck-offline.mjs [renovate] [--site]
 // Writes .shots/deck/<talk>-v2/<talk>-talk.html. slides2.js is the only deck;
 // --v2 is still accepted and changes nothing (v1 is under the tag
 // archive/renovate-deck-v1).
@@ -60,9 +60,9 @@ await browser.close();
 server.close();
 
 // 3. Each drawing (and the Virgil face) once, as a data URI the pages point
-// to at show time. The Quantum deck draws from the article's art and its own.
-const ARTICLE = { renovate: 'renovate', quantum: 'other-half' }[talk] || talk;
-const PREFIXES = [[`../../articles/${ARTICLE}/art/`, join(ROOT, 'articles', ARTICLE, 'art')], ['./art/', join(ROOT, 'talks', talk, 'art')]];
+// to at show time. The deck draws from its article's art. (The Quantum talk is
+// built by tools/qtalk-site.mjs.)
+const PREFIXES = [[`../../articles/${talk}/art/`, join(ROOT, 'articles', talk, 'art')]];
 const MIME = { png: 'image/png', woff2: 'font/woff2' };
 const ART = {};
 for (const p of pages) {
@@ -84,7 +84,7 @@ const doc = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>${talk === 'quantum' ? 'The other half of a quantum computer' : 'Renovate, don’t repaint'}: the talk</title>
+<title>Renovate, don’t repaint: the talk</title>
 <style>
 ${fontCss}
 html, body { margin: 0; height: 100%; background: #111214; overflow: hidden; }

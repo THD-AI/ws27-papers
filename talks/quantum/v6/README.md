@@ -36,6 +36,8 @@ raw/         read.png as the forge made it
 
 `heap.png` is v5's, cleaned for 4K (see `talks/quantum/v5/README.md` for its sources and credits).
 
+**Credit.** "Drawings after a photograph by Lars Ploughman, CC BY-SA 2.0". It is in the speaker notes of page 1 (`notes.md`), not on the slide. The first, sixteen-slide deck (tag `archive/quantum-deck-16`) printed it in its references panel, with the photographs behind that deck's own drawings: CEphoto, Uwe Aranas (the film reel, CC BY-SA 3.0), TheJosh (the desk computer, public domain) and Dsv (the rack servers, public domain, a reference for the article's opening drawing).
+
 `read.png` is new: Paper Studio forge, board `talk-read2`, round 1, candidate 2. References: v5's `heap.png` as the forge made it (so the refrigerator and film are the same as on page 1); the companion deck's approved line; the article's film-and-cable drawing, for the computer. Cleaned with `python tools/clean-drawing.py raw/read.png read.png`. It replaces v5's page-17 drawing, whose refrigerator was cut off by the edge.
 
 ## Open ideas

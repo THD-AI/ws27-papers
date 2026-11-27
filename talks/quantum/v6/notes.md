@@ -4,6 +4,7 @@ What the slides no longer say, so the speakers do. One field term per page, said
 
 | Page | Say | The field's word |
 |---|---|---|
+| 1 | (Credit, for the page and if asked; not on the slide.) The drawing here and on pages 10 and 18 was made with an image model from Alexander Rudaev's own line reference; the refrigerator is after a photograph by Lars Ploughman, "IBM Q at CES", CC BY-SA 2.0 (Wikimedia Commons). | |
 | 2 | Google, December 2024. The headline was speed: under five minutes against 10 septillion years, a benchmark with no known use. The errors are counted in the stored value, per 100,000 rounds of checks, read by matching, Google's standard decoder. | error suppression |
 | 3 | The map: the chip asks its checks every round, each round gives a frame of hints, an ordinary computer reads them and decides the fix. Everything after this is about the right half. | decoder |
 | 4 | Same chip, same data; only the decoder changed. 143 is the number in the paper's abstract. The network is of AlphaQubit's design, trained on simulations, then on the chip's data. | neural decoder |
