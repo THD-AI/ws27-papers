@@ -8,7 +8,7 @@ Kind: log, newest first. Read this before every loop on the deck; add to it at t
 - Live: https://thd-ai.github.io/ws27-papers/renovate/talk/ (gh-pages `145ee27`, loop 12). Notes on N, hidden in full screen; F for full screen. Publish steps in the README.
 - Q&A: `QUESTIONS.md`, nine expected questions with short answers from the article's facts.
 - Clock: the notes speak in about 14 minutes (130 words a minute, 1.5 s a click, 2.5 s a landing); the cue sheet's start times are computed from that, not set by hand.
-- Readers: round 11 median 7.5, round 12 median 8 (professor 8 and grade 1.7, voice 8, facts 8, projector 8, sceptic 7). Reports in `readers-r11/`, `readers-r12/`.
+- Two reader rounds (11 and 12) checked the changes; their reports and scores are kept with the private working documents.
 - Merged: ws27-papers#12 (the talk on the site). Open: ws27-papers#13 (loops 11–12), paper-studio#3 (stacked on #2).
 - His standing calls: no QR code on any slide; plugs and keys stay simple one-line drawings; the closing socket plate stays as it is; "How this was made" is folded, never a slide.
 - His answers (21 November): 12 December is right; the talk and the article are separate works and needn't match; the AI-sceptic seat means a sceptic of AI-made look and sound, not of AI at work, so the closing slide stays as it is. Rules that carry to any talk: dotPrivate `BRAND/methods/talks.md`. Left: the real projector and rehearsal run 0.
@@ -16,7 +16,7 @@ Kind: log, newest first. Read this before every loop on the deck; add to it at t
 ## Loop 13 (21 November): the AI-made look and sound
 
 What happened:
-- He redefined the AI-sceptic seat: a sceptic of AI-made work, who researches the current tells first. One reader did (Pangram, WikiProject AI Cleanup and others): visuals 8, motion 9, words and speech 6, overall 7. The visuals and the drawings pass; the speech didn't. The tell was the contrast sentence ("doesn't just X. It Y", "not X, but Y"), about once a minute, much of it added by rounds 11–12's fixes. Other tells: the italic serif aside under a sans slide, "Still," four times, semicolons in captions, → and ≈ in backups.
+- He redefined the AI-sceptic seat: a sceptic of AI-made work, who researches the current tells first. One reader did (Pangram, WikiProject AI Cleanup and others). The visuals and the drawings passed; the speech didn't. The tell was the contrast sentence ("doesn't just X. It Y", "not X, but Y"), about once a minute, much of it added by rounds 11–12's fixes. Other tells: the italic serif aside under a sans slide, "Still," four times, semicolons in captions, → and ≈ in backups.
 - Fixed: the notes keep about three contrasts on purpose; captions in the body sans; plain separators. Proposed to him, not done: plain titles instead of the "First brick: …" run and the slogan pairs.
 
 Rules that follow:
@@ -28,9 +28,9 @@ Rules that follow:
 What happened:
 - Projector: every page rendered at 1024×768 with 12% ambient light and slight blur (`.shots/deck/projector/`). It all reads; the wall strip on slide 14 nearly vanished (thin grey lines in the drawing) and now carries the ink filter. A label on slide 8 sat under the wrong dot.
 - Clock: the notes spoke in 11 minutes against a cue sheet planned for 14:40, with some windows too tight and others too loose. The start times are now computed from the words.
-- Round 11 (projector, professor, fact checker, voice and pacing, AI-sceptic): median 7.5. Convergent: the thesis came only at minute 14, the worker side of his thesis was never said, the course theory was hidden, ten fact wordings overstated their sources ("Telekom says 40" was only its press release; "walked it back" was half true for Klarna; "the staff stay" over a chart of 4,000 positions a year leaving).
+- Round 11 (projector, professor, fact checker, voice and pacing, AI-sceptic). Convergent: the thesis came only at minute 14, the worker side of his thesis was never said, the course theory was hidden, ten fact wordings overstated their sources ("Telekom says 40" was only its press release; "walked it back" was half true for Klarna; "the staff stay" over a chart of 4,000 positions a year leaving).
 - Fixed: his short answer at the start of slide 2; "the agent works with them, not instead of them" on slide 9 and in the close; an honest line that the rebuild can't be shown to have caused T-Mobile's result; a customer case and "always a way to a person" in step 6; the staff load in step 4; adoption terms (TOE) on slide 9 and stage-gate on slide 15, on the slide and not in speech; spoken grammar throughout; every fact fix.
-- Round 12 (the four seats whose part changed): median 8. The sceptic stays at 7 until the worker thesis is on a slide, not only spoken.
+- Round 12 (the four seats whose part changed). The sceptic seat stays unconvinced until the worker thesis is on a slide, not only spoken.
 
 Rules that follow:
 50. **Time a talk from its words, never by hand.** 130 words a minute, plus the clicks and the landings; a cue sheet wrong in both directions is worse than none.
