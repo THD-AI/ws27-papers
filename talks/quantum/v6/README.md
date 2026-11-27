@@ -29,7 +29,7 @@ raw/         read.png as the forge made it
 ## Look, present, publish
 
 - **Look:** serve the repository root (`node tools/serve.mjs`) and open `talks/quantum/v6/index.html`.
-- **Present:** `node tools/qtalk-site.mjs` writes `.shots/deck/quantum-v6/quantum-talk.html`, one file with everything embedded. Keys as in v5: Right, Space, a click or the wheel for the next step; Left back; G to a page number; N notes; F full screen; P presenter mode in two windows. Ctrl+P prints each page once, complete.
+- **Present:** `node tools/qtalk-site.mjs` writes `.shots/deck/quantum-v6/quantum-talk.html`, one file with everything embedded. Keys as in v5: Right, Space, a click or the wheel for the next step; Left back; G to a page number; N notes; F full screen; P presenter mode in two windows. Ctrl+P prints each page once, complete. Nothing but the slide shows on screen: the key hint that sat on the dark bars around it is gone (27 Nov).
 - **Publish:** after `node lib/build.mjs`, `node tools/qtalk-site.mjs --site`, then `node tools/talk-card.mjs`, then deploy `dist/` as the main README says. `--deck v5` builds the earlier version.
 
 ## The drawings
@@ -37,3 +37,7 @@ raw/         read.png as the forge made it
 `heap.png` is v5's, cleaned for 4K (see `talks/quantum/v5/README.md` for its sources and credits).
 
 `read.png` is new: Paper Studio forge, board `talk-read2`, round 1, candidate 2. References: v5's `heap.png` as the forge made it (so the refrigerator and film are the same as on page 1); the companion deck's approved line; the article's film-and-cable drawing, for the computer. Cleaned with `python tools/clean-drawing.py raw/read.png read.png`. It replaces v5's page-17 drawing, whose refrigerator was cut off by the edge.
+
+## Open ideas
+
+- **How to show the keys.** The on-screen hint was removed; a clearer way to show a first-time presenter the keys is still to be found. Until then they are listed here only.

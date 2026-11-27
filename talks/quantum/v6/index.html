@@ -228,28 +228,17 @@ build('p3', 2, (pid, st) => {
 // ---------------- 6: measuring, so the chip asks "same or different?" (pair)
 {
   const svg = slide('p5', 'Measuring a qubit destroys its superposition', 6, '', 'chip');
-  line(svg, 960, 280, 960, 880, { stroke: RULE, 'stroke-width': 2 });
-  // left: measure one qubit, the mix is gone
-  const my = 520;
-  circle(svg, 260, my, 110, { fill: PAPER, stroke: INK, 'stroke-width': 4 });
-  T(svg, 260, my - 6, '0 and 1', { size: 44, family: 'sans', anchor: 'middle' });
-  T(svg, 260, my + 44, 'at once', { ...CAP, anchor: 'middle' });
-  arrow(svg, 400, my, 560, my);
-  T(svg, 480, my - 30, 'measure', { ...CAP, anchor: 'middle' });
-  circle(svg, 700, my, 110, { fill: PAPER, stroke: INK, 'stroke-width': 4 });
-  T(svg, 700, my + 32, '1', { ...BIG, size: 96, anchor: 'middle' });
-  T(svg, 480, 760, 'Measure it: the mix is gone.', { ...LAB, size: 38, weight: 500, anchor: 'middle' });
-  // right: a check between two qubits asks only: same, or different?
-  const qa = 1180, qb = 1700;
-  circle(svg, qa, my, 70, { fill: PAPER, stroke: INK, 'stroke-width': 4 });
-  circle(svg, qb, my, 70, { fill: INK });
-  T(svg, qb, my + 10, 'flipped', { size: 24, family: 'sans', anchor: 'middle', fill: PAPER });
-  line(svg, qa + 70, my, 1290, my, { stroke: AMBER, 'stroke-width': 4 }); line(svg, 1590, my, qb - 70, my, { stroke: AMBER, 'stroke-width': 4 });
-  rect(svg, 1290, my - 80, 300, 160, { rx: 10, fill: AMBER_T, stroke: AMBER, 'stroke-width': 4 });
-  circle(svg, 1440, my - 36, 13, { fill: AMBER });
-  T(svg, 1440, my + 36, 'different', { size: 40, family: 'sans', weight: 600, anchor: 'middle', fill: AMBER });
-  T(svg, 1440, 760, 'So the chip asks a check:', { ...LAB, size: 38, weight: 500, anchor: 'middle' });
-  T(svg, 1440, 810, 'same, or different?', { ...LAB, size: 38, weight: 500, anchor: 'middle', fill: AMBER });
+  // measure one qubit, the mix is gone; so the chip only compares
+  const my = 500;
+  circle(svg, 740, my, 110, { fill: PAPER, stroke: INK, 'stroke-width': 4 });
+  T(svg, 740, my - 6, '0 and 1', { size: 44, family: 'sans', anchor: 'middle' });
+  T(svg, 740, my + 44, 'at once', { ...CAP, anchor: 'middle' });
+  arrow(svg, 880, my, 1040, my);
+  T(svg, 960, my - 30, 'measure', { ...CAP, anchor: 'middle' });
+  circle(svg, 1180, my, 110, { fill: PAPER, stroke: INK, 'stroke-width': 4 });
+  T(svg, 1180, my + 32, '1', { ...BIG, size: 96, anchor: 'middle' });
+  T(svg, 960, 740, 'Measure it: the mix is gone.', { ...LAB, size: 38, weight: 500, anchor: 'middle' });
+  T(svg, 960, 810, 'So the chip asks a check: same, or different?', { ...LAB, size: 38, weight: 500, anchor: 'middle', fill: AMBER });
 }
 
 // ---------------- 7: two ways to go wrong (pair of cards)
@@ -349,8 +338,8 @@ build('p3', 2, (pid, st) => {
 
 // ---------------- 12: fewer errors, less likely (pair; the layout he liked)
 {
-  const svg = slide('p11', 'Fewer errors, less likely', 12, 'distance 3 · 5% error per qubit · our own count', 'reader',
-    { sub: 'Same fired checks, two explanations. Matching counts a Y as two errors, so it picks the left.' });
+  const svg = slide('p11', 'Fewer errors, less likely', 12, 'distance 3 · 5% error per qubit · times right in 30 runs · our own count', 'reader',
+    { sub: 'Same fired checks, two explanations.' });
   line(svg, 960, 280, 960, 900, { stroke: RULE, 'stroke-width': 2 });
   const ex = lat.example, pitch = 150, cy = 520;
   const draw = (cx, errs) => {
@@ -363,12 +352,11 @@ build('p3', 2, (pid, st) => {
   const G2 = draw(1400, ex.read_together.errors);
   { const [x, y] = G2.pos(5); guess(svg, x, y, 32, 'Z'); }
   const res = (cx, k, lab, strong) => {
-    T(svg, cx, 800, lab, { ...LAB, size: 34, anchor: 'middle' });
-    T(svg, cx - 40, 890, String(k), { ...BIG, size: 72, anchor: 'end', fill: strong ? BLUE : QUIET });
-    T(svg, cx - 24, 884, 'in 30 right', { ...CAP, size: 32 });
+    T(svg, cx, 800, lab, { ...LAB, size: 34, anchor: 'middle', fill: strong ? BLUE : INK });
+    T(svg, cx, 890, String(k), { ...BIG, size: 72, anchor: 'middle', fill: strong ? BLUE : QUIET });
   };
-  res(520, 10, 'matching: an X and a Z', false);
-  res(1400, 19, 'likelier: a Y, and a Z here or here', true);
+  res(520, 10, 'matching’s pick', false);
+  res(1400, 19, 'the likelier pick', true);
 }
 
 // ---------------- 13: a better reader removed one error in six (sequence; builds row by row)
@@ -569,14 +557,11 @@ build('p13', 3, (pid, st) => {
   const bar = (y, nWrong, lab, sub) => {
     T(svg, 80, y + 40, lab, { ...LAB, size: 36, weight: 500 });
     T(svg, 80, y + 80, sub, { ...CAP, size: 28, fill: nWrong ? BLUE : MUTED });
-    const x0 = 640, w = 1060, fixed = (219 - nWrong) / 219 * w;
-    hbar(svg, x0, y, fixed, 90, { fill: QUIET });
-    if (nWrong) hbar(svg, x0 + fixed + 3, y, w - fixed - 3, 90, { fill: BLUE });
-    T(svg, x0 + w + 24, y + 54, String(nWrong), { ...BIG, size: 56, fill: nWrong ? BLUE : QUIET });
-    T(svg, x0 + w + 24, y + 86, 'missed', { ...CAP, size: 22, fill: nWrong ? BLUE : MUTED });
+    T(svg, 760, y + 80, String(nWrong), { ...BIG, size: 112, anchor: 'end', fill: nWrong ? BLUE : QUIET });
+    T(svg, 790, y + 76, 'of 219 missed', { ...LAB, size: 36, fill: nWrong ? BLUE : MUTED });
   };
-  bar(330, 0, 'plain matching', 'all 219 fixed');
-  bar(490, 6, 'correlated matching', '6 missed');
+  bar(330, 0, 'plain matching', 'every one fixed');
+  bar(490, 6, 'correlated matching', 'each should be fixed');
   T(svg, 80, 720, 'Those six add about 0.4 × the noise level: at 0.1% noise, 0.04%,', { ...LAB, size: 34 });
   T(svg, 80, 768, 'about the gap we measured (correlated 0.113%, plain 0.075%).', { ...LAB, size: 34 });
   T(svg, 80, 852, 'A second script, written without seeing ours, found the same six. Our setup only; the cause is not traced.', { ...CAP, size: 26 });
